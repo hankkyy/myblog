@@ -324,7 +324,7 @@ def build():
     from itertools import groupby
     # Group by year-month
     for (year, month), group in groupby(posts, key=lambda p: (p["date"].year, p["date"].month)):
-        month_label = f"{year}年{month}月"
+        month_label = f'{year}<span class="timeline-sep">年</span>{month}<span class="timeline-sep">月</span>'
         cards_html = "\n".join(article_card(p) for p in group)
         all_cards_groups.append(f'<div class="timeline-group"><h2 class="timeline-heading">{month_label}</h2>{cards_html}</div>')
     all_cards = "\n".join(all_cards_groups)

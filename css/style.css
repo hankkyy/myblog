@@ -83,8 +83,9 @@ blockquote p{margin-bottom:0;font-style:italic}
 .page-header .page-title span{color:#146bb7}
 
 .timeline-group{margin-bottom:60px}
-.timeline-heading{font-family:"Catamaran",sans-serif;font-size:1.5rem;font-weight:700;color:#16181a;padding:0 0 12px 0;margin:0 0 30px 0;border-bottom:2px solid #f1f3f5;position:relative}
+.timeline-heading{font-family:"Catamaran",sans-serif;font-size:2rem;font-weight:700;color:#16181a;padding:0 0 12px 0;margin:0 0 30px 0;border-bottom:2px solid #f1f3f5;position:relative;letter-spacing:2px}
 .timeline-heading::after{content:"";position:absolute;bottom:-2px;left:0;width:50px;height:2px;background:#146bb7}
+.timeline-sep{font-size:1rem;font-weight:400;color:#868e96;margin:0 2px}
 
 .cenote-breadcrumb{padding:15px 0}
 .cenote-breadcrumb ul{list-style:none;display:flex;flex-wrap:wrap;margin:0;padding:0}
