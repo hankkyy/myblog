@@ -60,8 +60,8 @@ blockquote p{margin-bottom:0;font-style:italic}
 
 .main-navigation{flex:none}
 .tg-site-menu--default a{display:block;font-size:14px;text-decoration:none;border-bottom:2px solid transparent;padding:15px 0;transition:.4s ease;margin-left:10px;margin-right:10px;font-weight:400;color:#16181a}
-.tg-site-menu--default a:hover{color:#16181a;border-bottom-color:#16181a}
-.tg-site-menu--default a.active{border-bottom-color:#16181a}
+.tg-site-menu--default a:hover{color:#16181a;border-bottom-color:#16181a;font-weight:700}
+.tg-site-menu--default a.active{border-bottom-color:#16181a;font-weight:700}
 .tg-site-menu--default ul{list-style:none;margin:0;padding-left:0;display:flex;flex-wrap:wrap}
 
 .tg-header-action-navigation{margin-left:auto}
