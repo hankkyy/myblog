@@ -16,7 +16,7 @@ CSS_DIR = ROOT / "css"
 SITE = {"title":"纵横四海","url":"https://hankzhang.us/","desc":"但行好事，莫问前程"}
 AUTHOR = "张子豪"
 YEAR = str(datetime.now().year)
-MENU = [("首页","/"),("归档","/posts/"),("关于","/about/")]
+MENU = [("首页","/"),("文章列表","/posts/"),("留言板","/guestbook/"),("关于","/about/")]
 SAFE = {".git","src","vercel.json",".gitignore","README.md","pagefind"}
 
 
@@ -69,21 +69,35 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
 <div id="page" class="site">
 <a class="skip-link screen-reader-text" href="#content">跳到内容</a>
 <header id="masthead" class="site-header tg-site-header tg-site-header--default">
+  <div class="tg-header-top">
+    <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+      <nav class="tg-header-navigation">
+        <div class="menu-menu-container"><ul id="header-menu" class="menu">{main_nav}</ul></div>
+      </nav>
+    </div>
+  </div>
   <div class="tg-header-bottom">
     <div class="header-bottom-top">
-      <div class="container">
-        <div class="site-branding" style="margin:0">
-          <{site_title_tag} class="site-title"><a href="{SITE['url']}" rel="home">{st}</a> <span style="font-size:14px;color:#adb5bd;font-weight:400">{SITE['desc']}</span></{site_title_tag}>
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <div class="site-branding">
+          <{site_title_tag} class="site-title"><a href="{SITE['url']}" rel="home">{st}</a></{site_title_tag}>
+          <p class="site-description">{SITE['desc']}</p>
         </div>
       </div>
     </div>
     <div class="header-bottom-bottom">
-      <div class="container" style="text-align:center">
-        <nav class="main-navigation tg-site-menu--default" style="display:inline-block">
-          <div class="menu-menu-container"><ul class="nav-menu" style="justify-content:center">{main_nav}</ul></div>
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <nav id="site-navigation" class="main-navigation tg-site-menu--default">
+          <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu">{main_nav}</ul></div>
         </nav>
-        {(' <div style="max-width:300px;margin:10px auto 0">' + search_html + '</div>') if search_html else ''}
+        <nav class="tg-header-action-navigation">
+          <ul class="tg-header-action-menu">
+            <li class="tg-search-toggle" onclick="document.getElementById('search-inline').style.display=document.getElementById('search-inline').style.display==='none'?'block':'none'"><i class="tg-icon-search">🔍</i></li>
+            <li class="tg-mobile-menu-toggle"><span></span></li>
+          </ul>
+        </nav>
       </div>
+      {(' <div id=\"search-inline\" style=\"max-width:300px;margin:10px auto;display:none\"></div>') if search_html else ''}
     </div>
   </div>
 </header>
