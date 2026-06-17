@@ -13,7 +13,7 @@ CONTENT = SRC / "content"
 THEME = SRC / "themes" / "cenote-style"
 CSS_DIR = ROOT / "css"
 
-SITE = {"title":"纵横四海","url":"https://hankzhang.us/","desc":"保持好奇心，继续探索世界"}
+SITE = {"title":"纵横四海","url":"https://hankzhang.us/","desc":"「保持好奇心，继续探索世界」"}
 AUTHOR = "Zihao Zhang"
 YEAR = str(datetime.now().year)
 MENU = [("首页","/"),("文章列表","/posts/"),("分类","/categories/"),("关于","/about/")]
