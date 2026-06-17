@@ -16,7 +16,7 @@ CSS_DIR = ROOT / "css"
 SITE = {"title":"纵横四海","url":"https://hankzhang.us/","desc":"但行好事，莫问前程"}
 AUTHOR = "张子豪"
 YEAR = str(datetime.now().year)
-MENU = [("首页","/"),("文章列表","/posts/"),("留言板","/guestbook/"),("关于","/about/"),("GitHub","https://github.com/hankkyy")]
+MENU = [("首页","/"),("文章列表","/posts/"),("联系","/guestbook/"),("关于","/about/"),("GitHub","https://github.com/hankkyy")]
 SAFE = {".git","src","vercel.json",".gitignore","README.md","pagefind"}
 
 
@@ -272,13 +272,11 @@ def build():
 
     home_title = f"{SITE['title']} – {SITE['desc']}"
 
-    # ===== HOMEPAGE: first article full-width, rest grid =====
-    first = article_card(posts[0]) if posts else ""
-    rest = "\n".join(article_card(p) for p in posts[1:]) if len(posts) > 1 else ""
+    # ===== HOMEPAGE: all articles in 3-column grid =====
+    cards = "\n".join(article_card(p) for p in posts)
     home_body = f"""<div id="primary" class="content-area">
-          <main id="main" class="site-main">
-            <div class="tg-archive-featured">{first}</div>
-            <div class="tg-archive-grid tg-archive-col--3">{rest}</div>
+          <main id="main" class="site-main tg-archive-grid tg-archive-col--3">
+            {cards}
           </main>
         </div>"""
     homepage = page_html(home_title,
@@ -343,14 +341,16 @@ def build():
         f"""<div id="primary" class="content-area">
           <main id="main" class="site-main">
             <article class="page type-page status-publish hentry">
-              <header class="entry-header"><h1 class="entry-title">留言板</h1></header>
+              <header class="entry-header"><h1 class="entry-title">联系方式</h1></header>
               <div class="entry-content">
-                <p>欢迎留言交流。</p>
+                <p>欢迎交流，可以通过以下方式联系我：</p>
+                <ul>
+                  <li><strong>GitHub</strong>：<a href="https://github.com/hankkyy" target="_blank">hankkyy</a></li>
+                  <li><strong>Email</strong>：hankzhang@example.com</li>
+                </ul>
+                <p>或者直接在本页面留言。</p>
               </div>
             </article>
-            <div class="comments-area">
-              <p class="no-comments">评论已关闭。</p>
-            </div>
           </main>
         </div>""",
         current="/guestbook/",
