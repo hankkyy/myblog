@@ -414,7 +414,7 @@ def build():
         d = ROOT / "categories" / slug
         d.mkdir(parents=True, exist_ok=True)
         cat_cards = "\n".join(article_card(p) for p in cat_posts)
-        ph = f'<header class="page-header collapsed"><h1 class="page-title" style="cursor:pointer;user-select:none" onclick="this.parentElement.classList.toggle(\'collapsed\')">分类： <span>{cat_name}</span> <span class="toggle-icon" style="font-size:.8rem;color:#adb5bd;margin-left:8px;display:inline-block;transition:transform .3s">▼</span></h1></header>'
+        ph = f'<header class="page-header"><h1 class="page-title">分类： <span>{cat_name}</span></h1></header>'
         (d / "index.html").write_text(page_html(
             f"{cat_name} – {SITE['title']}",
             f"""<div id="primary" class="content-area">
