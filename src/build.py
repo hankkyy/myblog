@@ -123,8 +123,8 @@ def parse_page(md_path):
     content_html = markdown(post.content, extensions=["extra", "codehilite"])
     plain = re.sub(r"<[^>]+>", "", content_html).strip()
     plain = re.sub(r"\s+", " ", plain)
-    summary = plain[:200]
-    truncated = len(plain) > 200
+    summary = plain[:55]
+    truncated = len(plain) > 55
     date = post.get("date", datetime.now())
     if isinstance(date, str):
         try: date = datetime.fromisoformat(date)

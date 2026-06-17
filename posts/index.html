@@ -75,7 +75,7 @@
               <h2 class="entry-title"><a href="/posts/spring-virtual-threads/" rel="bookmark">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></h2>
             </header>
             <div class="entry-content">
-              <p>Java 21 的 Virtual Threads（虚拟线程）是 Project Loom 的最终成果。Spring Boot 3.2 开始正式支持。我最近在项目里做了测试。 配置方式 # application.yml spring: threads: virtual: enabled: true # Spring Boot 3.2+ 或者在代码里： @Bean public TomcatPro [&hellip;]</p>
+              <p>Java 21 的 Virtual Threads（虚拟线程）是 Project Loom 的最终成果。Spr [&hellip;]</p>
             </div>
             <footer class="entry-footer">
               <a href="/posts/spring-virtual-threads/" class="tg-readmore-link">阅读更多</a>
@@ -89,7 +89,7 @@
               <h2 class="entry-title"><a href="/posts/rust-ownership/" rel="bookmark">Rust 写给 Java 程序员：所有权机制深度解析</a></h2>
             </header>
             <div class="entry-content">
-              <p>Rust 的所有权（Ownership）是让 Java 程序员最头疼的概念。Java 里我们只管 new，GC 会处理一切。Rust 完全不同——没有 GC，编译器在编译时就知道每块内存何时释放。 Java 的视角 String s1 = new String(&quot;hello&quot;); String s2 = s1; // s1 和 s2 指向同一个对象 // GC 会在没有任何引用 [&hellip;]</p>
+              <p>Rust 的所有权（Ownership）是让 Java 程序员最头疼的概念。Java 里我们只管 new，GC [&hellip;]</p>
             </div>
             <footer class="entry-footer">
               <a href="/posts/rust-ownership/" class="tg-readmore-link">阅读更多</a>
@@ -103,7 +103,7 @@
               <h2 class="entry-title"><a href="/posts/redis-fast/" rel="bookmark">Redis 为什么快？单线程、IO 多路复用与数据结构分析</a></h2>
             </header>
             <div class="entry-content">
-              <p>Redis 单线程却能支撑 10 万 QPS。这篇文章解释背后的设计。 1. 为什么单线程？ Redis 选择单线程不是因为不会写多线程，而是内存操作太快，多线程的上下文切换和锁竞争反而拖慢性能。 一个 Redis 命令的执行路径： 解析命令 → 查找 key → 执行操作 → 返回结果 全部是纯内存操作，耗时微秒级。相比之下，线程切换需要 1-10 微秒，锁竞争更贵。 但 Redis 6.0 引 [&hellip;]</p>
+              <p>Redis 单线程却能支撑 10 万 QPS。这篇文章解释背后的设计。 1. 为什么单线程？ Redis 选择 [&hellip;]</p>
             </div>
             <footer class="entry-footer">
               <a href="/posts/redis-fast/" class="tg-readmore-link">阅读更多</a>
@@ -117,7 +117,7 @@
               <h2 class="entry-title"><a href="/posts/llm-inference/" rel="bookmark">LLM 推理优化：从 Flash Attention 到 vLLM PagedAttention</a></h2>
             </header>
             <div class="entry-content">
-              <p>大模型推理慢、显存占用大，是实际部署最大的痛点。这篇文章梳理四个关键优化技术。 1. KV Cache Transformer 在生成每个 token 时都要重新计算所有历史 token 的 Key 和 Value。KV Cache 的核心思想：算过的 K、V 存起来，下次直接用。 # 没有 KV Cache：每步 O(n²) for i in range(max_len): Q, K, V =  [&hellip;]</p>
+              <p>大模型推理慢、显存占用大，是实际部署最大的痛点。这篇文章梳理四个关键优化技术。 1. KV Cache Tra [&hellip;]</p>
             </div>
             <footer class="entry-footer">
               <a href="/posts/llm-inference/" class="tg-readmore-link">阅读更多</a>
@@ -131,7 +131,7 @@
               <h2 class="entry-title"><a href="/posts/k8s-network/" rel="bookmark">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></h2>
             </header>
             <div class="entry-content">
-              <p>Kubernetes 的网络模型是面试高频题，但很多人只是背了「每个 Pod 一个 IP」，实际数据包怎么走的并不清楚。 K8s 网络的三层模型 ┌─────────────────────────────────────────────┐ │ Node │ │ ┌─────────┐ ┌─────────┐ ┌─────────┐ │ │ │ Pod A │ │ Pod B │ │ Pod C  [&hellip;]</p>
+              <p>Kubernetes 的网络模型是面试高频题，但很多人只是背了「每个 Pod 一个 IP」，实际数据包怎么走的 [&hellip;]</p>
             </div>
             <footer class="entry-footer">
               <a href="/posts/k8s-network/" class="tg-readmore-link">阅读更多</a>
@@ -145,7 +145,7 @@
               <h2 class="entry-title"><a href="/posts/internship-thoughts/" rel="bookmark">后端实习两个月，我学到的东西比大学两年都多</a></h2>
             </header>
             <div class="entry-content">
-              <p>在学校的时候，我以为后端开发就是 Spring Boot 连 MySQL，写几个 CRUD 接口。 实习两个月后，我发现 CRUD 是工作中最简单的部分。 学校不会教的事 1. 代码 Review 是真正的学习 学校作业交了就是交了，没人告诉你哪里写得烂。 公司的代码 Review： 「这个循环里查了 N 次数据库，改成批量查询」 「异常吞掉了，出问题没法排查」 「变量名 data 是什么意思？要 [&hellip;]</p>
+              <p>在学校的时候，我以为后端开发就是 Spring Boot 连 MySQL，写几个 CRUD 接口。 实习两个月 [&hellip;]</p>
             </div>
             <footer class="entry-footer">
               <a href="/posts/internship-thoughts/" class="tg-readmore-link">阅读更多</a>
@@ -159,7 +159,7 @@
               <h2 class="entry-title"><a href="/posts/hello-world/" rel="bookmark">你好，世界</a></h2>
             </header>
             <div class="entry-content">
-              <p>这是我的第一篇博客。 为什么写博客 写博客是整理思绪最好的方式。把想法写下来，才知道自己到底在想什么。 这个博客怎么搭的 用 Hugo 搭建，部署在 Vercel 上。外观参考了 WordPress 的 Cenote 主题，干净、纯粹、专注于文字。 技术栈 Hugo：Go 写的静态网站生成器，构建速度极快 Vercel：部署和托管，自带 CDN 和 HTTPS 字体：Roboto（正文）+ Cat [&hellip;]</p>
+              <p>这是我的第一篇博客。 为什么写博客 写博客是整理思绪最好的方式。把想法写下来，才知道自己到底在想什么。 这个博 [&hellip;]</p>
             </div>
             <footer class="entry-footer">
               <a href="/posts/hello-world/" class="tg-readmore-link">阅读更多</a>
@@ -173,7 +173,7 @@
               <h2 class="entry-title"><a href="/posts/doris-3-features/" rel="bookmark">2026 年 Apache Doris 3.0 新特性全解析</a></h2>
             </header>
             <div class="entry-content">
-              <p>Apache Doris 3.0 在 2026 年 4 月正式 GA。作为 OLAP 领域增长最快的项目，这次大版本带来了几个关键变革。 1. 存算分离正式 GA Doris 传统架构是存算一体的 Shared-Nothing： ┌──────────────────────────────────────┐ │ FE (Frontend) ← 元数据 + 查询计划 │ │ BE (Backend [&hellip;]</p>
+              <p>Apache Doris 3.0 在 2026 年 4 月正式 GA。作为 OLAP 领域增长最快的项目，这次 [&hellip;]</p>
             </div>
             <footer class="entry-footer">
               <a href="/posts/doris-3-features/" class="tg-readmore-link">阅读更多</a>
@@ -187,7 +187,7 @@
               <h2 class="entry-title"><a href="/posts/columnar-storage/" rel="bookmark">为什么 ClickHouse 比 MySQL 快 100 倍？列式存储原理</a></h2>
             </header>
             <div class="entry-content">
-              <p>面试经常被问：「为什么 OLAP 数据库用列存，而不是行存？」 直接用数据说话。假设有一张表： CREATE TABLE orders ( id INT, user_id INT, amount DECIMAL, status VARCHAR, created_at DATETIME ); -- 1 亿行数据 查询：SELECT SUM(amount) FROM orders WHERE stat [&hellip;]</p>
+              <p>面试经常被问：「为什么 OLAP 数据库用列存，而不是行存？」 直接用数据说话。假设有一张表： CREATE  [&hellip;]</p>
             </div>
             <footer class="entry-footer">
               <a href="/posts/columnar-storage/" class="tg-readmore-link">阅读更多</a>

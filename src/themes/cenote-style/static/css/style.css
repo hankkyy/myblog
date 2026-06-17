@@ -26,8 +26,16 @@ blockquote p{margin-bottom:0;font-style:italic}
 
 /* Grid Archive — 3 columns on homepage */
 .tg-archive-style--big-block .site-main{display:flex;flex-wrap:wrap}
-.tg-archive-col--3 .site-main{margin-left:-20px;margin-right:-20px}
-.tg-archive-col--3 article{width:33.33%;padding-left:20px;padding-right:20px}
+.tg-archive-col--3 .site-main{margin-left:-15px;margin-right:-15px}
+.tg-archive-col--3 article{width:33.33%;padding-left:15px;padding-right:15px;margin-bottom:40px}
+.tg-archive-col--3 article .entry-title{font-size:1.125rem}
+.tg-archive-col--3 article .entry-meta{font-size:11px;margin-bottom:8px}
+.tg-archive-col--3 article .entry-meta .posted-on{padding-left:35px}
+.tg-archive-col--3 article .entry-meta .posted-on::before{width:25px;left:5px}
+.tg-archive-col--3 article .entry-content{font-size:14px}
+.tg-archive-col--3 article .entry-content p{line-height:1.6}
+.tg-archive-col--3 article .tg-readmore-link{font-size:13px;padding-left:30px}
+.tg-archive-col--3 article .tg-readmore-link::before{width:22px}
 
 /* No-sidebar pages (full width) */
 #primary.content-area{width:100%}
@@ -165,8 +173,12 @@ article:last-of-type{margin-bottom:0}
 @media(max-width:768px){
   .layout--right-sidebar #primary,.layout--right-sidebar #secondary{width:100%!important;padding:0!important}
   .layout--right-sidebar #secondary{margin-top:40px}
-  .tg-archive-col--3 article{width:100%!important;padding:0!important}
+  .tg-archive-col--3 article{width:100%!important;padding:0!important;margin-bottom:40px!important}
   .tg-archive-col--3 .site-main{margin-left:0!important;margin-right:0!important}
+  .tg-archive-col--3 article .entry-title{font-size:1.313rem!important}
+  .tg-archive-col--3 article .entry-meta{font-size:12px!important}
+  .tg-archive-col--3 article .entry-meta .posted-on{padding-left:40px!important}
+  .tg-archive-col--3 article .entry-meta .posted-on::before{width:30px!important;left:5px!important}
   .header-bottom-bottom .container{flex-direction:column;gap:10px}
   .tg-header-action-menu li.tg-mobile-menu-toggle{display:flex}
   .tg-site-menu--default{display:none}
