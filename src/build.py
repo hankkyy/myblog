@@ -16,7 +16,7 @@ CSS_DIR = ROOT / "css"
 SITE = {"title":"纵横四海","url":"https://hankzhang.us/","desc":"但行好事，莫问前程"}
 AUTHOR = "张子豪"
 YEAR = str(datetime.now().year)
-MENU = [("首页","/"),("文章列表","/posts/"),("留言板","/guestbook/"),("关于","/about/")]
+MENU = [("首页","/"),("文章列表","/posts/"),("留言板","/guestbook/"),("关于","/about/"),("GitHub","https://github.com/hankkyy")]
 SAFE = {".git","src","vercel.json",".gitignore","README.md","pagefind"}
 
 
@@ -69,14 +69,7 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
 <div id="page" class="site">
 <a class="skip-link screen-reader-text" href="#content">跳到内容</a>
 <header id="masthead" class="site-header tg-site-header tg-site-header--default">
-  <div class="tg-header-top">
-    <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-      <nav class="tg-header-navigation">
-        <div class="menu-menu-container"><ul id="header-menu" class="menu">{main_nav}</ul></div>
-      </nav>
-      {search_html}
-    </div>
-  </div>
+  <div class="tg-header-top"><div class="container"></div></div>
   <div class="tg-header-bottom">
     <div class="header-bottom-top">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
@@ -92,6 +85,7 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
           <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu">{main_nav}</ul></div>
         </nav>
       </div>
+      {f'<div style="max-width:300px;margin:8px auto 0">{search_html}</div>' if search_html else ''}
     </div>
   </div>
 </header>
