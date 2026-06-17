@@ -451,7 +451,7 @@ def build():
         travel_map = """
           <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
           <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-          <h3 style="margin-top:40px">✈️ 飞行日志</h3>
+          <h3 style="margin-top:40px">🗺️ 足迹</h3>
           <div id="travel-map" style="height:420px;border-radius:8px;margin:20px 0"></div>
           <script>
           var map = L.map('travel-map', {scrollWheelZoom: false}).setView([30, 110], 3);
