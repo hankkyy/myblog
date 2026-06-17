@@ -449,15 +449,21 @@ def build():
         about = parse_page(about_md)
         (ROOT / "about").mkdir(parents=True, exist_ok=True)
         about_html = f"""
-          <div class="about-hero" style="text-align:center;padding:40px 0 20px">
-            <h1 class="about-name">张子豪 · Hank Zhang</h1>
-            <p class="about-tagline" style="font-size:1.1rem;color:#6c757d;margin-top:8px">后端开发 · 数据基础设施 · AI Agent</p>
-          </div>
+          <section class="about-intro">
+            <div class="about-intro-left">
+              <p class="about-greeting">Hi, I'm</p>
+              <h1 class="about-name">张子豪<span class="about-name-en"> · Hank Zhang</span></h1>
+              <p class="about-bio">后端开发工程师，专注于数据基础设施与 AI Agent 开发。</p>
+              <div class="about-stats">
+                <div class="about-stat"><strong>127</strong><span>篇文章</span></div>
+                <div class="about-stat"><strong>9</strong><span>个分类</span></div>
+                <div class="about-stat"><strong>47</strong><span>座城市</span></div>
+              </div>
+            </div>
+          </section>
 
-          <div class="about-divider"></div>
-
-          <div class="about-section">
-            <h2 class="about-h2"><span class="about-icon">🧰</span> 技术栈</h2>
+          <section class="about-block">
+            <h2 class="about-label">技术栈</h2>
             <div class="skill-grid">
               <div class="skill-card"><span class="skill-label">语言</span><span class="skill-value">Java · Python · SQL</span></div>
               <div class="skill-card"><span class="skill-label">框架</span><span class="skill-value">Spring Boot · Spring MVC · MyBatis · LangChain</span></div>
@@ -467,46 +473,42 @@ def build():
               <div class="skill-card"><span class="skill-label">AI / Agent</span><span class="skill-value">RAG · Chroma · Prompt Engineering · MCP</span></div>
               <div class="skill-card"><span class="skill-label">工具</span><span class="skill-value">Git · Linux · PySpark</span></div>
             </div>
-          </div>
+          </section>
 
-          <div class="about-section">
-            <h2 class="about-h2"><span class="about-icon">🎯</span> 关注方向</h2>
-            <div class="focus-list">
-              <div class="focus-item"><span class="focus-dot"></span> 分布式系统与微服务架构</div>
-              <div class="focus-item"><span class="focus-dot"></span> OLAP 数据库与实时数仓</div>
-              <div class="focus-item"><span class="focus-dot"></span> AI Agent 开发与应用</div>
-              <div class="focus-item"><span class="focus-dot"></span> 后端性能优化</div>
+          <section class="about-block">
+            <h2 class="about-label">关注方向</h2>
+            <div class="focus-grid">
+              <div class="focus-card"><div class="focus-num">01</div><div class="focus-text">分布式系统与微服务架构</div></div>
+              <div class="focus-card"><div class="focus-num">02</div><div class="focus-text">OLAP 数据库与实时数仓</div></div>
+              <div class="focus-card"><div class="focus-num">03</div><div class="focus-text">AI Agent 开发与应用</div></div>
+              <div class="focus-card"><div class="focus-num">04</div><div class="focus-text">后端性能优化</div></div>
             </div>
-          </div>
+          </section>
 
-          <div class="about-section">
-            <h2 class="about-h2"><span class="about-icon">✈️</span> 兴趣爱好</h2>
-            <p style="color:#495057;line-height:1.9;font-size:.95rem">
+          <section class="about-block">
+            <h2 class="about-label">兴趣爱好</h2>
+            <p class="about-text">
               热爱旅行和航空。喜欢靠窗的座位，起飞时引擎轰鸣的那一刻是旅途中最享受的瞬间。<br>
               相信眼界决定世界——去更多地方，见更多人，理解更多事。
             </p>
-          </div>
+          </section>
 
-          <div class="about-section">
-            <h2 class="about-h2"><span class="about-icon">📝</span> 关于这个博客</h2>
-            <p style="color:#495057;line-height:1.9;font-size:.95rem">
+          <section class="about-block">
+            <h2 class="about-label">关于这个博客</h2>
+            <p class="about-text">
               用 Python 构建的静态站点，部署在 Vercel。外观参考 WordPress Cenote 主题。<br>
               写技术笔记、项目复盘、行业观察。不追求日更，追求每篇都值得读。
             </p>
-          </div>
+          </section>
 
-          <div class="about-section contact-section" style="background:#f8f9fa;border-radius:12px;padding:32px;margin-top:40px">
-            <h2 class="about-h2" style="margin-top:0"><span class="about-icon">📬</span> 欢迎交流</h2>
+          <section class="about-block contact-block">
+            <h2 class="about-label">欢迎交流</h2>
             <div class="contact-links">
-              <a href="https://github.com/hankkyy" target="_blank" class="contact-link">
-                <span class="contact-icon">🐙</span> GitHub @hankkyy
-              </a>
-              <a href="mailto:hank.zihao@gmail.com" class="contact-link">
-                <span class="contact-icon">📧</span> hank.zihao@gmail.com
-              </a>
+              <a href="https://github.com/hankkyy" target="_blank" class="contact-link">🐙 GitHub @hankkyy</a>
+              <a href="mailto:hank.zihao@gmail.com" class="contact-link">📧 hank.zihao@gmail.com</a>
             </div>
-            <p style="color:#adb5bd;font-size:.85rem;margin-top:16px">或者直接在本页面留言</p>
-          </div>
+            <p class="about-text" style="color:#adb5bd;font-size:.85rem;margin-top:12px">或者直接在本页面留言</p>
+          </section>
         """
         (ROOT / "about" / "index.html").write_text(page_html(
             f"{about['title']} – {SITE['title']}",
