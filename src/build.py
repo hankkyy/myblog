@@ -256,9 +256,9 @@ def build():
           </main>
         </div>"""
     homepage = page_html(home_title,
-        f'<div class="tg-flex-container tg-flex-space-between">{home_body}{sidebar_html(posts)}</div>',
+        home_body,
         is_home=True,
-        body_class="layout--right-sidebar",
+        body_class="layout--no-sidebar",
         extra_body_class="tg-archive-style--big-block")
     (ROOT / "index.html").write_text(homepage)
 
