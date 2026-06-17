@@ -14,7 +14,7 @@
   <div class="tg-header-top">
     <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
       <nav class="tg-header-navigation">
-        <div class="menu-menu-container"><ul id="header-menu" class="menu"><li id="menu-item-首页"><a href="/" class="active">首页</a></li><li id="menu-item-技术"><a href="/categories/技术/">技术</a></li><li id="menu-item-杂谈"><a href="/categories/杂谈/">杂谈</a></li><li id="menu-item-关于"><a href="/about/">关于</a></li></ul></div>
+        <div class="menu-menu-container"><ul id="header-menu" class="menu"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/" class="active">首页</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/posts/">文章列表</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/guestbook/">留言板</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/about/">关于</a></li></ul></div>
       </nav>
     </div>
   </div>
@@ -29,8 +29,8 @@
     </div>
     <div class="header-bottom-bottom">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <nav id="site-navigation" class="main-navigation tg-site-menu--default">
-          <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu"><li id="menu-item-首页"><a href="/" class="active">首页</a></li><li id="menu-item-技术"><a href="/categories/技术/">技术</a></li><li id="menu-item-杂谈"><a href="/categories/杂谈/">杂谈</a></li><li id="menu-item-关于"><a href="/about/">关于</a></li></ul></div>
+        <nav class="main-navigation tg-site-menu--default">
+          <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/" class="active">首页</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/posts/">文章列表</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/guestbook/">留言板</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/about/">关于</a></li></ul></div>
         </nav>
         <nav class="tg-header-action-navigation">
           <ul class="tg-header-action-menu">
@@ -50,7 +50,7 @@
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
         <nav class="main-navigation cenote-sticky-navigation tg-site-menu--default">
-          <div class="menu-menu-container"><ul id="primary-menu" class="menu"><li id="menu-item-首页"><a href="/" class="active">首页</a></li><li id="menu-item-技术"><a href="/categories/技术/">技术</a></li><li id="menu-item-杂谈"><a href="/categories/杂谈/">杂谈</a></li><li id="menu-item-关于"><a href="/about/">关于</a></li></ul></div>
+          <div class="menu-menu-container"><ul class="menu"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/" class="active">首页</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/posts/">文章列表</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/guestbook/">留言板</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/about/">关于</a></li></ul></div>
         </nav>
         <nav class="tg-header-action-navigation">
           <ul class="tg-header-action-menu">
@@ -64,8 +64,7 @@
 </nav>
 <div id="content" class="site-content">
   <div class="container">
-    <div class="tg-flex-container tg-flex-space-between">
-        <div id="primary" class="content-area">
+<div class="tg-flex-container tg-flex-space-between"><div id="primary" class="content-area">
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
@@ -74,8 +73,7 @@
               <header class="entry-header">
                 <h1 class="entry-title">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</h1>
               </header>
-              <div class="entry-content">
-                <p>Java 21 的 Virtual Threads（虚拟线程）是 Project Loom 的最终成果。Spring Boot 3.2 开始正式支持。我最近在项目里做了测试。</p>
+              <div class="entry-content"><p>Java 21 的 Virtual Threads（虚拟线程）是 Project Loom 的最终成果。Spring Boot 3.2 开始正式支持。我最近在项目里做了测试。</p>
 <h2>配置方式</h2>
 <div class="codehilite"><pre><span></span><code><span class="c1"># application.yml</span>
 <span class="nt">spring</span><span class="p">:</span>
@@ -203,13 +201,10 @@
 </table>
 <blockquote>
 <p>一句话：<strong>虚拟线程让「一个请求一个线程」模型重新变得可行</strong>。MVC 从此不怕高并发。</p>
-</blockquote>
-              </div>
-              <footer class="entry-footer">
-                <span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span>
-              </footer>
+</blockquote></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
-                      <nav class="navigation post-navigation" aria-label="文章">
+            <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
             <div class="nav-links"><div class="nav-next"><a href="/posts/rust-ownership/" rel="next"><span class="nav-links__label">下一篇文章</span> Rust 写给 Java 程序员：所有权机制深度解析</a></div></div>
           </nav>
@@ -220,12 +215,11 @@
               </div>
             </div>
             <div class="comments-area">
-              <h3 class="comments-title">评论</h3>
+              <h3>评论</h3>
               <p class="no-comments">评论已关闭。</p>
             </div>
           </main>
-        </div>
-        <aside id="secondary" class="widget-area">
+        </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">近期文章</h2>
             <ul><li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li><li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li><li><a href="/posts/redis-fast/">Redis 为什么快？单线程、IO 多路复用与数据结构分析</a></li><li><a href="/posts/llm-inference/">LLM 推理优化：从 Flash Attention 到 vLLM PagedAttention</a></li><li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li></ul>
@@ -234,8 +228,7 @@
             <h2 class="widget-title">分类</h2>
             <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/技术/">技术</a><a href="/categories/杂谈/">杂谈</a></div>
           </section>
-        </aside>
-    </div>
+        </aside></div>
   </div>
 </div>
 <footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">

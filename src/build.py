@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""构建脚本 — 1:1 匹配 sinyalee.com/blog HTML 结构"""
+"""构建脚本 — 1:1 匹配 sinyalee.com/blog"""
 
 import re, shutil
 from datetime import datetime
@@ -13,31 +13,27 @@ CONTENT = SRC / "content"
 THEME = SRC / "themes" / "cenote-style"
 CSS_DIR = ROOT / "css"
 
-SITE = {
-    "title": "新的原野",
-    "url": "https://hankzhang.us/",
-    "desc": "一片新的原野，一个充满爱与善良的博客",
-}
+SITE = {"title":"新的原野","url":"https://hankzhang.us/","desc":"一片新的原野，一个充满爱与善良的博客"}
 AUTHOR = "张子豪"
 YEAR = str(datetime.now().year)
-MENU = [("首页", "/"), ("技术", "/categories/技术/"), ("杂谈", "/categories/杂谈/"), ("关于", "/about/")]
-SAFE = {".git", "src", "vercel.json", ".gitignore", "README.md"}
+MENU = [("首页","/"),("文章列表","/posts/"),("留言板","/guestbook/"),("关于","/about/")]
+SAFE = {".git","src","vercel.json",".gitignore","README.md"}
 
 
 def menu_html(current="/"):
     top, main = [], []
     for label, url in MENU:
-        is_active = (url == current) or (url != "/" and current.startswith(url))
-        a = ' class="active"' if is_active else ""
-        top.append(f'<li id="menu-item-{label}"><a href="{url}"{a}>{label}</a></li>')
-        main.append(f'<li id="menu-item-{label}"><a href="{url}"{a}>{label}</a></li>')
+        a = ' class="active"' if current == url else ""
+        top.append(f'<li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="{url}"{a}>{label}</a></li>')
+        main.append(f'<li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="{url}"{a}>{label}</a></li>')
     return "".join(top), "".join(main)
 
 
-def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_class="layout--no-sidebar"):
+def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_class="layout--no-sidebar", extra_body_class=""):
     top_nav, main_nav = menu_html(current)
     st = SITE["title"]
     site_title_tag = "h1" if is_home else "p"
+    bc = f"{body_class} {extra_body_class}".strip()
 
     return f"""<!DOCTYPE html>
 <html lang="zh-Hans">
@@ -48,7 +44,7 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
 <link rel="stylesheet" href="/css/style.css">
 {"<meta name=\"description\" content=\"" + desc + "\">" if desc else ""}
 </head>
-<body class="{body_class}">
+<body class="{bc}">
 <div id="page" class="site">
 <a class="skip-link screen-reader-text" href="#content">跳到内容</a>
 <header id="masthead" class="site-header tg-site-header tg-site-header--default">
@@ -70,7 +66,7 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
     </div>
     <div class="header-bottom-bottom">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <nav id="site-navigation" class="main-navigation tg-site-menu--default">
+        <nav class="main-navigation tg-site-menu--default">
           <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu">{main_nav}</ul></div>
         </nav>
         <nav class="tg-header-action-navigation">
@@ -91,7 +87,7 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
         <nav class="main-navigation cenote-sticky-navigation tg-site-menu--default">
-          <div class="menu-menu-container"><ul id="primary-menu" class="menu">{main_nav}</ul></div>
+          <div class="menu-menu-container"><ul class="menu">{main_nav}</ul></div>
         </nav>
         <nav class="tg-header-action-navigation">
           <ul class="tg-header-action-menu">
@@ -105,9 +101,7 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
 </nav>
 <div id="content" class="site-content">
   <div class="container">
-    <div class="tg-flex-container tg-flex-space-between">
 {body}
-    </div>
   </div>
 </div>
 <footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
@@ -131,12 +125,10 @@ def parse_page(md_path):
     plain = re.sub(r"\s+", " ", plain)
     summary = plain[:200]
     truncated = len(plain) > 200
-
     date = post.get("date", datetime.now())
     if isinstance(date, str):
         try: date = datetime.fromisoformat(date)
         except ValueError: date = datetime.now()
-
     return {
         "title": post.get("title", "Untitled"),
         "date": date,
@@ -153,7 +145,12 @@ def parse_page(md_path):
 
 def cat_links_meta(cats):
     if not cats: return ""
-    return "".join(f'<a href="/categories/{c.lower().replace(" ", "-")}/" rel="category">{c}</a>' for c in cats)
+    parts = []
+    for i, c in enumerate(cats):
+        slug = c.lower().replace(" ", "-")
+        sep = '<span class="cat-seperator">, </span>' if i > 0 else ""
+        parts.append(f'{sep}<a href="/categories/{slug}/" rel="category">{c}</a>')
+    return "".join(parts)
 
 
 def cat_links_footer(cats):
@@ -167,10 +164,10 @@ def posted_on(p):
 
 
 def article_card(p):
-    cats = cat_links_meta(p["categories"])
+    cats_html = cat_links_meta(p["categories"])
     return f"""<article id="post-{p['slug']}" class="post type-post status-publish format-standard hentry">
             <div class="entry-meta">
-              <span class="cat-links">{cats}</span>{posted_on(p)}
+              <span class="cat-links">{cats_html}</span>{posted_on(p)}
             </div>
             <header class="entry-header">
               <h2 class="entry-title"><a href="/posts/{p['slug']}/" rel="bookmark">{p['title']}</a></h2>
@@ -185,10 +182,8 @@ def article_card(p):
 
 
 def article_single(p, all_posts):
-    # Post navigation
     idx = next((i for i, pp in enumerate(all_posts) if pp["slug"] == p["slug"]), None)
-    prev_html = ""
-    next_html = ""
+    prev_html = next_html = ""
     if idx is not None:
         if idx > 0:
             prev = all_posts[idx - 1]
@@ -196,15 +191,14 @@ def article_single(p, all_posts):
         if idx < len(all_posts) - 1:
             nxt = all_posts[idx + 1]
             next_html = f'<div class="nav-next"><a href="/posts/{nxt["slug"]}/" rel="next"><span class="nav-links__label">下一篇文章</span> {nxt["title"]}</a></div>'
-
     nav = ""
     if prev_html or next_html:
-        nav = f"""          <nav class="navigation post-navigation" aria-label="文章">
+        nav = f"""<nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
             <div class="nav-links">{prev_html}{next_html}</div>
           </nav>"""
 
-    return f"""        <div id="primary" class="content-area">
+    return f"""<div id="primary" class="content-area">
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
@@ -213,12 +207,8 @@ def article_single(p, all_posts):
               <header class="entry-header">
                 <h1 class="entry-title">{p['title']}</h1>
               </header>
-              <div class="entry-content">
-                {p['content']}
-              </div>
-              <footer class="entry-footer">
-                {cat_links_footer(p['categories'])}
-              </footer>
+              <div class="entry-content">{p['content']}</div>
+              <footer class="entry-footer">{cat_links_footer(p['categories'])}</footer>
             </article>
             {nav}
             <div class="author-bio">
@@ -228,7 +218,7 @@ def article_single(p, all_posts):
               </div>
             </div>
             <div class="comments-area">
-              <h3 class="comments-title">评论</h3>
+              <h3>评论</h3>
               <p class="no-comments">评论已关闭。</p>
             </div>
           </main>
@@ -239,7 +229,7 @@ def sidebar_html(posts):
     recent = "".join(f'<li><a href="/posts/{p["slug"]}/">{p["title"]}</a></li>' for p in posts[:5])
     cats_set = sorted({c for p in posts for c in p.get("categories", [])})
     tags = "".join(f'<a href="/categories/{c.lower().replace(" ", "-")}/">{c}</a>' for c in cats_set)
-    return f"""        <aside id="secondary" class="widget-area">
+    return f"""<aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">近期文章</h2>
             <ul>{recent}</ul>
@@ -251,58 +241,63 @@ def sidebar_html(posts):
         </aside>"""
 
 
-def list_page(posts, title_tag, current="/", page_header=""):
-    items = "\n".join(article_card(p) for p in posts)
-    return page_html(title_tag, f"""        <div id="primary" class="content-area">
-          <main id="main" class="site-main">
-            {page_header}
-            {items}
-          </main>
-        </div>""", current=current, is_home=(current == "/"), body_class="layout--no-sidebar")
-
-
 def build():
-    # Clean output
     for item in ROOT.iterdir():
         if item.name in SAFE: continue
         if item.is_dir(): shutil.rmtree(item)
         else: item.unlink()
 
-    # Copy CSS
     CSS_DIR.mkdir(exist_ok=True)
     css_src = THEME / "static" / "css" / "style.css"
     if css_src.exists(): shutil.copy(css_src, CSS_DIR / "style.css")
 
-    # Read posts
     posts = []
     posts_dir = CONTENT / "posts"
     if posts_dir.exists():
         for f in sorted(posts_dir.glob("*.md"), reverse=True):
             posts.append(parse_page(f))
 
-    # Homepage
     home_title = f"{SITE['title']} – {SITE['desc']}"
-    (ROOT / "index.html").write_text(list_page(posts[:10], home_title))
 
-    # /posts/
+    # ===== HOMEPAGE: 3-column grid =====
+    cards = "\n".join(article_card(p) for p in posts)
+    homepage = page_html(home_title,
+        f"""<div id="primary" class="content-area">
+          <main id="main" class="site-main">
+            {cards}
+          </main>
+        </div>""",
+        is_home=True,
+        body_class="layout--no-sidebar",
+        extra_body_class="tg-archive-style--big-block tg-archive-col--3")
+    (ROOT / "index.html").write_text(homepage)
+
+    # ===== /posts/ = 文章列表 (full archive, single column) =====
     (ROOT / "posts").mkdir(parents=True, exist_ok=True)
-    (ROOT / "posts" / "index.html").write_text(list_page(posts[:10], home_title))
+    archive = page_html(f"文章列表 – {SITE['title']}",
+        f"""<div id="primary" class="content-area">
+          <main id="main" class="site-main">
+            <header class="page-header"><h1 class="page-title">文章列表</h1></header>
+            {cards}
+          </main>
+        </div>""",
+        current="/posts/",
+        body_class="layout--no-sidebar")
+    (ROOT / "posts" / "index.html").write_text(archive)
 
-    # Single posts
+    # ===== SINGLE POSTS =====
     for p in posts:
         body = article_single(p, posts)
         side = sidebar_html(posts)
-        html = page_html(
-            f"{p['title']} – {SITE['title']}",
-            f"{body}\n{side}",
+        html = page_html(f"{p['title']} – {SITE['title']}",
+            f'<div class="tg-flex-container tg-flex-space-between">{body}{side}</div>',
             desc=p["description"],
-            body_class="layout--right-sidebar",
-        )
+            body_class="layout--right-sidebar")
         d = ROOT / "posts" / p["slug"]
         d.mkdir(parents=True, exist_ok=True)
         (d / "index.html").write_text(html)
 
-    # Category pages
+    # ===== CATEGORIES =====
     cats = {}
     for p in posts:
         for c in p.get("categories", []):
@@ -311,19 +306,47 @@ def build():
         slug = cat_name.lower().replace(" ", "-")
         d = ROOT / "categories" / slug
         d.mkdir(parents=True, exist_ok=True)
+        cat_cards = "\n".join(article_card(p) for p in cat_posts)
         ph = f'<header class="page-header"><h1 class="page-title">分类： <span>{cat_name}</span></h1></header>'
-        (d / "index.html").write_text(
-            list_page(cat_posts, f"{cat_name} – {SITE['title']}",
-                      current=f"/categories/{slug}/", page_header=ph)
-        )
+        (d / "index.html").write_text(page_html(
+            f"{cat_name} – {SITE['title']}",
+            f"""<div id="primary" class="content-area">
+          <main id="main" class="site-main">
+            {ph}
+            {cat_cards}
+          </main>
+        </div>""",
+            current=f"/categories/{slug}/",
+            body_class="layout--no-sidebar"))
 
-    # About
+    # ===== GUESTBOOK =====
+    (ROOT / "guestbook").mkdir(parents=True, exist_ok=True)
+    (ROOT / "guestbook" / "index.html").write_text(page_html(
+        f"留言板 – {SITE['title']}",
+        f"""<div id="primary" class="content-area">
+          <main id="main" class="site-main">
+            <article class="page type-page status-publish hentry">
+              <header class="entry-header"><h1 class="entry-title">留言板</h1></header>
+              <div class="entry-content">
+                <p>欢迎留言交流。</p>
+              </div>
+            </article>
+            <div class="comments-area">
+              <p class="no-comments">评论已关闭。</p>
+            </div>
+          </main>
+        </div>""",
+        current="/guestbook/",
+        body_class="layout--no-sidebar"))
+
+    # ===== ABOUT =====
     about_md = CONTENT / "about.md"
     if about_md.exists():
         about = parse_page(about_md)
-        html = page_html(
+        (ROOT / "about").mkdir(parents=True, exist_ok=True)
+        (ROOT / "about" / "index.html").write_text(page_html(
             f"{about['title']} – {SITE['title']}",
-            f"""        <div id="primary" class="content-area">
+            f"""<div id="primary" class="content-area">
           <main id="main" class="site-main">
             <article class="page type-page status-publish hentry">
               <header class="entry-header"><h1 class="entry-title">{about['title']}</h1></header>
@@ -332,10 +355,7 @@ def build():
           </main>
         </div>""",
             current="/about/",
-            body_class="layout--no-sidebar",
-        )
-        (ROOT / "about").mkdir(parents=True, exist_ok=True)
-        (ROOT / "about" / "index.html").write_text(html)
+            body_class="layout--no-sidebar"))
 
     print(f"✅ 构建完成！{len(posts)} 篇文章，{len(cats)} 个分类")
 
