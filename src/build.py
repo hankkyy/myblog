@@ -451,96 +451,73 @@ def build():
         travel_map = """
           <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
           <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-          <h3 style="margin-top:40px">🗺️ 足迹</h3>
-          <div id="travel-map" style="height:420px;border-radius:8px;margin:20px 0"></div>
+          <h3 style="margin-top:40px">🗺️ 足迹 <span style="font-size:.8rem;color:#adb5bd;font-weight:400;margin-left:8px">44 座城市</span></h3>
+          <div id="travel-map" style="height:450px;border-radius:8px;margin:20px 0;overflow:hidden"></div>
           <script>
-          var map = L.map('travel-map', {scrollWheelZoom: false}).setView([30, 110], 3);
-          L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; OSM contributors'
+          var map = L.map('travel-map', {scrollWheelZoom: false, zoomControl: false}).setView([35, 120], 3);
+          L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OSM'
           }).addTo(map);
+          L.control.zoom({position:'bottomright'}).addTo(map);
 
-          var places = [
-            // 美国
-            {name:'哥伦布', lat:40.00, lng:-83.01},
-            {name:'西雅图', lat:47.61, lng:-122.33},
-            {name:'洛杉矶', lat:34.05, lng:-118.24},
-            {name:'旧金山', lat:37.77, lng:-122.42},
-            {name:'拉斯维加斯', lat:36.17, lng:-115.14},
-            {name:'丹佛', lat:39.74, lng:-104.99},
-            {name:'达拉斯', lat:32.78, lng:-96.80},
-            {name:'休斯敦', lat:29.76, lng:-95.37},
-            {name:'亚特兰大', lat:33.75, lng:-84.39},
-            {name:'底特律', lat:42.33, lng:-83.05},
-            {name:'波特兰', lat:45.52, lng:-122.68},
-            {name:'圣安东尼奥', lat:29.42, lng:-98.49},
-            {name:'坦帕', lat:27.95, lng:-82.46},
-            {name:'劳德代尔堡', lat:26.12, lng:-80.14},
-            {name:'里诺', lat:39.53, lng:-119.81},
-            {name:'长滩', lat:33.77, lng:-118.19},
-            {name:'伯克利', lat:37.87, lng:-122.27},
-            {name:'奥克兰', lat:37.80, lng:-122.27},
-            // 中国
-            {name:'武汉', lat:30.59, lng:114.31},
-            {name:'北京', lat:39.90, lng:116.41},
-            {name:'上海', lat:31.23, lng:121.47},
-            {name:'深圳', lat:22.54, lng:114.06},
-            {name:'香港', lat:22.32, lng:114.17},
-            {name:'厦门', lat:24.48, lng:118.09},
-            {name:'三亚', lat:18.25, lng:109.51},
-            {name:'桂林', lat:25.27, lng:110.29},
-            {name:'太原', lat:37.87, lng:112.55},
-            {name:'琼海', lat:19.25, lng:110.47},
-            {name:'福州', lat:26.07, lng:119.30},
-            {name:'南昌', lat:28.68, lng:115.86},
-            {name:'宁波', lat:29.87, lng:121.55},
-            {name:'南京', lat:32.06, lng:118.80},
-            {name:'无锡', lat:31.49, lng:120.31},
-            // 日本
-            {name:'大阪', lat:34.69, lng:135.50},
-            {name:'京都', lat:35.01, lng:135.77},
-            {name:'神户', lat:34.69, lng:135.20},
-            {name:'奈良', lat:34.69, lng:135.83},
-            {name:'镰仓', lat:35.32, lng:139.55},
-            // 韩国
-            {name:'首尔', lat:37.57, lng:126.98},
+          var cities = [
+            {name:'武汉', lat:30.59, lng:114.31, size:8, color:'#e74c3c'},
+            {name:'哥伦布', lat:40.00, lng:-83.01, size:7, color:'#3498db'},
+            {name:'北京', lat:39.90, lng:116.41, size:6, color:'#2ecc71'},
+            {name:'上海', lat:31.23, lng:121.47, size:6, color:'#2ecc71'},
+            {name:'深圳', lat:22.54, lng:114.06, size:5, color:'#2ecc71'},
+            {name:'香港', lat:22.32, lng:114.17, size:5, color:'#2ecc71'},
+            {name:'厦门', lat:24.48, lng:118.09, size:5, color:'#2ecc71'},
+            {name:'三亚', lat:18.25, lng:109.51, size:5, color:'#2ecc71'},
+            {name:'桂林', lat:25.27, lng:110.29, size:4, color:'#2ecc71'},
+            {name:'太原', lat:37.87, lng:112.55, size:5, color:'#2ecc71'},
+            {name:'琼海', lat:19.25, lng:110.47, size:4, color:'#2ecc71'},
+            {name:'福州', lat:26.07, lng:119.30, size:5, color:'#2ecc71'},
+            {name:'南昌', lat:28.68, lng:115.86, size:4, color:'#2ecc71'},
+            {name:'宁波', lat:29.87, lng:121.55, size:4, color:'#2ecc71'},
+            {name:'南京', lat:32.06, lng:118.80, size:5, color:'#2ecc71'},
+            {name:'无锡', lat:31.49, lng:120.31, size:4, color:'#2ecc71'},
+            {name:'洛杉矶', lat:34.05, lng:-118.24, size:5, color:'#3498db'},
+            {name:'旧金山', lat:37.77, lng:-122.42, size:6, color:'#3498db'},
+            {name:'西雅图', lat:47.61, lng:-122.33, size:5, color:'#3498db'},
+            {name:'拉斯维加斯', lat:36.17, lng:-115.14, size:4, color:'#3498db'},
+            {name:'达拉斯', lat:32.78, lng:-96.80, size:4, color:'#3498db'},
+            {name:'休斯敦', lat:29.76, lng:-95.37, size:4, color:'#3498db'},
+            {name:'亚特兰大', lat:33.75, lng:-84.39, size:4, color:'#3498db'},
+            {name:'丹佛', lat:39.74, lng:-104.99, size:4, color:'#3498db'},
+            {name:'底特律', lat:42.33, lng:-83.05, size:4, color:'#3498db'},
+            {name:'波特兰', lat:45.52, lng:-122.68, size:4, color:'#3498db'},
+            {name:'圣安东尼奥', lat:29.42, lng:-98.49, size:4, color:'#3498db'},
+            {name:'坦帕', lat:27.95, lng:-82.46, size:4, color:'#3498db'},
+            {name:'劳德代尔堡', lat:26.12, lng:-80.14, size:4, color:'#3498db'},
+            {name:'里诺', lat:39.53, lng:-119.81, size:4, color:'#3498db'},
+            {name:'长滩', lat:33.77, lng:-118.19, size:4, color:'#3498db'},
+            {name:'伯克利', lat:37.87, lng:-122.27, size:4, color:'#3498db'},
+            {name:'奥克兰', lat:37.80, lng:-122.27, size:4, color:'#3498db'},
+            {name:'大阪', lat:34.69, lng:135.50, size:5, color:'#e67e22'},
+            {name:'京都', lat:35.01, lng:135.77, size:5, color:'#e67e22'},
+            {name:'神户', lat:34.69, lng:135.20, size:4, color:'#e67e22'},
+            {name:'奈良', lat:34.69, lng:135.83, size:4, color:'#e67e22'},
+            {name:'镰仓', lat:35.32, lng:139.55, size:4, color:'#e67e22'},
+            {name:'首尔', lat:37.57, lng:126.98, size:5, color:'#e67e22'},
           ];
 
-          // Draw markers with glow effect
-          places.forEach(function(p) {
-            var marker = L.circleMarker([p.lat, p.lng], {
-              radius: 5, fillColor: '#146bb7', color: '#fff', weight: 1.5,
+          cities.forEach(function(c) {
+            var m = L.circleMarker([c.lat, c.lng], {
+              radius: c.size, fillColor: c.color, color: '#fff', weight: 1.5,
               fillOpacity: 0.85
-            }).addTo(map).bindPopup(p.name);
-            marker.on('mouseover', function() { this.setRadius(8); });
-            marker.on('mouseout', function() { this.setRadius(5); });
-          });
-
-          // Draw key flight routes
-          var routes = [
-            ['武汉','哥伦布'], ['哥伦布','旧金山'], ['旧金山','洛杉矶'],
-            ['旧金山','西雅图'], ['哥伦布','纽约'], ['上海','大阪'],
-            ['上海','首尔'], ['大阪','京都'],
-          ];
-          var lookup = {};
-          places.forEach(function(p) { lookup[p.name] = p; });
-          routes.forEach(function(r) {
-            var a = lookup[r[0]], b = lookup[r[1]];
-            if (!a || !b) return;
-            var latlngs = [];
-            var from = L.latLng(a.lat, a.lng);
-            var to = L.latLng(b.lat, b.lng);
-            var mid = L.latLng((a.lat+b.lat)/2+10, (a.lng+b.lng)/2);
-            for (var t = 0; t <= 1; t += 0.02) {
-              var la = (1-t)*(1-t)*from.lat + 2*(1-t)*t*mid.lat + t*t*to.lat;
-              var ln = (1-t)*(1-t)*from.lng + 2*(1-t)*t*mid.lng + t*t*to.lng;
-              latlngs.push([la, ln]);
-            }
-            L.polyline(latlngs, {
-              color: '#146bb7', weight: 1.2, opacity: 0.35, dashArray: '4 6'
             }).addTo(map);
+            m.bindPopup('<b>' + c.name + '</b>');
+            m.on('mouseover', function() { this.setRadius(this.options.radius * 1.5); this.setStyle({fillOpacity:1}); });
+            m.on('mouseout', function() { this.setRadius(this.options.radius); this.setStyle({fillOpacity:0.85}); });
           });
           </script>
-          <p style="text-align:center;color:#adb5bd;font-size:.85rem;margin-top:8px">拖拽地图查看航线</p>
+          <div style="text-align:center;margin-top:8px;font-size:.8rem;color:#adb5bd">
+            <span style="color:#e74c3c">●</span> 家乡 &nbsp;
+            <span style="color:#3498db">●</span> 北美 &nbsp;
+            <span style="color:#2ecc71">●</span> 中国 &nbsp;
+            <span style="color:#e67e22">●</span> 日韩
+          </div>
         """
         (ROOT / "about" / "index.html").write_text(page_html(
             f"{about['title']} – {SITE['title']}",
