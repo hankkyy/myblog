@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLM 推理优化：从 Flash Attention 到 vLLM PagedAttention – 新的原野</title>
+<link rel="stylesheet" href="/css/style.css">
+<meta name="description" content="深入理解大模型推理加速的核心技术：KV Cache、Flash Attention、Continuous Batching 和 PagedAttention">
+</head>
+<body class="layout--right-sidebar">
+<div id="page" class="site">
+<a class="skip-link screen-reader-text" href="#content">跳到内容</a>
+<header id="masthead" class="site-header tg-site-header tg-site-header--default">
+  <div class="tg-header-top">
+    <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+      <nav class="tg-header-navigation">
+        <div class="menu-menu-container"><ul id="header-menu" class="menu"><li id="menu-item-首页"><a href="/" class="active">首页</a></li><li id="menu-item-技术"><a href="/categories/技术/">技术</a></li><li id="menu-item-杂谈"><a href="/categories/杂谈/">杂谈</a></li><li id="menu-item-关于"><a href="/about/">关于</a></li></ul></div>
+      </nav>
+    </div>
+  </div>
+  <div class="tg-header-bottom">
+    <div class="header-bottom-top">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <div class="site-branding">
+          <p class="site-title"><a href="https://hankzhang.us/" rel="home">新的原野</a></p>
+          <p class="site-description">一片新的原野，一个充满爱与善良的博客</p>
+        </div>
+      </div>
+    </div>
+    <div class="header-bottom-bottom">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <nav id="site-navigation" class="main-navigation tg-site-menu--default">
+          <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu"><li id="menu-item-首页"><a href="/" class="active">首页</a></li><li id="menu-item-技术"><a href="/categories/技术/">技术</a></li><li id="menu-item-杂谈"><a href="/categories/杂谈/">杂谈</a></li><li id="menu-item-关于"><a href="/about/">关于</a></li></ul></div>
+        </nav>
+        <nav class="tg-header-action-navigation">
+          <ul class="tg-header-action-menu">
+            <li class="tg-search-toggle"><i class="tg-icon-search">🔍</i></li>
+            <li class="tg-mobile-menu-toggle"><span></span></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+<nav id="cenote-sticky-header" class="cenote-header-sticky">
+  <div class="sticky-header-slide">
+    <div class="cenote-reading-bar">
+      <div class="container tg-flex-container tg-flex-item-centered"></div>
+    </div>
+    <div class="cenote-sticky-main">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <nav class="main-navigation cenote-sticky-navigation tg-site-menu--default">
+          <div class="menu-menu-container"><ul id="primary-menu" class="menu"><li id="menu-item-首页"><a href="/" class="active">首页</a></li><li id="menu-item-技术"><a href="/categories/技术/">技术</a></li><li id="menu-item-杂谈"><a href="/categories/杂谈/">杂谈</a></li><li id="menu-item-关于"><a href="/about/">关于</a></li></ul></div>
+        </nav>
+        <nav class="tg-header-action-navigation">
+          <ul class="tg-header-action-menu">
+            <li class="tg-search-toggle"><i class="tg-icon-search">🔍</i></li>
+            <li class="tg-mobile-menu-toggle"><span></span></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</nav>
+<div id="content" class="site-content">
+  <div class="container">
+    <div class="tg-flex-container tg-flex-space-between">
+        <div id="primary" class="content-area">
+          <main id="main" class="site-main">
+            <article class="post type-post status-publish format-standard hentry">
+              <div class="entry-meta">
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">张子豪</a></span></span><span class="posted-on"><a href="/posts/llm-inference/" rel="bookmark"><time class="entry-date published" datetime="2026-06-13">2026年6月13日</time></a></span>
+              </div>
+              <header class="entry-header">
+                <h1 class="entry-title">LLM 推理优化：从 Flash Attention 到 vLLM PagedAttention</h1>
+              </header>
+              <div class="entry-content">
+                <p>大模型推理慢、显存占用大，是实际部署最大的痛点。这篇文章梳理四个关键优化技术。</p>
+<h2>1. KV Cache</h2>
+<p>Transformer 在生成每个 token 时都要重新计算所有历史 token 的 Key 和 Value。KV Cache 的核心思想：<strong>算过的 K、V 存起来，下次直接用</strong>。</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 没有 KV Cache：每步 O(n²)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_len</span><span class="p">):</span>
+    <span class="n">Q</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">linear</span><span class="p">(</span><span class="n">x</span><span class="p">[:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># 重复计算！</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">attention</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span>
+
+<span class="c1"># 有 KV Cache：每步 O(n)</span>
+<span class="n">K_cache</span><span class="p">,</span> <span class="n">V_cache</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_len</span><span class="p">):</span>
+    <span class="n">Q_new</span><span class="p">,</span> <span class="n">K_new</span><span class="p">,</span> <span class="n">V_new</span> <span class="o">=</span> <span class="n">linear</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">K_cache</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">K_new</span><span class="p">)</span>
+    <span class="n">V_cache</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">V_new</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">attention</span><span class="p">(</span><span class="n">Q_new</span><span class="p">,</span> <span class="n">K_cache</span><span class="p">,</span> <span class="n">V_cache</span><span class="p">)</span>
+</code></pre></div>
+
+<p>显存占用：<code>2 × num_layers × hidden_size × seq_len × dtype_size</code>。对于 LLaMA-70B，单请求 2048 token 约需 1.1GB。</p>
+<h2>2. Flash Attention</h2>
+<p>经典 Attention 的问题：中间矩阵 (QK^T) 大小是 O(n²)，必须写到 HBM（显存），然后再读回来做 softmax。</p>
+<p>Flash Attention 的做法：<strong>分块计算，不写中间结果</strong>。</p>
+<div class="codehilite"><pre><span></span><code><span class="err">传统</span><span class="o">:</span><span class="w"> </span><span class="n">QK</span><span class="o">^</span><span class="n">T</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">HBM</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">softmax</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">HBM</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="err">×</span><span class="n">V</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">HBM</span><span class="w">  </span><span class="o">(</span><span class="mi">3</span><span class="err">次</span><span class="n">HBM读写</span><span class="o">)</span>
+<span class="n">Flash</span><span class="o">:</span><span class="w"> </span><span class="n">QK</span><span class="o">^</span><span class="n">T</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">SRAM</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">softmax</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="err">×</span><span class="n">V</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">HBM</span><span class="w">       </span><span class="o">(</span><span class="mi">1</span><span class="err">次</span><span class="n">HBM读写</span><span class="o">)</span>
+</code></pre></div>
+
+<p>利用 GPU 的 SRAM（比 HBM 快 10x+），将 Q、K、V 分成小块，在 SRAM 内完成全部计算。结果是 2-4x 加速 + 显存占用降低到 O(n)。</p>
+<h2>3. vLLM PagedAttention</h2>
+<p>传统推理引擎为每个请求预分配连续显存（max_seq_len），产生大量碎片。PagedAttention 借鉴操作系统虚拟内存思想：<strong>KV Cache 分成固定大小的 block，不要求连续</strong>。</p>
+<div class="codehilite"><pre><span></span><code><span class="nl">传统</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="n">Req1</span><span class="w"> </span><span class="n">KV</span><span class="o">:</span><span class="w"> </span><span class="err">████████</span><span class="n">________</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="n">Req2</span><span class="w"> </span><span class="n">KV</span><span class="o">:</span><span class="w"> </span><span class="err">████</span><span class="n">____________</span><span class="p">]</span>
+<span class="nl">PagedAttention</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="n">Block0</span><span class="o">:</span><span class="n">Req1</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="n">Block1</span><span class="o">:</span><span class="n">Req2</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="n">Block2</span><span class="o">:</span><span class="n">Req1</span><span class="p">]</span><span class="w"> </span><span class="p">[</span><span class="n">Block3</span><span class="o">:</span><span class="n">空闲</span><span class="p">]</span>
+</code></pre></div>
+
+<p>结果：显存利用率从 20-40% 提升到 <strong>96%+</strong>。</p>
+<h2>4. Continuous Batching</h2>
+<p>传统静态 batching：等所有请求完成才开始下一批。一个长请求拖慢全家。</p>
+<p>Continuous Batching：<strong>每个 step 动态组 batch</strong>。有请求完成就踢出去，新请求随时加入。吞吐提升 2-10x。</p>
+<h2>总结</h2>
+<table>
+<thead>
+<tr>
+<th>技术</th>
+<th>解决的问题</th>
+<th>加速比</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>KV Cache</td>
+<td>避免重复计算</td>
+<td>基础</td>
+</tr>
+<tr>
+<td>Flash Attention</td>
+<td>I/O 瓶颈</td>
+<td>2-4x</td>
+</tr>
+<tr>
+<td>PagedAttention</td>
+<td>显存碎片</td>
+<td>吞吐 2-4x</td>
+</tr>
+<tr>
+<td>Continuous Batching</td>
+<td>批效率</td>
+<td>吞吐 2-10x</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>优化推理的核心思路：别让 GPU 闲着等数据。</p>
+</blockquote>
+              </div>
+              <footer class="entry-footer">
+                <span class="cat-links">分类： <a href="/categories/ai/" rel="category">AI</a></span>
+              </footer>
+            </article>
+                      <nav class="navigation post-navigation" aria-label="文章">
+            <h2 class="screen-reader-text">文章导航</h2>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/redis-fast/" rel="prev"><span class="nav-links__label">上一篇文章</span> Redis 为什么快？单线程、IO 多路复用与数据结构分析</a></div><div class="nav-next"><a href="/posts/k8s-network/" rel="next"><span class="nav-links__label">下一篇文章</span> Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></div></div>
+          </nav>
+            <div class="author-bio">
+              <div class="author-bio-content">
+                <h3>关于 张子豪</h3>
+                <p>后端开发工程师，关注分布式系统、OLAP 数据库、云原生技术。</p>
+              </div>
+            </div>
+            <div class="comments-area">
+              <h3 class="comments-title">评论</h3>
+              <p class="no-comments">评论已关闭。</p>
+            </div>
+          </main>
+        </div>
+        <aside id="secondary" class="widget-area">
+          <section class="widget widget_recent_entries">
+            <h2 class="widget-title">近期文章</h2>
+            <ul><li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li><li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li><li><a href="/posts/redis-fast/">Redis 为什么快？单线程、IO 多路复用与数据结构分析</a></li><li><a href="/posts/llm-inference/">LLM 推理优化：从 Flash Attention 到 vLLM PagedAttention</a></li><li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li></ul>
+          </section>
+          <section class="widget widget_tag_cloud">
+            <h2 class="widget-title">分类</h2>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/技术/">技术</a><a href="/categories/杂谈/">杂谈</a></div>
+          </section>
+        </aside>
+    </div>
+  </div>
+</div>
+<footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
+  <div class="tg-footer-bottom">
+    <div class="container">
+      <div class="site-info">
+        Copyright &copy; 2026 <a href="https://hankzhang.us/" title="新的原野"><span>新的原野</span></a>. All rights reserved.
+      </div>
+    </div>
+  </div>
+</footer>
+</div>
+</body>
+</html>

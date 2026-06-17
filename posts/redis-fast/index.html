@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rust 写给 Java 程序员：所有权机制深度解析 – 新的原野</title>
+<title>Redis 为什么快？单线程、IO 多路复用与数据结构分析 – 新的原野</title>
 <link rel="stylesheet" href="/css/style.css">
-<meta name="description" content="从 Java GC 视角理解 Rust 的所有权、借用和生命周期">
+<meta name="description" content="从线程模型、epoll、高效数据结构三个层面解释 Redis 高性能的秘密">
 </head>
 <body class="layout--right-sidebar">
 <div id="page" class="site">
@@ -69,59 +69,89 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">张子豪</a></span></span><span class="posted-on"><a href="/posts/rust-ownership/" rel="bookmark"><time class="entry-date published" datetime="2026-06-16">2026年6月16日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">张子豪</a></span></span><span class="posted-on"><a href="/posts/redis-fast/" rel="bookmark"><time class="entry-date published" datetime="2026-06-09">2026年6月9日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">Rust 写给 Java 程序员：所有权机制深度解析</h1>
+                <h1 class="entry-title">Redis 为什么快？单线程、IO 多路复用与数据结构分析</h1>
               </header>
               <div class="entry-content">
-                <p>Rust 的所有权（Ownership）是让 Java 程序员最头疼的概念。Java 里我们只管 <code>new</code>，GC 会处理一切。Rust 完全不同——<strong>没有 GC，编译器在编译时就知道每块内存何时释放</strong>。</p>
-<h2>Java 的视角</h2>
-<div class="codehilite"><pre><span></span><code><span class="n">String</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
-<span class="n">String</span><span class="w"> </span><span class="n">s2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s1</span><span class="p">;</span><span class="w">  </span><span class="c1">// s1 和 s2 指向同一个对象</span>
-<span class="c1">// GC 会在没有任何引用时回收内存</span>
+                <p>Redis 单线程却能支撑 10 万 QPS。这篇文章解释背后的设计。</p>
+<h2>1. 为什么单线程？</h2>
+<p>Redis 选择单线程不是因为不会写多线程，而是<strong>内存操作太快，多线程的上下文切换和锁竞争反而拖慢性能</strong>。</p>
+<p>一个 Redis 命令的执行路径：</p>
+<div class="codehilite"><pre><span></span><code>解析命令 → 查找 key → 执行操作 → 返回结果
 </code></pre></div>
 
-<p>Java 的做法：<strong>引用计数 + GC 追踪</strong>。程序员不用想内存，运行时帮你管。</p>
-<h2>Rust 的做法</h2>
-<div class="codehilite"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
-<span class="kd">let</span><span class="w"> </span><span class="n">s2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s1</span><span class="p">;</span><span class="w">       </span><span class="c1">// s1 所有权转移给 s2</span>
-<span class="c1">// println!(&quot;{}&quot;, s1);  // 编译错误！s1 已失效</span>
+<p>全部是纯内存操作，耗时微秒级。相比之下，线程切换需要 1-10 微秒，锁竞争更贵。</p>
+<p>但 Redis 6.0 引入了<strong>IO 多线程</strong>——网络读写可以多线程，命令执行仍然是单线程。</p>
+<h2>2. IO 多路复用：epoll</h2>
+<p>单线程怎么处理几万个客户端连接？答案是 epoll。</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 伪代码：epoll 工作流程</span>
+<span class="n">epoll_fd</span> <span class="o">=</span> <span class="n">epoll_create</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">client</span> <span class="ow">in</span> <span class="n">clients</span><span class="p">:</span>
+    <span class="n">epoll_ctl</span><span class="p">(</span><span class="n">epoll_fd</span><span class="p">,</span> <span class="n">ADD</span><span class="p">,</span> <span class="n">client</span><span class="o">.</span><span class="n">fd</span><span class="p">,</span> <span class="n">EPOLLIN</span><span class="p">)</span>
+
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">events</span> <span class="o">=</span> <span class="n">epoll_wait</span><span class="p">(</span><span class="n">epoll_fd</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>  <span class="c1"># 阻塞等待</span>
+    <span class="k">for</span> <span class="n">fd</span><span class="p">,</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+        <span class="n">handle_client</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span>  <span class="c1"># 只处理就绪的连接</span>
 </code></pre></div>
 
-<p>Rust 的核心规则：</p>
-<ol>
-<li><strong>每个值有且只有一个所有者</strong></li>
-<li><strong>所有者离开作用域，值被 drop</strong></li>
-<li><strong>赋值/传参会转移所有权（move）</strong></li>
-</ol>
-<h2>为什么 Rust 要这样设计？</h2>
-<p>三个字：<strong>零成本抽象</strong>。</p>
-<p>Java GC 的问题：
-- Stop-the-world 停顿
-- 内存占用比实际需要多 30-50%
-- 不可预测的性能抖动</p>
-<p>Rust 的答案：<strong>编译期确定内存生命周期，运行时零开销</strong>。</p>
-<h2>借用（Borrowing）：不转移所有权的访问</h2>
-<div class="codehilite"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">print_len</span><span class="p">(</span><span class="n">s</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nb">String</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// 不可变借用</span>
-<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;len: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">len</span><span class="p">());</span>
-<span class="p">}</span>
-
-<span class="kd">let</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
-<span class="n">print_len</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">);</span><span class="w">    </span><span class="c1">// 借出，不转移所有权</span>
-<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">);</span><span class="w"> </span><span class="c1">// s 仍然可用</span>
+<p>对比：
+- <code>select</code>：遍历所有 fd → O(n)，最多 1024 个
+- <code>poll</code>：遍历所有 fd → O(n)，无上限但不高效
+- <code>epoll</code>：只返回就绪的 fd → O(1)，基于红黑树 + 就绪链表</p>
+<h2>3. 高效数据结构</h2>
+<p>Redis 快不只是因为内存，还因为数据结构设计得巧妙。</p>
+<p><strong>SDS (Simple Dynamic String)</strong>：</p>
+<div class="codehilite"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">sdshdr</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">len</span><span class="p">;</span><span class="w">     </span><span class="c1">// 已用长度</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">free</span><span class="p">;</span><span class="w">    </span><span class="c1">// 剩余空间</span>
+<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="n">buf</span><span class="p">[];</span><span class="w">  </span><span class="c1">// 实际数据</span>
+<span class="p">};</span>
 </code></pre></div>
 
-<h2>对 Java 程序员的建议</h2>
-<p>如果你从 Java 转 Rust，按这个顺序学：</p>
-<ol>
-<li>先忘掉继承，拥抱组合 + trait</li>
-<li>接受「编译器是你朋友」——每次编译错误都在教你内存安全</li>
-<li><code>clone()</code> 是你的逃生舱——先让代码跑起来，再优化</li>
-<li>理解 <code>String</code> vs <code>&amp;str</code>、<code>Vec</code> vs <code>&amp;[T]</code> 的区别</li>
-</ol>
+<ul>
+<li>O(1) 获取字符串长度（C 字符串要 O(n)）</li>
+<li>预分配空间，减少 realloc</li>
+<li>二进制安全</li>
+</ul>
+<p><strong>ziplist</strong>：连续内存存储，省指针开销。小数据量时比链表紧凑 5-10 倍。</p>
+<p><strong>skiplist</strong>：ZSet 的底层结构，平均 O(log n)，实现比平衡树简单。</p>
+<h2>4. 性能数据</h2>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>单机 QPS</th>
+<th>延迟 P99</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>120,000</td>
+<td>&lt; 1ms</td>
+</tr>
+<tr>
+<td>SET</td>
+<td>110,000</td>
+<td>&lt; 1ms</td>
+</tr>
+<tr>
+<td>INCR</td>
+<td>115,000</td>
+<td>&lt; 1ms</td>
+</tr>
+<tr>
+<td>LPUSH</td>
+<td>105,000</td>
+<td>&lt; 1ms</td>
+</tr>
+</tbody>
+</table>
 <blockquote>
-<p>Rust 的学习曲线陡峭，但翻过去之后，你会开始质疑 Java 的每一行代码为什么慢。</p>
+<p>Redis 的快是「正确的架构选择 × 极致的数据结构优化」的结果，不是蛮力堆机器能比的。</p>
 </blockquote>
               </div>
               <footer class="entry-footer">
@@ -130,7 +160,7 @@
             </article>
                       <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/spring-virtual-threads/" rel="prev"><span class="nav-links__label">上一篇文章</span> Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></div><div class="nav-next"><a href="/posts/redis-fast/" rel="next"><span class="nav-links__label">下一篇文章</span> Redis 为什么快？单线程、IO 多路复用与数据结构分析</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/rust-ownership/" rel="prev"><span class="nav-links__label">上一篇文章</span> Rust 写给 Java 程序员：所有权机制深度解析</a></div><div class="nav-next"><a href="/posts/llm-inference/" rel="next"><span class="nav-links__label">下一篇文章</span> LLM 推理优化：从 Flash Attention 到 vLLM PagedAttention</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">

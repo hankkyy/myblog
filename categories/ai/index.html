@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>关于 – 新的原野</title>
+<title>AI – 新的原野</title>
 <link rel="stylesheet" href="/css/style.css">
 
 </head>
@@ -14,7 +14,7 @@
   <div class="tg-header-top">
     <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
       <nav class="tg-header-navigation">
-        <div class="menu-menu-container"><ul id="header-menu" class="menu"><li id="menu-item-首页"><a href="/">首页</a></li><li id="menu-item-技术"><a href="/categories/技术/">技术</a></li><li id="menu-item-杂谈"><a href="/categories/杂谈/">杂谈</a></li><li id="menu-item-关于"><a href="/about/" class="active">关于</a></li></ul></div>
+        <div class="menu-menu-container"><ul id="header-menu" class="menu"><li id="menu-item-首页"><a href="/">首页</a></li><li id="menu-item-技术"><a href="/categories/技术/">技术</a></li><li id="menu-item-杂谈"><a href="/categories/杂谈/">杂谈</a></li><li id="menu-item-关于"><a href="/about/">关于</a></li></ul></div>
       </nav>
     </div>
   </div>
@@ -30,7 +30,7 @@
     <div class="header-bottom-bottom">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
         <nav id="site-navigation" class="main-navigation tg-site-menu--default">
-          <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu"><li id="menu-item-首页"><a href="/">首页</a></li><li id="menu-item-技术"><a href="/categories/技术/">技术</a></li><li id="menu-item-杂谈"><a href="/categories/杂谈/">杂谈</a></li><li id="menu-item-关于"><a href="/about/" class="active">关于</a></li></ul></div>
+          <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu"><li id="menu-item-首页"><a href="/">首页</a></li><li id="menu-item-技术"><a href="/categories/技术/">技术</a></li><li id="menu-item-杂谈"><a href="/categories/杂谈/">杂谈</a></li><li id="menu-item-关于"><a href="/about/">关于</a></li></ul></div>
         </nav>
         <nav class="tg-header-action-navigation">
           <ul class="tg-header-action-menu">
@@ -50,7 +50,7 @@
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
         <nav class="main-navigation cenote-sticky-navigation tg-site-menu--default">
-          <div class="menu-menu-container"><ul id="primary-menu" class="menu"><li id="menu-item-首页"><a href="/">首页</a></li><li id="menu-item-技术"><a href="/categories/技术/">技术</a></li><li id="menu-item-杂谈"><a href="/categories/杂谈/">杂谈</a></li><li id="menu-item-关于"><a href="/about/" class="active">关于</a></li></ul></div>
+          <div class="menu-menu-container"><ul id="primary-menu" class="menu"><li id="menu-item-首页"><a href="/">首页</a></li><li id="menu-item-技术"><a href="/categories/技术/">技术</a></li><li id="menu-item-杂谈"><a href="/categories/杂谈/">杂谈</a></li><li id="menu-item-关于"><a href="/about/">关于</a></li></ul></div>
         </nav>
         <nav class="tg-header-action-navigation">
           <ul class="tg-header-action-menu">
@@ -67,20 +67,21 @@
     <div class="tg-flex-container tg-flex-space-between">
         <div id="primary" class="content-area">
           <main id="main" class="site-main">
-            <article class="page type-page status-publish hentry">
-              <header class="entry-header"><h1 class="entry-title">关于</h1></header>
-              <div class="entry-content"><p>张子豪（Hank Zhang），后端开发工程师，目前在联通数智医疗实习。</p>
-<p>关注领域：</p>
-<ul>
-<li><strong>分布式系统</strong>：Kubernetes、Docker、微服务架构</li>
-<li><strong>OLAP 数据库</strong>：Apache Doris、ClickHouse、列式存储</li>
-<li><strong>云原生</strong>：Vercel、Serverless、边缘计算</li>
-<li><strong>AI Infra</strong>：LLM 推理优化、RAG 架构</li>
-</ul>
-<p>这个博客记录学习和工作中的思考。欢迎交流。</p>
-<hr />
-<p>联系方式：<a href="https://github.com/hankkyy">GitHub</a></p></div>
-            </article>
+            <header class="page-header"><h1 class="page-title">分类： <span>AI</span></h1></header>
+            <article id="post-llm-inference" class="post type-post status-publish format-standard hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/ai/" rel="category">AI</a></span><span class="posted-on"><a href="/posts/llm-inference/" rel="bookmark"><time class="entry-date published" datetime="2026-06-13">2026年6月13日</time></a></span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/llm-inference/" rel="bookmark">LLM 推理优化：从 Flash Attention 到 vLLM PagedAttention</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>大模型推理慢、显存占用大，是实际部署最大的痛点。这篇文章梳理四个关键优化技术。 1. KV Cache Transformer 在生成每个 token 时都要重新计算所有历史 token 的 Key 和 Value。KV Cache 的核心思想：算过的 K、V 存起来，下次直接用。 # 没有 KV Cache：每步 O(n²) for i in range(max_len): Q, K, V =  [&hellip;]</p>
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/llm-inference/" class="tg-readmore-link">阅读更多</a>
+            </footer>
+          </article>
           </main>
         </div>
     </div>

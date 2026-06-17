@@ -1,7 +1,7 @@
 ---
 title: "你好，世界"
 date: 2026-06-17T12:00:00+08:00
-categories: ["杂谈集"]
+categories: ["杂谈"]
 description: "这是我的第一篇博客文章。"
 ---
 

@@ -1,22 +1,26 @@
 <!DOCTYPE html>
 <html lang="zh-Hans">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Spring Boot 3 + Virtual Threads：性能测试与踩坑记录 – 新的原野</title>
-  <link rel="stylesheet" href="/css/style.css">
-  <meta name="description" content="Java 21 Virtual Threads 在 Spring Boot 3 中的实际表现，1000并发下的对比测试">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spring Boot 3 + Virtual Threads：性能测试与踩坑记录 – 新的原野</title>
+<link rel="stylesheet" href="/css/style.css">
+<meta name="description" content="Java 21 Virtual Threads 在 Spring Boot 3 中的实际表现，1000并发下的对比测试">
 </head>
 <body class="layout--right-sidebar">
 <div id="page" class="site">
-
-<header id="masthead" class="site-header">
-  <div class="header-top">
-    <div class="container"><nav><ul><li><a href="/" class="active">首页</a></li><li><a href="/categories/技术/">技术</a></li><li><a href="/categories/杂谈/">杂谈</a></li><li><a href="/about/">关于</a></li></ul></nav></div>
+<a class="skip-link screen-reader-text" href="#content">跳到内容</a>
+<header id="masthead" class="site-header tg-site-header tg-site-header--default">
+  <div class="tg-header-top">
+    <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+      <nav class="tg-header-navigation">
+        <div class="menu-menu-container"><ul id="header-menu" class="menu"><li id="menu-item-首页"><a href="/" class="active">首页</a></li><li id="menu-item-技术"><a href="/categories/技术/">技术</a></li><li id="menu-item-杂谈"><a href="/categories/杂谈/">杂谈</a></li><li id="menu-item-关于"><a href="/about/">关于</a></li></ul></div>
+      </nav>
+    </div>
   </div>
-  <div class="header-bottom">
+  <div class="tg-header-bottom">
     <div class="header-bottom-top">
-      <div class="container">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
         <div class="site-branding">
           <p class="site-title"><a href="https://hankzhang.us/" rel="home">新的原野</a></p>
           <p class="site-description">一片新的原野，一个充满爱与善良的博客</p>
@@ -24,22 +28,46 @@
       </div>
     </div>
     <div class="header-bottom-bottom">
-      <div class="container">
-        <nav class="main-navigation"><a href="/" class="active">首页</a>
-          <a href="/categories/技术/">技术</a>
-          <a href="/categories/杂谈/">杂谈</a>
-          <a href="/about/">关于</a></nav>
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <nav id="site-navigation" class="main-navigation tg-site-menu--default">
+          <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu"><li id="menu-item-首页"><a href="/" class="active">首页</a></li><li id="menu-item-技术"><a href="/categories/技术/">技术</a></li><li id="menu-item-杂谈"><a href="/categories/杂谈/">杂谈</a></li><li id="menu-item-关于"><a href="/about/">关于</a></li></ul></div>
+        </nav>
+        <nav class="tg-header-action-navigation">
+          <ul class="tg-header-action-menu">
+            <li class="tg-search-toggle"><i class="tg-icon-search">🔍</i></li>
+            <li class="tg-mobile-menu-toggle"><span></span></li>
+          </ul>
+        </nav>
       </div>
     </div>
   </div>
 </header>
-
-  <div id="content" class="site-content">
-    <div class="container">
-      <div class="tg-flex-container tg-flex-space-between">
+<nav id="cenote-sticky-header" class="cenote-header-sticky">
+  <div class="sticky-header-slide">
+    <div class="cenote-reading-bar">
+      <div class="container tg-flex-container tg-flex-item-centered"></div>
+    </div>
+    <div class="cenote-sticky-main">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <nav class="main-navigation cenote-sticky-navigation tg-site-menu--default">
+          <div class="menu-menu-container"><ul id="primary-menu" class="menu"><li id="menu-item-首页"><a href="/" class="active">首页</a></li><li id="menu-item-技术"><a href="/categories/技术/">技术</a></li><li id="menu-item-杂谈"><a href="/categories/杂谈/">杂谈</a></li><li id="menu-item-关于"><a href="/about/">关于</a></li></ul></div>
+        </nav>
+        <nav class="tg-header-action-navigation">
+          <ul class="tg-header-action-menu">
+            <li class="tg-search-toggle"><i class="tg-icon-search">🔍</i></li>
+            <li class="tg-mobile-menu-toggle"><span></span></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</nav>
+<div id="content" class="site-content">
+  <div class="container">
+    <div class="tg-flex-container tg-flex-space-between">
         <div id="primary" class="content-area">
           <main id="main" class="site-main">
-            <article class="post type-post hentry single">
+            <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
                 <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">张子豪</a></span></span><span class="posted-on"><a href="/posts/spring-virtual-threads/" rel="bookmark"><time class="entry-date published" datetime="2026-06-12">2026年6月12日</time></a></span>
               </div>
@@ -181,57 +209,44 @@
                 <span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span>
               </footer>
             </article>
-                      <nav class="navigation post-navigation">
+                      <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links">
-              
-              <div class="nav-next">
-            <a href="/posts/rust-ownership/" rel="next">
-              <span class="nav-links__label">下一篇文章</span>
-              Rust 写给 Java 程序员：所有权机制深度解析
-            </a>
-          </div>
-            </div>
+            <div class="nav-links"><div class="nav-next"><a href="/posts/rust-ownership/" rel="next"><span class="nav-links__label">下一篇文章</span> Rust 写给 Java 程序员：所有权机制深度解析</a></div></div>
           </nav>
-            <!-- 作者简介 -->
             <div class="author-bio">
               <div class="author-bio-content">
-                <h3 class="author-bio-title">关于 张子豪</h3>
-                <p>后端开发工程师，目前在联通数智医疗实习。关注分布式系统、OLAP 数据库、云原生技术。这个博客记录学习和工作的思考。</p>
+                <h3>关于 张子豪</h3>
+                <p>后端开发工程师，关注分布式系统、OLAP 数据库、云原生技术。</p>
               </div>
+            </div>
+            <div class="comments-area">
+              <h3 class="comments-title">评论</h3>
+              <p class="no-comments">评论已关闭。</p>
             </div>
           </main>
         </div>
-          <aside id="secondary" class="widget-area">
-            <section class="widget widget_recent_entries">
-              <h2 class="widget-title">近期文章</h2>
-              <ul>
-                <li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li>
-<li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li>
-<li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li>
-<li><a href="/posts/internship-thoughts/">后端实习两个月，我学到的东西比大学两年都多</a></li>
-<li><a href="/posts/hello-world/">你好，世界</a></li>
-              </ul>
-            </section>
-            <section class="widget widget_tag_cloud">
-              <h2 class="widget-title">分类</h2>
-              <div class="tagcloud">
-                <a href="/categories/技术/">技术</a>
-<a href="/categories/杂谈/">杂谈</a>
-<a href="/categories/杂谈集/">杂谈集</a>
-              </div>
-            </section>
-          </aside>
+        <aside id="secondary" class="widget-area">
+          <section class="widget widget_recent_entries">
+            <h2 class="widget-title">近期文章</h2>
+            <ul><li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li><li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li><li><a href="/posts/redis-fast/">Redis 为什么快？单线程、IO 多路复用与数据结构分析</a></li><li><a href="/posts/llm-inference/">LLM 推理优化：从 Flash Attention 到 vLLM PagedAttention</a></li><li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li></ul>
+          </section>
+          <section class="widget widget_tag_cloud">
+            <h2 class="widget-title">分类</h2>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/技术/">技术</a><a href="/categories/杂谈/">杂谈</a></div>
+          </section>
+        </aside>
+    </div>
+  </div>
+</div>
+<footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
+  <div class="tg-footer-bottom">
+    <div class="container">
+      <div class="site-info">
+        Copyright &copy; 2026 <a href="https://hankzhang.us/" title="新的原野"><span>新的原野</span></a>. All rights reserved.
       </div>
     </div>
   </div>
-
-<footer id="colophon" class="site-footer">
-  <div class="container">
-    <div class="site-info">Copyright &copy; 2026 <a href="https://hankzhang.us/">新的原野</a>. All rights reserved.</div>
-  </div>
 </footer>
-
 </div>
 </body>
 </html>
