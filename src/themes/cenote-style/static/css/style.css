@@ -25,7 +25,7 @@ blockquote p{margin-bottom:0;font-style:italic}
 .tg-flex-item-centered{align-items:center}
 
 /* Featured article - full width at top */
-.tg-archive-featured article{width:50%!important;padding:0!important;margin-bottom:0}
+.tg-archive-featured article{width:50%!important;padding:0!important;margin-bottom:0!important}
 
 /* Grid Archive — 2 columns */
 .tg-archive-style--big-block .site-main{display:flex;flex-wrap:wrap;gap:60px 0}
