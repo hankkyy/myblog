@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>@Transactional 失效的 5 种场景：为什么你的事务没回滚？ – 纵横四海</title>
+<meta name="description" content="总结 Spring 事务注解最常见的失效场景和原因，面试和实际开发都会用到的知识。">
+<meta property="og:title" content="@Transactional 失效的 5 种场景：为什么你的事务没回滚？ – 纵横四海">
+<meta property="og:description" content="总结 Spring 事务注解最常见的失效场景和原因，面试和实际开发都会用到的知识。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://hankzhang.us/">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://hankzhang.us/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "@Transactional 失效的 5 种场景：为什么你的事务没回滚？ – 纵横四海",
+  "description": "总结 Spring 事务注解最常见的失效场景和原因，面试和实际开发都会用到的知识。",
+  "url": "https://hankzhang.us/",
+  "datePublished": "2026-06-17",
+  "author": { "@type": "Person", "name": "Zihao Zhang" }
+}
+</script>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body class="layout--right-sidebar">
+<div id="page" class="site">
+<a class="skip-link screen-reader-text" href="#content">跳到内容</a>
+<header id="masthead" class="site-header tg-site-header tg-site-header--default">
+  <div class="tg-header-top"></div>
+  <div class="tg-header-bottom">
+    <div class="header-bottom-top">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <div class="site-branding">
+          <p class="site-title"><a href="https://hankzhang.us/" rel="home">纵横四海</a></p>
+          <p class="site-description">但行好事，莫问前程</p>
+        </div>
+      </div>
+    </div>
+    <div class="header-bottom-bottom">
+      <div class="container" style="display:flex;justify-content:center;align-items:center;gap:15px">
+        <nav id="site-navigation" class="main-navigation tg-site-menu--default" style="display:inline-flex;align-items:center;gap:10px">
+          <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu" style="justify-content:center"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/" class="active">首页</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/posts/">文章列表</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/about/">关于</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="https://github.com/hankkyy" target="_blank" rel="noopener">GitHub</a></li></ul></div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+<nav id="cenote-sticky-header" class="cenote-header-sticky">
+  <div class="sticky-header-slide">
+    <div class="cenote-reading-bar">
+      <div class="container tg-flex-container tg-flex-item-centered"></div>
+    </div>
+    <div class="cenote-sticky-main">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <nav class="main-navigation cenote-sticky-navigation tg-site-menu--default">
+          <div class="menu-menu-container"><ul class="menu" style="justify-content:center"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/" class="active">首页</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/posts/">文章列表</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/about/">关于</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="https://github.com/hankkyy" target="_blank" rel="noopener">GitHub</a></li></ul></div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</nav>
+<div id="content" class="site-content">
+  <div class="container">
+<div class="tg-flex-container tg-flex-space-between"><div id="primary" class="content-area">
+          <main id="main" class="site-main">
+            <article class="post type-post status-publish format-standard hentry">
+              <div class="entry-meta">
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/spring-transactional/" rel="bookmark"><time class="entry-date published" datetime="2025-06-30">2025年6月30日</time></a></span>
+              </div>
+              <header class="entry-header">
+                <h1 class="entry-title">@Transactional 失效的 5 种场景：为什么你的事务没回滚？</h1>
+              </header>
+              <div class="entry-content"><p>@Transactional 看起来很美好，但它有好几种情况会静默失效。</p>
+<h2>1. 同类方法调用</h2>
+<div class="codehilite"><pre><span></span><code><span class="nd">@Service</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">UserService</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Transactional</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">createUser</span><span class="p">(</span><span class="n">User</span><span class="w"> </span><span class="n">user</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 这里的事务不会生效！</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">saveUser</span><span class="p">(</span><span class="n">user</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Transactional</span><span class="p">(</span><span class="n">propagation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Propagation</span><span class="p">.</span><span class="na">REQUIRES_NEW</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">saveUser</span><span class="p">(</span><span class="n">User</span><span class="w"> </span><span class="n">user</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// ...</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>原因：Spring 事务是通过 AOP 代理实现的。同类方法调用绕过了代理。</p>
+<p>解决：把方法拆到不同的 Service 里，或者用 <code>AopContext.currentProxy()</code>。</p>
+<h2>2. 非 public 方法</h2>
+<div class="codehilite"><pre><span></span><code><span class="nd">@Transactional</span>
+<span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">saveUser</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span><span class="w">  </span><span class="c1">// 事务不生效！</span>
+</code></pre></div>
+
+<p>AOP 代理只能拦截 public 方法。</p>
+<h2>3. 异常被吞了</h2>
+<div class="codehilite"><pre><span></span><code><span class="nd">@Transactional</span>
+<span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">createUser</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 抛异常的代码</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">log</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;出错了&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">);</span><span class="w">  </span><span class="c1">// 事务不会回滚！</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>事务只在抛出未被捕获的 RuntimeException 时才回滚。你 catch 了又没抛出去，等于白搭。要在 catch 里手动回滚：</p>
+<div class="codehilite"><pre><span></span><code><span class="n">TransactionAspectSupport</span><span class="p">.</span><span class="na">currentTransactionStatus</span><span class="p">().</span><span class="na">setRollbackOnly</span><span class="p">();</span>
+</code></pre></div>
+
+<h2>4. 数据库引擎不支持</h2>
+<p>MyISAM 不支持事务。你加了 @Transactional 也没用。</p>
+<h2>5. 多线程</h2>
+<div class="codehilite"><pre><span></span><code><span class="nd">@Transactional</span>
+<span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">batchProcess</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="n">Thread</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">userMapper</span><span class="p">.</span><span class="na">insert</span><span class="p">(</span><span class="n">user</span><span class="p">);</span><span class="w">  </span><span class="c1">// 不在当前事务中！</span>
+<span class="w">    </span><span class="p">}).</span><span class="na">start</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>事务绑定在 ThreadLocal 上，新线程拿不到当前事务。</p>
+<h2>总结</h2>
+<p>记住两个根本原因：AOP 代理的局限 + 事务绑定在 ThreadLocal 上。所有失效场景都可以归到这两类。</p></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span></footer>
+            </article>
+            <nav class="navigation post-navigation" aria-label="文章">
+            <h2 class="screen-reader-text">文章导航</h2>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/neovim-setup-guide/" rel="prev"><span class="nav-links__label">上一篇文章</span> Neovim 配置指南：2025 年的终端编辑器还能打吗</a></div><div class="nav-next"><a href="/posts/thread-pool-interview/" rel="next"><span class="nav-links__label">下一篇文章</span> 线程池面试八连问：核心参数、拒绝策略和调优思路</a></div></div>
+          </nav>
+            <div class="author-bio">
+              <div class="author-bio-content">
+                <h3>关于 Zihao Zhang</h3>
+                <p>后端开发工程师。关注 Java/Spring Boot/Redis/MySQL 技术栈，分布式系统，OLAP 数据库，AI Agent 开发与应用。</p>
+              </div>
+            </div>
+            <div class="comments-area">
+              <h3>评论</h3>
+              <p class="no-comments">评论已关闭。</p>
+            </div>
+          </main>
+        </div><aside id="secondary" class="widget-area">
+          <section class="widget widget_recent_entries">
+            <h2 class="widget-title">近期文章</h2>
+            <ul><li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li><li><a href="/posts/doris-3-features/">2026 年 Apache Doris 3.0 新特性全解析</a></li><li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li><li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li><li><a href="/posts/columnar-storage/">为什么 ClickHouse 比 MySQL 快 100 倍？列式存储原理</a></li></ul>
+          </section>
+          <section class="widget widget_tag_cloud">
+            <h2 class="widget-title">分类</h2>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/云原生/">云原生</a><a href="/categories/人工智能/">人工智能</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+          </section>
+        </aside></div>
+  </div>
+</div>
+<footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
+  <div class="tg-footer-bottom">
+    <div class="container">
+      <div class="site-info" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Copyright &copy; 2026 <a href="https://hankzhang.us/" title="纵横四海"><span>纵横四海</span></a>. All rights reserved.</span>
+        <nav style="display:flex;gap:15px">
+          <a href="/">首页</a><a href="/posts/">文章列表</a><a href="/about/">关于</a><a href="https://github.com/hankkyy" target="_blank" rel="noopener">GitHub</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</footer>
+<button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:#16181a;color:#fff;border:none;cursor:pointer;font-size:20px;display:none;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,.2)">↑</button>
+<script>
+window.addEventListener('scroll',function(){document.getElementById('back-to-top').style.display=window.scrollY>300?'block':'none'});
+</script>
+</div>
+</body>
+</html>

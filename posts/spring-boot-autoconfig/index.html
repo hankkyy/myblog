@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenAI 和软银启动「星际之门」计划：5000 亿美元建 AI 超级算力 – 纵横四海</title>
-<meta name="description" content="OpenAI 和软银宣布投资 5000 亿美元建设全球 AI 算力网络，首期 1000 亿美元已经启动。">
-<meta property="og:title" content="OpenAI 和软银启动「星际之门」计划：5000 亿美元建 AI 超级算力 – 纵横四海">
-<meta property="og:description" content="OpenAI 和软银宣布投资 5000 亿美元建设全球 AI 算力网络，首期 1000 亿美元已经启动。">
+<title>Spring Boot 自动配置原理：@SpringBootApplication 到底做了什么？ – 纵横四海</title>
+<meta name="description" content="从 @SpringBootApplication 注解一路追踪到 AutoConfiguration 的加载机制，面试必考。">
+<meta property="og:title" content="Spring Boot 自动配置原理：@SpringBootApplication 到底做了什么？ – 纵横四海">
+<meta property="og:description" content="从 @SpringBootApplication 注解一路追踪到 AutoConfiguration 的加载机制，面试必考。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "OpenAI 和软银启动「星际之门」计划：5000 亿美元建 AI 超级算力 – 纵横四海",
-  "description": "OpenAI 和软银宣布投资 5000 亿美元建设全球 AI 算力网络，首期 1000 亿美元已经启动。",
+  "headline": "Spring Boot 自动配置原理：@SpringBootApplication 到底做了什么？ – 纵横四海",
+  "description": "从 @SpringBootApplication 注解一路追踪到 AutoConfiguration 的加载机制，面试必考。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -68,37 +68,45 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/openai-stargate-project/" rel="bookmark"><time class="entry-date published" datetime="2025-10-20">2025年10月20日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/spring-boot-autoconfig/" rel="bookmark"><time class="entry-date published" datetime="2025-04-25">2025年4月25日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">OpenAI 和软银启动「星际之门」计划：5000 亿美元建 AI 超级算力</h1>
+                <h1 class="entry-title">Spring Boot 自动配置原理：@SpringBootApplication 到底做了什么？</h1>
               </header>
-              <div class="entry-content"><p>OpenAI 和软银宣布了史上最大规模的 AI 基础设施投资——「星际之门」（Stargate）。</p>
-<h2>规模</h2>
+              <div class="entry-content"><p>Spring Boot 的自动配置是面试高频题。很多人只会说「约定大于配置」，但被追问原理就卡壳了。</p>
+<h2>@SpringBootApplication 的三合一</h2>
+<div class="codehilite"><pre><span></span><code><span class="nd">@SpringBootConfiguration</span><span class="w">  </span><span class="c1">// 等价于 @Configuration</span>
+<span class="nd">@EnableAutoConfiguration</span><span class="w">  </span><span class="c1">// 自动配置的入口</span>
+<span class="nd">@ComponentScan</span><span class="w">            </span><span class="c1">// 扫描组件</span>
+</code></pre></div>
+
+<p>关键是 <code>@EnableAutoConfiguration</code>。</p>
+<h2>自动配置的流程</h2>
+<ol>
+<li><code>@EnableAutoConfiguration</code> 引入了 <code>AutoConfigurationImportSelector</code></li>
+<li>它会读取 <code>META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports</code>（Spring Boot 3 的写法）</li>
+<li>这个文件列出了所有候选的自动配置类（约 200 个）</li>
+<li>通过 <code>@Conditional</code> 注解过滤——满足条件才加载</li>
+</ol>
+<h2>@Conditional 的魔法</h2>
+<p>Spring Boot 提供了很多条件注解：</p>
 <ul>
-<li>总投资：5000 亿美元（分 4 年）</li>
-<li>首期投入：1000 亿美元</li>
-<li>计划建设 10 个超大规模数据中心</li>
-<li>每个数据中心配置 10-20 万张 GPU</li>
-<li>全部建成后的总算力将是目前全球 AI 算力的 5 倍以上</li>
+<li><code>@ConditionalOnClass</code>：类路径存在某个类才加载。比如 <code>DataSourceAutoConfiguration</code> 需要 DataSource 类存在</li>
+<li><code>@ConditionalOnMissingBean</code>：用户没自己定义这个 Bean 才自动创建</li>
+<li><code>@ConditionalOnProperty</code>：配置文件有某个属性才加载</li>
 </ul>
-<h2>参与者</h2>
-<ul>
-<li>OpenAI（提供技术和需求）</li>
-<li>软银（主要出资方）</li>
-<li>Oracle（数据中心运营）</li>
-<li>MGX（阿联酋主权基金）</li>
-</ul>
-<h2>为什么需要这么多算力</h2>
-<p>Sam Altman 的说法是：要达到 AGI，需要指数级增长的算力。GPT-5 的训练算力已经是 GPT-4 的 10 倍，未来的模型只会更「吃」算力。</p>
-<h2>能源挑战</h2>
-<p>5000 亿美元的 AI 数据中心意味着天文数字的电力消耗。算下来需要大约 50GW 的电力——相当于 5 个大型核电站的发电量。</p>
-<p>OpenAI 已经开始投资核聚变和地热等新型能源。AI 的未来不仅是算法的竞争，也是能源的竞争。</p></div>
-              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/ai/" rel="category">AI</a><a href="/categories/新闻/" rel="category">新闻</a></span></footer>
+<h2>面试怎么答</h2>
+<blockquote>
+<p>Spring Boot 通过 <code>@EnableAutoConfiguration</code> 触发自动配置。启动时扫描 <code>AutoConfiguration.imports</code> 文件，根据 <code>@Conditional</code> 条件注解决定是否加载某个自动配置类。最终达到的效果是：你引入了 <code>spring-boot-starter-web</code>，它自动给你配好了 DispatcherServlet、Tomcat、Jackson。</p>
+</blockquote>
+<h2>怎么验证你的理解</h2>
+<p>创建一个空的 Spring Boot 项目，打开 <code>spring-boot-autoconfigure</code> jar 包，看看 <code>AutoConfiguration.imports</code> 文件长什么样。遇到一个自动配置类，点进去看看它上面的 @Conditional 注解。</p>
+<p>动手远比背书有效。</p></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/kafka-alternatives-2025/" rel="prev"><span class="nav-links__label">上一篇文章</span> Kafka 不再是唯一选择：2025 消息队列选型指南</a></div><div class="nav-next"><a href="/posts/design-patterns-singleton-factory/" rel="next"><span class="nav-links__label">下一篇文章</span> 设计模式面试：单例的 5 种写法和工厂模式在 Spring 中的应用</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/twitter-x-rebrand-one-year/" rel="prev"><span class="nav-links__label">上一篇文章</span> X（原 Twitter）改名一年半，马斯克亏了多少？</a></div><div class="nav-next"><a href="/posts/git-workflow-best-practices/" rel="next"><span class="nav-links__label">下一篇文章</span> Git 工作流最佳实践：从单人项目到团队协作</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">

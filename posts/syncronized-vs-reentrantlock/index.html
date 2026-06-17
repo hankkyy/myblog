@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenAI 和软银启动「星际之门」计划：5000 亿美元建 AI 超级算力 – 纵横四海</title>
-<meta name="description" content="OpenAI 和软银宣布投资 5000 亿美元建设全球 AI 算力网络，首期 1000 亿美元已经启动。">
-<meta property="og:title" content="OpenAI 和软银启动「星际之门」计划：5000 亿美元建 AI 超级算力 – 纵横四海">
-<meta property="og:description" content="OpenAI 和软银宣布投资 5000 亿美元建设全球 AI 算力网络，首期 1000 亿美元已经启动。">
+<title>synchronized vs ReentrantLock：从面试被问到源码实现 – 纵横四海</title>
+<meta name="description" content="对比 Java 内置锁和显式锁的差异，包括锁升级过程和 AQS 原理。">
+<meta property="og:title" content="synchronized vs ReentrantLock：从面试被问到源码实现 – 纵横四海">
+<meta property="og:description" content="对比 Java 内置锁和显式锁的差异，包括锁升级过程和 AQS 原理。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "OpenAI 和软银启动「星际之门」计划：5000 亿美元建 AI 超级算力 – 纵横四海",
-  "description": "OpenAI 和软银宣布投资 5000 亿美元建设全球 AI 算力网络，首期 1000 亿美元已经启动。",
+  "headline": "synchronized vs ReentrantLock：从面试被问到源码实现 – 纵横四海",
+  "description": "对比 Java 内置锁和显式锁的差异，包括锁升级过程和 AQS 原理。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -68,37 +68,96 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/openai-stargate-project/" rel="bookmark"><time class="entry-date published" datetime="2025-10-20">2025年10月20日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/syncronized-vs-reentrantlock/" rel="bookmark"><time class="entry-date published" datetime="2025-05-30">2025年5月30日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">OpenAI 和软银启动「星际之门」计划：5000 亿美元建 AI 超级算力</h1>
+                <h1 class="entry-title">synchronized vs ReentrantLock：从面试被问到源码实现</h1>
               </header>
-              <div class="entry-content"><p>OpenAI 和软银宣布了史上最大规模的 AI 基础设施投资——「星际之门」（Stargate）。</p>
-<h2>规模</h2>
+              <div class="entry-content"><p>synchronized 和 ReentrantLock 有什么区别？十个面试九个问。</p>
+<h2>用法对比</h2>
+<div class="codehilite"><pre><span></span><code><span class="c1">// synchronized</span>
+<span class="kd">synchronized</span><span class="w"> </span><span class="p">(</span><span class="n">lock</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 临界区</span>
+<span class="p">}</span>
+
+<span class="c1">// ReentrantLock</span>
+<span class="n">lock</span><span class="p">.</span><span class="na">lock</span><span class="p">();</span>
+<span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 临界区</span>
+<span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">lock</span><span class="p">.</span><span class="na">unlock</span><span class="p">();</span><span class="w">  </span><span class="c1">// 必须在 finally 中释放！</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2>核心区别</h2>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>synchronized</th>
+<th>ReentrantLock</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>实现</td>
+<td>JVM 内置（monitorenter/exit）</td>
+<td>JDK 层面（AQS）</td>
+</tr>
+<tr>
+<td>可中断</td>
+<td>不支持</td>
+<td>lockInterruptibly()</td>
+</tr>
+<tr>
+<td>超时获取</td>
+<td>不支持</td>
+<td>tryLock(time, unit)</td>
+</tr>
+<tr>
+<td>公平锁</td>
+<td>非公平</td>
+<td>可公平可非公平</td>
+</tr>
+<tr>
+<td>多条件</td>
+<td>一个条件队列</td>
+<td>多个 Condition</td>
+</tr>
+<tr>
+<td>性能</td>
+<td>JDK 6+ 优化后旗鼓相当</td>
+<td>差不多</td>
+</tr>
+</tbody>
+</table>
+<h2>JDK 6 的锁升级</h2>
+<p>synchronized 在 JDK 6 之前是重量级锁（直接操作系统互斥量）。JDK 6 引入了锁升级：</p>
+<ol>
+<li><strong>无锁</strong>：没有线程竞争</li>
+<li><strong>偏向锁</strong>：同一个线程多次获取，直接通过（CAS 标记线程 ID）</li>
+<li><strong>轻量级锁</strong>：多个线程交替执行（CAS 自旋）</li>
+<li><strong>重量级锁</strong>：真正的阻塞（操作系统层面）</li>
+</ol>
+<h2>ReentrantLock 底层：AQS</h2>
+<p>ReentrantLock 基于 AQS（AbstractQueuedSynchronizer）。AQS 维护了一个 state（volatile int）和一个 FIFO 等待队列。</p>
 <ul>
-<li>总投资：5000 亿美元（分 4 年）</li>
-<li>首期投入：1000 亿美元</li>
-<li>计划建设 10 个超大规模数据中心</li>
-<li>每个数据中心配置 10-20 万张 GPU</li>
-<li>全部建成后的总算力将是目前全球 AI 算力的 5 倍以上</li>
+<li>加锁：CAS 把 state 从 0 改为 1</li>
+<li>重入：同一个线程再获取，state + 1</li>
+<li>释放：state - 1，state 为 0 时唤醒等待线程</li>
 </ul>
-<h2>参与者</h2>
+<h2>什么时候用 ReentrantLock</h2>
 <ul>
-<li>OpenAI（提供技术和需求）</li>
-<li>软银（主要出资方）</li>
-<li>Oracle（数据中心运营）</li>
-<li>MGX（阿联酋主权基金）</li>
+<li>需要尝试获取锁（tryLock）</li>
+<li>需要可中断的锁</li>
+<li>需要公平锁（先来先得）</li>
 </ul>
-<h2>为什么需要这么多算力</h2>
-<p>Sam Altman 的说法是：要达到 AGI，需要指数级增长的算力。GPT-5 的训练算力已经是 GPT-4 的 10 倍，未来的模型只会更「吃」算力。</p>
-<h2>能源挑战</h2>
-<p>5000 亿美元的 AI 数据中心意味着天文数字的电力消耗。算下来需要大约 50GW 的电力——相当于 5 个大型核电站的发电量。</p>
-<p>OpenAI 已经开始投资核聚变和地热等新型能源。AI 的未来不仅是算法的竞争，也是能源的竞争。</p></div>
-              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/ai/" rel="category">AI</a><a href="/categories/新闻/" rel="category">新闻</a></span></footer>
+<p>能用 synchronized 就用 synchronized。代码更简单，出错的概率更小。</p></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/kafka-alternatives-2025/" rel="prev"><span class="nav-links__label">上一篇文章</span> Kafka 不再是唯一选择：2025 消息队列选型指南</a></div><div class="nav-next"><a href="/posts/design-patterns-singleton-factory/" rel="next"><span class="nav-links__label">下一篇文章</span> 设计模式面试：单例的 5 种写法和工厂模式在 Spring 中的应用</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/jvm-gc-interview/" rel="prev"><span class="nav-links__label">上一篇文章</span> JVM 垃圾回收面试精讲：从 CMS 到 G1 到 ZGC</a></div><div class="nav-next"><a href="/posts/on-call-experience/" rel="next"><span class="nav-links__label">下一篇文章</span> 第一次 On-Call 的体验：凌晨两点的告警电话</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">

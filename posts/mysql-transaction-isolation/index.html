@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenAI 和软银启动「星际之门」计划：5000 亿美元建 AI 超级算力 – 纵横四海</title>
-<meta name="description" content="OpenAI 和软银宣布投资 5000 亿美元建设全球 AI 算力网络，首期 1000 亿美元已经启动。">
-<meta property="og:title" content="OpenAI 和软银启动「星际之门」计划：5000 亿美元建 AI 超级算力 – 纵横四海">
-<meta property="og:description" content="OpenAI 和软银宣布投资 5000 亿美元建设全球 AI 算力网络，首期 1000 亿美元已经启动。">
+<title>MySQL 事务隔离级别面试精讲：脏读、幻读、不可重复读到底怎么区分？ – 纵横四海</title>
+<meta name="description" content="用实际场景举例说明四种隔离级别和三种并发问题，记住就不再混了。">
+<meta property="og:title" content="MySQL 事务隔离级别面试精讲：脏读、幻读、不可重复读到底怎么区分？ – 纵横四海">
+<meta property="og:description" content="用实际场景举例说明四种隔离级别和三种并发问题，记住就不再混了。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "OpenAI 和软银启动「星际之门」计划：5000 亿美元建 AI 超级算力 – 纵横四海",
-  "description": "OpenAI 和软银宣布投资 5000 亿美元建设全球 AI 算力网络，首期 1000 亿美元已经启动。",
+  "headline": "MySQL 事务隔离级别面试精讲：脏读、幻读、不可重复读到底怎么区分？ – 纵横四海",
+  "description": "用实际场景举例说明四种隔离级别和三种并发问题，记住就不再混了。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -68,37 +68,77 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/openai-stargate-project/" rel="bookmark"><time class="entry-date published" datetime="2025-10-20">2025年10月20日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/mysql-transaction-isolation/" rel="bookmark"><time class="entry-date published" datetime="2025-03-25">2025年3月25日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">OpenAI 和软银启动「星际之门」计划：5000 亿美元建 AI 超级算力</h1>
+                <h1 class="entry-title">MySQL 事务隔离级别面试精讲：脏读、幻读、不可重复读到底怎么区分？</h1>
               </header>
-              <div class="entry-content"><p>OpenAI 和软银宣布了史上最大规模的 AI 基础设施投资——「星际之门」（Stargate）。</p>
-<h2>规模</h2>
+              <div class="entry-content"><p>事务隔离级别几乎是 MySQL 面试必问题。</p>
+<h2>三种并发问题</h2>
+<p><strong>脏读</strong>：读了别人还没提交的数据。别人回滚了，你读到的就是脏数据。</p>
+<blockquote>
+<p>场景：A 转账给 B 100 元，但还没提交。B 查余额发现多了 100。A 回滚了。B 白高兴了。</p>
+</blockquote>
+<p><strong>不可重复读</strong>：同一个事务内，两次读同一行数据，结果不一样（别人 Update 了）。</p>
+<blockquote>
+<p>场景：事务 A 读了余额是 500。事务 B 改了余额为 600 并提交。事务 A 再读，变成 600。</p>
+</blockquote>
+<p><strong>幻读</strong>：同一个事务内，两次查询，第二次多了一些行（别人 Insert 了）。</p>
+<blockquote>
+<p>场景：事务 A 查了所有余额大于 500 的用户，有 3 个。事务 B 插入了新用户余额 800。事务 A 再查，变成 4 个。</p>
+</blockquote>
+<h2>四种隔离级别</h2>
+<table>
+<thead>
+<tr>
+<th>级别</th>
+<th>脏读</th>
+<th>不可重复读</th>
+<th>幻读</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Read Uncommitted</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Read Committed</td>
+<td>✗</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>Repeatable Read（默认）</td>
+<td>✗</td>
+<td>✗</td>
+<td>部分解决</td>
+</tr>
+<tr>
+<td>Serializable</td>
+<td>✗</td>
+<td>✗</td>
+<td>✗</td>
+</tr>
+</tbody>
+</table>
+<h2>InnoDB 如何实现 Repeatable Read</h2>
 <ul>
-<li>总投资：5000 亿美元（分 4 年）</li>
-<li>首期投入：1000 亿美元</li>
-<li>计划建设 10 个超大规模数据中心</li>
-<li>每个数据中心配置 10-20 万张 GPU</li>
-<li>全部建成后的总算力将是目前全球 AI 算力的 5 倍以上</li>
+<li><strong>MVCC（多版本并发控制）</strong>：每个事务看到的是一个「快照」，而不是实时数据</li>
+<li><strong>Next-Key Lock</strong>：行锁 + 间隙锁，解决幻读问题</li>
 </ul>
-<h2>参与者</h2>
-<ul>
-<li>OpenAI（提供技术和需求）</li>
-<li>软银（主要出资方）</li>
-<li>Oracle（数据中心运营）</li>
-<li>MGX（阿联酋主权基金）</li>
-</ul>
-<h2>为什么需要这么多算力</h2>
-<p>Sam Altman 的说法是：要达到 AGI，需要指数级增长的算力。GPT-5 的训练算力已经是 GPT-4 的 10 倍，未来的模型只会更「吃」算力。</p>
-<h2>能源挑战</h2>
-<p>5000 亿美元的 AI 数据中心意味着天文数字的电力消耗。算下来需要大约 50GW 的电力——相当于 5 个大型核电站的发电量。</p>
-<p>OpenAI 已经开始投资核聚变和地热等新型能源。AI 的未来不仅是算法的竞争，也是能源的竞争。</p></div>
-              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/ai/" rel="category">AI</a><a href="/categories/新闻/" rel="category">新闻</a></span></footer>
+<h2>面试话术</h2>
+<blockquote>
+<p>MySQL 默认是 Repeatable Read。它用 MVCC 实现快照读，保证同一个事务内读到的数据是一致的。对于写操作，用 Next-Key Lock 防止幻读——不仅锁住查询到的行，还锁住行之间的间隙。</p>
+</blockquote>
+<p>别只背表格。能说出 MVCC 和 Next-Key Lock 这两个关键词，面试官就知道你真的懂了。</p></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/数据库/" rel="category">数据库</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/kafka-alternatives-2025/" rel="prev"><span class="nav-links__label">上一篇文章</span> Kafka 不再是唯一选择：2025 消息队列选型指南</a></div><div class="nav-next"><a href="/posts/design-patterns-singleton-factory/" rel="next"><span class="nav-links__label">下一篇文章</span> 设计模式面试：单例的 5 种写法和工厂模式在 Spring 中的应用</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/postgres-vs-mysql-2025/" rel="prev"><span class="nav-links__label">上一篇文章</span> PostgreSQL 还是 MySQL？2025 年数据库选型的重新思考</a></div><div class="nav-next"><a href="/posts/terminal-tools-i-use/" rel="next"><span class="nav-links__label">下一篇文章</span> 我的终端工具链：2025 年开发效率套件分享</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">

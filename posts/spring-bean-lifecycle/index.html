@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenAI 和软银启动「星际之门」计划：5000 亿美元建 AI 超级算力 – 纵横四海</title>
-<meta name="description" content="OpenAI 和软银宣布投资 5000 亿美元建设全球 AI 算力网络，首期 1000 亿美元已经启动。">
-<meta property="og:title" content="OpenAI 和软银启动「星际之门」计划：5000 亿美元建 AI 超级算力 – 纵横四海">
-<meta property="og:description" content="OpenAI 和软银宣布投资 5000 亿美元建设全球 AI 算力网络，首期 1000 亿美元已经启动。">
+<title>Spring Bean 生命周期：从实例化到销毁经历了什么？ – 纵横四海</title>
+<meta name="description" content="梳理 Spring Bean 从创建到销毁的完整生命周期，面试时可以画图回答。">
+<meta property="og:title" content="Spring Bean 生命周期：从实例化到销毁经历了什么？ – 纵横四海">
+<meta property="og:description" content="梳理 Spring Bean 从创建到销毁的完整生命周期，面试时可以画图回答。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "OpenAI 和软银启动「星际之门」计划：5000 亿美元建 AI 超级算力 – 纵横四海",
-  "description": "OpenAI 和软银宣布投资 5000 亿美元建设全球 AI 算力网络，首期 1000 亿美元已经启动。",
+  "headline": "Spring Bean 生命周期：从实例化到销毁经历了什么？ – 纵横四海",
+  "description": "梳理 Spring Bean 从创建到销毁的完整生命周期，面试时可以画图回答。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -68,37 +68,58 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/openai-stargate-project/" rel="bookmark"><time class="entry-date published" datetime="2025-10-20">2025年10月20日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/spring-bean-lifecycle/" rel="bookmark"><time class="entry-date published" datetime="2025-07-12">2025年7月12日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">OpenAI 和软银启动「星际之门」计划：5000 亿美元建 AI 超级算力</h1>
+                <h1 class="entry-title">Spring Bean 生命周期：从实例化到销毁经历了什么？</h1>
               </header>
-              <div class="entry-content"><p>OpenAI 和软银宣布了史上最大规模的 AI 基础设施投资——「星际之门」（Stargate）。</p>
-<h2>规模</h2>
+              <div class="entry-content"><p>Spring Bean 的生命周期是面试的经典题。完整流程如下：</p>
+<h2>生命周期全流程</h2>
+<div class="codehilite"><pre><span></span><code><span class="mf">1.</span><span class="w"> </span><span class="n">实例化</span><span class="err">（</span><span class="n">Instantiation</span><span class="err">）</span>
+<span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="n">调用构造方法创建对象</span>
+
+<span class="mf">2.</span><span class="w"> </span><span class="n">属性赋值</span><span class="err">（</span><span class="n">Populate</span><span class="w"> </span><span class="n">Properties</span><span class="err">）</span>
+<span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="n">依赖注入</span><span class="err">（@</span><span class="n">Autowired</span><span class="w"> </span><span class="n">的字段被赋值</span><span class="err">）</span>
+
+<span class="mf">3.</span><span class="w"> </span><span class="n">BeanNameAware</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">BeanFactoryAware</span>
+<span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="n">如果</span><span class="w"> </span><span class="n">Bean</span><span class="w"> </span><span class="n">实现了这些</span><span class="w"> </span><span class="n">Aware</span><span class="w"> </span><span class="n">接口</span><span class="err">，</span><span class="n">调用</span><span class="w"> </span><span class="n">setBeanName</span><span class="p">()</span><span class="err">、</span><span class="n">setBeanFactory</span><span class="p">()</span>
+
+<span class="mf">4.</span><span class="w"> </span><span class="n">BeanPostProcessor</span><span class="mf">.</span><span class="nb">pos</span><span class="n">tProcessBeforeInitialization</span>
+<span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="n">初始化前的拦截点</span>
+
+<span class="mf">5.</span><span class="w"> </span><span class="n">InitializingBean</span><span class="mf">.</span><span class="n">afterPropertiesSet</span><span class="p">()</span>
+<span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="n">如果实现了</span><span class="w"> </span><span class="n">InitializingBean</span><span class="w"> </span><span class="n">接口</span>
+
+<span class="mf">6.</span><span class="w"> </span><span class="err">@</span><span class="nb">Pos</span><span class="n">tConstruct</span><span class="w"> </span><span class="n">方法</span>
+<span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="n">通常在这做初始化工作</span><span class="err">（</span><span class="n">推荐</span><span class="err">）</span>
+
+<span class="mf">7.</span><span class="w"> </span><span class="n">BeanPostProcessor</span><span class="mf">.</span><span class="nb">pos</span><span class="n">tProcessAfterInitialization</span>
+<span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="n">初始化后的拦截点</span><span class="err">（</span><span class="n">AOP</span><span class="w"> </span><span class="n">代理在这里生成</span><span class="err">！）</span>
+
+<span class="mf">8.</span><span class="w"> </span><span class="n">就绪</span><span class="err">（</span><span class="n">Bean</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="kr">read</span><span class="n">y</span><span class="w"> </span><span class="kr">to</span><span class="w"> </span><span class="n">use</span><span class="err">）</span>
+
+<span class="mf">9.</span><span class="w"> </span><span class="err">@</span><span class="n">PreDestroy</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">DisposableBean</span><span class="mf">.</span><span class="n">destroy</span><span class="p">()</span>
+<span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="n">销毁时的回调</span>
+</code></pre></div>
+
+<h2>面试时怎么答</h2>
+<p>不要一开始就背全部步骤。先说三个关键词：</p>
+<blockquote>
+<p>Bean 的生命周期分为三阶段：创建（实例化 + 属性注入）、初始化（@PostConstruct 等回调）、销毁（@PreDestroy）。其中最关键的是 BeanPostProcessor——AOP 就是通过它在初始化后生成代理对象的。</p>
+</blockquote>
+<p>然后被追问再说详细步骤。</p>
+<h2>几个重要的点</h2>
 <ul>
-<li>总投资：5000 亿美元（分 4 年）</li>
-<li>首期投入：1000 亿美元</li>
-<li>计划建设 10 个超大规模数据中心</li>
-<li>每个数据中心配置 10-20 万张 GPU</li>
-<li>全部建成后的总算力将是目前全球 AI 算力的 5 倍以上</li>
+<li><strong>BeanPostProcessor</strong> 是最强大的扩展点——它可以修改任何 Bean（AOP、@Autowired 都是靠它实现的）</li>
+<li><strong>@PostConstruct &gt; InitializingBean</strong>：推荐用 @PostConstruct，代码侵入性更小</li>
+<li>如果你自定义了一个 BeanPostProcessor，注意不要在里面执行耗时操作——每个 Bean 都会经过它</li>
 </ul>
-<h2>参与者</h2>
-<ul>
-<li>OpenAI（提供技术和需求）</li>
-<li>软银（主要出资方）</li>
-<li>Oracle（数据中心运营）</li>
-<li>MGX（阿联酋主权基金）</li>
-</ul>
-<h2>为什么需要这么多算力</h2>
-<p>Sam Altman 的说法是：要达到 AGI，需要指数级增长的算力。GPT-5 的训练算力已经是 GPT-4 的 10 倍，未来的模型只会更「吃」算力。</p>
-<h2>能源挑战</h2>
-<p>5000 亿美元的 AI 数据中心意味着天文数字的电力消耗。算下来需要大约 50GW 的电力——相当于 5 个大型核电站的发电量。</p>
-<p>OpenAI 已经开始投资核聚变和地热等新型能源。AI 的未来不仅是算法的竞争，也是能源的竞争。</p></div>
-              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/ai/" rel="category">AI</a><a href="/categories/新闻/" rel="category">新闻</a></span></footer>
+<p>理解了 Bean 生命周期，Spring 的大部分「魔法」都能解释通了。</p></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/kafka-alternatives-2025/" rel="prev"><span class="nav-links__label">上一篇文章</span> Kafka 不再是唯一选择：2025 消息队列选型指南</a></div><div class="nav-next"><a href="/posts/design-patterns-singleton-factory/" rel="next"><span class="nav-links__label">下一篇文章</span> 设计模式面试：单例的 5 种写法和工厂模式在 Spring 中的应用</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/thread-pool-interview/" rel="prev"><span class="nav-links__label">上一篇文章</span> 线程池面试八连问：核心参数、拒绝策略和调优思路</a></div><div class="nav-next"><a href="/posts/baidu-ernie-5/" rel="next"><span class="nav-links__label">下一篇文章</span> 百度发布文心大模型 5.0：在国内 AI 竞争中还能保持领先吗？</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">

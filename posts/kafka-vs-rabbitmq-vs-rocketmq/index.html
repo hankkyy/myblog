@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenAI 和软银启动「星际之门」计划：5000 亿美元建 AI 超级算力 – 纵横四海</title>
-<meta name="description" content="OpenAI 和软银宣布投资 5000 亿美元建设全球 AI 算力网络，首期 1000 亿美元已经启动。">
-<meta property="og:title" content="OpenAI 和软银启动「星际之门」计划：5000 亿美元建 AI 超级算力 – 纵横四海">
-<meta property="og:description" content="OpenAI 和软银宣布投资 5000 亿美元建设全球 AI 算力网络，首期 1000 亿美元已经启动。">
+<title>Kafka vs RabbitMQ vs RocketMQ：消息队列选型面试全攻略 – 纵横四海</title>
+<meta name="description" content="从吞吐量、可靠性、延迟、功能四个维度对比三大消息队列，面试时能讲出所以然。">
+<meta property="og:title" content="Kafka vs RabbitMQ vs RocketMQ：消息队列选型面试全攻略 – 纵横四海">
+<meta property="og:description" content="从吞吐量、可靠性、延迟、功能四个维度对比三大消息队列，面试时能讲出所以然。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "OpenAI 和软银启动「星际之门」计划：5000 亿美元建 AI 超级算力 – 纵横四海",
-  "description": "OpenAI 和软银宣布投资 5000 亿美元建设全球 AI 算力网络，首期 1000 亿美元已经启动。",
+  "headline": "Kafka vs RabbitMQ vs RocketMQ：消息队列选型面试全攻略 – 纵横四海",
+  "description": "从吞吐量、可靠性、延迟、功能四个维度对比三大消息队列，面试时能讲出所以然。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -68,37 +68,87 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/openai-stargate-project/" rel="bookmark"><time class="entry-date published" datetime="2025-10-20">2025年10月20日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/kafka-vs-rabbitmq-vs-rocketmq/" rel="bookmark"><time class="entry-date published" datetime="2025-09-18">2025年9月18日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">OpenAI 和软银启动「星际之门」计划：5000 亿美元建 AI 超级算力</h1>
+                <h1 class="entry-title">Kafka vs RabbitMQ vs RocketMQ：消息队列选型面试全攻略</h1>
               </header>
-              <div class="entry-content"><p>OpenAI 和软银宣布了史上最大规模的 AI 基础设施投资——「星际之门」（Stargate）。</p>
-<h2>规模</h2>
+              <div class="entry-content"><p>消息队列选型是面试中常见的问题。三个主流 MQ 各有擅长。</p>
+<h2>简单对比</h2>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Kafka</th>
+<th>RabbitMQ</th>
+<th>RocketMQ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>吞吐</td>
+<td>极高（百万/秒）</td>
+<td>中等（万/秒）</td>
+<td>高（十万/秒）</td>
+</tr>
+<tr>
+<td>延迟</td>
+<td>毫秒级</td>
+<td>微秒级</td>
+<td>毫秒级</td>
+</tr>
+<tr>
+<td>可靠性</td>
+<td>高（副本+ISR）</td>
+<td>高（镜像队列）</td>
+<td>很高（同步刷盘）</td>
+</tr>
+<tr>
+<td>协议</td>
+<td>自有协议</td>
+<td>AMQP</td>
+<td>自定义（兼容 JMS）</td>
+</tr>
+<tr>
+<td>事务消息</td>
+<td>不原生支持</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>顺序消息</td>
+<td>分区内有序</td>
+<td>不保证</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>延时消息</td>
+<td>不原生支持</td>
+<td>插件支持</td>
+<td>原生支持</td>
+</tr>
+</tbody>
+</table>
+<h2>各自的擅长场景</h2>
+<p><strong>Kafka</strong>：日志收集、流处理、大数据管道。核心优势是高吞吐 + 持久化 + 消息回溯。</p>
+<p><strong>RabbitMQ</strong>：业务解耦、异步调用。核心优势是灵活的路由 + 丰富的插件。</p>
+<p><strong>RocketMQ</strong>：阿里的交易、物流、支付场景。核心优势是事务消息 + 顺序消息 + 亿级消息堆积。</p>
+<h2>面试怎么答</h2>
+<blockquote>
+<p>选型主要看场景。大数据流处理选 Kafka（高吞吐、持久化）；传统业务解耦选 RabbitMQ（灵活路由）；金融级可靠性要求选 RocketMQ（事务消息、顺序消息）。</p>
+</blockquote>
+<h2>加分项</h2>
 <ul>
-<li>总投资：5000 亿美元（分 4 年）</li>
-<li>首期投入：1000 亿美元</li>
-<li>计划建设 10 个超大规模数据中心</li>
-<li>每个数据中心配置 10-20 万张 GPU</li>
-<li>全部建成后的总算力将是目前全球 AI 算力的 5 倍以上</li>
+<li>Kafka 的 Topic 逻辑上分为多个 Partition，是并行和扩展的基础</li>
+<li>RabbitMQ 的 Exchange 有四种类型（direct、topic、fanout、headers）</li>
+<li>RocketMQ 是阿里双十一的核心基础设施，经过极端场景验证</li>
 </ul>
-<h2>参与者</h2>
-<ul>
-<li>OpenAI（提供技术和需求）</li>
-<li>软银（主要出资方）</li>
-<li>Oracle（数据中心运营）</li>
-<li>MGX（阿联酋主权基金）</li>
-</ul>
-<h2>为什么需要这么多算力</h2>
-<p>Sam Altman 的说法是：要达到 AGI，需要指数级增长的算力。GPT-5 的训练算力已经是 GPT-4 的 10 倍，未来的模型只会更「吃」算力。</p>
-<h2>能源挑战</h2>
-<p>5000 亿美元的 AI 数据中心意味着天文数字的电力消耗。算下来需要大约 50GW 的电力——相当于 5 个大型核电站的发电量。</p>
-<p>OpenAI 已经开始投资核聚变和地热等新型能源。AI 的未来不仅是算法的竞争，也是能源的竞争。</p></div>
-              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/ai/" rel="category">AI</a><a href="/categories/新闻/" rel="category">新闻</a></span></footer>
+<p>三个都了解过最好。但至少深入一个。</p></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/分布式/" rel="category">分布式</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/kafka-alternatives-2025/" rel="prev"><span class="nav-links__label">上一篇文章</span> Kafka 不再是唯一选择：2025 消息队列选型指南</a></div><div class="nav-next"><a href="/posts/design-patterns-singleton-factory/" rel="next"><span class="nav-links__label">下一篇文章</span> 设计模式面试：单例的 5 种写法和工厂模式在 Spring 中的应用</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/learning-from-failure/" rel="prev"><span class="nav-links__label">上一篇文章</span> 那些年我搞砸过的技术决策</a></div><div class="nav-next"><a href="/posts/tencent-cloud-price-war/" rel="next"><span class="nav-links__label">下一篇文章</span> 腾讯云降价 60%：中国云计算进入价格战时代</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">
