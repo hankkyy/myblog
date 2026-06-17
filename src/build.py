@@ -448,38 +448,13 @@ def build():
     if about_md.exists():
         about = parse_page(about_md)
         (ROOT / "about").mkdir(parents=True, exist_ok=True)
-        travel_map = f"""
-          <h3 style="margin-top:40px;margin-bottom:24px">🗺️ 足迹 <span style="font-size:.8rem;color:#adb5bd;font-weight:400;margin-left:8px">47 座城市</span></h3>
-          <div class="travel-regions">
-            <div class="travel-card na">
-              <div class="travel-card-header">🇺🇸 北美</div>
-              <div class="travel-card-count">20 城</div>
-              <div class="travel-card-cities">哥伦布 · 洛杉矶 · 旧金山 · 西雅图 · 拉斯维加斯 · 达拉斯 · 休斯敦 · 亚特兰大 · 丹佛 · 芝加哥 · 凤凰城 · 底特律 · 波特兰 · 圣安东尼奥 · 坦帕 · 劳德代尔堡 · 里诺 · 长滩 · 伯克利 · 奥克兰</div>
-            </div>
-            <div class="travel-card cn">
-              <div class="travel-card-header">🇨🇳 中国</div>
-              <div class="travel-card-count">17 城</div>
-              <div class="travel-card-cities">武汉 · 北京 · 上海 · 深圳 · 香港 · 厦门 · 三亚 · 桂林 · 太原 · 琼海 · 福州 · 南昌 · 宁波 · 南京 · 无锡 · 台北</div>
-            </div>
-            <div class="travel-card jpkr">
-              <div class="travel-card-header">🇯🇵🇰🇷 日韩</div>
-              <div class="travel-card-count">7 城</div>
-              <div class="travel-card-cities">大阪 · 京都 · 神户 · 奈良 · 镰仓 · 首尔</div>
-            </div>
-            <div class="travel-card extra">
-              <div class="travel-card-header" style="font-size:2rem;font-weight:400">🌏</div>
-              <div class="travel-card-count" style="margin-top:8px">3 大洲 · 3 个国家</div>
-              <div class="travel-card-cities" style="margin-top:8px">保持好奇心，继续探索世界</div>
-            </div>
-          </div>
-        """
         (ROOT / "about" / "index.html").write_text(page_html(
             f"{about['title']} – {SITE['title']}",
             f"""<div id="primary" class="content-area">
           <main id="main" class="site-main">
             <article class="page type-page status-publish hentry">
               <header class="entry-header"><h1 class="entry-title">{about['title']}</h1></header>
-              <div class="entry-content">{"".join(about['content'].replace("<!--MAP-->", travel_map))}</div>
+              <div class="entry-content">{about['content']}</div>
             </article>
           </main>
         </div>""",
