@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RAG 架构实战：从零搭建一个文档问答系统 – 纵横四海</title>
+<title>AGENTS.md：给 AI 写一份项目说明书 – 纵横四海</title>
 <link rel="stylesheet" href="/css/style.css">
 
-<meta name="description" content="用 LangChain + Chroma + OpenAI 搭建 RAG 系统的完整步骤，附带性能优化技巧">
+<meta name="description" content="为什么应该在每个项目里放一个 AGENTS.md 文件，以及怎么写">
 </head>
 <body class="layout--right-sidebar">
 <div id="page" class="site">
@@ -52,60 +52,62 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">张子豪</a></span></span><span class="posted-on"><a href="/posts/rag-from-scratch/" rel="bookmark"><time class="entry-date published" datetime="2026-06-01">2026年6月1日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">张子豪</a></span></span><span class="posted-on"><a href="/posts/agents-md/" rel="bookmark"><time class="entry-date published" datetime="2026-06-05">2026年6月5日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">RAG 架构实战：从零搭建一个文档问答系统</h1>
+                <h1 class="entry-title">AGENTS.md：给 AI 写一份项目说明书</h1>
               </header>
-              <div class="entry-content"><p>RAG（Retrieval-Augmented Generation）是让 LLM 回答私有文档的核心方案。</p>
-<h2>架构概览</h2>
-<div class="codehilite"><pre><span></span><code>┌──────────┐    ┌──────────┐    ┌──────────┐
-│ 文档切分  │ → │ 向量嵌入  │ → │ 向量存储  │
-└──────────┘    └──────────┘    └──────────┘
-                                      │
-┌──────────┐    ┌──────────┐          │
-│ LLM 生成  │ ← │ 检索召回  │ ←────────┘
-└──────────┘    └──────────┘
+              <div class="entry-content"><p>如果你用 AI 辅助编程（Copilot、Cursor、Claude Code），有个简单但被低估的做法：<strong>在项目根目录放一个 <code>AGENTS.md</code></strong>。</p>
+<h2>它是什么</h2>
+<p><code>AGENTS.md</code> 是一份写给 AI 的项目说明书。放在项目根目录，AI 编程助手会自动读取它。</p>
+<div class="codehilite"><pre><span></span><code><span class="gh"># Project Name - Development Guide</span>
+
+<span class="gu">## Build &amp; Run</span>
+npm install &amp;&amp; npm run dev
+
+<span class="gu">## Project Structure</span>
+src/ — 主代码
+tests/ — 测试
+
+<span class="gu">## Conventions</span>
+<span class="k">-</span><span class="w"> </span>TypeScript strict mode
+<span class="k">-</span><span class="w"> </span>组件用 named export
 </code></pre></div>
 
-<h2>核心代码</h2>
-<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.text_splitter</span><span class="w"> </span><span class="kn">import</span> <span class="n">RecursiveCharacterTextSplitter</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.embeddings</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAIEmbeddings</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.vectorstores</span><span class="w"> </span><span class="kn">import</span> <span class="n">Chroma</span>
-
-<span class="c1"># 1. 文档切分</span>
-<span class="n">splitter</span> <span class="o">=</span> <span class="n">RecursiveCharacterTextSplitter</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">chunk_overlap</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
-<span class="n">chunks</span> <span class="o">=</span> <span class="n">splitter</span><span class="o">.</span><span class="n">split_documents</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span>
-
-<span class="c1"># 2. 向量化 + 存储</span>
-<span class="n">embeddings</span> <span class="o">=</span> <span class="n">OpenAIEmbeddings</span><span class="p">()</span>
-<span class="n">vectorstore</span> <span class="o">=</span> <span class="n">Chroma</span><span class="o">.</span><span class="n">from_documents</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">embeddings</span><span class="p">)</span>
-
-<span class="c1"># 3. 检索</span>
-<span class="n">retriever</span> <span class="o">=</span> <span class="n">vectorstore</span><span class="o">.</span><span class="n">as_retriever</span><span class="p">(</span><span class="n">search_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">})</span>
-<span class="n">docs</span> <span class="o">=</span> <span class="n">retriever</span><span class="o">.</span><span class="n">get_relevant_documents</span><span class="p">(</span><span class="s2">&quot;Doris 3.0 新特性&quot;</span><span class="p">)</span>
-
-<span class="c1"># 4. 生成</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.chains</span><span class="w"> </span><span class="kn">import</span> <span class="n">RetrievalQA</span>
-<span class="n">qa</span> <span class="o">=</span> <span class="n">RetrievalQA</span><span class="o">.</span><span class="n">from_chain_type</span><span class="p">(</span><span class="n">llm</span><span class="o">=</span><span class="n">ChatOpenAI</span><span class="p">(),</span> <span class="n">retriever</span><span class="o">=</span><span class="n">retriever</span><span class="p">)</span>
-<span class="n">answer</span> <span class="o">=</span> <span class="n">qa</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Doris 3.0 有哪些新特性？&quot;</span><span class="p">)</span>
-</code></pre></div>
-
-<h2>关键优化</h2>
+<h2>为什么重要</h2>
+<p>没有 AGENTS.md，AI 会：</p>
 <ul>
-<li><strong>Chunk size</strong>：500-1000 token 最佳。太短缺上下文，太长噪音多</li>
-<li><strong>Overlap</strong>：chunk_size 的 10%，保证信息不丢失</li>
-<li><strong>Embedding 模型</strong>：text-embedding-3-small 性价比最高</li>
-<li><strong>检索策略</strong>：MMR（最大边际相关性）避免重复文档</li>
+<li>用错包管理器（<code>pip</code> vs <code>poetry</code>）</li>
+<li>猜错你的代码风格（<code>snake_case</code> vs <code>camelCase</code>）</li>
+<li>不知道测试怎么跑</li>
+<li>搞不清项目结构</li>
+</ul>
+<p>有 AGENTS.md，AI 开局就知道项目规则。</p>
+<h2>常见内容</h2>
+<div class="codehilite"><pre><span></span><code><span class="mf">1.</span><span class="w"> </span><span class="n">项目简介</span><span class="err">（</span><span class="n">一句话</span><span class="err">）</span>
+<span class="mf">2.</span><span class="w"> </span><span class="n">环境要求</span><span class="err">（</span><span class="n">Node</span><span class="w"> </span><span class="mf">20</span><span class="o">+</span><span class="p">,</span><span class="w"> </span><span class="n">Python</span><span class="w"> </span><span class="mf">3.11</span><span class="o">+</span><span class="err">）</span>
+<span class="mf">3.</span><span class="w"> </span><span class="n">本地开发命令</span>
+<span class="mf">4.</span><span class="w"> </span><span class="n">项目结构速览</span>
+<span class="mf">5.</span><span class="w"> </span><span class="n">代码风格约定</span>
+<span class="mf">6.</span><span class="w"> </span><span class="n">Git</span><span class="w"> </span><span class="n">分支规范</span>
+<span class="mf">7.</span><span class="w"> </span><span class="n">注意事项</span><span class="o">/</span><span class="n">坑</span>
+</code></pre></div>
+
+<h2>最佳实践</h2>
+<ul>
+<li><strong>简短优先</strong>：200-500 行最合适，太长 AI 可能不读完</li>
+<li><strong>具体不抽象</strong>：写「组件放 <code>components/</code>，页面放 <code>pages/</code>」而不是「遵循关注点分离」</li>
+<li><strong>和 README 分开</strong>：README 给人看，AGENTS.md 给 AI 看</li>
+<li><strong>放根目录</strong>：AI 工具默认读取根目录的 <code>AGENTS.md</code> 或 <code>.cursorrules</code></li>
 </ul>
 <blockquote>
-<p>RAG 的本质是把「LLM 不知道的东西」提前塞进 prompt。</p>
+<p>花 20 分钟写 AGENTS.md，等于给每个 AI 协作者做一次 onboarding。</p>
 </blockquote></div>
-              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/人工智能/" rel="category">人工智能</a></span></footer>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/mcp-protocol/" rel="prev"><span class="nav-links__label">上一篇文章</span> MCP 协议：让 LLM 安全调用外部工具的标准化方案</a></div><div class="nav-next"><a href="/posts/spring-redis-cache/" rel="next"><span class="nav-links__label">下一篇文章</span> Spring Boot + Redis 缓存实战：从注解到分布式锁</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/internship-thoughts/" rel="prev"><span class="nav-links__label">上一篇文章</span> 后端实习两个月，我学到的东西比大学两年都多</a></div><div class="nav-next"><a href="/posts/mcp-protocol/" rel="next"><span class="nav-links__label">下一篇文章</span> MCP 协议：让 LLM 安全调用外部工具的标准化方案</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">
