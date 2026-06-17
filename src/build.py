@@ -254,31 +254,40 @@ def build():
     posts = []
     posts_dir = CONTENT / "posts"
     if posts_dir.exists():
-        for f in sorted(posts_dir.glob("*.md"), reverse=True):
+        for f in posts_dir.glob("*.md"):
             posts.append(parse_page(f))
+    # 按日期降序排列（最新的在前）
+    posts.sort(key=lambda p: p["date"], reverse=True)
 
     home_title = f"{SITE['title']} – {SITE['desc']}"
 
-    # ===== HOMEPAGE: 3-column grid =====
-    cards = "\n".join(article_card(p) for p in posts)
+    # ===== HOMEPAGE: first article full-width, rest in 3-column grid =====
+    first_card = article_card(posts[0]) if posts else ""
+    grid_cards = "\n".join(article_card(p) for p in posts[1:]) if len(posts) > 1 else ""
     homepage = page_html(home_title,
         f"""<div id="primary" class="content-area">
           <main id="main" class="site-main">
-            {cards}
+            <div class="tg-archive-featured">
+              {first_card}
+            </div>
+            <div class="tg-archive-grid tg-archive-col--3">
+              {grid_cards}
+            </div>
           </main>
         </div>""",
         is_home=True,
         body_class="layout--no-sidebar",
-        extra_body_class="tg-archive-style--big-block tg-archive-col--3")
+        extra_body_class="tg-archive-style--big-block")
     (ROOT / "index.html").write_text(homepage)
 
     # ===== /posts/ = 文章列表 (full archive, single column) =====
     (ROOT / "posts").mkdir(parents=True, exist_ok=True)
+    all_cards = "\n".join(article_card(p) for p in posts)
     archive = page_html(f"文章列表 – {SITE['title']}",
         f"""<div id="primary" class="content-area">
           <main id="main" class="site-main">
             <header class="page-header"><h1 class="page-title">文章列表</h1></header>
-            {cards}
+            {all_cards}
           </main>
         </div>""",
         current="/posts/",
