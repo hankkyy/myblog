@@ -370,11 +370,17 @@ def build():
     (ROOT / "posts").mkdir(parents=True, exist_ok=True)
     all_cards_groups = []
     from itertools import groupby
-    # Group by year-month
-    for (year, month), group in groupby(posts, key=lambda p: (p["date"].year, p["date"].month)):
-        month_label = f'{year}<span class="timeline-sep">年</span>{month}<span class="timeline-sep">月</span>'
-        cards_html = "\n".join(article_card(p) for p in group)
-        all_cards_groups.append(f'<div class="timeline-group"><h2 class="timeline-heading" onclick="this.parentElement.classList.toggle(\'collapsed\');this.classList.toggle(\'collapsed\')">{month_label}<span class="toggle-icon">▼</span></h2>{cards_html}</div>')
+    # Group by year, then by month within each year
+    for year, year_group in groupby(posts, key=lambda p: p["date"].year):
+        year_posts = list(year_group)
+        year_label = f'{year}<span class="timeline-sep">年</span>'
+        month_sections = []
+        for month, month_group in groupby(year_posts, key=lambda p: p["date"].month):
+            month_posts = list(month_group)
+            month_label = f'{month}<span class="timeline-sep">月</span>'
+            cards_html = "\n".join(article_card(p) for p in month_posts)
+            month_sections.append(f'<div class="timeline-month-group"><h3 class="timeline-month-heading" onclick="this.parentElement.classList.toggle(\'collapsed\');this.classList.toggle(\'collapsed\')">{month_label}<span class="toggle-icon">▼</span></h3>{cards_html}</div>')
+        all_cards_groups.append(f'<div class="timeline-group"><h2 class="timeline-heading">{year_label}</h2>{"".join(month_sections)}</div>')
     all_cards = "\n".join(all_cards_groups)
     archive = page_html(f"文章列表 – {SITE['title']}",
         f"""<div id="primary" class="content-area">
