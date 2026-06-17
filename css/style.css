@@ -132,7 +132,8 @@ blockquote p{margin-bottom:0;font-style:italic}
 .travel-card-header{{font-weight:700;font-size:1.1rem;margin-bottom:4px}}
 .travel-card-count{{font-size:1.5rem;font-weight:700;color:#16181a;margin-bottom:12px}}
 .travel-card-cities{{font-size:.82rem;color:#6c757d;line-height:1.8}}}
-.cat-index-articles{padding-top:48px}
+.cat-index-articles{padding-top:60px}
+.cat-index-articles > article:first-child{margin-top:0}
 
 /* About page */
 .about-intro{padding:72px 0 48px;position:relative;overflow:hidden}
