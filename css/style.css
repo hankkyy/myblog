@@ -153,12 +153,21 @@ article:last-of-type { margin-bottom: 0; }
 .pagination .current { background: #146bb7; color: #fff; border-color: #146bb7; }
 .pagination a:hover { background: #146bb7; color: #fff; border-color: #146bb7; text-decoration: none; }
 
+/* ========== AUTHOR BIO ========== */
+.author-bio { margin-top: 40px; padding: 30px; background: #f8f9fa; border-radius: 4px; }
+.author-bio-title { font-size: 1.125rem; margin-bottom: 10px; color: #16181a; }
+.author-bio p { font-size: 14px; color: #868e96; line-height: 1.8; margin: 0; }
+
 /* ========== FOOTER ========== */
 .site-footer { border-top: 1px solid #f1f3f5; padding: 25px 0; text-align: center; }
 .site-footer .site-info { color: #bdbdbd; font-size: 0.85rem; }
 .site-footer a { color: #146bb7; }
 
 /* ========== RESPONSIVE ========== */
+.screen-reader-text { border: 0; clip: rect(1px, 1px, 1px, 1px); clip-path: inset(50%); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px; }
+.skip-link { position: absolute; top: -100px; left: 0; background: #16181a; color: #fff; padding: 10px; z-index: 100; }
+.skip-link:focus { top: 0; }
+
 @media (max-width: 768px) {
   .layout--right-sidebar #primary, .layout--right-sidebar #secondary { width: 100% !important; padding: 0 !important; }
   .layout--right-sidebar #secondary { margin-top: 40px; }

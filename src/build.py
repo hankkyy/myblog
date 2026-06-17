@@ -256,6 +256,13 @@ def article_full(post, all_posts):
               </footer>
             </article>
             {nav}
+            <!-- 作者简介 -->
+            <div class="author-bio">
+              <div class="author-bio-content">
+                <h3 class="author-bio-title">关于 {AUTHOR}</h3>
+                <p>后端开发工程师，目前在联通数智医疗实习。关注分布式系统、OLAP 数据库、云原生技术。这个博客记录学习和工作的思考。</p>
+              </div>
+            </div>
           </main>
         </div>"""
 
