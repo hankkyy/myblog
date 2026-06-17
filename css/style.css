@@ -238,9 +238,9 @@ article.hentry::before,article.post::before{content:'';position:absolute;left:0;
 article.hentry:hover,article.post:hover{box-shadow:0 4px 20px rgba(0,0,0,.06)}
 article.hentry:hover::before,article.post:hover::before{transform:scaleY(1);opacity:1}
 article:last-of-type{margin-bottom:0}
-/* Grid articles — no extra padding to avoid breaking layout */
-.tg-archive-grid article.hentry,.tg-archive-grid article.post{padding:0;margin-left:0;margin-right:0;border-radius:0;box-shadow:none}
-.tg-archive-grid article.hentry:hover,.tg-archive-grid article.post:hover{box-shadow:none;transform:translateY(-2px)}
+/* Grid articles */
+.tg-archive-grid article.hentry,.tg-archive-grid article.post{padding:0 0 0 12px;margin-left:0;margin-right:0;border-radius:0;border-left:3px solid transparent;box-shadow:none;transition:all .3s}
+.tg-archive-grid article.hentry:hover,.tg-archive-grid article.post:hover{box-shadow:0 4px 20px rgba(0,0,0,.06);transform:translateY(-2px);border-left-color:#146bb7}
 .tg-archive-grid article.hentry::before,.tg-archive-grid article.post::before{display:none}
 /* Featured article */
 .tg-archive-featured article{border-left:4px solid #146bb7;padding-left:28px;border-radius:0 8px 8px 0}
