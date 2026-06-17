@@ -144,9 +144,9 @@ def parse_page(md_path):
     summary = plain[:55]
     # Use description for featured card when available (cleaner)
     desc = post.get("description", "")
-    long_summary = plain[:400]
+    long_summary = plain[:280]
     truncated = len(plain) > 55
-    long_truncated = len(plain) > 400
+    long_truncated = len(plain) > 280
     date = post.get("date", datetime.now())
     if isinstance(date, str):
         try: date = datetime.fromisoformat(date)
