@@ -454,6 +454,8 @@ def build():
             <p class="about-tagline" style="font-size:1.1rem;color:#6c757d;margin-top:8px">后端开发 · 数据基础设施 · AI Agent</p>
           </div>
 
+          <div class="about-divider"></div>
+
           <div class="about-section">
             <h2 class="about-h2"><span class="about-icon">🧰</span> 技术栈</h2>
             <div class="skill-grid">
