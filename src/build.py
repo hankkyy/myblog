@@ -455,7 +455,8 @@ def build():
           <div id="travel-map" style="height:450px;border-radius:8px;margin:20px 0;overflow:hidden"></div>
           <script>
           document.addEventListener('DOMContentLoaded', function() {
-          var map = L.map('travel-map', {scrollWheelZoom: false, zoomControl: false}).setView([35, -170], 2);
+          setTimeout(function() {
+          var map = L.map('travel-map', {scrollWheelZoom: false, zoomControl: false, worldCopyJump: true}).setView([35, -170], 2);
           L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; OSM'
           }).addTo(map);
