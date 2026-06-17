@@ -16,7 +16,7 @@ CSS_DIR = ROOT / "css"
 SITE = {"title":"纵横四海","url":"https://hankzhang.us/","desc":"但行好事，莫问前程"}
 AUTHOR = "Zihao Zhang"
 YEAR = str(datetime.now().year)
-MENU = [("首页","/"),("文章列表","/posts/"),("联系","/guestbook/"),("关于","/about/"),("GitHub","https://github.com/hankkyy")]
+MENU = [("首页","/"),("文章列表","/posts/"),("关于","/about/"),("GitHub","https://github.com/hankkyy")]
 SAFE = {".git","src","vercel.json",".gitignore","README.md","pagefind"}
 
 
@@ -52,7 +52,7 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
 <script type="application/ld+json">
 {{
   "@context": "https://schema.org",
-  "@type": "{'Article' if not is_home and current != '/about/' and current != '/guestbook/' else 'WebSite'}",
+  "@type": "{'Article' if not is_home and current != '/about/' else 'WebSite'}",
   "headline": "{title_tag}",
   "description": "{desc or SITE['desc']}",
   "url": "{SITE['url']}{'' if current == '/' else current}",
@@ -373,28 +373,6 @@ def build():
             current=f"/categories/{slug}/",
             body_class="layout--no-sidebar"))
 
-    # ===== GUESTBOOK =====
-    (ROOT / "guestbook").mkdir(parents=True, exist_ok=True)
-    (ROOT / "guestbook" / "index.html").write_text(page_html(
-        f"留言板 – {SITE['title']}",
-        f"""<div id="primary" class="content-area">
-          <main id="main" class="site-main">
-            <article class="page type-page status-publish hentry">
-              <header class="entry-header"><h1 class="entry-title">联系方式</h1></header>
-              <div class="entry-content">
-                <p>欢迎交流，可以通过以下方式联系我：</p>
-                <ul>
-                  <li><strong>GitHub</strong>：<a href="https://github.com/hankkyy" target="_blank">hankkyy</a></li>
-                  <li><strong>Email</strong>：hank.zihao@gmail.com</li>
-                </ul>
-                <p>或者直接在本页面留言。</p>
-              </div>
-            </article>
-          </main>
-        </div>""",
-        current="/guestbook/",
-        body_class="layout--no-sidebar"))
-
     # ===== ABOUT =====
     about_md = CONTENT / "about.md"
     if about_md.exists():
@@ -419,7 +397,7 @@ def build():
         urls.append((f'{SITE["url"]}posts/{p["slug"]}/', "weekly"))
     for cat_name in cats:
         urls.append((f'{SITE["url"]}categories/{cat_name.lower().replace(" ", "-")}/', "weekly"))
-    for page in ["posts/", "about/", "guestbook/"]:
+    for page in ["posts/", "about/"]:
         urls.append((f'{SITE["url"]}{page}', "monthly"))
     sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     for url, freq in urls:

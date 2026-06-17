@@ -32,5 +32,11 @@ date: 2026-06-17T12:00:00+08:00
 
 ---
 
-GitHub: [hankkyy](https://github.com/hankkyy)  
-Email: hank.zihao@gmail.com
+## 欢迎交流
+
+欢迎交流，可以通过以下方式联系我：
+
+- **GitHub**：[hankkyy](https://github.com/hankkyy)
+- **Email**：hank.zihao@gmail.com
+
+或者直接在本页面留言。
