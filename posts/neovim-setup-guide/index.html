@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>X（原 Twitter）改名一年半，马斯克亏了多少？ – 纵横四海</title>
-<meta name="description" content="X 平台广告收入持续下滑，估值从 440 亿美元跌至约 120 亿美元，但马斯克似乎在下一盘更大的棋。">
-<meta property="og:title" content="X（原 Twitter）改名一年半，马斯克亏了多少？ – 纵横四海">
-<meta property="og:description" content="X 平台广告收入持续下滑，估值从 440 亿美元跌至约 120 亿美元，但马斯克似乎在下一盘更大的棋。">
+<title>Neovim 配置指南：2025 年的终端编辑器还能打吗 – 纵横四海</title>
+<meta name="description" content="从零配置一套现代化的 Neovim 开发环境，LSP、自动补全、文件树和 Git 集成，全部搞定。">
+<meta property="og:title" content="Neovim 配置指南：2025 年的终端编辑器还能打吗 – 纵横四海">
+<meta property="og:description" content="从零配置一套现代化的 Neovim 开发环境，LSP、自动补全、文件树和 Git 集成，全部搞定。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "X（原 Twitter）改名一年半，马斯克亏了多少？ – 纵横四海",
-  "description": "X 平台广告收入持续下滑，估值从 440 亿美元跌至约 120 亿美元，但马斯克似乎在下一盘更大的棋。",
+  "headline": "Neovim 配置指南：2025 年的终端编辑器还能打吗 – 纵横四海",
+  "description": "从零配置一套现代化的 Neovim 开发环境，LSP、自动补全、文件树和 Git 集成，全部搞定。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -68,34 +68,50 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/twitter-x-rebrand-one-year/" rel="bookmark"><time class="entry-date published" datetime="2025-04-22">2025年4月22日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/neovim-setup-guide/" rel="bookmark"><time class="entry-date published" datetime="2025-06-25">2025年6月25日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">X（原 Twitter）改名一年半，马斯克亏了多少？</h1>
+                <h1 class="entry-title">Neovim 配置指南：2025 年的终端编辑器还能打吗</h1>
               </header>
-              <div class="entry-content"><p>马斯克 2023 年把 Twitter 改成 X，一年半过去了，账面上亏了很多。</p>
-<h2>财务数据</h2>
+              <div class="entry-content"><p>用了一年 Neovim，分享一下配置心得。</p>
+<h2>为什么选 Neovim</h2>
 <ul>
-<li>收购价：440 亿美元</li>
-<li>当前估值（Fidelity 数据）：约 120-150 亿美元</li>
-<li>广告收入：下降约 60%</li>
-<li>用户数：月活 4.5 亿，跟收购前基本持平</li>
-<li>裁员：从 7500 人砍到 1500 人</li>
+<li>启动快（50ms vs Code 的 5s）</li>
+<li>内存占用低（200MB vs Code 的 1GB+）</li>
+<li>纯键盘操作，不需要鼠标</li>
+<li>配置文件就是代码，可以版本控制</li>
+<li>在远程服务器上也能用</li>
 </ul>
-<h2>马斯克在干什么</h2>
-<p>明显不只是为了做社交平台：
-- X 已经整合了 Grok AI
-- 推出了支付功能（X Money）
-- 正在申请各州的金融牌照
-- 目标是做成「美版微信」——社交 + 支付 + 内容 + AI</p>
-<h2>用户变化</h2>
-<p>X 的政治氛围确实变了。更多人选择迁移到 Threads 或 Bluesky。但 X 的「实时信息」属性依然很强——重大新闻发生时，大家还是第一时间上 X 搜索。</p>
-<p>对于技术从业者来说，X 依然是获取 AI/科技前沿信息的最佳渠道之一。不管你喜欢还是讨厌马斯克，这一点暂时还没变。</p></div>
-              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/新闻/" rel="category">新闻</a></span></footer>
+<h2>核心插件</h2>
+<p>我用的插件不多，但都很关键：</p>
+<ul>
+<li>Lazy.nvim：插件管理器（替代 Packer）</li>
+<li>nvim-lspconfig：LSP 配置（代码补全、跳转定义、错误提示）</li>
+<li>nvim-cmp：自动补全引擎</li>
+<li>Telescope：模糊查找（文件、符号、Git）</li>
+<li>neo-tree：文件浏览器</li>
+<li>gitsigns：Git 状态显示</li>
+<li>tokyonight：配色主题</li>
+</ul>
+<h2>配置思路</h2>
+<p>不要把别人的配置直接搬过来。最好的方式是：
+1. 从最少的插件开始
+2. 遇到痛点再找解决方案
+3. 理解每个插件的配置
+4. 定期清理不用的插件</p>
+<h2>VS Code 用户要转吗？</h2>
+<ul>
+<li>如果你经常在远程服务器上写代码 → 强烈推荐</li>
+<li>如果你主要写 Java/C# → 算了（IDE 更好）</li>
+<li>如果你写 Python/Go/Rust/JS → 值得尝试</li>
+<li>如果你追求「手不离键盘」的体验 → 必须试</li>
+</ul>
+<p>Neovim 的学习曲线确实陡，但一旦适应了，就回不去了。</p></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/doris-vs-clickhouse-2025/" rel="prev"><span class="nav-links__label">上一篇文章</span> Doris vs ClickHouse：OLAP 数据库学习对比</a></div><div class="nav-next"><a href="/posts/git-workflow-best-practices/" rel="next"><span class="nav-links__label">下一篇文章</span> Git 工作流最佳实践：从单人项目到团队协作</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/redis-cluster-practice/" rel="prev"><span class="nav-links__label">上一篇文章</span> Redis Cluster 入门：从单机到集群的那些坑</a></div><div class="nav-next"><a href="/posts/baidu-ernie-5/" rel="next"><span class="nav-links__label">下一篇文章</span> 百度发布文心大模型 5.0：在国内 AI 竞争中还能保持领先吗？</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">

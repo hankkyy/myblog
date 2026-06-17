@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>X（原 Twitter）改名一年半，马斯克亏了多少？ – 纵横四海</title>
-<meta name="description" content="X 平台广告收入持续下滑，估值从 440 亿美元跌至约 120 亿美元，但马斯克似乎在下一盘更大的棋。">
-<meta property="og:title" content="X（原 Twitter）改名一年半，马斯克亏了多少？ – 纵横四海">
-<meta property="og:description" content="X 平台广告收入持续下滑，估值从 440 亿美元跌至约 120 亿美元，但马斯克似乎在下一盘更大的棋。">
+<title>CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？ – 纵横四海</title>
+<meta name="description" content="边缘计算让代码在全球 CDN 节点上运行，显著降低延迟。了解它适合和不适合的场景。">
+<meta property="og:title" content="CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？ – 纵横四海">
+<meta property="og:description" content="边缘计算让代码在全球 CDN 节点上运行，显著降低延迟。了解它适合和不适合的场景。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "X（原 Twitter）改名一年半，马斯克亏了多少？ – 纵横四海",
-  "description": "X 平台广告收入持续下滑，估值从 440 亿美元跌至约 120 亿美元，但马斯克似乎在下一盘更大的棋。",
+  "headline": "CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？ – 纵横四海",
+  "description": "边缘计算让代码在全球 CDN 节点上运行，显著降低延迟。了解它适合和不适合的场景。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -68,34 +68,43 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/twitter-x-rebrand-one-year/" rel="bookmark"><time class="entry-date published" datetime="2025-04-22">2025年4月22日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/cdn-edge-computing/" rel="bookmark"><time class="entry-date published" datetime="2025-05-18">2025年5月18日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">X（原 Twitter）改名一年半，马斯克亏了多少？</h1>
+                <h1 class="entry-title">CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？</h1>
               </header>
-              <div class="entry-content"><p>马斯克 2023 年把 Twitter 改成 X，一年半过去了，账面上亏了很多。</p>
-<h2>财务数据</h2>
+              <div class="entry-content"><p>边缘计算（Edge Computing）是 CDN 的进化版——不仅缓存静态文件，还能在离用户最近的节点上运行代码。</p>
+<h2>为什么需要边缘计算</h2>
+<p>传统架构：用户 → CDN（静态） → 源站（动态处理）</p>
+<p>边缘计算：用户 → 边缘节点（动态 + 静态都在这里处理）</p>
+<p>一个用户在新加坡，源站在美国。传统模式下动态请求要跨半个地球（200ms+）。边缘计算模式下直接在最近节点处理（10ms）。</p>
+<h2>适用场景</h2>
 <ul>
-<li>收购价：440 亿美元</li>
-<li>当前估值（Fidelity 数据）：约 120-150 亿美元</li>
-<li>广告收入：下降约 60%</li>
-<li>用户数：月活 4.5 亿，跟收购前基本持平</li>
-<li>裁员：从 7500 人砍到 1500 人</li>
+<li>A/B 测试（在边缘根据 cookie 返回不同版本）</li>
+<li>图片优化（实时缩放、转格式）</li>
+<li>API 网关（认证、限流、路由在边缘完成）</li>
+<li>地理位置相关的逻辑</li>
+<li>简单的服务端渲染</li>
 </ul>
-<h2>马斯克在干什么</h2>
-<p>明显不只是为了做社交平台：
-- X 已经整合了 Grok AI
-- 推出了支付功能（X Money）
-- 正在申请各州的金融牌照
-- 目标是做成「美版微信」——社交 + 支付 + 内容 + AI</p>
-<h2>用户变化</h2>
-<p>X 的政治氛围确实变了。更多人选择迁移到 Threads 或 Bluesky。但 X 的「实时信息」属性依然很强——重大新闻发生时，大家还是第一时间上 X 搜索。</p>
-<p>对于技术从业者来说，X 依然是获取 AI/科技前沿信息的最佳渠道之一。不管你喜欢还是讨厌马斯克，这一点暂时还没变。</p></div>
-              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/新闻/" rel="category">新闻</a></span></footer>
+<h2>不适合的场景</h2>
+<ul>
+<li>需要数据库的操作（延迟和不一致问题）</li>
+<li>计算密集型任务（边缘节点的 CPU 有限）</li>
+<li>有状态的逻辑（边缘节点之间不共享状态）</li>
+</ul>
+<h2>主流平台</h2>
+<ul>
+<li>Cloudflare Workers：全球最大边缘网络，支持 JS/TS/WASM</li>
+<li>Vercel Edge Functions：和 Next.js 深度集成</li>
+<li>Deno Deploy：基于 Deno 的边缘平台</li>
+<li>AWS Lambda@Edge：跟 CloudFront 绑定</li>
+</ul>
+<p>边缘计算是一个重要的趋势——不是替代传统的后端，而是让某些关键路径变得更快。</p></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/doris-vs-clickhouse-2025/" rel="prev"><span class="nav-links__label">上一篇文章</span> Doris vs ClickHouse：OLAP 数据库学习对比</a></div><div class="nav-next"><a href="/posts/git-workflow-best-practices/" rel="next"><span class="nav-links__label">下一篇文章</span> Git 工作流最佳实践：从单人项目到团队协作</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/git-workflow-best-practices/" rel="prev"><span class="nav-links__label">上一篇文章</span> Git 工作流最佳实践：从单人项目到团队协作</a></div><div class="nav-next"><a href="/posts/aws-reinvent-2025/" rel="next"><span class="nav-links__label">下一篇文章</span> AWS re:Invent 2025：Amazon 的 AI 全线反击</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">

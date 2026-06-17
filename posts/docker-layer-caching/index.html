@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>X（原 Twitter）改名一年半，马斯克亏了多少？ – 纵横四海</title>
-<meta name="description" content="X 平台广告收入持续下滑，估值从 440 亿美元跌至约 120 亿美元，但马斯克似乎在下一盘更大的棋。">
-<meta property="og:title" content="X（原 Twitter）改名一年半，马斯克亏了多少？ – 纵横四海">
-<meta property="og:description" content="X 平台广告收入持续下滑，估值从 440 亿美元跌至约 120 亿美元，但马斯克似乎在下一盘更大的棋。">
+<title>Docker 镜像层缓存原理：为什么 COPY 顺序影响构建速度 – 纵横四海</title>
+<meta name="description" content="通过一个简单的 Spring Boot 项目，理解 Docker 层缓存的工作机制和最佳实践。">
+<meta property="og:title" content="Docker 镜像层缓存原理：为什么 COPY 顺序影响构建速度 – 纵横四海">
+<meta property="og:description" content="通过一个简单的 Spring Boot 项目，理解 Docker 层缓存的工作机制和最佳实践。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "X（原 Twitter）改名一年半，马斯克亏了多少？ – 纵横四海",
-  "description": "X 平台广告收入持续下滑，估值从 440 亿美元跌至约 120 亿美元，但马斯克似乎在下一盘更大的棋。",
+  "headline": "Docker 镜像层缓存原理：为什么 COPY 顺序影响构建速度 – 纵横四海",
+  "description": "通过一个简单的 Spring Boot 项目，理解 Docker 层缓存的工作机制和最佳实践。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -68,34 +68,39 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/twitter-x-rebrand-one-year/" rel="bookmark"><time class="entry-date published" datetime="2025-04-22">2025年4月22日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/docker-layer-caching/" rel="bookmark"><time class="entry-date published" datetime="2025-01-18">2025年1月18日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">X（原 Twitter）改名一年半，马斯克亏了多少？</h1>
+                <h1 class="entry-title">Docker 镜像层缓存原理：为什么 COPY 顺序影响构建速度</h1>
               </header>
-              <div class="entry-content"><p>马斯克 2023 年把 Twitter 改成 X，一年半过去了，账面上亏了很多。</p>
-<h2>财务数据</h2>
+              <div class="entry-content"><p>Docker 的镜像层缓存是一个非常重要但容易被忽视的概念。</p>
+<h2>层是什么</h2>
+<p>Docker 镜像由多个只读层叠加而成。Dockerfile 中的每一行指令（FROM、RUN、COPY 等）都会创建一个新的层。这些层会被缓存——如果某一层没有变化，Docker 直接复用缓存，跳过重建。</p>
+<h2>一个典型案例</h2>
+<div class="codehilite"><pre><span></span><code><span class="c"># 不好的写法</span>
+<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>/app
+<span class="k">RUN</span><span class="w"> </span>mvn<span class="w"> </span>package
+
+<span class="c"># 好的写法</span>
+<span class="k">COPY</span><span class="w"> </span>pom.xml<span class="w"> </span>/app
+<span class="k">RUN</span><span class="w"> </span>mvn<span class="w"> </span>dependency:resolve
+<span class="k">COPY</span><span class="w"> </span>src<span class="w"> </span>/app/src
+<span class="k">RUN</span><span class="w"> </span>mvn<span class="w"> </span>package
+</code></pre></div>
+
+<p>为什么第二种写法更快？因为 <code>pom.xml</code> 变化频率远低于源码。先把依赖下载好并缓存住，每次改代码只需要重新编译，不用重新下载依赖。</p>
+<h2>关键原则</h2>
 <ul>
-<li>收购价：440 亿美元</li>
-<li>当前估值（Fidelity 数据）：约 120-150 亿美元</li>
-<li>广告收入：下降约 60%</li>
-<li>用户数：月活 4.5 亿，跟收购前基本持平</li>
-<li>裁员：从 7500 人砍到 1500 人</li>
+<li>把变化频率低的操作放在前面（安装系统依赖、下载 Maven/npm 依赖）</li>
+<li>把变化频率高的操作放在后面（COPY 源码、编译）</li>
+<li>合理利用多阶段构建减小镜像体积</li>
 </ul>
-<h2>马斯克在干什么</h2>
-<p>明显不只是为了做社交平台：
-- X 已经整合了 Grok AI
-- 推出了支付功能（X Money）
-- 正在申请各州的金融牌照
-- 目标是做成「美版微信」——社交 + 支付 + 内容 + AI</p>
-<h2>用户变化</h2>
-<p>X 的政治氛围确实变了。更多人选择迁移到 Threads 或 Bluesky。但 X 的「实时信息」属性依然很强——重大新闻发生时，大家还是第一时间上 X 搜索。</p>
-<p>对于技术从业者来说，X 依然是获取 AI/科技前沿信息的最佳渠道之一。不管你喜欢还是讨厌马斯克，这一点暂时还没变。</p></div>
-              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/新闻/" rel="category">新闻</a></span></footer>
+<p>理解了层缓存，Docker 构建速度能提升数倍。</p></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/doris-vs-clickhouse-2025/" rel="prev"><span class="nav-links__label">上一篇文章</span> Doris vs ClickHouse：OLAP 数据库学习对比</a></div><div class="nav-next"><a href="/posts/git-workflow-best-practices/" rel="next"><span class="nav-links__label">下一篇文章</span> Git 工作流最佳实践：从单人项目到团队协作</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/http3-quic-explained/" rel="prev"><span class="nav-links__label">上一篇文章</span> HTTP/3 和 QUIC：为什么用 UDP 替代 TCP？</a></div><div class="nav-next"><a href="/posts/sam-altman-fired-return/" rel="next"><span class="nav-links__label">下一篇文章</span> OpenAI 宫斗续集：Sam Altman 回归一年后 OpenAI 变成什么样了？</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">

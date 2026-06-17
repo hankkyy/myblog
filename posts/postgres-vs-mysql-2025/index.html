@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>X（原 Twitter）改名一年半，马斯克亏了多少？ – 纵横四海</title>
-<meta name="description" content="X 平台广告收入持续下滑，估值从 440 亿美元跌至约 120 亿美元，但马斯克似乎在下一盘更大的棋。">
-<meta property="og:title" content="X（原 Twitter）改名一年半，马斯克亏了多少？ – 纵横四海">
-<meta property="og:description" content="X 平台广告收入持续下滑，估值从 440 亿美元跌至约 120 亿美元，但马斯克似乎在下一盘更大的棋。">
+<title>PostgreSQL 还是 MySQL？2025 年数据库选型的重新思考 – 纵横四海</title>
+<meta name="description" content="从个人开发者和中小项目的角度，对比 PostgreSQL 和 MySQL 在 2025 年的差异和各自的优势场景。">
+<meta property="og:title" content="PostgreSQL 还是 MySQL？2025 年数据库选型的重新思考 – 纵横四海">
+<meta property="og:description" content="从个人开发者和中小项目的角度，对比 PostgreSQL 和 MySQL 在 2025 年的差异和各自的优势场景。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "X（原 Twitter）改名一年半，马斯克亏了多少？ – 纵横四海",
-  "description": "X 平台广告收入持续下滑，估值从 440 亿美元跌至约 120 亿美元，但马斯克似乎在下一盘更大的棋。",
+  "headline": "PostgreSQL 还是 MySQL？2025 年数据库选型的重新思考 – 纵横四海",
+  "description": "从个人开发者和中小项目的角度，对比 PostgreSQL 和 MySQL 在 2025 年的差异和各自的优势场景。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -68,34 +68,41 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/twitter-x-rebrand-one-year/" rel="bookmark"><time class="entry-date published" datetime="2025-04-22">2025年4月22日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/postgres-vs-mysql-2025/" rel="bookmark"><time class="entry-date published" datetime="2025-03-20">2025年3月20日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">X（原 Twitter）改名一年半，马斯克亏了多少？</h1>
+                <h1 class="entry-title">PostgreSQL 还是 MySQL？2025 年数据库选型的重新思考</h1>
               </header>
-              <div class="entry-content"><p>马斯克 2023 年把 Twitter 改成 X，一年半过去了，账面上亏了很多。</p>
-<h2>财务数据</h2>
+              <div class="entry-content"><p>MySQL 和 PostgreSQL 的争论从来没有停过。2025 年了，情况有些变化。</p>
+<h2>PostgreSQL 的优势</h2>
 <ul>
-<li>收购价：440 亿美元</li>
-<li>当前估值（Fidelity 数据）：约 120-150 亿美元</li>
-<li>广告收入：下降约 60%</li>
-<li>用户数：月活 4.5 亿，跟收购前基本持平</li>
-<li>裁员：从 7500 人砍到 1500 人</li>
+<li><strong>JSON 支持</strong>：Postgres 的 JSONB 类型支持索引，查询性能比 MySQL 的 JSON 好很多</li>
+<li><strong>窗口函数</strong>：更丰富的分析函数（但 MySQL 8.0+ 也追上来了）</li>
+<li><strong>地理空间</strong>：PostGIS 扩展是地理数据处理的标准</li>
+<li><strong>并发控制</strong>：MVCC 实现更干净，没有 MySQL 的间隙锁问题</li>
+<li><strong>SQL 标准</strong>：对标准 SQL 的兼容更好</li>
 </ul>
-<h2>马斯克在干什么</h2>
-<p>明显不只是为了做社交平台：
-- X 已经整合了 Grok AI
-- 推出了支付功能（X Money）
-- 正在申请各州的金融牌照
-- 目标是做成「美版微信」——社交 + 支付 + 内容 + AI</p>
-<h2>用户变化</h2>
-<p>X 的政治氛围确实变了。更多人选择迁移到 Threads 或 Bluesky。但 X 的「实时信息」属性依然很强——重大新闻发生时，大家还是第一时间上 X 搜索。</p>
-<p>对于技术从业者来说，X 依然是获取 AI/科技前沿信息的最佳渠道之一。不管你喜欢还是讨厌马斯克，这一点暂时还没变。</p></div>
-              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/新闻/" rel="category">新闻</a></span></footer>
+<h2>MySQL 的优势</h2>
+<ul>
+<li><strong>简单</strong>：安装、配置、运维都更简单</li>
+<li><strong>生态</strong>：几乎所有 ORM、框架都把 MySQL 作为第一选择</li>
+<li><strong>云服务</strong>：各大云厂商的 MySQL 托管服务非常成熟</li>
+<li><strong>社区</strong>：中文社区极其活跃，中文资料多</li>
+<li><strong>阿里/腾讯</strong>：国内大厂的 MySQL 定制版（PolarDB、TDSQL）很强</li>
+</ul>
+<h2>怎么选</h2>
+<ul>
+<li>个人项目 / 快速原型 → MySQL（上手快，生态好）</li>
+<li>复杂查询 / GIS / JSON 密集 → PostgreSQL</li>
+<li>国内找工作 → MySQL（市场占有率绝对优势）</li>
+<li>想学「正确」的 SQL → PostgreSQL</li>
+</ul>
+<p>两个都值得学。先精通一个，另一个看看文档就能上手。</p></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/数据库/" rel="category">数据库</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/doris-vs-clickhouse-2025/" rel="prev"><span class="nav-links__label">上一篇文章</span> Doris vs ClickHouse：OLAP 数据库学习对比</a></div><div class="nav-next"><a href="/posts/git-workflow-best-practices/" rel="next"><span class="nav-links__label">下一篇文章</span> Git 工作流最佳实践：从单人项目到团队协作</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/distributed-lock-deep-dive/" rel="prev"><span class="nav-links__label">上一篇文章</span> 分布式锁的三代演进：从 Redis 到 Etcd 再到无锁设计</a></div><div class="nav-next"><a href="/posts/doris-vs-clickhouse-2025/" rel="next"><span class="nav-links__label">下一篇文章</span> Doris vs ClickHouse：OLAP 数据库学习对比</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">
