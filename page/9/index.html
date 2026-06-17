@@ -61,7 +61,63 @@
   <div class="container">
 <div id="primary" class="content-area">
           <main id="main" class="site-main">
-            <div class="tg-archive-featured"><article id="post-redis-cluster-practice" class="post type-post status-publish format-standard hentry">
+            <div class="tg-archive-featured"><article id="post-leetcode-25-reverse-k-group" class="post type-post status-publish format-standard hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/leetcode/" rel="category">LeetCode</a></span><span class="posted-on"><a href="/posts/leetcode-25-reverse-k-group/" rel="bookmark"><time class="entry-date published" datetime="2025-07-08">2025年7月8日</time></a></span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/leetcode-25-reverse-k-group/" rel="bookmark">LeetCode 25. K 个一组翻转链表：递归解法的简洁与优雅</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>K 个一组翻转链表是链表题中的 Hard，但用递归来做非常简洁。 题目 给定链表 ，k=3，输出 （最后不足 k 个的保持原样）。 递归思路 - 从当前节点开始，数 k 个节点 - 如果够 k 个，翻转这 k 个节点，然后递归处理剩下的 - 如果不够 k 个，直接返回当前节点 代码 代码精妙之处 1. 先检查够不够 k 个——不够直接返回，够了才翻转 2.  [&hellip;]</p>
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/leetcode-25-reverse-k-group/" class="tg-readmore-link">阅读更多</a>
+            </footer>
+          </article></div>
+            <div class="tg-archive-grid tg-archive-col--3"><article id="post-thread-pool-interview" class="post type-post status-publish format-standard hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/thread-pool-interview/" rel="bookmark"><time class="entry-date published" datetime="2025-07-05">2025年7月5日</time></a></span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/thread-pool-interview/" rel="bookmark">线程池面试八连问：核心参数、拒绝策略和调优思路</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>线程池是 Java 并发编程面试的高频题。 七个核心参数 执行流程 1. 任务来了，如果线程数 corePoo [&hellip;]</p>
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/thread-pool-interview/" class="tg-readmore-link">阅读更多</a>
+            </footer>
+          </article>
+<article id="post-spring-transactional" class="post type-post status-publish format-standard hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/spring-transactional/" rel="bookmark"><time class="entry-date published" datetime="2025-06-30">2025年6月30日</time></a></span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/spring-transactional/" rel="bookmark">@Transactional 失效的 5 种场景：为什么你的事务没回滚？</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>@Transactional 看起来很美好，但它有好几种情况会静默失效。 1. 同类方法调用 原因：Sprin [&hellip;]</p>
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/spring-transactional/" class="tg-readmore-link">阅读更多</a>
+            </footer>
+          </article>
+<article id="post-neovim-setup-guide" class="post type-post status-publish format-standard hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/neovim-setup-guide/" rel="bookmark"><time class="entry-date published" datetime="2025-06-25">2025年6月25日</time></a></span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/neovim-setup-guide/" rel="bookmark">Neovim 配置指南：2025 年的终端编辑器还能打吗</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>用了一年 Neovim，分享一下配置心得。 为什么选 Neovim - 启动快（50ms vs Code 的  [&hellip;]</p>
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/neovim-setup-guide/" class="tg-readmore-link">阅读更多</a>
+            </footer>
+          </article>
+<article id="post-redis-cluster-practice" class="post type-post status-publish format-standard hentry">
             <div class="entry-meta">
               <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a><span class="cat-seperator">, </span><a href="/categories/分布式/" rel="category">分布式</a></span><span class="posted-on"><a href="/posts/redis-cluster-practice/" rel="bookmark"><time class="entry-date published" datetime="2025-06-20">2025年6月20日</time></a></span>
             </div>
@@ -69,13 +125,27 @@
               <h2 class="entry-title"><a href="/posts/redis-cluster-practice/" rel="bookmark">Redis Cluster 入门：从单机到集群的那些坑</a></h2>
             </header>
             <div class="entry-content">
-              <p>最近在学习 Redis Cluster，搭了一套 3 主 3 从的环境，过程中踩了不少坑。 搭建过程 Redis Cluster 最少需要 6 个节点（3 主 3 从），用 一条命令就能创建。关键是理解槽位（slot）的概念：整个集群有 16384 个哈希槽，每个主节点负责一部分。 扩容时的问题 手动做槽位迁移，如果在业务高峰期迁移，Redis 会返回 MO [&hellip;]</p>
+              <p>最近在学习 Redis Cluster，搭了一套 3 主 3 从的环境，过程中踩了不少坑。 搭建过程 Redi [&hellip;]</p>
             </div>
             <footer class="entry-footer">
               <a href="/posts/redis-cluster-practice/" class="tg-readmore-link">阅读更多</a>
             </footer>
-          </article></div>
-            <div class="tg-archive-grid tg-archive-col--3"><article id="post-mysql-index-interview" class="post type-post status-publish format-standard hentry">
+          </article>
+<article id="post-leetcode-206-reverse-linkedlist" class="post type-post status-publish format-standard hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/leetcode/" rel="category">LeetCode</a></span><span class="posted-on"><a href="/posts/leetcode-206-reverse-linkedlist/" rel="bookmark"><time class="entry-date published" datetime="2025-06-20">2025年6月20日</time></a></span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/leetcode-206-reverse-linkedlist/" rel="bookmark">LeetCode 206. 反转链表：迭代和递归两种解法，面试必会</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>反转链表是链表操作的基础，面试官可能让你先写迭代，再写递归。 迭代解法 用三个指针：prev（前一个）、cur [&hellip;]</p>
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/leetcode-206-reverse-linkedlist/" class="tg-readmore-link">阅读更多</a>
+            </footer>
+          </article>
+<article id="post-mysql-index-interview" class="post type-post status-publish format-standard hentry">
             <div class="entry-meta">
               <span class="cat-links"><a href="/categories/数据库/" rel="category">数据库</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/mysql-index-interview/" rel="bookmark"><time class="entry-date published" datetime="2025-06-15">2025年6月15日</time></a></span>
             </div>
@@ -130,78 +200,8 @@
             <footer class="entry-footer">
               <a href="/posts/on-call-experience/" class="tg-readmore-link">阅读更多</a>
             </footer>
-          </article>
-<article id="post-syncronized-vs-reentrantlock" class="post type-post status-publish format-standard hentry">
-            <div class="entry-meta">
-              <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/syncronized-vs-reentrantlock/" rel="bookmark"><time class="entry-date published" datetime="2025-05-30">2025年5月30日</time></a></span>
-            </div>
-            <header class="entry-header">
-              <h2 class="entry-title"><a href="/posts/syncronized-vs-reentrantlock/" rel="bookmark">synchronized vs ReentrantLock：从面试被问到源码实现</a></h2>
-            </header>
-            <div class="entry-content">
-              <p>synchronized 和 ReentrantLock 有什么区别？十个面试九个问。 用法对比 核心区别 J [&hellip;]</p>
-            </div>
-            <footer class="entry-footer">
-              <a href="/posts/syncronized-vs-reentrantlock/" class="tg-readmore-link">阅读更多</a>
-            </footer>
-          </article>
-<article id="post-jvm-gc-interview" class="post type-post status-publish format-standard hentry">
-            <div class="entry-meta">
-              <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/jvm-gc-interview/" rel="bookmark"><time class="entry-date published" datetime="2025-05-25">2025年5月25日</time></a></span>
-            </div>
-            <header class="entry-header">
-              <h2 class="entry-title"><a href="/posts/jvm-gc-interview/" rel="bookmark">JVM 垃圾回收面试精讲：从 CMS 到 G1 到 ZGC</a></h2>
-            </header>
-            <div class="entry-content">
-              <p>JVM 垃圾回收是 Java 面试的高频考点。别再只说「标记-清除」了。 GC 算法的演进 - 标记-清除：最 [&hellip;]</p>
-            </div>
-            <footer class="entry-footer">
-              <a href="/posts/jvm-gc-interview/" class="tg-readmore-link">阅读更多</a>
-            </footer>
-          </article>
-<article id="post-sql-optimization-guide" class="post type-post status-publish format-standard hentry">
-            <div class="entry-meta">
-              <span class="cat-links"><a href="/categories/数据库/" rel="category">数据库</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/sql-optimization-guide/" rel="bookmark"><time class="entry-date published" datetime="2025-05-20">2025年5月20日</time></a></span>
-            </div>
-            <header class="entry-header">
-              <h2 class="entry-title"><a href="/posts/sql-optimization-guide/" rel="bookmark">SQL 优化面试指南：从 EXPLAIN 到索引设计的实战思路</a></h2>
-            </header>
-            <div class="entry-content">
-              <p>SQL 优化是后端面试的高频题，也是日常开发必备技能。 EXPLAIN 核心字段 type 字段（从好到差）  [&hellip;]</p>
-            </div>
-            <footer class="entry-footer">
-              <a href="/posts/sql-optimization-guide/" class="tg-readmore-link">阅读更多</a>
-            </footer>
-          </article>
-<article id="post-cdn-edge-computing" class="post type-post status-publish format-standard hentry">
-            <div class="entry-meta">
-              <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/cdn-edge-computing/" rel="bookmark"><time class="entry-date published" datetime="2025-05-18">2025年5月18日</time></a></span>
-            </div>
-            <header class="entry-header">
-              <h2 class="entry-title"><a href="/posts/cdn-edge-computing/" rel="bookmark">CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？</a></h2>
-            </header>
-            <div class="entry-content">
-              <p>边缘计算（Edge Computing）是 CDN 的进化版——不仅缓存静态文件，还能在离用户最近的节点上运行 [&hellip;]</p>
-            </div>
-            <footer class="entry-footer">
-              <a href="/posts/cdn-edge-computing/" class="tg-readmore-link">阅读更多</a>
-            </footer>
-          </article>
-<article id="post-leetcode-239-sliding-window" class="post type-post status-publish format-standard hentry">
-            <div class="entry-meta">
-              <span class="cat-links"><a href="/categories/leetcode/" rel="category">LeetCode</a></span><span class="posted-on"><a href="/posts/leetcode-239-sliding-window/" rel="bookmark"><time class="entry-date published" datetime="2025-05-15">2025年5月15日</time></a></span>
-            </div>
-            <header class="entry-header">
-              <h2 class="entry-title"><a href="/posts/leetcode-239-sliding-window/" rel="bookmark">LeetCode 239. 滑动窗口最大值：单调队列的经典应用</a></h2>
-            </header>
-            <div class="entry-content">
-              <p>滑动窗口最大值是一道经典的 Hard 题，但用单调队列来做非常优雅。 题目 给定数组 和 ，返回每个窗口的最大 [&hellip;]</p>
-            </div>
-            <footer class="entry-footer">
-              <a href="/posts/leetcode-239-sliding-window/" class="tg-readmore-link">阅读更多</a>
-            </footer>
           </article></div>
-            <nav class="navigation pagination" aria-label="文章分页"><div class="nav-links"><a class="page-numbers" href="/">1</a><span class="page-numbers dots">&hellip;</span><a class="page-numbers" href="/page/7/">7</a><a class="page-numbers" href="/page/8/">8</a><span class="page-numbers current">9</span><a class="page-numbers" href="/page/10/">10</a><a class="page-numbers" href="/page/11/">11</a><a class="page-numbers" href="/page/12/">12</a><span class="page-jump"><input type="number" min="1" max="12" placeholder="跳转" id="jump-input-9" style="width:56px;text-align:center;border:1px solid #dee2e6;border-right:none;border-radius:4px 0 0 4px;padding:5px 2px;font-size:.85rem;line-height:1.4;outline:none;color:#363b40;transition:border-color .2s" onfocus="this.style.borderColor=&#39;#146bb7&#39;" onblur="this.style.borderColor=&#39;#dee2e6&#39;"><button onclick="var v=parseInt(document.getElementById(&quot;jump-input-9&quot;).value);if(v>=1&&v<=12)location.href=v===1?&quot;/&quot;:&quot;/page/&quot;+v+&quot;/&quot;" style="border:1px solid #dee2e6;border-left:none;border-radius:0 4px 4px 0;padding:6px 10px;cursor:pointer;background:#f8f9fa;color:#495057;font-size:.85rem;transition:all .2s" onmouseover="this.style.background=&#39;#146bb7&#39;;this.style.color=&#39;#fff&#39;;this.style.borderColor=&#39;#146bb7&#39;" onmouseout="this.style.background=&#39;#f8f9fa&#39;;this.style.color=&#39;#495057&#39;;this.style.borderColor=&#39;#dee2e6&#39;">→</button></span></div></nav>
+            <nav class="navigation pagination" aria-label="文章分页"><div class="nav-links"><a class="page-numbers" href="/">1</a><span class="page-numbers dots">&hellip;</span><a class="page-numbers" href="/page/7/">7</a><a class="page-numbers" href="/page/8/">8</a><span class="page-numbers current">9</span><a class="page-numbers" href="/page/10/">10</a><a class="page-numbers" href="/page/11/">11</a><span class="page-numbers dots">&hellip;</span><a class="page-numbers" href="/page/13/">13</a><span class="page-jump"><input type="number" min="1" max="13" placeholder="跳转" id="jump-input-9" style="width:56px;text-align:center;border:1px solid #dee2e6;border-right:none;border-radius:4px 0 0 4px;padding:5px 2px;font-size:.85rem;line-height:1.4;outline:none;color:#363b40;transition:border-color .2s" onfocus="this.style.borderColor=&#39;#146bb7&#39;" onblur="this.style.borderColor=&#39;#dee2e6&#39;"><button onclick="var v=parseInt(document.getElementById(&quot;jump-input-9&quot;).value);if(v>=1&&v<=13)location.href=v===1?&quot;/&quot;:&quot;/page/&quot;+v+&quot;/&quot;" style="border:1px solid #dee2e6;border-left:none;border-radius:0 4px 4px 0;padding:6px 10px;cursor:pointer;background:#f8f9fa;color:#495057;font-size:.85rem;transition:all .2s" onmouseover="this.style.background=&#39;#146bb7&#39;;this.style.color=&#39;#fff&#39;;this.style.borderColor=&#39;#146bb7&#39;" onmouseout="this.style.background=&#39;#f8f9fa&#39;;this.style.color=&#39;#495057&#39;;this.style.borderColor=&#39;#dee2e6&#39;">→</button></span></div></nav>
           </main>
         </div>
   </div>

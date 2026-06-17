@@ -61,7 +61,63 @@
   <div class="container">
 <div id="primary" class="content-area">
           <main id="main" class="site-main">
-            <div class="tg-archive-featured"><article id="post-huawei-ascend-910c" class="post type-post status-publish format-standard hentry">
+            <div class="tg-archive-featured"><article id="post-database-sharding-practice" class="post type-post status-publish format-standard hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/数据库/" rel="category">数据库</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/database-sharding-practice/" rel="bookmark"><time class="entry-date published" datetime="2025-08-15">2025年8月15日</time></a></span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/database-sharding-practice/" rel="bookmark">MySQL 分库分表学习笔记：从单库到分片的完整思路</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>最近在学习分库分表的方案，整理一下理解。 为什么需要分库分表 当一个表的数据量超过千万级别时，单库的性能会遇到瓶颈。虽然索引能帮助查询，但 B+Tree 层级变深，buffer pool 也装不下那么多数据。 分片键怎么选 这是最关键的一步。常见的选择： - 用户 ID：同一用户的数据在同一分片，用户维度查询快 - 订单 ID：按订单号分散，但用户查自己所有 [&hellip;]</p>
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/database-sharding-practice/" class="tg-readmore-link">阅读更多</a>
+            </footer>
+          </article></div>
+            <div class="tg-archive-grid tg-archive-col--3"><article id="post-leetcode-53-maximum-subarray" class="post type-post status-publish format-standard hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/leetcode/" rel="category">LeetCode</a></span><span class="posted-on"><a href="/posts/leetcode-53-maximum-subarray/" rel="bookmark"><time class="entry-date published" datetime="2025-08-12">2025年8月12日</time></a></span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/leetcode-53-maximum-subarray/" rel="bookmark">LeetCode 53. 最大子数组和：动态规划入门第一题</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>最大子数组和（Maximum Subarray）是动态规划的经典入门题。 题目 给定 ，找出和最大的连续子数组 [&hellip;]</p>
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/leetcode-53-maximum-subarray/" class="tg-readmore-link">阅读更多</a>
+            </footer>
+          </article>
+<article id="post-api-design-philosophy" class="post type-post status-publish format-standard hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/api-design-philosophy/" rel="bookmark"><time class="entry-date published" datetime="2025-08-10">2025年8月10日</time></a></span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/api-design-philosophy/" rel="bookmark">API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>REST、gRPC、GraphQL 各有各的好，但好的 API 设计跟选择什么协议关系不大。 REST RES [&hellip;]</p>
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/api-design-philosophy/" class="tg-readmore-link">阅读更多</a>
+            </footer>
+          </article>
+<article id="post-spring-mvc-flow" class="post type-post status-publish format-standard hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/spring-mvc-flow/" rel="bookmark"><time class="entry-date published" datetime="2025-08-08">2025年8月8日</time></a></span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/spring-mvc-flow/" rel="bookmark">Spring MVC 请求处理流程：从 DispatcherServlet 到视图渲染</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>Spring MVC 的请求处理流程是经典面试题。 完整流程 每一步详解 1. DispatcherServl [&hellip;]</p>
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/spring-mvc-flow/" class="tg-readmore-link">阅读更多</a>
+            </footer>
+          </article>
+<article id="post-huawei-ascend-910c" class="post type-post status-publish format-standard hentry">
             <div class="entry-meta">
               <span class="cat-links"><a href="/categories/ai/" rel="category">AI</a><span class="cat-seperator">, </span><a href="/categories/新闻/" rel="category">新闻</a></span><span class="posted-on"><a href="/posts/huawei-ascend-910c/" rel="bookmark"><time class="entry-date published" datetime="2025-08-05">2025年8月5日</time></a></span>
             </div>
@@ -69,13 +125,13 @@
               <h2 class="entry-title"><a href="/posts/huawei-ascend-910c/" rel="bookmark">华为昇腾 910C 量产：国产 AI 芯片能替代英伟达吗？</a></h2>
             </header>
             <div class="entry-content">
-              <p>华为的昇腾 910C AI 芯片正式量产了。 性能 - FP16 算力：约 320 TFLOPS（H100 是 400 TFLOPS） - 功耗：310W - 制程：7nm（受制裁限制，无法用更先进制程） - 显存：64GB HBM2E 优势 - 不受美国出口管制 - 价格比英伟达便宜约 50% - 跟华为云深度整合 - 国产化替代的政治正确 劣势 - 软件 [&hellip;]</p>
+              <p>华为的昇腾 910C AI 芯片正式量产了。 性能 - FP16 算力：约 320 TFLOPS（H100 是 [&hellip;]</p>
             </div>
             <footer class="entry-footer">
               <a href="/posts/huawei-ascend-910c/" class="tg-readmore-link">阅读更多</a>
             </footer>
-          </article></div>
-            <div class="tg-archive-grid tg-archive-col--3"><article id="post-post-quantum-crypto" class="post type-post status-publish format-standard hentry">
+          </article>
+<article id="post-post-quantum-crypto" class="post type-post status-publish format-standard hentry">
             <div class="entry-meta">
               <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/post-quantum-crypto/" rel="bookmark"><time class="entry-date published" datetime="2025-07-30">2025年7月30日</time></a></span>
             </div>
@@ -144,64 +200,8 @@
             <footer class="entry-footer">
               <a href="/posts/spring-bean-lifecycle/" class="tg-readmore-link">阅读更多</a>
             </footer>
-          </article>
-<article id="post-leetcode-25-reverse-k-group" class="post type-post status-publish format-standard hentry">
-            <div class="entry-meta">
-              <span class="cat-links"><a href="/categories/leetcode/" rel="category">LeetCode</a></span><span class="posted-on"><a href="/posts/leetcode-25-reverse-k-group/" rel="bookmark"><time class="entry-date published" datetime="2025-07-08">2025年7月8日</time></a></span>
-            </div>
-            <header class="entry-header">
-              <h2 class="entry-title"><a href="/posts/leetcode-25-reverse-k-group/" rel="bookmark">LeetCode 25. K 个一组翻转链表：递归解法的简洁与优雅</a></h2>
-            </header>
-            <div class="entry-content">
-              <p>K 个一组翻转链表是链表题中的 Hard，但用递归来做非常简洁。 题目 给定链表 ，k=3，输出 （最后不足  [&hellip;]</p>
-            </div>
-            <footer class="entry-footer">
-              <a href="/posts/leetcode-25-reverse-k-group/" class="tg-readmore-link">阅读更多</a>
-            </footer>
-          </article>
-<article id="post-thread-pool-interview" class="post type-post status-publish format-standard hentry">
-            <div class="entry-meta">
-              <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/thread-pool-interview/" rel="bookmark"><time class="entry-date published" datetime="2025-07-05">2025年7月5日</time></a></span>
-            </div>
-            <header class="entry-header">
-              <h2 class="entry-title"><a href="/posts/thread-pool-interview/" rel="bookmark">线程池面试八连问：核心参数、拒绝策略和调优思路</a></h2>
-            </header>
-            <div class="entry-content">
-              <p>线程池是 Java 并发编程面试的高频题。 七个核心参数 执行流程 1. 任务来了，如果线程数 corePoo [&hellip;]</p>
-            </div>
-            <footer class="entry-footer">
-              <a href="/posts/thread-pool-interview/" class="tg-readmore-link">阅读更多</a>
-            </footer>
-          </article>
-<article id="post-spring-transactional" class="post type-post status-publish format-standard hentry">
-            <div class="entry-meta">
-              <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/spring-transactional/" rel="bookmark"><time class="entry-date published" datetime="2025-06-30">2025年6月30日</time></a></span>
-            </div>
-            <header class="entry-header">
-              <h2 class="entry-title"><a href="/posts/spring-transactional/" rel="bookmark">@Transactional 失效的 5 种场景：为什么你的事务没回滚？</a></h2>
-            </header>
-            <div class="entry-content">
-              <p>@Transactional 看起来很美好，但它有好几种情况会静默失效。 1. 同类方法调用 原因：Sprin [&hellip;]</p>
-            </div>
-            <footer class="entry-footer">
-              <a href="/posts/spring-transactional/" class="tg-readmore-link">阅读更多</a>
-            </footer>
-          </article>
-<article id="post-neovim-setup-guide" class="post type-post status-publish format-standard hentry">
-            <div class="entry-meta">
-              <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/neovim-setup-guide/" rel="bookmark"><time class="entry-date published" datetime="2025-06-25">2025年6月25日</time></a></span>
-            </div>
-            <header class="entry-header">
-              <h2 class="entry-title"><a href="/posts/neovim-setup-guide/" rel="bookmark">Neovim 配置指南：2025 年的终端编辑器还能打吗</a></h2>
-            </header>
-            <div class="entry-content">
-              <p>用了一年 Neovim，分享一下配置心得。 为什么选 Neovim - 启动快（50ms vs Code 的  [&hellip;]</p>
-            </div>
-            <footer class="entry-footer">
-              <a href="/posts/neovim-setup-guide/" class="tg-readmore-link">阅读更多</a>
-            </footer>
           </article></div>
-            <nav class="navigation pagination" aria-label="文章分页"><div class="nav-links"><a class="page-numbers" href="/">1</a><span class="page-numbers dots">&hellip;</span><a class="page-numbers" href="/page/6/">6</a><a class="page-numbers" href="/page/7/">7</a><span class="page-numbers current">8</span><a class="page-numbers" href="/page/9/">9</a><a class="page-numbers" href="/page/10/">10</a><span class="page-numbers dots">&hellip;</span><a class="page-numbers" href="/page/12/">12</a><span class="page-jump"><input type="number" min="1" max="12" placeholder="跳转" id="jump-input-8" style="width:56px;text-align:center;border:1px solid #dee2e6;border-right:none;border-radius:4px 0 0 4px;padding:5px 2px;font-size:.85rem;line-height:1.4;outline:none;color:#363b40;transition:border-color .2s" onfocus="this.style.borderColor=&#39;#146bb7&#39;" onblur="this.style.borderColor=&#39;#dee2e6&#39;"><button onclick="var v=parseInt(document.getElementById(&quot;jump-input-8&quot;).value);if(v>=1&&v<=12)location.href=v===1?&quot;/&quot;:&quot;/page/&quot;+v+&quot;/&quot;" style="border:1px solid #dee2e6;border-left:none;border-radius:0 4px 4px 0;padding:6px 10px;cursor:pointer;background:#f8f9fa;color:#495057;font-size:.85rem;transition:all .2s" onmouseover="this.style.background=&#39;#146bb7&#39;;this.style.color=&#39;#fff&#39;;this.style.borderColor=&#39;#146bb7&#39;" onmouseout="this.style.background=&#39;#f8f9fa&#39;;this.style.color=&#39;#495057&#39;;this.style.borderColor=&#39;#dee2e6&#39;">→</button></span></div></nav>
+            <nav class="navigation pagination" aria-label="文章分页"><div class="nav-links"><a class="page-numbers" href="/">1</a><span class="page-numbers dots">&hellip;</span><a class="page-numbers" href="/page/6/">6</a><a class="page-numbers" href="/page/7/">7</a><span class="page-numbers current">8</span><a class="page-numbers" href="/page/9/">9</a><a class="page-numbers" href="/page/10/">10</a><span class="page-numbers dots">&hellip;</span><a class="page-numbers" href="/page/13/">13</a><span class="page-jump"><input type="number" min="1" max="13" placeholder="跳转" id="jump-input-8" style="width:56px;text-align:center;border:1px solid #dee2e6;border-right:none;border-radius:4px 0 0 4px;padding:5px 2px;font-size:.85rem;line-height:1.4;outline:none;color:#363b40;transition:border-color .2s" onfocus="this.style.borderColor=&#39;#146bb7&#39;" onblur="this.style.borderColor=&#39;#dee2e6&#39;"><button onclick="var v=parseInt(document.getElementById(&quot;jump-input-8&quot;).value);if(v>=1&&v<=13)location.href=v===1?&quot;/&quot;:&quot;/page/&quot;+v+&quot;/&quot;" style="border:1px solid #dee2e6;border-left:none;border-radius:0 4px 4px 0;padding:6px 10px;cursor:pointer;background:#f8f9fa;color:#495057;font-size:.85rem;transition:all .2s" onmouseover="this.style.background=&#39;#146bb7&#39;;this.style.color=&#39;#fff&#39;;this.style.borderColor=&#39;#146bb7&#39;" onmouseout="this.style.background=&#39;#f8f9fa&#39;;this.style.color=&#39;#495057&#39;;this.style.borderColor=&#39;#dee2e6&#39;">→</button></span></div></nav>
           </main>
         </div>
   </div>

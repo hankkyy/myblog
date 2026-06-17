@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LeetCode 15. 三数之和：排序+双指针的经典模板 – 纵横四海</title>
+<meta name="description" content="从 O(n³) 暴力到 O(n²) 双指针，掌握这道常考题的三步优化思路。">
+<meta property="og:title" content="LeetCode 15. 三数之和：排序+双指针的经典模板 – 纵横四海">
+<meta property="og:description" content="从 O(n³) 暴力到 O(n²) 双指针，掌握这道常考题的三步优化思路。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://hankzhang.us/">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://hankzhang.us/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "LeetCode 15. 三数之和：排序+双指针的经典模板 – 纵横四海",
+  "description": "从 O(n³) 暴力到 O(n²) 双指针，掌握这道常考题的三步优化思路。",
+  "url": "https://hankzhang.us/",
+  "datePublished": "2026-06-17",
+  "author": { "@type": "Person", "name": "Zihao Zhang" }
+}
+</script>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body class="layout--right-sidebar">
+<div id="page" class="site">
+<a class="skip-link screen-reader-text" href="#content">跳到内容</a>
+<header id="masthead" class="site-header tg-site-header tg-site-header--default">
+  <div class="tg-header-top"></div>
+  <div class="tg-header-bottom">
+    <div class="header-bottom-top">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <div class="site-branding">
+          <p class="site-title"><a href="https://hankzhang.us/" rel="home">纵横四海</a></p>
+          <p class="site-description">但行好事，莫问前程</p>
+        </div>
+      </div>
+    </div>
+    <div class="header-bottom-bottom">
+      <div class="container" style="display:flex;justify-content:center;align-items:center;gap:15px">
+        <nav id="site-navigation" class="main-navigation tg-site-menu--default" style="display:inline-flex;align-items:center;gap:10px">
+          <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu" style="justify-content:center"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/" class="active">首页</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/posts/">文章列表</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/categories/">分类</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/about/">关于</a></li></ul></div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+<nav id="cenote-sticky-header" class="cenote-header-sticky">
+  <div class="sticky-header-slide">
+    <div class="cenote-sticky-main">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <span class="sticky-title">LeetCode 15. 三数之和：排序+双指针的经典模板</span>
+      </div>
+    </div>
+  </div>
+</nav>
+<div id="content" class="site-content">
+  <div class="container">
+<div class="tg-flex-container tg-flex-space-between"><div id="primary" class="content-area">
+          <main id="main" class="site-main">
+            <article class="post type-post status-publish format-standard hentry">
+              <div class="entry-meta">
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/leetcode-15-3sum/" rel="bookmark"><time class="entry-date published" datetime="2025-04-20">2025年4月20日</time></a></span>
+              </div>
+              <header class="entry-header">
+                <h1 class="entry-title">LeetCode 15. 三数之和：排序+双指针的经典模板</h1>
+              </header>
+              <div class="entry-content"><p>三数之和（3Sum）是面试高频题，核心是排序 + 双指针。</p>
+<h2>题目</h2>
+<p>给定 <code>nums = [-1,0,1,2,-1,-4]</code>，找出所有和为 0 的不重复三元组。答案：<code>[[-1,-1,2], [-1,0,1]]</code>。</p>
+<h2>解法演进</h2>
+<p><strong>暴力 O(n³)</strong>：三重循环 — 太慢。</p>
+<p><strong>哈希表 O(n²)/O(n)</strong>：固定第一个数，剩下两个用两数之和的哈希表解法。但去重比较麻烦。</p>
+<p><strong>排序+双指针 O(n²)/O(1)</strong>：最优解。</p>
+<h2>代码</h2>
+<div class="codehilite"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="nf">threeSum</span><span class="p">(</span><span class="kt">int</span><span class="o">[]</span><span class="w"> </span><span class="n">nums</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">List</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="n">Arrays</span><span class="p">.</span><span class="na">sort</span><span class="p">(</span><span class="n">nums</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span><span class="w"> </span><span class="c1">// 去重</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">break</span><span class="p">;</span><span class="w"> </span><span class="c1">// 最小的都&gt;0，不可能和为0</span>
+
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nums</span><span class="p">.</span><span class="na">length</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">left</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">right</span><span class="o">]</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sum</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">result</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">Arrays</span><span class="p">.</span><span class="na">asList</span><span class="p">(</span><span class="n">nums</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">left</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">right</span><span class="o">]</span><span class="p">));</span>
+<span class="w">                </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">left</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">left</span><span class="o">+</span><span class="mi">1</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="n">left</span><span class="o">++</span><span class="p">;</span><span class="w"> </span><span class="c1">// 去重</span>
+<span class="w">                </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">left</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">right</span><span class="o">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">nums</span><span class="o">[</span><span class="n">right</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span><span class="p">)</span><span class="w"> </span><span class="n">right</span><span class="o">--</span><span class="p">;</span>
+<span class="w">                </span><span class="n">left</span><span class="o">++</span><span class="p">;</span><span class="w"> </span><span class="n">right</span><span class="o">--</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sum</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">left</span><span class="o">++</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">right</span><span class="o">--</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2>去重是关键</h2>
+<ol>
+<li>外层：<code>if (i &gt; 0 &amp;&amp; nums[i] == nums[i-1]) continue</code> — 跳过重复的第一个数</li>
+<li>内层：找到解后跳过重复的 left 和 right</li>
+</ol>
+<h2>剪枝优化</h2>
+<p><code>if (nums[i] &gt; 0) break</code> — 排序后如果第一个数已经大于 0，后面不可能有解。</p>
+<h2>扩展</h2>
+<ul>
+<li>LeetCode 18. 四数之和：再加一层循环</li>
+<li>LeetCode 16. 最接近的三数之和：不用找等于 0，找最接近 target 的</li>
+</ul>
+<p>双指针的核心：排序后用首尾指针逼近目标值。</p></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/leetcode/" rel="category">LeetCode</a></span></footer>
+            </article>
+            <nav class="navigation post-navigation" aria-label="文章">
+            <h2 class="screen-reader-text">文章导航</h2>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/system-design-tinyurl/" rel="prev"><span class="nav-links__label">上一篇文章</span> 系统设计面试攻略：设计一个短链接服务（TinyURL）</a></div><div class="nav-next"><a href="/posts/twitter-x-rebrand-one-year/" rel="next"><span class="nav-links__label">下一篇文章</span> X（原 Twitter）改名一年半，马斯克亏了多少？</a></div></div>
+          </nav>
+            <div class="author-bio">
+              <div class="author-bio-content">
+                <h3>关于 Zihao Zhang</h3>
+                <p>后端开发工程师。关注 Java/Spring Boot/Redis/MySQL 技术栈，分布式系统，OLAP 数据库，AI Agent 开发与应用。</p>
+              </div>
+            </div>
+            <div class="comments-area">
+              <h3>评论</h3>
+              <p class="no-comments">评论已关闭。</p>
+            </div>
+          </main>
+        </div><aside id="secondary" class="widget-area">
+          <section class="widget widget_recent_entries">
+            <h2 class="widget-title">近期文章</h2>
+            <ul><li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li><li><a href="/posts/doris-3-features/">2026 年 Apache Doris 3.0 新特性全解析</a></li><li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li><li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li><li><a href="/posts/columnar-storage/">为什么 ClickHouse 比 MySQL 快 100 倍？列式存储原理</a></li></ul>
+          </section>
+          <section class="widget widget_tag_cloud">
+            <h2 class="widget-title">分类</h2>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+          </section>
+        </aside></div>
+  </div>
+</div>
+<footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
+  <div class="tg-footer-bottom">
+    <div class="container">
+      <div class="site-info" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Copyright &copy; 2026 <a href="https://hankzhang.us/" title="纵横四海"><span>纵横四海</span></a>. All rights reserved.</span>
+        <nav style="display:flex;gap:15px">
+          <a href="/">首页</a><a href="/posts/">文章列表</a><a href="/categories/">分类</a><a href="/about/">关于</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</footer>
+<button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:#16181a;color:#fff;border:none;cursor:pointer;font-size:20px;display:none;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,.2)">↑</button>
+<script>
+window.addEventListener('scroll',function(){document.getElementById('back-to-top').style.display=window.scrollY>300?'block':'none';var s=document.getElementById('cenote-sticky-header');if(s)s.classList.toggle('visible',window.scrollY>200);});
+</script>
+</div>
+</body>
+</html>
