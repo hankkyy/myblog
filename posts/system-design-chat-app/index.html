@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cursor 估值突破 100 亿美元：AI 编程工具重新定义了「IDE」 – 纵横四海</title>
-<meta name="description" content="Cursor 完成新一轮融资估值 100 亿美元，AI 原生 IDE 正在取代 VS Code 和 JetBrains。">
-<meta property="og:title" content="Cursor 估值突破 100 亿美元：AI 编程工具重新定义了「IDE」 – 纵横四海">
-<meta property="og:description" content="Cursor 完成新一轮融资估值 100 亿美元，AI 原生 IDE 正在取代 VS Code 和 JetBrains。">
+<title>系统设计面试：设计一个即时通讯系统（WhatsApp/微信） – 纵横四海</title>
+<meta name="description" content="从一对一聊天到群聊、在线状态、消息可靠性，拆解即时通讯系统的核心设计。">
+<meta property="og:title" content="系统设计面试：设计一个即时通讯系统（WhatsApp/微信） – 纵横四海">
+<meta property="og:description" content="从一对一聊天到群聊、在线状态、消息可靠性，拆解即时通讯系统的核心设计。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Cursor 估值突破 100 亿美元：AI 编程工具重新定义了「IDE」 – 纵横四海",
-  "description": "Cursor 完成新一轮融资估值 100 亿美元，AI 原生 IDE 正在取代 VS Code 和 JetBrains。",
+  "headline": "系统设计面试：设计一个即时通讯系统（WhatsApp/微信） – 纵横四海",
+  "description": "从一对一聊天到群聊、在线状态、消息可靠性，拆解即时通讯系统的核心设计。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -52,7 +52,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">Cursor 估值突破 100 亿美元：AI 编程工具重新定义了「IDE」</span>
+        <span class="sticky-title">系统设计面试：设计一个即时通讯系统（WhatsApp/微信）</span>
       </div>
     </div>
   </div>
@@ -63,39 +63,60 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/cursor-ai-ide-rise/" rel="bookmark"><time class="entry-date published" datetime="2026-03-08">2026年3月8日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/system-design-chat-app/" rel="bookmark"><time class="entry-date published" datetime="2025-06-28">2025年6月28日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">Cursor 估值突破 100 亿美元：AI 编程工具重新定义了「IDE」</h1>
+                <h1 class="entry-title">系统设计面试：设计一个即时通讯系统（WhatsApp/微信）</h1>
               </header>
-              <div class="entry-content"><p>Cursor 的估值到了 100 亿美元。一个「代码编辑器」值这么多？</p>
-<h2>做了什么不一样</h2>
-<p>Cursor 不是给传统 IDE 加个 AI 插件，而是从零设计的 AI 原生编辑器：
-- AI 可以读懂整个代码库的上下文
-- 一个指令就能跨多个文件重构
-- 自动生成测试、文档、PR 描述
-- 「Agent 模式」可以自主完成一个完整功能</p>
-<h2>跟 GitHub Copilot 的区别</h2>
+              <div class="entry-content"><p>设计一个像 WhatsApp 或微信的即时通讯系统，是系统设计面试的常考题。</p>
+<h2>核心需求</h2>
 <ul>
-<li>Copilot 是「IDE 里的 AI 助手」</li>
-<li>Cursor 是「AI 助手就是 IDE」</li>
-<li>Cursor 的上下文理解深度远超 Copilot</li>
-<li>但 Copilot 有 GitHub 生态的优势（PR、Issues、Actions 深度集成）</li>
+<li>一对一聊天和群聊</li>
+<li>消息可靠性（不能丢消息）</li>
+<li>在线状态</li>
+<li>历史消息</li>
+<li>支持 10 亿用户</li>
 </ul>
-<h2>开发者生态变化</h2>
+<h2>架构概览</h2>
+<div class="codehilite"><pre><span></span><code>客户端 ←→ WebSocket 长连接 ←→ 聊天服务
+                                    ↓
+                              消息队列（Kafka）
+                                    ↓
+                              消息存储（HBase/Cassandra）
+</code></pre></div>
+
+<h2>为什么用 WebSocket 而不是 HTTP 轮询</h2>
+<p>HTTP 轮询延迟高、浪费带宽。WebSocket 建立长连接后服务端可以主动推送消息。但 HTTP 用于发送消息是可以的（更简单）。</p>
+<h2>消息可靠性</h2>
+<ol>
+<li>客户端发送消息 → 服务端返回 ACK</li>
+<li>服务端存储消息并推送给接收方</li>
+<li>接收方返回 ACK</li>
+<li>如果没收到 ACK，服务端重试</li>
+</ol>
+<p>对于群聊，只需存储一份消息，用「收件箱」模式——每个用户有一个消息队列。</p>
+<h2>在线状态</h2>
+<p>用户每 30 秒发送心跳。服务端记录最后心跳时间。超过 1 分钟没心跳标记为离线。</p>
+<h2>存储选型</h2>
 <ul>
-<li>初级开发者的效率提升最大——AI 帮你写大部分代码</li>
-<li>资深开发者的角色从「写代码」变成「审代码 + 定方向」</li>
-<li>「10x 工程师」的定义变了：不是打字快，而是能高效跟 AI 协作</li>
+<li>消息体：HBase 或 Cassandra（按时间排序的高吞吐写入）</li>
+<li>用户关系和群组：MySQL</li>
+<li>图片/视频：对象存储（S3/OSS）+ CDN</li>
+<li>最近消息列表：Redis</li>
 </ul>
-<h2>争议</h2>
-<p>有人担心过度依赖 AI 会导致开发者退化——就像用计算器久了不会心算。但更多人觉得这就是工具进化，不必焦虑。</p>
-<p>不管怎样，不会用 AI 编程工具的人，效率确实会落后。</p></div>
-              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/ai/" rel="category">AI</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
+<h2>扩展</h2>
+<ul>
+<li>端到端加密（WhatsApp 的 Signal 协议）</li>
+<li>消息已读状态</li>
+<li>撤回消息</li>
+<li>多设备同步</li>
+</ul>
+<p>即时通讯看着简单，做到亿级用户且不丢消息非常复杂。</p></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/系统设计/" rel="category">系统设计</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/k8s-configmap-secret/" rel="prev"><span class="nav-links__label">上一篇文章</span> Kubernetes ConfigMap 和 Secret：配置管理的正确姿势</a></div><div class="nav-next"><a href="/posts/ctrip-ai-travel/" rel="next"><span class="nav-links__label">下一篇文章</span> 携程推出 AI 旅行规划师：一句话生成完整行程</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/neovim-setup-guide/" rel="prev"><span class="nav-links__label">上一篇文章</span> Neovim 配置指南：2025 年的终端编辑器还能打吗</a></div><div class="nav-next"><a href="/posts/spring-transactional/" rel="next"><span class="nav-links__label">下一篇文章</span> @Transactional 失效的 5 种场景：为什么你的事务没回滚？</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">

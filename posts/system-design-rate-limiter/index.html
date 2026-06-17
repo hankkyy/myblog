@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cursor 估值突破 100 亿美元：AI 编程工具重新定义了「IDE」 – 纵横四海</title>
-<meta name="description" content="Cursor 完成新一轮融资估值 100 亿美元，AI 原生 IDE 正在取代 VS Code 和 JetBrains。">
-<meta property="og:title" content="Cursor 估值突破 100 亿美元：AI 编程工具重新定义了「IDE」 – 纵横四海">
-<meta property="og:description" content="Cursor 完成新一轮融资估值 100 亿美元，AI 原生 IDE 正在取代 VS Code 和 JetBrains。">
+<title>系统设计面试：设计一个 API 限流器（Rate Limiter） – 纵横四海</title>
+<meta name="description" content="从令牌桶到滑动窗口，拆解限流算法的核心思路和分布式限流的实现方案。">
+<meta property="og:title" content="系统设计面试：设计一个 API 限流器（Rate Limiter） – 纵横四海">
+<meta property="og:description" content="从令牌桶到滑动窗口，拆解限流算法的核心思路和分布式限流的实现方案。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Cursor 估值突破 100 亿美元：AI 编程工具重新定义了「IDE」 – 纵横四海",
-  "description": "Cursor 完成新一轮融资估值 100 亿美元，AI 原生 IDE 正在取代 VS Code 和 JetBrains。",
+  "headline": "系统设计面试：设计一个 API 限流器（Rate Limiter） – 纵横四海",
+  "description": "从令牌桶到滑动窗口，拆解限流算法的核心思路和分布式限流的实现方案。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -52,7 +52,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">Cursor 估值突破 100 亿美元：AI 编程工具重新定义了「IDE」</span>
+        <span class="sticky-title">系统设计面试：设计一个 API 限流器（Rate Limiter）</span>
       </div>
     </div>
   </div>
@@ -63,39 +63,50 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/cursor-ai-ide-rise/" rel="bookmark"><time class="entry-date published" datetime="2026-03-08">2026年3月8日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/system-design-rate-limiter/" rel="bookmark"><time class="entry-date published" datetime="2026-01-25">2026年1月25日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">Cursor 估值突破 100 亿美元：AI 编程工具重新定义了「IDE」</h1>
+                <h1 class="entry-title">系统设计面试：设计一个 API 限流器（Rate Limiter）</h1>
               </header>
-              <div class="entry-content"><p>Cursor 的估值到了 100 亿美元。一个「代码编辑器」值这么多？</p>
-<h2>做了什么不一样</h2>
-<p>Cursor 不是给传统 IDE 加个 AI 插件，而是从零设计的 AI 原生编辑器：
-- AI 可以读懂整个代码库的上下文
-- 一个指令就能跨多个文件重构
-- 自动生成测试、文档、PR 描述
-- 「Agent 模式」可以自主完成一个完整功能</p>
-<h2>跟 GitHub Copilot 的区别</h2>
+              <div class="entry-content"><p>API 限流是每个后端系统都需要的基础能力。面试中常让你设计一个限流器。</p>
+<h2>需求</h2>
 <ul>
-<li>Copilot 是「IDE 里的 AI 助手」</li>
-<li>Cursor 是「AI 助手就是 IDE」</li>
-<li>Cursor 的上下文理解深度远超 Copilot</li>
-<li>但 Copilot 有 GitHub 生态的优势（PR、Issues、Actions 深度集成）</li>
+<li>限制每个用户/API Key 的请求频率</li>
+<li>比如：每分钟最多 100 次请求</li>
+<li>超过限制返回 429 Too Many Requests</li>
+<li>需要支持分布式部署</li>
 </ul>
-<h2>开发者生态变化</h2>
-<ul>
-<li>初级开发者的效率提升最大——AI 帮你写大部分代码</li>
-<li>资深开发者的角色从「写代码」变成「审代码 + 定方向」</li>
-<li>「10x 工程师」的定义变了：不是打字快，而是能高效跟 AI 协作</li>
-</ul>
-<h2>争议</h2>
-<p>有人担心过度依赖 AI 会导致开发者退化——就像用计算器久了不会心算。但更多人觉得这就是工具进化，不必焦虑。</p>
-<p>不管怎样，不会用 AI 编程工具的人，效率确实会落后。</p></div>
-              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/ai/" rel="category">AI</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
+<h2>常见算法</h2>
+<h3>固定窗口</h3>
+<p>把时间分成固定窗口（比如每分钟），每个窗口独立计数。简单但有问题——窗口边界处可以发送 2 倍的请求（上分钟的最后 1 秒 + 这分钟的第 1 秒）。</p>
+<h3>滑动窗口日志</h3>
+<p>记录每次请求的时间戳，查询最近 N 秒内的请求数。精确但内存占用大。</p>
+<h3>滑动窗口计数器</h3>
+<p>结合前一个窗口的请求数做加权计算。Redis 的 <code>ZSET</code> 可以实现。</p>
+<h3>令牌桶（最常用）</h3>
+<p>以固定速率往桶里放令牌（比如每秒 10 个）。请求来时取一个令牌——取到就通过，取不到就拒绝。桶有容量上限，允许一定的突发流量。</p>
+<h2>实现</h2>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 用 Redis 实现令牌桶</span>
+<span class="n">String</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;rate_limit:&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">userId</span><span class="p">;</span>
+<span class="kt">long</span><span class="w"> </span><span class="n">now</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">();</span>
+<span class="kt">long</span><span class="w"> </span><span class="n">tokens</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">redis</span><span class="p">.</span><span class="na">incr</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+<span class="n">redis</span><span class="p">.</span><span class="na">expire</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="mi">60</span><span class="p">);</span><span class="w"> </span><span class="c1">// 窗口 60 秒</span>
+
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">tokens</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">429</span><span class="p">;</span>
+<span class="c1">// 处理请求...</span>
+</code></pre></div>
+
+<h2>分布式限流</h2>
+<p>多节点部署时，需要共享计数器——用 Redis 解决。但 Redis 本身也可能成为瓶颈。解决方案：
+- 本地限流 + 全局限流双层方案
+- 本地做粗粒度限流（比如单节点 1000/s），全局限严格（比如总体 5000/s）</p>
+<h2>面试要点</h2>
+<p>必须提到令牌桶算法和滑动窗口的区别。能说出分布式限流的双层方案是加分项。</p></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/系统设计/" rel="category">系统设计</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/k8s-configmap-secret/" rel="prev"><span class="nav-links__label">上一篇文章</span> Kubernetes ConfigMap 和 Secret：配置管理的正确姿势</a></div><div class="nav-next"><a href="/posts/ctrip-ai-travel/" rel="next"><span class="nav-links__label">下一篇文章</span> 携程推出 AI 旅行规划师：一句话生成完整行程</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/meta-threads-growth/" rel="prev"><span class="nav-links__label">上一篇文章</span> Threads 月活突破 5 亿：Meta 的「推特杀手」终于成功了</a></div><div class="nav-next"><a href="/posts/tiktok-shop-global/" rel="next"><span class="nav-links__label">下一篇文章</span> TikTok Shop 全球 GMV 突破 500 亿美元：直播带货席卷全球</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">

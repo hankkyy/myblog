@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cursor 估值突破 100 亿美元：AI 编程工具重新定义了「IDE」 – 纵横四海</title>
-<meta name="description" content="Cursor 完成新一轮融资估值 100 亿美元，AI 原生 IDE 正在取代 VS Code 和 JetBrains。">
-<meta property="og:title" content="Cursor 估值突破 100 亿美元：AI 编程工具重新定义了「IDE」 – 纵横四海">
-<meta property="og:description" content="Cursor 完成新一轮融资估值 100 亿美元，AI 原生 IDE 正在取代 VS Code 和 JetBrains。">
+<title>Service Mesh 入门：Istio 到底解决了什么问题？ – 纵横四海</title>
+<meta name="description" content="理解 Service Mesh 的核心概念——Sidecar、流量管理、可观测性，以及它和 API 网关的区别。">
+<meta property="og:title" content="Service Mesh 入门：Istio 到底解决了什么问题？ – 纵横四海">
+<meta property="og:description" content="理解 Service Mesh 的核心概念——Sidecar、流量管理、可观测性，以及它和 API 网关的区别。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Cursor 估值突破 100 亿美元：AI 编程工具重新定义了「IDE」 – 纵横四海",
-  "description": "Cursor 完成新一轮融资估值 100 亿美元，AI 原生 IDE 正在取代 VS Code 和 JetBrains。",
+  "headline": "Service Mesh 入门：Istio 到底解决了什么问题？ – 纵横四海",
+  "description": "理解 Service Mesh 的核心概念——Sidecar、流量管理、可观测性，以及它和 API 网关的区别。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -52,7 +52,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">Cursor 估值突破 100 亿美元：AI 编程工具重新定义了「IDE」</span>
+        <span class="sticky-title">Service Mesh 入门：Istio 到底解决了什么问题？</span>
       </div>
     </div>
   </div>
@@ -63,39 +63,57 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/cursor-ai-ide-rise/" rel="bookmark"><time class="entry-date published" datetime="2026-03-08">2026年3月8日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/service-mesh-istio-intro/" rel="bookmark"><time class="entry-date published" datetime="2025-09-30">2025年9月30日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">Cursor 估值突破 100 亿美元：AI 编程工具重新定义了「IDE」</h1>
+                <h1 class="entry-title">Service Mesh 入门：Istio 到底解决了什么问题？</h1>
               </header>
-              <div class="entry-content"><p>Cursor 的估值到了 100 亿美元。一个「代码编辑器」值这么多？</p>
-<h2>做了什么不一样</h2>
-<p>Cursor 不是给传统 IDE 加个 AI 插件，而是从零设计的 AI 原生编辑器：
-- AI 可以读懂整个代码库的上下文
-- 一个指令就能跨多个文件重构
-- 自动生成测试、文档、PR 描述
-- 「Agent 模式」可以自主完成一个完整功能</p>
-<h2>跟 GitHub Copilot 的区别</h2>
+              <div class="entry-content"><p>Service Mesh 是微服务架构的下一阶段。Istio 是目前最流行的 Service Mesh 实现。</p>
+<h2>微服务通信的痛点</h2>
+<p>在微服务架构中，服务之间的通信变得复杂：
+- 服务发现：A 怎么找到 B？
+- 负载均衡：多个 B 实例怎么分配流量？
+- 超时重试：B 挂了怎么办？
+- 熔断降级：B 太慢了怎么办？
+- 灰度发布：怎么把 10% 流量切到新版本？</p>
+<p>以前这些逻辑要写在每个服务里。Service Mesh 把这部分剥离出来。</p>
+<h2>Sidecar 模式</h2>
+<p>每个服务 Pod 旁边放一个 Sidecar 代理（Envoy）。所有进出流量都经过它：</p>
+<div class="codehilite"><pre><span></span><code>Service A → Envoy Proxy → Envoy Proxy → Service B
+</code></pre></div>
+
+<p>应用代码不需要知道网络细节——Sidecar 帮你处理了。</p>
+<h2>Istio 的架构</h2>
 <ul>
-<li>Copilot 是「IDE 里的 AI 助手」</li>
-<li>Cursor 是「AI 助手就是 IDE」</li>
-<li>Cursor 的上下文理解深度远超 Copilot</li>
-<li>但 Copilot 有 GitHub 生态的优势（PR、Issues、Actions 深度集成）</li>
+<li><strong>数据面</strong>：Envoy（Sidecar），负责实际处理流量</li>
+<li><strong>控制面</strong>：Istiod，配置和管理 Envoy</li>
+<li><strong>Ingress/Egress Gateway</strong>：管理进出集群的流量</li>
 </ul>
-<h2>开发者生态变化</h2>
+<h2>核心功能</h2>
+<p><strong>流量管理</strong>：
+- 金丝雀发布：把 5% 流量路由到新版本
+- 故障注入：故意注入延迟测试容错
+- 超时和重试策略</p>
+<p><strong>可观测性</strong>：
+- 自动生成分布式追踪（Jaeger/Zipkin）
+- 指标收集（Prometheus）
+- 可视化（Kiali）</p>
+<p><strong>安全</strong>：
+- 服务间的 mTLS（双向 TLS 加密）
+- 基于身份的访问控制</p>
+<h2>Istio vs API 网关</h2>
 <ul>
-<li>初级开发者的效率提升最大——AI 帮你写大部分代码</li>
-<li>资深开发者的角色从「写代码」变成「审代码 + 定方向」</li>
-<li>「10x 工程师」的定义变了：不是打字快，而是能高效跟 AI 协作</li>
+<li>API 网关是集群入口（南北流量）</li>
+<li>Service Mesh 是服务间通信（东西流量）</li>
 </ul>
-<h2>争议</h2>
-<p>有人担心过度依赖 AI 会导致开发者退化——就像用计算器久了不会心算。但更多人觉得这就是工具进化，不必焦虑。</p>
-<p>不管怎样，不会用 AI 编程工具的人，效率确实会落后。</p></div>
-              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/ai/" rel="category">AI</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
+<p>两者各司其职，可以同时使用。</p>
+<h2>学习建议</h2>
+<p>Istio 的概念很多，建议先在 Minikube 上搭一个 demo 环境，体验金丝雀发布和故障注入。动手比看书快得多。</p></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/云原生/" rel="category">云原生</a><a href="/categories/分布式/" rel="category">分布式</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/k8s-configmap-secret/" rel="prev"><span class="nav-links__label">上一篇文章</span> Kubernetes ConfigMap 和 Secret：配置管理的正确姿势</a></div><div class="nav-next"><a href="/posts/ctrip-ai-travel/" rel="next"><span class="nav-links__label">下一篇文章</span> 携程推出 AI 旅行规划师：一句话生成完整行程</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/shopee-layoffs-2025/" rel="prev"><span class="nav-links__label">上一篇文章</span> Shopee 母公司冬海集团裁员 15%：东南亚电商的寒冬还没结束</a></div><div class="nav-next"><a href="/posts/hashmap-source-code/" rel="next"><span class="nav-links__label">下一篇文章</span> HashMap 源码深度解析：JDK 8 的红黑树化和扩容机制</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">

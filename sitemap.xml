@@ -39,12 +39,14 @@
   <url><loc>https://hankzhang.us/posts/gpt5-launch-thoughts/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/ctrip-ai-travel/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/cursor-ai-ide-rise/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/k8s-configmap-secret/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/sora-v2-openai/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/gemini-robot-ai/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/leetcode-215-kth-largest/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/apple-m4-ultra/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/flink-vs-spark-2026/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/tiktok-shop-global/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/system-design-rate-limiter/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/meta-threads-growth/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/leetcode-42-trapping-rain-water/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/ollama-local-llm-trend/</loc><changefreq>weekly</changefreq></url>
@@ -62,6 +64,7 @@
   <url><loc>https://hankzhang.us/posts/kafka-alternatives-2025/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/computer-architecture-cache/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/hashmap-source-code/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/service-mesh-istio-intro/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/shopee-layoffs-2025/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/tencent-cloud-price-war/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/kafka-vs-rabbitmq-vs-rocketmq/</loc><changefreq>weekly</changefreq></url>
@@ -70,6 +73,7 @@
   <url><loc>https://hankzhang.us/posts/tesla-optimus-robot-2025/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/how-i-prepare-interviews/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/microsoft-nuclear-ai/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/system-design-news-feed/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/cap-theorem-explained/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/database-sharding-practice/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/leetcode-53-maximum-subarray/</loc><changefreq>weekly</changefreq></url>
@@ -84,6 +88,7 @@
   <url><loc>https://hankzhang.us/posts/leetcode-25-reverse-k-group/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/thread-pool-interview/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/spring-transactional/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/system-design-chat-app/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/neovim-setup-guide/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/redis-cluster-practice/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/leetcode-206-reverse-linkedlist/</loc><changefreq>weekly</changefreq></url>
@@ -92,6 +97,7 @@
   <url><loc>https://hankzhang.us/posts/aws-reinvent-2025/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/on-call-experience/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/syncronized-vs-reentrantlock/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/k8s-hpa-autoscaling/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/jvm-gc-interview/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/sql-optimization-guide/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/cdn-edge-computing/</loc><changefreq>weekly</changefreq></url>

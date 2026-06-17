@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cursor 估值突破 100 亿美元：AI 编程工具重新定义了「IDE」 – 纵横四海</title>
-<meta name="description" content="Cursor 完成新一轮融资估值 100 亿美元，AI 原生 IDE 正在取代 VS Code 和 JetBrains。">
-<meta property="og:title" content="Cursor 估值突破 100 亿美元：AI 编程工具重新定义了「IDE」 – 纵横四海">
-<meta property="og:description" content="Cursor 完成新一轮融资估值 100 亿美元，AI 原生 IDE 正在取代 VS Code 和 JetBrains。">
+<title>系统设计面试：设计一个社交媒体的信息流（News Feed） – 纵横四海</title>
+<meta name="description" content="以 Twitter/微博为例，拆解信息流的生成、推送和拉取策略，理解推模式和拉模式的取舍。">
+<meta property="og:title" content="系统设计面试：设计一个社交媒体的信息流（News Feed） – 纵横四海">
+<meta property="og:description" content="以 Twitter/微博为例，拆解信息流的生成、推送和拉取策略，理解推模式和拉模式的取舍。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Cursor 估值突破 100 亿美元：AI 编程工具重新定义了「IDE」 – 纵横四海",
-  "description": "Cursor 完成新一轮融资估值 100 亿美元，AI 原生 IDE 正在取代 VS Code 和 JetBrains。",
+  "headline": "系统设计面试：设计一个社交媒体的信息流（News Feed） – 纵横四海",
+  "description": "以 Twitter/微博为例，拆解信息流的生成、推送和拉取策略，理解推模式和拉模式的取舍。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -52,7 +52,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">Cursor 估值突破 100 亿美元：AI 编程工具重新定义了「IDE」</span>
+        <span class="sticky-title">系统设计面试：设计一个社交媒体的信息流（News Feed）</span>
       </div>
     </div>
   </div>
@@ -63,39 +63,54 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/cursor-ai-ide-rise/" rel="bookmark"><time class="entry-date published" datetime="2026-03-08">2026年3月8日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/system-design-news-feed/" rel="bookmark"><time class="entry-date published" datetime="2025-08-22">2025年8月22日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">Cursor 估值突破 100 亿美元：AI 编程工具重新定义了「IDE」</h1>
+                <h1 class="entry-title">系统设计面试：设计一个社交媒体的信息流（News Feed）</h1>
               </header>
-              <div class="entry-content"><p>Cursor 的估值到了 100 亿美元。一个「代码编辑器」值这么多？</p>
-<h2>做了什么不一样</h2>
-<p>Cursor 不是给传统 IDE 加个 AI 插件，而是从零设计的 AI 原生编辑器：
-- AI 可以读懂整个代码库的上下文
-- 一个指令就能跨多个文件重构
-- 自动生成测试、文档、PR 描述
-- 「Agent 模式」可以自主完成一个完整功能</p>
-<h2>跟 GitHub Copilot 的区别</h2>
+              <div class="entry-content"><p>信息流（News Feed / Timeline）是社交媒体的核心，也是系统设计面试的经典题。</p>
+<h2>需求</h2>
 <ul>
-<li>Copilot 是「IDE 里的 AI 助手」</li>
-<li>Cursor 是「AI 助手就是 IDE」</li>
-<li>Cursor 的上下文理解深度远超 Copilot</li>
-<li>但 Copilot 有 GitHub 生态的优势（PR、Issues、Actions 深度集成）</li>
+<li>用户看到自己关注的人发的帖子</li>
+<li>按时间倒序排列</li>
+<li>支持图片和视频</li>
+<li>千万级 DAU</li>
 </ul>
-<h2>开发者生态变化</h2>
+<h2>推模式 vs 拉模式</h2>
+<p><strong>推模式（Fan-out on Write）</strong>：
+- 用户发帖时，预先推送到所有粉丝的信息流里
+- 读的时候直接从 Redis 拿，O(1)
+- 缺点：明星用户有上亿粉丝，写扩散成本巨大</p>
+<p><strong>拉模式（Fan-out on Read）</strong>：
+- 用户查看信息流时，实时拉取所有关注的人的最新帖子
+- 写操作简单
+- 缺点：关注的人多了，读操作很慢</p>
+<h2>混合模式（实际用的方案）</h2>
 <ul>
-<li>初级开发者的效率提升最大——AI 帮你写大部分代码</li>
-<li>资深开发者的角色从「写代码」变成「审代码 + 定方向」</li>
-<li>「10x 工程师」的定义变了：不是打字快，而是能高效跟 AI 协作</li>
+<li>普通用户（粉丝少）：用推模式，发帖时推送给粉丝</li>
+<li>大 V（粉丝多）：用拉模式，粉丝查看时实时拉取</li>
+<li>最终结果合并：推的结果 + 拉的结果 → 排序 → 返回</li>
 </ul>
-<h2>争议</h2>
-<p>有人担心过度依赖 AI 会导致开发者退化——就像用计算器久了不会心算。但更多人觉得这就是工具进化，不必焦虑。</p>
-<p>不管怎样，不会用 AI 编程工具的人，效率确实会落后。</p></div>
-              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/ai/" rel="category">AI</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
+<h2>存储设计</h2>
+<ul>
+<li>帖子存储：MySQL 分库分表（按 user_id 分片）</li>
+<li>信息流缓存：Redis List（每个用户一个 Timeline，存储最近 1000 条）</li>
+<li>图片/视频：CDN + 对象存储</li>
+<li>热数据：最近 3 天的帖子在 Redis，更久的在 MySQL</li>
+</ul>
+<h2>核心优化</h2>
+<ul>
+<li>分页：用游标（cursor）而不是 offset，避免深分页问题</li>
+<li>异步：发帖后先写入，后台异步推送给粉丝</li>
+<li>去重：有的粉丝可能同时被推送又被拉取，需要合并去重</li>
+</ul>
+<h2>面试要点</h2>
+<p>必须提到推拉结合的混合模式。这是面试官最想听到的关键词。</p></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/系统设计/" rel="category">系统设计</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/k8s-configmap-secret/" rel="prev"><span class="nav-links__label">上一篇文章</span> Kubernetes ConfigMap 和 Secret：配置管理的正确姿势</a></div><div class="nav-next"><a href="/posts/ctrip-ai-travel/" rel="next"><span class="nav-links__label">下一篇文章</span> 携程推出 AI 旅行规划师：一句话生成完整行程</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/cap-theorem-explained/" rel="prev"><span class="nav-links__label">上一篇文章</span> CAP 定理面试精讲：你只能三选二，但现实没有那么简单</a></div><div class="nav-next"><a href="/posts/microsoft-nuclear-ai/" rel="next"><span class="nav-links__label">下一篇文章</span> 微软签下核电站供电合同：AI 数据中心的电力需求有多恐怖？</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">
