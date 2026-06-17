@@ -136,52 +136,84 @@
           }).addTo(map);
 
           var places = [
-            {name:'武汉 ✈️ 哥伦布', from:[30.59,114.31], to:[40.00,-83.01]},
-            {name:'哥伦布 ✈️ 纽约', from:[40.00,-83.01], to:[40.71,-74.01]},
-            {name:'哥伦布 ✈️ 芝加哥', from:[40.00,-83.01], to:[41.88,-87.63]},
-            {name:'纽约 ✈️ 旧金山', from:[40.71,-74.01], to:[37.77,-122.42]},
-            {name:'旧金山 ✈️ 洛杉矶', from:[37.77,-122.42], to:[34.05,-118.24]},
-            {name:'旧金山 ✈️ 西雅图', from:[37.77,-122.42], to:[47.61,-122.33]},
-            {name:'上海 ✈️ 东京', from:[31.23,121.47], to:[35.68,139.76]},
-            {name:'上海 ✈️ 首尔', from:[31.23,121.47], to:[37.57,126.98]},
-            {name:'北京 ✈️ 上海', from:[39.90,116.41], to:[31.23,121.47]},
-            {name:'新加坡 ✈️ 曼谷', from:[1.35,103.82], to:[13.75,100.50]},
-            {name:'伦敦 ✈️ 巴黎', from:[51.51,-0.13], to:[48.86,2.35]},
+            // 美国
+            {name:'哥伦布', lat:40.00, lng:-83.01},
+            {name:'西雅图', lat:47.61, lng:-122.33},
+            {name:'洛杉矶', lat:34.05, lng:-118.24},
+            {name:'旧金山', lat:37.77, lng:-122.42},
+            {name:'拉斯维加斯', lat:36.17, lng:-115.14},
+            {name:'丹佛', lat:39.74, lng:-104.99},
+            {name:'达拉斯', lat:32.78, lng:-96.80},
+            {name:'休斯敦', lat:29.76, lng:-95.37},
+            {name:'亚特兰大', lat:33.75, lng:-84.39},
+            {name:'底特律', lat:42.33, lng:-83.05},
+            {name:'波特兰', lat:45.52, lng:-122.68},
+            {name:'圣安东尼奥', lat:29.42, lng:-98.49},
+            {name:'坦帕', lat:27.95, lng:-82.46},
+            {name:'劳德代尔堡', lat:26.12, lng:-80.14},
+            {name:'里诺', lat:39.53, lng:-119.81},
+            {name:'长滩', lat:33.77, lng:-118.19},
+            {name:'伯克利', lat:37.87, lng:-122.27},
+            {name:'奥克兰', lat:37.80, lng:-122.27},
+            // 中国
+            {name:'武汉', lat:30.59, lng:114.31},
+            {name:'北京', lat:39.90, lng:116.41},
+            {name:'上海', lat:31.23, lng:121.47},
+            {name:'深圳', lat:22.54, lng:114.06},
+            {name:'香港', lat:22.32, lng:114.17},
+            {name:'厦门', lat:24.48, lng:118.09},
+            {name:'三亚', lat:18.25, lng:109.51},
+            {name:'桂林', lat:25.27, lng:110.29},
+            {name:'太原', lat:37.87, lng:112.55},
+            {name:'琼海', lat:19.25, lng:110.47},
+            {name:'福州', lat:26.07, lng:119.30},
+            {name:'南昌', lat:28.68, lng:115.86},
+            {name:'宁波', lat:29.87, lng:121.55},
+            {name:'南京', lat:32.06, lng:118.80},
+            {name:'无锡', lat:31.49, lng:120.31},
+            // 日本
+            {name:'大阪', lat:34.69, lng:135.50},
+            {name:'京都', lat:35.01, lng:135.77},
+            {name:'神户', lat:34.69, lng:135.20},
+            {name:'奈良', lat:34.69, lng:135.83},
+            {name:'镰仓', lat:35.32, lng:139.55},
+            // 韩国
+            {name:'首尔', lat:37.57, lng:126.98},
           ];
 
-          // Draw curved flight routes
+          // Draw markers with glow effect
           places.forEach(function(p) {
-            var latlngs = [];
-            var from = L.latLng(p.from[0], p.from[1]);
-            var to = L.latLng(p.to[0], p.to[1]);
-            var mid = L.latLng(
-              (p.from[0]+p.to[0])/2 + 8,
-              (p.from[1]+p.to[1])/2
-            );
-            for (var t = 0; t <= 1; t += 0.02) {
-              var a = (1-t)*(1-t)*from.lat + 2*(1-t)*t*mid.lat + t*t*to.lat;
-              var b = (1-t)*(1-t)*from.lng + 2*(1-t)*t*mid.lng + t*t*to.lng;
-              latlngs.push([a, b]);
-            }
-            var line = L.polyline(latlngs, {
-              color: '#146bb7', weight: 1.5, opacity: 0.5, dashArray: '6 4'
-            }).addTo(map);
-            line.bindPopup(p.name);
+            var marker = L.circleMarker([p.lat, p.lng], {
+              radius: 5, fillColor: '#146bb7', color: '#fff', weight: 1.5,
+              fillOpacity: 0.85
+            }).addTo(map).bindPopup(p.name);
+            marker.on('mouseover', function() { this.setRadius(8); });
+            marker.on('mouseout', function() { this.setRadius(5); });
           });
 
-          // Draw airport markers
-          var airports = {};
-          places.forEach(function(p) {
-            airports[p.from.join(',')] = p.from;
-            airports[p.to.join(',')] = p.to;
-          });
-          var icon = L.divIcon({
-            className: 'airport-marker',
-            html: '<div style="width:12px;height:12px;background:#146bb7;border:2px solid #fff;border-radius:50%;box-shadow:0 0 8px rgba(20,107,183,0.6)"></div>',
-            iconSize: [12,12], iconAnchor: [6,6]
-          });
-          Object.values(airports).forEach(function(pos) {
-            L.marker(pos, {icon: icon}).addTo(map);
+          // Draw key flight routes
+          var routes = [
+            ['武汉','哥伦布'], ['哥伦布','旧金山'], ['旧金山','洛杉矶'],
+            ['旧金山','西雅图'], ['哥伦布','纽约'], ['上海','大阪'],
+            ['上海','首尔'], ['大阪','京都'],
+          ];
+          var lookup = {};
+          places.forEach(function(p) { lookup[p.name] = p; });
+          routes.forEach(function(r) {
+            var a = lookup[r[0]], b = lookup[r[1]];
+            if (!a || !b) return;
+            var latlngs = [];
+            var from = L.latLng(a.lat, a.lng);
+            var to = L.latLng(b.lat, b.lng);
+            var mid = L.latLng((a.lat+b.lat)/2+10, (a.lng+b.lng)/2);
+            for (var t = 0; t <= 1; t += 0.02) {
+              var la = (1-t)*(1-t)*from.lat + 2*(1-t)*t*mid.lat + t*t*to.lat;
+              var ln = (1-t)*(1-t)*from.lng + 2*(1-t)*t*mid.lng + t*t*to.lng;
+              latlngs.push([la, ln]);
+            }
+            L.polyline(latlngs, {
+              color: '#146bb7', weight: 1.2, opacity: 0.35, dashArray: '4 6'
+            }).addTo(map);
           });
           </script>
           <p style="text-align:center;color:#adb5bd;font-size:.85rem;margin-top:8px">拖拽地图查看航线</p>
