@@ -193,7 +193,7 @@ blockquote p{margin-bottom:0;font-style:italic}
 .travel-stat{display:flex;flex-direction:column;align-items:center;background:#fff;border-radius:10px;padding:14px 22px;border:1px solid #ffe0cc;transition:all .3s;min-width:90px}
 .travel-stat:hover{border-color:#de7b85;transform:translateY(-2px);box-shadow:0 4px 12px rgba(222,123,133,.1)}
 .travel-stat strong{font-size:1.6rem;color:#de7b85;font-weight:800;line-height:1.2}
-.travel-stat .stat-unit{font-size:.8rem;font-weight:500;color:#c9878e;margin-left:1px}
+.travel-stat .stat-unit{font-size:.8rem;font-weight:500;color:#c9878e;margin-left:3px}
 .travel-stat span{font-size:.72rem;color:#adb5bd;font-weight:500;margin-top:2px}
 /* Blog about card */
 .blog-about-card{background:#f8f9fa;border-radius:14px;padding:28px 32px;border:1px solid #e9ecef;position:relative}
