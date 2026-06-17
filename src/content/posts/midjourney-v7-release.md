@@ -1,11 +1,11 @@
 ---
-title: "Midjourney V8 发布：AI 生图已经可以以假乱真了"
+title: "Midjourney V7 发布：AI 生图离以假乱真越来越近了"
 date: 2026-04-12T16:00:00+08:00
 categories: ['AI', '新闻']
-description: "Midjourney V8 发布，图像真实度达到「摄影级」，AI 生成内容与真实照片的界限越来越模糊。"
+description: "Midjourney V7 发布，图像真实度大幅提升，AI 生图的进步速度依然惊人。"
 ---
 
-Midjourney V8 来了，效果太震撼了。
+Midjourney V7 来了，效果又进步了一大截。
 
 ## 提升
 
