@@ -73,10 +73,11 @@ blockquote p{margin-bottom:0;font-style:italic}
 .tg-header-action-menu li.tg-mobile-menu-toggle span{display:block;width:100%;height:2px;background:#16181a;margin:2px 0;transition:.3s}
 .tg-search-toggle i{font-size:18px}
 
-.cenote-header-sticky{position:fixed;top:0;left:0;right:0;z-index:9999;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.1);transform:translateY(-100%);transition:transform .3s}
-.cenote-sticky-header--not-top{transform:translateY(0)}
+.cenote-header-sticky{position:fixed;top:0;left:0;right:0;z-index:9999;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.08);transform:translateY(-100%);transition:transform .3s}
+.cenote-header-sticky.visible{transform:translateY(0)}
 .cenote-reading-bar{background:#f8f9fa;padding:5px 0}
 .cenote-sticky-main{padding:10px 0}
+.cenote-sticky-main .sticky-title{font-family:"Catamaran",sans-serif;font-weight:700;font-size:1rem;color:#16181a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:600px}
 
 .page-header{padding:20px 0;margin-bottom:40px;border-bottom:1px solid #f1f3f5}
 .page-header .page-title{font-size:1.313rem;font-weight:700;color:#16181a}

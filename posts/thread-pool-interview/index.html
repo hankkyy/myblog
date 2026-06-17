@@ -50,14 +50,9 @@
 </header>
 <nav id="cenote-sticky-header" class="cenote-header-sticky">
   <div class="sticky-header-slide">
-    <div class="cenote-reading-bar">
-      <div class="container tg-flex-container tg-flex-item-centered"></div>
-    </div>
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <nav class="main-navigation cenote-sticky-navigation tg-site-menu--default">
-          <div class="menu-menu-container"><ul class="menu" style="justify-content:center"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/" class="active">首页</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/posts/">文章列表</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/about/">关于</a></li></ul></div>
-        </nav>
+        <span class="sticky-title">线程池面试八连问：核心参数、拒绝策略和调优思路</span>
       </div>
     </div>
   </div>
@@ -159,7 +154,7 @@
 </footer>
 <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:#16181a;color:#fff;border:none;cursor:pointer;font-size:20px;display:none;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,.2)">↑</button>
 <script>
-window.addEventListener('scroll',function(){document.getElementById('back-to-top').style.display=window.scrollY>300?'block':'none'});
+window.addEventListener('scroll',function(){document.getElementById('back-to-top').style.display=window.scrollY>300?'block':'none';var s=document.getElementById('cenote-sticky-header');if(s)s.classList.toggle('visible',window.scrollY>200);});
 </script>
 </div>
 </body>

@@ -29,7 +29,7 @@ def menu_html(current="/"):
     return "".join(parts)
 
 
-def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_class="layout--no-sidebar", extra_body_class=""):
+def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_class="layout--no-sidebar", extra_body_class="", sticky_title=""):
     main_nav = menu_html(current)
     st = SITE["title"]
     site_title_tag = "h1" if is_home else "p"
@@ -88,14 +88,9 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
 </header>
 <nav id="cenote-sticky-header" class="cenote-header-sticky">
   <div class="sticky-header-slide">
-    <div class="cenote-reading-bar">
-      <div class="container tg-flex-container tg-flex-item-centered"></div>
-    </div>
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <nav class="main-navigation cenote-sticky-navigation tg-site-menu--default">
-          <div class="menu-menu-container"><ul class="menu" style="justify-content:center">{main_nav}</ul></div>
-        </nav>
+        {f'<span class="sticky-title">{sticky_title}</span>' if sticky_title else f'<nav class="main-navigation cenote-sticky-navigation tg-site-menu--default"><div class="menu-menu-container"><ul class="menu" style="justify-content:center">{main_nav}</ul></div></nav>'}
       </div>
     </div>
   </div>
@@ -119,7 +114,7 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
 </footer>
 <button id="back-to-top" onclick="window.scrollTo({{top:0,behavior:'smooth'}})" style="position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:#16181a;color:#fff;border:none;cursor:pointer;font-size:20px;display:none;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,.2)">↑</button>
 <script>
-window.addEventListener('scroll',function(){{document.getElementById('back-to-top').style.display=window.scrollY>300?'block':'none'}});
+window.addEventListener('scroll',function(){{document.getElementById('back-to-top').style.display=window.scrollY>300?'block':'none';var s=document.getElementById('cenote-sticky-header');if(s)s.classList.toggle('visible',window.scrollY>200);}});
 </script>
 </div>
 </body>
@@ -403,7 +398,8 @@ def build():
         html = page_html(f"{p['title']} – {SITE['title']}",
             f'<div class="tg-flex-container tg-flex-space-between">{body}{side}</div>',
             desc=p["description"],
-            body_class="layout--right-sidebar")
+            body_class="layout--right-sidebar",
+            sticky_title=p["title"])
         d = ROOT / "posts" / p["slug"]
         d.mkdir(parents=True, exist_ok=True)
         (d / "index.html").write_text(html)
