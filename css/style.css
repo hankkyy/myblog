@@ -176,3 +176,5 @@ article:last-of-type{margin-bottom:0}
   .entry-meta{flex-wrap:wrap}
 }
 #search-inline input{height:30px!important;font-size:13px!important;padding:2px 8px!important}
+#search-inline .pagefind-ui__form{height:30px!important}
+#search-inline .pagefind-ui__search-input{height:30px!important;font-size:13px!important;padding:0 8px!important}
