@@ -16,7 +16,7 @@ CSS_DIR = ROOT / "css"
 SITE = {"title":"纵横四海","url":"https://hankzhang.us/","desc":"但行好事，莫问前程"}
 AUTHOR = "张子豪"
 YEAR = str(datetime.now().year)
-MENU = [("首页","/"),("文章列表","/posts/"),("留言板","/guestbook/"),("关于","/about/"),("管理","https://github.com/hankkyy/myblog")]
+MENU = [("首页","/"),("文章列表","/posts/"),("留言板","/guestbook/"),("关于","/about/"),("管理","https://vercel.com/hankkyys-projects/myblog")]
 SAFE = {".git","src","vercel.json",".gitignore","README.md","pagefind"}
 
 
