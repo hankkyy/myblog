@@ -110,7 +110,7 @@ blockquote p{margin-bottom:0;font-style:italic}
 
 .cat-index-group{margin-bottom:30px}
 .cat-index-group.collapsed .cat-index-articles{display:none}
-.cat-index-heading{font-family:"Catamaran",sans-serif;font-size:1.3rem;font-weight:700;color:#16181a;padding:12px 0;border-bottom:1px solid #f1f3f5;cursor:pointer;user-select:none;transition:color .2s}
+.cat-index-heading{font-family:"Catamaran",sans-serif;font-size:1.3rem;font-weight:700;color:#16181a;padding:12px 0;border-bottom:1px solid #f1f3f5;cursor:pointer;user-select:none;transition:color .2s;display:flex;align-items:center;gap:4px}
 .cat-index-heading:hover{color:#146bb7}
 .cat-index-heading .toggle-icon{font-size:.9rem;color:#adb5bd;margin-left:8px;transition:transform .3s;display:inline-block}
 .cat-index-heading.collapsed .toggle-icon{transform:rotate(-90deg)}
