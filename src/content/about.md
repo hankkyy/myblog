@@ -33,4 +33,4 @@ date: 2026-06-17T12:00:00+08:00
 ---
 
 GitHub: [hankkyy](https://github.com/hankkyy)  
-Email: hankzhang@example.com
+Email: hank.zihao@gmail.com
