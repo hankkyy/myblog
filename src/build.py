@@ -34,9 +34,7 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
     st = SITE["title"]
     site_title_tag = "h1" if is_home else "p"
     desc_meta = f'<meta name="description" content="{desc}">' if desc else ""
-    pagefind_css = '<link rel="stylesheet" href="/pagefind/pagefind-ui.css">' if is_home else ""
     bc = f"{body_class} {extra_body_class}".strip()
-    search_html = '<div id="search-inline" style="width:200px"></div>' if is_home else ""
 
     return f"""<!DOCTYPE html>
 <html lang="zh-Hans">
@@ -63,7 +61,6 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
 }}
 </script>
 <link rel="stylesheet" href="/css/style.css">
-{pagefind_css}
 </head>
 <body class="{bc}">
 <div id="page" class="site">
@@ -84,7 +81,6 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
         <nav id="site-navigation" class="main-navigation tg-site-menu--default" style="display:inline-flex;align-items:center;gap:10px">
           <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu" style="justify-content:center">{main_nav}</ul></div>
         </nav>
-        {search_html}
       </div>
     </div>
   </div>
@@ -108,7 +104,6 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
 {body}
   </div>
 </div>
-{"<script src=\"/pagefind/pagefind-ui.js\"></script>\n<script>\n  new PagefindUI({ element: \"#search-inline\", showSubResults: false, showImages: false });\n</script>" if is_home else ""}
 <footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
   <div class="tg-footer-bottom">
     <div class="container">
@@ -393,20 +388,6 @@ def build():
     (ROOT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {SITE['url']}sitemap.xml\n")
 
     print(f"✅ 构建完成！{len(posts)} 篇文章，{len(cats)} 个分类")
-
-    # 运行 Pagefind 生成搜索索引
-    import subprocess
-    try:
-        result = subprocess.run(
-            ["npx", "--yes", "pagefind", "--site", str(ROOT)],
-            capture_output=True, text=True, timeout=60, cwd=str(ROOT)
-        )
-        if result.returncode == 0:
-            print("✅ Pagefind 搜索索引已生成")
-        else:
-            print(f"⚠️ Pagefind: {result.stderr.strip()}")
-    except Exception as e:
-        print(f"⚠️ Pagefind 跳过: {e}")
 
 
 if __name__ == "__main__":
