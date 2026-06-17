@@ -268,21 +268,55 @@ def build():
 
     home_title = f"{SITE['title']} – {SITE['desc']}"
 
-    # ===== HOMEPAGE: first article full-width, rest in 3-column grid =====
-    first_card = article_card(posts[0]) if posts else ""
-    rest_cards = "\n".join(article_card(p) for p in posts[1:]) if len(posts) > 1 else ""
-    home_body = f"""<div id="primary" class="content-area">
+    # ===== HOMEPAGE with pagination: 10 per page, first full-width, rest 3-col grid =====
+    PER_PAGE = 10
+    total_pages = (len(posts) + PER_PAGE - 1) // PER_PAGE
+
+    def pagination_html(current_page):
+        if total_pages <= 1:
+            return ""
+        links = []
+        for pg in range(1, total_pages + 1):
+            if pg == current_page:
+                links.append(f'<span class="page-numbers current">{pg}</span>')
+            else:
+                href = "/" if pg == 1 else f"/page/{pg}/"
+                links.append(f'<a class="page-numbers" href="{href}">{pg}</a>')
+        return f'<nav class="navigation pagination" aria-label="文章分页"><div class="nav-links">{"".join(links)}</div></nav>'
+
+    for page_num in range(1, total_pages + 1):
+        start = (page_num - 1) * PER_PAGE
+        end = start + PER_PAGE
+        page_posts = posts[start:end]
+
+        first_card = article_card(page_posts[0]) if page_posts else ""
+        rest_cards = "\n".join(article_card(p) for p in page_posts[1:]) if len(page_posts) > 1 else ""
+        pgn = pagination_html(page_num)
+
+        page_body = f"""<div id="primary" class="content-area">
           <main id="main" class="site-main">
             <div class="tg-archive-featured">{first_card}</div>
             <div class="tg-archive-grid tg-archive-col--3">{rest_cards}</div>
+            {pgn}
           </main>
         </div>"""
-    homepage = page_html(home_title,
-        home_body,
-        is_home=True,
-        body_class="layout--no-sidebar",
-        extra_body_class="tg-archive-style--big-block")
-    (ROOT / "index.html").write_text(homepage)
+
+        if page_num == 1:
+            page_title = home_title
+            out_dir = ROOT
+        else:
+            page_title = f"第{page_num}页 – {SITE['title']}"
+            out_dir = ROOT / "page" / str(page_num)
+
+        out_dir.mkdir(parents=True, exist_ok=True)
+        (out_dir / "index.html").write_text(page_html(
+            page_title,
+            page_body,
+            is_home=(page_num == 1),
+            body_class="layout--no-sidebar",
+            extra_body_class="tg-archive-style--big-block",
+            current="/" if page_num == 1 else f"/page/{page_num}/"
+        ))
 
     # ===== /posts/ = 文章列表 with timeline =====
     (ROOT / "posts").mkdir(parents=True, exist_ok=True)
