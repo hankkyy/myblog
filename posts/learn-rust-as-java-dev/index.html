@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>腾讯云降价 60%：中国云计算进入价格战时代 – 纵横四海</title>
-<meta name="description" content="腾讯云宣布全线降价最高 60%，回应阿里云此前的降价策略。中国云计算市场进入白热化价格战。">
-<meta property="og:title" content="腾讯云降价 60%：中国云计算进入价格战时代 – 纵横四海">
-<meta property="og:description" content="腾讯云宣布全线降价最高 60%，回应阿里云此前的降价策略。中国云计算市场进入白热化价格战。">
+<title>作为 Java 开发者，我是怎么开始学 Rust 的 – 纵横四海</title>
+<meta name="description" content="从 Java 程序员的视角出发，理解 Rust 的所有权、借用的核心概念，对比两种语言的思维方式差异。">
+<meta property="og:title" content="作为 Java 开发者，我是怎么开始学 Rust 的 – 纵横四海">
+<meta property="og:description" content="从 Java 程序员的视角出发，理解 Rust 的所有权、借用的核心概念，对比两种语言的思维方式差异。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "腾讯云降价 60%：中国云计算进入价格战时代 – 纵横四海",
-  "description": "腾讯云宣布全线降价最高 60%，回应阿里云此前的降价策略。中国云计算市场进入白热化价格战。",
+  "headline": "作为 Java 开发者，我是怎么开始学 Rust 的 – 纵横四海",
+  "description": "从 Java 程序员的视角出发，理解 Rust 的所有权、借用的核心概念，对比两种语言的思维方式差异。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -68,36 +68,40 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/tencent-cloud-price-war/" rel="bookmark"><time class="entry-date published" datetime="2025-09-22">2025年9月22日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/learn-rust-as-java-dev/" rel="bookmark"><time class="entry-date published" datetime="2025-02-05">2025年2月5日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">腾讯云降价 60%：中国云计算进入价格战时代</h1>
+                <h1 class="entry-title">作为 Java 开发者，我是怎么开始学 Rust 的</h1>
               </header>
-              <div class="entry-content"><p>国内云厂商的价格战越来越猛了。</p>
-<p>今年 4 月阿里云率先降价，最高降幅 55%。现在腾讯云跟进，最高降 60%。</p>
-<h2>降了什么</h2>
-<ul>
-<li>ECS/云服务器：降价 40-60%</li>
-<li>CDN：降价 50%</li>
-<li>对象存储：降价 30%</li>
-<li>数据库（MySQL/PostgreSQL）：降价 25-40%</li>
-</ul>
-<h2>为什么降价</h2>
-<ol>
-<li><strong>市场竞争</strong>：华为云、字节火山引擎在抢份额</li>
-<li><strong>硬件成本下降</strong>：国产 GPU/CPU 的量产</li>
-<li><strong>AI 驱动效率</strong>：自动化运维减少了人力成本</li>
-<li><strong>锁定客户</strong>：降价换规模，后面靠增值服务赚钱</li>
-</ol>
-<h2>对开发者意味着什么</h2>
-<p>短期看是好事，同样的预算能买到更多机器。但长期看，小厂商会被挤出市场，最终可能回到寡头垄断。</p>
-<p>另外，降价的主要是基础资源。真正赚钱的是数据库、中间件、AI 平台等 PaaS 产品，这些没怎么降价。</p>
-<p>对于我们做技术的来说，云原生能力越来越重要了，因为企业会倾向于用云原生架构来降低对特定云厂商的依赖。</p></div>
-              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/新闻/" rel="category">新闻</a></span></footer>
+              <div class="entry-content"><p>最近开始学 Rust，作为写了几年 Java 的人，思维方式确实需要转换。</p>
+<h2>最大的不同：所有权</h2>
+<p>Java 的垃圾回收让我们习惯了「随便创建对象，GC 会处理」。Rust 让你自己管理内存，但编译器会帮你检查是否正确。</p>
+<div class="codehilite"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">s2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s1</span><span class="p">;</span><span class="w">  </span><span class="c1">// s1 的所有权转移给了 s2</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s1</span><span class="p">);</span><span class="w">  </span><span class="c1">// 编译错误！s1 已经无效了</span>
+</code></pre></div>
+
+<p>这跟 Java 完全不同——Java 里 <code>s1</code> 和 <code>s2</code> 可以指向同一个对象。</p>
+<h2>借用（Borrowing）</h2>
+<p>如果不想转移所有权，可以用引用（借用）：</p>
+<div class="codehilite"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">s2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">s1</span><span class="p">;</span><span class="w">  </span><span class="c1">// s2 借用 s1，s1 依然有效</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s1</span><span class="p">);</span><span class="w">  </span><span class="c1">// 没问题</span>
+</code></pre></div>
+
+<h2>Rust 对 Java 开发者的启发</h2>
+<p>即使不写 Rust，理解所有权和借用的概念能让你写出更好的 Java 代码：
+- 更清楚对象的生命周期
+- 更谨慎地处理可变状态
+- 减少不必要的对象拷贝</p>
+<h2>学习建议</h2>
+<p>不要一上来就看《The Rust Book》，先看 Rustlings（互动式练习），跟着敲一遍。然后写一个小项目（命令行工具、简单的 HTTP 服务）。</p>
+<p>Rust 的学习曲线比 Java 陡，但收获也比想象中大。</p></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/learning-from-failure/" rel="prev"><span class="nav-links__label">上一篇文章</span> 那些年我搞砸过的技术决策</a></div><div class="nav-next"><a href="/posts/shopee-layoffs-2025/" rel="next"><span class="nav-links__label">下一篇文章</span> Shopee 母公司冬海集团裁员 15%：东南亚电商的寒冬还没结束</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/sam-altman-fired-return/" rel="prev"><span class="nav-links__label">上一篇文章</span> OpenAI 宫斗续集：Sam Altman 回归一年后 OpenAI 变成什么样了？</a></div><div class="nav-next"><a href="/posts/tech-winter-2025/" rel="next"><span class="nav-links__label">下一篇文章</span> 2025 科技寒冬：硅谷裁员潮背后的结构性变化</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">

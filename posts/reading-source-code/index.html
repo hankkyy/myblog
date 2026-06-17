@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>腾讯云降价 60%：中国云计算进入价格战时代 – 纵横四海</title>
-<meta name="description" content="腾讯云宣布全线降价最高 60%，回应阿里云此前的降价策略。中国云计算市场进入白热化价格战。">
-<meta property="og:title" content="腾讯云降价 60%：中国云计算进入价格战时代 – 纵横四海">
-<meta property="og:description" content="腾讯云宣布全线降价最高 60%，回应阿里云此前的降价策略。中国云计算市场进入白热化价格战。">
+<title>读源码是成为更好程序员的最佳捷径 – 纵横四海</title>
+<meta name="description" content="分享读源码的方法：从 Redis 的简洁代码到 Spring 的复杂架构，不同级别的代码该怎么读。">
+<meta property="og:title" content="读源码是成为更好程序员的最佳捷径 – 纵横四海">
+<meta property="og:description" content="分享读源码的方法：从 Redis 的简洁代码到 Spring 的复杂架构，不同级别的代码该怎么读。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "腾讯云降价 60%：中国云计算进入价格战时代 – 纵横四海",
-  "description": "腾讯云宣布全线降价最高 60%，回应阿里云此前的降价策略。中国云计算市场进入白热化价格战。",
+  "headline": "读源码是成为更好程序员的最佳捷径 – 纵横四海",
+  "description": "分享读源码的方法：从 Redis 的简洁代码到 Spring 的复杂架构，不同级别的代码该怎么读。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -68,36 +68,42 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/tencent-cloud-price-war/" rel="bookmark"><time class="entry-date published" datetime="2025-09-22">2025年9月22日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/reading-source-code/" rel="bookmark"><time class="entry-date published" datetime="2025-05-08">2025年5月8日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">腾讯云降价 60%：中国云计算进入价格战时代</h1>
+                <h1 class="entry-title">读源码是成为更好程序员的最佳捷径</h1>
               </header>
-              <div class="entry-content"><p>国内云厂商的价格战越来越猛了。</p>
-<p>今年 4 月阿里云率先降价，最高降幅 55%。现在腾讯云跟进，最高降 60%。</p>
-<h2>降了什么</h2>
+              <div class="entry-content"><p>很多人觉得读源码太难了，其实有方法。</p>
+<h2>为什么读源码</h2>
 <ul>
-<li>ECS/云服务器：降价 40-60%</li>
-<li>CDN：降价 50%</li>
-<li>对象存储：降价 30%</li>
-<li>数据库（MySQL/PostgreSQL）：降价 25-40%</li>
+<li>文档会过时，代码不会骗你</li>
+<li>理解为什么这样设计，而不只是怎么用</li>
+<li>写出更符合框架设计哲学的代码</li>
+<li>为贡献开源项目做准备</li>
 </ul>
-<h2>为什么降价</h2>
-<ol>
-<li><strong>市场竞争</strong>：华为云、字节火山引擎在抢份额</li>
-<li><strong>硬件成本下降</strong>：国产 GPU/CPU 的量产</li>
-<li><strong>AI 驱动效率</strong>：自动化运维减少了人力成本</li>
-<li><strong>锁定客户</strong>：降价换规模，后面靠增值服务赚钱</li>
-</ol>
-<h2>对开发者意味着什么</h2>
-<p>短期看是好事，同样的预算能买到更多机器。但长期看，小厂商会被挤出市场，最终可能回到寡头垄断。</p>
-<p>另外，降价的主要是基础资源。真正赚钱的是数据库、中间件、AI 平台等 PaaS 产品，这些没怎么降价。</p>
-<p>对于我们做技术的来说，云原生能力越来越重要了，因为企业会倾向于用云原生架构来降低对特定云厂商的依赖。</p></div>
-              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/新闻/" rel="category">新闻</a></span></footer>
+<h2>怎么读</h2>
+<h3>1. 从入口开始</h3>
+<p>找到 main 函数或请求处理的第一行代码，跟着调用链往下走。</p>
+<h3>2. 画调用图</h3>
+<p>不用工具，纸和笔就够了。每个函数的功能用一句话总结。</p>
+<h3>3. 忽略细节</h3>
+<p>第一次通读时忽略异常处理、日志、参数校验。这些会干扰对主流程的理解。</p>
+<h3>4. 修一个小 bug</h3>
+<p>找一个 good first issue，试着修复。修 bug 是理解代码最快的方式。</p>
+<h2>推荐阅读顺序</h2>
+<ul>
+<li>入门级：Redis 源码（代码极其简洁，C 语言）</li>
+<li>进阶：Netty 核心模块（Reactor 模式的教科书实现）</li>
+<li>高级：Spring IoC 容器（设计模式的集大成者）</li>
+</ul>
+<h2>心态</h2>
+<p>不要期望一次就读懂全部。每次带着一个问题去读：「这块代码是做什么的？」「为什么要这样设计？」。</p>
+<p>读源码最大的收获不是「看懂了什么」，而是「发现原来这么复杂的东西也是普通程序员一行一行写出来的」。</p></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a><a href="/categories/杂谈/" rel="category">杂谈</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/learning-from-failure/" rel="prev"><span class="nav-links__label">上一篇文章</span> 那些年我搞砸过的技术决策</a></div><div class="nav-next"><a href="/posts/shopee-layoffs-2025/" rel="next"><span class="nav-links__label">下一篇文章</span> Shopee 母公司冬海集团裁员 15%：东南亚电商的寒冬还没结束</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/git-workflow-best-practices/" rel="prev"><span class="nav-links__label">上一篇文章</span> Git 工作流最佳实践：从单人项目到团队协作</a></div><div class="nav-next"><a href="/posts/cdn-edge-computing/" rel="next"><span class="nav-links__label">下一篇文章</span> CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">

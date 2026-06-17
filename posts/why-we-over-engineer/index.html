@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>腾讯云降价 60%：中国云计算进入价格战时代 – 纵横四海</title>
-<meta name="description" content="腾讯云宣布全线降价最高 60%，回应阿里云此前的降价策略。中国云计算市场进入白热化价格战。">
-<meta property="og:title" content="腾讯云降价 60%：中国云计算进入价格战时代 – 纵横四海">
-<meta property="og:description" content="腾讯云宣布全线降价最高 60%，回应阿里云此前的降价策略。中国云计算市场进入白热化价格战。">
+<title>为什么我们总喜欢过度设计：从「Hello World」到「微服务架构」的反思 – 纵横四海</title>
+<meta name="description" content="聊聊技术圈过度设计的现象，为什么简单的方案往往是最好的方案。">
+<meta property="og:title" content="为什么我们总喜欢过度设计：从「Hello World」到「微服务架构」的反思 – 纵横四海">
+<meta property="og:description" content="聊聊技术圈过度设计的现象，为什么简单的方案往往是最好的方案。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "腾讯云降价 60%：中国云计算进入价格战时代 – 纵横四海",
-  "description": "腾讯云宣布全线降价最高 60%，回应阿里云此前的降价策略。中国云计算市场进入白热化价格战。",
+  "headline": "为什么我们总喜欢过度设计：从「Hello World」到「微服务架构」的反思 – 纵横四海",
+  "description": "聊聊技术圈过度设计的现象，为什么简单的方案往往是最好的方案。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -68,36 +68,43 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/tencent-cloud-price-war/" rel="bookmark"><time class="entry-date published" datetime="2025-09-22">2025年9月22日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/why-we-over-engineer/" rel="bookmark"><time class="entry-date published" datetime="2025-03-08">2025年3月8日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">腾讯云降价 60%：中国云计算进入价格战时代</h1>
+                <h1 class="entry-title">为什么我们总喜欢过度设计：从「Hello World」到「微服务架构」的反思</h1>
               </header>
-              <div class="entry-content"><p>国内云厂商的价格战越来越猛了。</p>
-<p>今年 4 月阿里云率先降价，最高降幅 55%。现在腾讯云跟进，最高降 60%。</p>
-<h2>降了什么</h2>
-<ul>
-<li>ECS/云服务器：降价 40-60%</li>
-<li>CDN：降价 50%</li>
-<li>对象存储：降价 30%</li>
-<li>数据库（MySQL/PostgreSQL）：降价 25-40%</li>
-</ul>
-<h2>为什么降价</h2>
+              <div class="entry-content"><p>你有没有过这种经历：本来只需要一个简单的脚本，最后搭建了一整套微服务架构。</p>
+<h2>过度设计的症状</h2>
 <ol>
-<li><strong>市场竞争</strong>：华为云、字节火山引擎在抢份额</li>
-<li><strong>硬件成本下降</strong>：国产 GPU/CPU 的量产</li>
-<li><strong>AI 驱动效率</strong>：自动化运维减少了人力成本</li>
-<li><strong>锁定客户</strong>：降价换规模，后面靠增值服务赚钱</li>
+<li><strong>提前优化</strong>：现在只有 100 个用户，就考虑千万级并发</li>
+<li><strong>炫技式选型</strong>：用 Kafka 替代一个简单的队列、用 K8s 部署一个单页应用</li>
+<li><strong>抽象地狱</strong>：三层接口、五层继承，为了「扩展性」牺牲了可读性</li>
+<li><strong>技术崇拜</strong>：「xx大厂用的方案肯定是对的」</li>
 </ol>
-<h2>对开发者意味着什么</h2>
-<p>短期看是好事，同样的预算能买到更多机器。但长期看，小厂商会被挤出市场，最终可能回到寡头垄断。</p>
-<p>另外，降价的主要是基础资源。真正赚钱的是数据库、中间件、AI 平台等 PaaS 产品，这些没怎么降价。</p>
-<p>对于我们做技术的来说，云原生能力越来越重要了，因为企业会倾向于用云原生架构来降低对特定云厂商的依赖。</p></div>
-              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/新闻/" rel="category">新闻</a></span></footer>
+<h2>为什么简单更好</h2>
+<ul>
+<li>简单的代码更容易理解和维护</li>
+<li>简单的架构调试成本低</li>
+<li>简单的方案迭代速度更快</li>
+<li>简单不等于简陋——Antirez 的 Redis 就极其简单但极其强大</li>
+</ul>
+<h2>什么时候该复杂</h2>
+<ul>
+<li>明确知道未来 6 个月内会遇到的场景</li>
+<li>已经撞到现有方案的瓶颈</li>
+<li>团队有能力和意愿维护这套复杂方案</li>
+</ul>
+<h2>我的原则</h2>
+<blockquote>
+<p>Make it work, make it right, make it fast.</p>
+</blockquote>
+<p>先让代码跑起来，再让它跑得正确，最后让它跑得飞快。大多数项目卡在了第一步，就已经开始在思考第三步了。</p>
+<p>戒掉过度设计，是成为成熟程序员的重要一步。</p></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/杂谈/" rel="category">杂谈</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/learning-from-failure/" rel="prev"><span class="nav-links__label">上一篇文章</span> 那些年我搞砸过的技术决策</a></div><div class="nav-next"><a href="/posts/shopee-layoffs-2025/" rel="next"><span class="nav-links__label">下一篇文章</span> Shopee 母公司冬海集团裁员 15%：东南亚电商的寒冬还没结束</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/anthropic-claude-4/" rel="prev"><span class="nav-links__label">上一篇文章</span> Anthropic 发布 Claude 4：主打「安全性」的 AI 能跑多远？</a></div><div class="nav-next"><a href="/posts/distributed-lock-deep-dive/" rel="next"><span class="nav-links__label">下一篇文章</span> 分布式锁的三代演进：从 Redis 到 Etcd 再到无锁设计</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">
