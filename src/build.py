@@ -61,6 +61,7 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
 }}
 </script>
 <link rel="stylesheet" href="/css/style.css">
+<link rel="icon" type="image/png" href="/favicon.png">
 </head>
 <body class="{bc}">
 <div id="page" class="site">
