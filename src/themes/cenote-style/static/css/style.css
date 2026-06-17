@@ -83,7 +83,7 @@ article, .hentry { margin-bottom: 80px; line-height: 1.6; }
 article:last-of-type { margin-bottom: 0; }
 
 /* 文章元信息 */
-.entry-meta { font-size: 12px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.entry-meta { font-size: 12px; margin-bottom: 12px; display: flex; align-items: center; flex-wrap: wrap; }
 .entry-meta .cat-links, .entry-meta .posted-on, .entry-meta .byline { letter-spacing: 1px; }
 .entry-meta .cat-links a { color: #146bb7; text-transform: uppercase; display: inline-block; font-size: 12px; }
 .entry-meta .posted-on { position: relative; padding-left: 60px; }

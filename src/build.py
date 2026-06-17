@@ -181,11 +181,7 @@ def cat_links(categories, in_footer=False):
 
 
 def posted_on(post):
-    return f"""<span class="posted-on">
-              <a href="/posts/{post['slug']}/" rel="bookmark">
-                <time class="entry-date published" datetime="{post['date_iso']}">{post['date_formatted']}</time>
-              </a>
-            </span>"""
+    return f'<span class="posted-on"><a href="/posts/{post["slug"]}/" rel="bookmark"><time class="entry-date published" datetime="{post["date_iso"]}">{post["date_formatted"]}</time></a></span>'
 
 
 def article_list_item(post):
@@ -247,12 +243,7 @@ def article_full(post, all_posts):
           <main id="main" class="site-main">
             <article class="post type-post hentry single">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">{AUTHOR}</a></span></span>
-                <span class="posted-on">
-                  <a href="/posts/{post['slug']}/" rel="bookmark">
-                    <time class="entry-date published" datetime="{post['date_iso']}">{post['date_formatted']}</time>
-                  </a>
-                </span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">{AUTHOR}</a></span></span><span class="posted-on"><a href="/posts/{post['slug']}/" rel="bookmark"><time class="entry-date published" datetime="{post['date_iso']}">{post['date_formatted']}</time></a></span>
               </div>
               <header class="entry-header">
                 <h1 class="entry-title">{post['title']}</h1>
