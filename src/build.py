@@ -451,38 +451,64 @@ def build():
         travel_map = """
           <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
           <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-          <h3 style="margin-top:40px">🗺️ 足迹</h3>
-          <div id="travel-map" style="height:380px;border-radius:8px;margin:20px 0"></div>
+          <h3 style="margin-top:40px">✈️ 飞行日志</h3>
+          <div id="travel-map" style="height:420px;border-radius:8px;margin:20px 0"></div>
           <script>
-          var map = L.map('travel-map', {scrollWheelZoom: false}).setView([35, 100], 3);
-          L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
+          var map = L.map('travel-map', {scrollWheelZoom: false}).setView([30, 110], 3);
+          L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OSM contributors'
           }).addTo(map);
+
           var places = [
-            {name:'武汉', lat:30.59, lng:114.31},
-            {name:'哥伦布', lat:40.00, lng:-83.01},
-            {name:'纽约', lat:40.71, lng:-74.01},
-            {name:'旧金山', lat:37.77, lng:-122.42},
-            {name:'洛杉矶', lat:34.05, lng:-118.24},
-            {name:'芝加哥', lat:41.88, lng:-87.63},
-            {name:'西雅图', lat:47.61, lng:-122.33},
-            {name:'北京', lat:39.90, lng:116.41},
-            {name:'上海', lat:31.23, lng:121.47},
-            {name:'东京', lat:35.68, lng:139.76},
-            {name:'首尔', lat:37.57, lng:126.98},
-            {name:'新加坡', lat:1.35, lng:103.82},
-            {name:'曼谷', lat:13.75, lng:100.50},
-            {name:'伦敦', lat:51.51, lng:-0.13},
-            {name:'巴黎', lat:48.86, lng:2.35},
+            {name:'武汉 ✈️ 哥伦布', from:[30.59,114.31], to:[40.00,-83.01]},
+            {name:'哥伦布 ✈️ 纽约', from:[40.00,-83.01], to:[40.71,-74.01]},
+            {name:'哥伦布 ✈️ 芝加哥', from:[40.00,-83.01], to:[41.88,-87.63]},
+            {name:'纽约 ✈️ 旧金山', from:[40.71,-74.01], to:[37.77,-122.42]},
+            {name:'旧金山 ✈️ 洛杉矶', from:[37.77,-122.42], to:[34.05,-118.24]},
+            {name:'旧金山 ✈️ 西雅图', from:[37.77,-122.42], to:[47.61,-122.33]},
+            {name:'上海 ✈️ 东京', from:[31.23,121.47], to:[35.68,139.76]},
+            {name:'上海 ✈️ 首尔', from:[31.23,121.47], to:[37.57,126.98]},
+            {name:'北京 ✈️ 上海', from:[39.90,116.41], to:[31.23,121.47]},
+            {name:'新加坡 ✈️ 曼谷', from:[1.35,103.82], to:[13.75,100.50]},
+            {name:'伦敦 ✈️ 巴黎', from:[51.51,-0.13], to:[48.86,2.35]},
           ];
+
+          // Draw curved flight routes
           places.forEach(function(p) {
-            L.circleMarker([p.lat, p.lng], {
-              radius: 6, fillColor: '#146bb7', color: '#fff', weight: 2,
-              fillOpacity: 0.9
-            }).addTo(map).bindPopup(p.name);
+            var latlngs = [];
+            var from = L.latLng(p.from[0], p.from[1]);
+            var to = L.latLng(p.to[0], p.to[1]);
+            var mid = L.latLng(
+              (p.from[0]+p.to[0])/2 + 8,
+              (p.from[1]+p.to[1])/2
+            );
+            for (var t = 0; t <= 1; t += 0.02) {
+              var a = (1-t)*(1-t)*from.lat + 2*(1-t)*t*mid.lat + t*t*to.lat;
+              var b = (1-t)*(1-t)*from.lng + 2*(1-t)*t*mid.lng + t*t*to.lng;
+              latlngs.push([a, b]);
+            }
+            var line = L.polyline(latlngs, {
+              color: '#146bb7', weight: 1.5, opacity: 0.5, dashArray: '6 4'
+            }).addTo(map);
+            line.bindPopup(p.name);
+          });
+
+          // Draw airport markers
+          var airports = {};
+          places.forEach(function(p) {
+            airports[p.from.join(',')] = p.from;
+            airports[p.to.join(',')] = p.to;
+          });
+          var icon = L.divIcon({
+            className: 'airport-marker',
+            html: '<div style="width:12px;height:12px;background:#146bb7;border:2px solid #fff;border-radius:50%;box-shadow:0 0 8px rgba(20,107,183,0.6)"></div>',
+            iconSize: [12,12], iconAnchor: [6,6]
+          });
+          Object.values(airports).forEach(function(pos) {
+            L.marker(pos, {icon: icon}).addTo(map);
           });
           </script>
-          <p style="text-align:center;color:#adb5bd;font-size:.85rem;margin-top:8px">滚动或拖拽地图查看</p>
+          <p style="text-align:center;color:#adb5bd;font-size:.85rem;margin-top:8px">拖拽地图查看航线</p>
         """
         (ROOT / "about" / "index.html").write_text(page_html(
             f"{about['title']} – {SITE['title']}",
