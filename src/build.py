@@ -525,9 +525,8 @@ def build():
           <main id="main" class="site-main">
             <article class="page type-page status-publish hentry">
               <header class="entry-header"><h1 class="entry-title">{about['title']}</h1></header>
-              <div class="entry-content">{about['content']}</div>
+              <div class="entry-content">{"".join(about['content'].replace("<!--MAP-->", travel_map))}</div>
             </article>
-            {travel_map}
           </main>
         </div>""",
             current="/about/",
