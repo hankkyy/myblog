@@ -80,12 +80,12 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
       </div>
     </div>
     <div class="header-bottom-bottom">
-      <div class="container" style="display:flex;justify-content:center">
+      <div class="container" style="display:flex;justify-content:center;align-items:center;gap:15px">
         <nav id="site-navigation" class="main-navigation tg-site-menu--default" style="display:inline-flex;align-items:center;gap:10px">
           <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu" style="justify-content:center">{main_nav}</ul></div>
         </nav>
+        {search_html}
       </div>
-      {f'<div style="max-width:250px;margin:8px auto 0;text-align:center">{search_html}</div>' if search_html else ''}
     </div>
   </div>
 </header>
