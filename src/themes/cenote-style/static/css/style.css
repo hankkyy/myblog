@@ -44,7 +44,7 @@ blockquote p{margin-bottom:0;font-style:italic}
 .skip-link:focus{top:0}
 
 /* Header */
-.tg-site-header .tg-header-top{background:#16181a;padding:10px 0;min-height:20px}
+.tg-site-header .tg-header-top{background:#16181a;min-height:40px;padding:0}
 .tg-site-header .tg-header-top ul{display:flex;list-style:none;margin:0;padding:0}
 .tg-site-header .tg-header-top ul li a{color:#fff;font-size:14px;text-decoration:none;margin-right:1.2rem}
 .tg-site-header .tg-header-top ul li a:hover{color:#bbb}
@@ -59,8 +59,9 @@ blockquote p{margin-bottom:0;font-style:italic}
 .site-branding .site-description{margin:0 0 30px;font-size:14px;color:#adb5bd}
 
 .main-navigation{flex:6}
-.tg-site-menu--default a{display:block;font-size:14px;text-decoration:none;border-bottom:2px solid transparent;padding:15px 0;transition:.4s ease;margin-left:10px;margin-right:10px;font-weight:400;color:#363b40}
-.tg-site-menu--default a:hover{color:#146bb7}
+.tg-site-menu--default a{display:block;font-size:14px;text-decoration:none;border-bottom:2px solid transparent;padding:15px 0;transition:.4s ease;margin-left:10px;margin-right:10px;font-weight:400;color:#16181a}
+.tg-site-menu--default a:hover{color:#16181a;border-bottom-color:#16181a}
+.tg-site-menu--default a.active{border-bottom-color:#16181a}
 .tg-site-menu--default ul{list-style:none;margin:0;padding-left:0;display:flex;flex-wrap:wrap}
 
 .tg-header-action-navigation{margin-left:auto}
