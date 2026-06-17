@@ -14,7 +14,7 @@ THEME = SRC / "themes" / "cenote-style"
 CSS_DIR = ROOT / "css"
 
 SITE = {"title":"纵横四海","url":"https://hankzhang.us/","desc":"但行好事，莫问前程"}
-AUTHOR = "张子豪"
+AUTHOR = "Zihao Zhang"
 YEAR = str(datetime.now().year)
 MENU = [("首页","/"),("文章列表","/posts/"),("联系","/guestbook/"),("关于","/about/"),("GitHub","https://github.com/hankkyy")]
 SAFE = {".git","src","vercel.json",".gitignore","README.md","pagefind"}
