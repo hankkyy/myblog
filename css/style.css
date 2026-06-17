@@ -114,6 +114,14 @@ blockquote p{margin-bottom:0;font-style:italic}
 .cat-index-heading:hover{color:#146bb7}
 .cat-index-heading .toggle-icon{font-size:.9rem;color:#adb5bd;margin-left:8px;transition:transform .3s;display:inline-block}
 .cat-index-heading.collapsed .toggle-icon{transform:rotate(-90deg)}
+@keyframes pulse {{
+  0% {{ transform: scale(1); opacity: 0.6; }}
+  100% {{ transform: scale(3); opacity: 0; }}
+}}
+.pulse-marker {{
+  animation: pulse 2s ease-out infinite;
+  transform-origin: center;
+}}
 .cat-index-articles{padding-top:20px}
 
 .cenote-breadcrumb{padding:15px 0}

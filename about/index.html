@@ -123,7 +123,7 @@
           var el = document.getElementById('travel-map');
           if (!el) return;
           var map = L.map('travel-map', {scrollWheelZoom: false, zoomControl: false, worldCopyJump: true, attributionControl: false}).setView([35, -170], 2);
-          L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+          L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg', {
             attribution: '&copy; Stadia Maps, &copy; Stamen Design, &copy; OSM'
           }).addTo(map);
           var cities = [
@@ -171,10 +171,12 @@
             {name:'首尔', lat:37.57, lng:126.98, size:5, color:'#e67e22'},
           ];
           cities.forEach(function(c) {
-            var m = L.circleMarker([c.lat, c.lng], {radius: c.size, fillColor: c.color, color: '#fff', weight: 1.5, fillOpacity: 0.85}).addTo(map);
+            var m = L.circleMarker([c.lat, c.lng], {radius: c.size+2, fillColor: c.color, color: '#fff', weight: 2, fillOpacity: 0.9, opacity: 0.8}).addTo(map);
             m.bindPopup('<b>' + c.name + '</b>');
-            m.on('mouseover', function() { this.setRadius(this.options.radius * 1.5); this.setStyle({fillOpacity:1}); });
-            m.on('mouseout', function() { this.setRadius(this.options.radius); this.setStyle({fillOpacity:0.85}); });
+            m.on('mouseover', function() { this.setRadius(this.options.radius * 2); this.setStyle({fillOpacity:1, opacity:1}); });
+            m.on('mouseout', function() { this.setRadius(this.options.radius); this.setStyle({fillOpacity:0.9, opacity:0.8}); });
+            // Pulse animation
+            var pulse = L.circleMarker([c.lat, c.lng], {radius: c.size+2, fillColor: c.color, fillOpacity: 0.2, color: c.color, weight: 1, opacity: 0.4, className: 'pulse-marker'}).addTo(map);
           });
           setTimeout(function() { map.invalidateSize(); }, 300);
           }, 200);
