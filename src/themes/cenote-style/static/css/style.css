@@ -47,10 +47,10 @@ blockquote p{margin-bottom:0;font-style:italic}
 .skip-link:focus{top:0}
 
 /* Header */
-.tg-site-header .tg-header-top{background:#16181a;height:3px;padding:0}
-.tg-site-header .tg-header-top ul{display:flex;list-style:none;margin:0}
-.tg-site-header .tg-header-top ul li a{color:#fff;font-size:14px;text-decoration:none;margin-right:1.2rem}
-.tg-site-header .tg-header-top ul li a:hover{color:#146bb7}
+.tg-site-header .tg-header-top{background:#16181a;padding:8px 0}
+.tg-site-header .tg-header-top ul{display:flex;list-style:none;margin:0;padding:0}
+.tg-site-header .tg-header-top ul li a{color:#fff;font-size:14px;text-decoration:none}
+.tg-site-header .tg-header-top ul li a:hover{color:#bbb}
 .tg-header-navigation{display:flex}
 .header-bottom-top{padding:5px 0}
 .header-bottom-bottom .container{padding:10px 0;border-top:2px solid #fff0e6;display:flex;justify-content:space-between;align-items:center}
