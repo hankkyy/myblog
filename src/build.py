@@ -13,7 +13,7 @@ CONTENT = SRC / "content"
 THEME = SRC / "themes" / "cenote-style"
 CSS_DIR = ROOT / "css"
 
-SITE = {"title":"新的原野","url":"https://hankzhang.us/","desc":"一片新的原野，一个充满爱与善良的博客"}
+SITE = {"title":"纵横四海","url":"https://hankzhang.us/","desc":"但行好事，莫问前程"}
 AUTHOR = "张子豪"
 YEAR = str(datetime.now().year)
 MENU = [("首页","/"),("文章列表","/posts/"),("留言板","/guestbook/"),("关于","/about/")]
