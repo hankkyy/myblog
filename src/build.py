@@ -74,17 +74,16 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
     <div class="header-bottom-top">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
         <div class="site-branding">
-          <{site_title_tag} class="site-title"><a href="{SITE['url']}" rel="home">{st}</a></{site_title_tag}>
-          <p class="site-description">{SITE['desc']}</p>
+          <{site_title_tag} class="site-title"><a href="{SITE['url']}" rel="home">{st}</a> <span style="font-size:14px;color:#adb5bd;font-weight:400">{SITE['desc']}</span></{site_title_tag}>
         </div>
       </div>
     </div>
     <div class="header-bottom-bottom">
-      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <nav id="site-navigation" class="main-navigation tg-site-menu--default" style="flex:1;text-align:center">
+      <div class="container" style="text-align:center">
+        <nav id="site-navigation" class="main-navigation tg-site-menu--default" style="display:inline-block">
           <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu" style="justify-content:center">{main_nav}</ul></div>
         </nav>
-        <span class="tg-search-toggle" onclick="var s=document.getElementById('search-inline');s.style.display=s.style.display==='none'?'block':'none';" style="cursor:pointer;font-size:18px;color:#16181a">🔍</span>
+        <span class="tg-search-toggle" onclick="var s=document.getElementById('search-inline');s.style.display=s.style.display==='none'?'block':'none';" style="cursor:pointer;font-size:18px;color:#16181a;margin-left:10px">🔍</span>
       </div>
       {f'<div id="search-inline" style="max-width:300px;margin:10px auto 0;display:none">{search_html}</div>' if search_html else ''}
     </div>
