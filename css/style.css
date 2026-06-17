@@ -73,7 +73,7 @@ blockquote p{margin-bottom:0;font-style:italic}
 .tg-header-action-menu li.tg-mobile-menu-toggle span{display:block;width:100%;height:2px;background:#16181a;margin:2px 0;transition:.3s}
 .tg-search-toggle i{font-size:18px}
 
-.cenote-header-sticky{position:fixed;top:0;left:0;right:0;z-index:9999;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.08);transform:translateY(-100%);transition:transform .3s}
+.cenote-header-sticky{position:fixed;top:0;left:0;right:0;z-index:9999;background:#e8f4fd;box-shadow:0 1px 3px rgba(0,0,0,.08);transform:translateY(-100%);transition:transform .3s}
 .cenote-header-sticky.visible{transform:translateY(0)}
 .cenote-reading-bar{background:#f8f9fa;padding:5px 0}
 .cenote-sticky-main{padding:10px 0}
