@@ -24,8 +24,8 @@ blockquote p{margin-bottom:0;font-style:italic}
 .tg-flex-space-between{justify-content:space-between}
 .tg-flex-item-centered{align-items:center}
 
-/* Grid — 2 columns, first article spans full width */
-.tg-archive-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:60px 30px}
+/* Grid — 3 columns, first article spans full width */
+.tg-archive-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:60px 30px}
 .tg-archive-grid > article:first-child{grid-column:1 / -1;width:100%}
 .tg-archive-col--3.tg-archive-grid, .tg-archive-col--2.tg-archive-grid{margin-left:0;margin-right:0}
 
