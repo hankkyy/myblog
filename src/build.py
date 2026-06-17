@@ -69,7 +69,7 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
 <div id="page" class="site">
 <a class="skip-link screen-reader-text" href="#content">跳到内容</a>
 <header id="masthead" class="site-header tg-site-header tg-site-header--default">
-  <div class="tg-header-top"><div class="container" style="display:flex;justify-content:center">{search_html}</div></div>
+  <div class="tg-header-top"></div>
   <div class="tg-header-bottom">
     <div class="header-bottom-top">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
@@ -84,7 +84,9 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
         <nav id="site-navigation" class="main-navigation tg-site-menu--default" style="flex:1;text-align:center">
           <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu">{main_nav}</ul></div>
         </nav>
+        <span class="tg-search-toggle" onclick="var s=document.getElementById('search-inline');s.style.display=s.style.display==='none'?'block':'none';" style="cursor:pointer;font-size:18px;color:#16181a">🔍</span>
       </div>
+      {f'<div id="search-inline" style="max-width:300px;margin:10px auto 0;display:none">{search_html}</div>' if search_html else ''}
     </div>
   </div>
 </header>
