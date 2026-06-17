@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>gRPC vs REST：什么时候该用 gRPC？ – 纵横四海</title>
 <link rel="stylesheet" href="/css/style.css">
+
 <meta name="description" content="Protobuf 编码、HTTP/2 多路复用、流式传输——gRPC 的优劣势分析">
 </head>
 <body class="layout--right-sidebar">
@@ -45,6 +46,9 @@
   </div>
 </nav>
 <div id="content" class="site-content">
+  <div class="container" id="search-container" style="max-width:600px;margin-bottom:30px">
+    <div id="search"></div>
+  </div>
   <div class="container">
 <div class="tg-flex-container tg-flex-space-between"><div id="primary" class="content-area">
           <main id="main" class="site-main">
@@ -155,6 +159,11 @@ HTTP/2:    单连接 [req1,req2,req3] → [res2,res1,res3]  ← 多路复用
         </aside></div>
   </div>
 </div>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+  new PagefindUI({ element: "#search", showSubResults: true });
+  document.getElementById('search-container').style.display = document.body.className.includes('right-sidebar') ? 'none' : '';
+</script>
 <footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
   <div class="tg-footer-bottom">
     <div class="container">

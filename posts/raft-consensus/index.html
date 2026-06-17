@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>分布式共识算法：Raft 为什么比 Paxos 更好懂 – 纵横四海</title>
 <link rel="stylesheet" href="/css/style.css">
+
 <meta name="description" content="从 Leader 选举、日志复制到安全性保证，图解 Raft 共识算法">
 </head>
 <body class="layout--right-sidebar">
@@ -45,6 +46,9 @@
   </div>
 </nav>
 <div id="content" class="site-content">
+  <div class="container" id="search-container" style="max-width:600px;margin-bottom:30px">
+    <div id="search"></div>
+  </div>
   <div class="container">
 <div class="tg-flex-container tg-flex-space-between"><div id="primary" class="content-area">
           <main id="main" class="site-main">
@@ -149,6 +153,11 @@ Leader → Client: OK (多数确认后)
         </aside></div>
   </div>
 </div>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+  new PagefindUI({ element: "#search", showSubResults: true });
+  document.getElementById('search-container').style.display = document.body.className.includes('right-sidebar') ? 'none' : '';
+</script>
 <footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
   <div class="tg-footer-bottom">
     <div class="container">

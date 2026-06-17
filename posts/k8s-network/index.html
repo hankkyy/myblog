@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程 – 纵横四海</title>
 <link rel="stylesheet" href="/css/style.css">
+
 <meta name="description" content="追踪一个请求从外部进入 K8s 集群到 Pod 的完整网络路径">
 </head>
 <body class="layout--right-sidebar">
@@ -45,6 +46,9 @@
   </div>
 </nav>
 <div id="content" class="site-content">
+  <div class="container" id="search-container" style="max-width:600px;margin-bottom:30px">
+    <div id="search"></div>
+  </div>
   <div class="container">
 <div class="tg-flex-container tg-flex-space-between"><div id="primary" class="content-area">
           <main id="main" class="site-main">
@@ -182,6 +186,11 @@
         </aside></div>
   </div>
 </div>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+  new PagefindUI({ element: "#search", showSubResults: true });
+  document.getElementById('search-container').style.display = document.body.className.includes('right-sidebar') ? 'none' : '';
+</script>
 <footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
   <div class="tg-footer-bottom">
     <div class="container">

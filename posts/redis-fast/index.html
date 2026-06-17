@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Redis 为什么快？单线程、IO 多路复用与数据结构分析 – 纵横四海</title>
 <link rel="stylesheet" href="/css/style.css">
+
 <meta name="description" content="从线程模型、epoll、高效数据结构三个层面解释 Redis 高性能的秘密">
 </head>
 <body class="layout--right-sidebar">
@@ -45,6 +46,9 @@
   </div>
 </nav>
 <div id="content" class="site-content">
+  <div class="container" id="search-container" style="max-width:600px;margin-bottom:30px">
+    <div id="search"></div>
+  </div>
   <div class="container">
 <div class="tg-flex-container tg-flex-space-between"><div id="primary" class="content-area">
           <main id="main" class="site-main">
@@ -162,6 +166,11 @@
         </aside></div>
   </div>
 </div>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+  new PagefindUI({ element: "#search", showSubResults: true });
+  document.getElementById('search-container').style.display = document.body.className.includes('right-sidebar') ? 'none' : '';
+</script>
 <footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
   <div class="tg-footer-bottom">
     <div class="container">

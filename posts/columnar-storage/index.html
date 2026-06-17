@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>为什么 ClickHouse 比 MySQL 快 100 倍？列式存储原理 – 纵横四海</title>
 <link rel="stylesheet" href="/css/style.css">
+
 <meta name="description" content="从磁盘 I/O、压缩、向量化执行三个层面理解列式存储的性能优势">
 </head>
 <body class="layout--right-sidebar">
@@ -45,6 +46,9 @@
   </div>
 </nav>
 <div id="content" class="site-content">
+  <div class="container" id="search-container" style="max-width:600px;margin-bottom:30px">
+    <div id="search"></div>
+  </div>
   <div class="container">
 <div class="tg-flex-container tg-flex-space-between"><div id="primary" class="content-area">
           <main id="main" class="site-main">
@@ -224,6 +228,11 @@ status:  [paid | pending | paid | ...] ← 和这列
         </aside></div>
   </div>
 </div>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+  new PagefindUI({ element: "#search", showSubResults: true });
+  document.getElementById('search-container').style.display = document.body.className.includes('right-sidebar') ? 'none' : '';
+</script>
 <footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
   <div class="tg-footer-bottom">
     <div class="container">

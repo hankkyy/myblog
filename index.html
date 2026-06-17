@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>纵横四海 – 但行好事，莫问前程</title>
 <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/pagefind/pagefind-ui.css">
 
 </head>
 <body class="layout--no-sidebar tg-archive-style--big-block">
@@ -45,6 +46,9 @@
   </div>
 </nav>
 <div id="content" class="site-content">
+  <div class="container" id="search-container" style="max-width:600px;margin-bottom:30px">
+    <div id="search"></div>
+  </div>
   <div class="container">
 <div id="primary" class="content-area">
           <main id="main" class="site-main">
@@ -266,6 +270,11 @@
         </div>
   </div>
 </div>
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+  new PagefindUI({ element: "#search", showSubResults: true });
+  document.getElementById('search-container').style.display = document.body.className.includes('right-sidebar') ? 'none' : '';
+</script>
 <footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
   <div class="tg-footer-bottom">
     <div class="container">
