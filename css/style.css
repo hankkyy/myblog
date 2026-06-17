@@ -182,4 +182,4 @@ article:last-of-type{margin-bottom:0}
 #search-inline .pagefind-ui__search-input{height:28px!important;font-size:13px!important;padding:0 8px!important}
 #search-inline .pagefind-ui__drawer{display:none!important}
 #search-inline .pagefind-ui__button{display:none!important}
-#search-inline .pagefind-ui__search-icon{display:none!important}
+#search-inline .pagefind-ui__form:before{display:none!important}
