@@ -104,6 +104,8 @@ blockquote p{margin-bottom:0;font-style:italic}
 .tagcloud{display:flex;flex-wrap:wrap;gap:8px}
 .tagcloud a{display:inline-block;font-size:12px;text-transform:uppercase;padding:6px 12px;border:1px solid #dee2e6;border-radius:4px;color:#363b40;transition:all .2s}
 .tagcloud a:hover{color:#146bb7;border-color:#146bb7;text-decoration:none}
+.page-header.collapsed .toggle-icon{transform:rotate(-90deg)}
+.page-header.collapsed ~ article.hentry{display:none}
 .cat-count{font-size:.9rem;color:#adb5bd;margin-left:4px}
 
 .cenote-breadcrumb{padding:15px 0}
