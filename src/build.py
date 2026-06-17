@@ -44,9 +44,15 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{title_tag}</title>
+<meta name="description" content="{desc or SITE['desc']}">
+<meta property="og:title" content="{title_tag}">
+<meta property="og:description" content="{desc or SITE['desc']}">
+<meta property="og:type" content="{'website' if is_home else 'article'}">
+<meta property="og:url" content="{SITE['url']}{'' if current == '/' else current}">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="{SITE['url']}{'' if current == '/' else current}">
 <link rel="stylesheet" href="/css/style.css">
 {pagefind_css}
-{desc_meta}
 </head>
 <body class="{bc}">
 <div id="page" class="site">
@@ -356,6 +362,23 @@ def build():
         </div>""",
             current="/about/",
             body_class="layout--no-sidebar"))
+
+    # 生成 sitemap.xml
+    urls = [(SITE["url"], "daily")]
+    for p in posts:
+        urls.append((f'{SITE["url"]}posts/{p["slug"]}/', "weekly"))
+    for cat_name in cats:
+        urls.append((f'{SITE["url"]}categories/{cat_name.lower().replace(" ", "-")}/', "weekly"))
+    for page in ["posts/", "about/", "guestbook/"]:
+        urls.append((f'{SITE["url"]}{page}', "monthly"))
+    sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    for url, freq in urls:
+        sitemap += f'  <url><loc>{url}</loc><changefreq>{freq}</changefreq></url>\n'
+    sitemap += '</urlset>'
+    (ROOT / "sitemap.xml").write_text(sitemap)
+
+    # 生成 robots.txt
+    (ROOT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {SITE['url']}sitemap.xml\n")
 
     print(f"✅ 构建完成！{len(posts)} 篇文章，{len(cats)} 个分类")
 

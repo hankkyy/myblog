@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://hankzhang.us/</loc><changefreq>daily</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/rust-ownership/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/doris-3-features/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/k8s-network/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/spring-virtual-threads/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/columnar-storage/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/redis-fast/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/internship-thoughts/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/agents-md/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/mcp-protocol/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/rag-from-scratch/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/spring-redis-cache/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/raft-consensus/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/url-shortener/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/mysql-btree/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/docker-internals/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/grpc-vs-rest/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/ai-coding-tools/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/open-source-growth/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/hello-world/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/categories/技术/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/categories/杂谈/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/categories/人工智能/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/categories/分布式/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/categories/系统设计/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/categories/云原生/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://hankzhang.us/about/</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://hankzhang.us/guestbook/</loc><changefreq>monthly</changefreq></url>
+</urlset>
