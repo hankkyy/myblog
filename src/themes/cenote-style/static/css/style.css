@@ -52,10 +52,10 @@ blockquote p{margin-bottom:0;font-style:italic}
 .tg-site-header .tg-header-top ul li a{color:#fff;font-size:14px;text-decoration:none;margin-right:1.2rem}
 .tg-site-header .tg-header-top ul li a:hover{color:#146bb7}
 .tg-header-navigation{display:flex}
-.header-bottom-top{padding:30px 0 0}
+.header-bottom-top{padding:20px 0}
 .header-bottom-bottom .container{padding:20px 0;border-top:2px solid #fff0e6;display:flex;justify-content:space-between;align-items:center}
 
-.site-branding{margin:0 auto;text-align:center}
+.site-branding{margin:0;text-align:center}
 .site-branding .site-title{font-family:"Catamaran",helvetica,arial,sans-serif;font-size:1.313rem;font-weight:700;margin:0 0 10px}
 .site-branding .site-title a{color:#16181a}
 .site-branding .site-title a:hover{text-decoration:none}
