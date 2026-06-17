@@ -123,7 +123,7 @@
           var el = document.getElementById('travel-map');
           if (!el) return;
           var map = L.map('travel-map', {scrollWheelZoom: false, zoomControl: false, worldCopyJump: true, attributionControl: false}).setView([35, -170], 2);
-          L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}{r}.png', {
+          L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; Stadia Maps, &copy; Stamen Design, &copy; OSM'
           }).addTo(map);
           var cities = [
