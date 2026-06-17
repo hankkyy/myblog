@@ -246,7 +246,7 @@ article:last-of-type{margin-bottom:0}
 .layout--right-sidebar .hentry,.layout--right-sidebar .post{padding:0;margin-left:0;margin-right:0;border-radius:0}
 .layout--right-sidebar .hentry:hover,.layout--right-sidebar .post:hover{box-shadow:none}
 /* Featured article */
-.tg-archive-featured article{border-left:4px solid #146bb7;padding-left:28px;border-radius:0 8px 8px 0}
+.tg-archive-featured article{padding-left:0;border-radius:0}
 .tg-archive-featured article::before{display:none}
 
 .entry-meta{font-size:12px;margin-bottom:12px;display:flex;align-items:center;flex-wrap:wrap}
