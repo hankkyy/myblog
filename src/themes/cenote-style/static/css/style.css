@@ -29,7 +29,7 @@ blockquote p{margin-bottom:0;font-style:italic}
 
 /* Grid — 3 columns */
 .tg-archive-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:80px 30px}
-.tg-archive-grid article{margin-bottom:0}
+.tg-archive-grid article{margin-bottom:0!important}
 .tg-archive-col--3.tg-archive-grid{margin-left:0;margin-right:0}
 
 /* No-sidebar pages (full width) */
