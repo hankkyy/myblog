@@ -82,10 +82,9 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
       <div class="container" style="text-align:center">
         <nav id="site-navigation" class="main-navigation tg-site-menu--default" style="display:inline-flex;align-items:center;gap:10px">
           <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu" style="justify-content:center">{main_nav}</ul></div>
-          <span class="tg-search-toggle" onclick="var s=document.getElementById('search-inline');s.style.display=s.style.display==='none'?'block':'none';" style="cursor:pointer;font-size:18px;color:#16181a">🔍</span>
+          <span style="display:inline-flex;align-items:center;gap:4px"><span style="font-size:18px;color:#16181a">🔍</span>{search_html}</span>
         </nav>
       </div>
-      {f'<div id="search-inline" style="max-width:300px;margin:10px auto 0;display:none">{search_html}</div>' if search_html else ''}
     </div>
   </div>
 </header>
