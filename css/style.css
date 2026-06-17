@@ -134,6 +134,24 @@ blockquote p{margin-bottom:0;font-style:italic}
 .travel-card-cities{{font-size:.82rem;color:#6c757d;line-height:1.8}}}
 .cat-index-articles{padding-top:20px}
 
+/* About page */
+.about-name{{font-size:2rem;color:#16181a;margin:0}}
+.about-h2{{font-size:1.2rem;font-weight:700;color:#16181a;margin:32px 0 16px;display:flex;align-items:center;gap:8px}}
+.about-icon{{font-size:1.3rem}}
+.about-section{{margin-bottom:8px}}
+.skill-grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}}
+.skill-card{{background:#f8f9fa;border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:4px;transition:all .2s;border:1px solid transparent}}
+.skill-card:hover{{border-color:#dee2e6;box-shadow:0 2px 8px rgba(0,0,0,.04)}}
+.skill-label{{font-size:.75rem;text-transform:uppercase;color:#adb5bd;font-weight:600;letter-spacing:1px}}
+.skill-value{{font-size:.9rem;color:#495057;line-height:1.5}}
+.focus-list{{display:flex;flex-direction:column;gap:10px}}
+.focus-item{{display:flex;align-items:center;gap:10px;color:#495057;font-size:.95rem}}
+.focus-dot{{width:8px;height:8px;border-radius:50%;background:#146bb7;flex-shrink:0}}
+.contact-links{{display:flex;flex-wrap:wrap;gap:16px}}
+.contact-link{{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:#fff;border-radius:8px;border:1px solid #dee2e6;color:#16181a;font-size:.9rem;transition:all .2s;text-decoration:none}}
+.contact-link:hover{{border-color:#146bb7;color:#146bb7;box-shadow:0 2px 8px rgba(20,107,183,.1);text-decoration:none}}
+.contact-icon{{font-size:1.1rem}}
+
 .cenote-breadcrumb{padding:15px 0}
 .cenote-breadcrumb ul{list-style:none;display:flex;flex-wrap:wrap;margin:0;padding:0}
 .cenote-breadcrumb li{font-size:14px}
