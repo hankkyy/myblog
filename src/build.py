@@ -452,34 +452,16 @@ def build():
         (ROOT / "about").mkdir(parents=True, exist_ok=True)
         travel_map = f"""
           <h3 style="margin-top:40px;margin-bottom:20px">🗺️ 足迹 <span style="font-size:.8rem;color:#adb5bd;font-weight:400;margin-left:8px">47 座城市</span></h3>
-          <div style="display:flex;flex-wrap:wrap;gap:16px 12px;margin-bottom:10px">
-            <div style="flex:1;min-width:150px;background:#f8f9fa;border-radius:8px;padding:16px">
-              <div style="font-weight:700;color:#3498db;margin-bottom:8px">🇺🇸 北美 · 18 城</div>
-              <div style="font-size:.85rem;color:#495057;line-height:1.8">
-                哥伦布 · 洛杉矶 · 旧金山 · 西雅图 · 拉斯维加斯 · 达拉斯 · 休斯敦 · 亚特兰大 · 丹佛 · 芝加哥 · 凤凰城 · 底特律 · 波特兰 · 圣安东尼奥 · 坦帕 · 劳德代尔堡 · 里诺 · 长滩 · 伯克利 · 奥克兰
-              </div>
-            </div>
-            <div style="flex:1;min-width:150px;background:#f8f9fa;border-radius:8px;padding:16px">
-              <div style="font-weight:700;color:#2ecc71;margin-bottom:8px">🇨🇳 中国 · 17 城</div>
-              <div style="font-size:.85rem;color:#495057;line-height:1.8">
-                武汉 · 北京 · 上海 · 深圳 · 香港 · 厦门 · 三亚 · 桂林 · 太原 · 琼海 · 福州 · 南昌 · 宁波 · 南京 · 无锡 · 台北
-              </div>
-            </div>
-            <div style="flex:1;min-width:150px;background:#f8f9fa;border-radius:8px;padding:16px">
-              <div style="font-weight:700;color:#e67e22;margin-bottom:8px">🇯🇵🇰🇷 日韩 · 7 城</div>
-              <div style="font-size:.85rem;color:#495057;line-height:1.8">
-                大阪 · 京都 · 神户 · 奈良 · 镰仓 · 首尔
-              </div>
-            </div>
-          </div>
-          <div id="travel-map" style="height:380px;border-radius:8px;margin:20px 0;overflow:hidden"></div>
+          <div id="travel-map" style="height:420px;border-radius:8px;margin:20px 0;overflow:hidden"></div>
           <script>
           document.addEventListener('DOMContentLoaded', function() {{
           setTimeout(function() {{
           var el = document.getElementById('travel-map');
           if (!el) return;
           var map = L.map('travel-map', {{scrollWheelZoom: false, zoomControl: false, worldCopyJump: true, attributionControl: false}}).setView([35, -170], 2);
-          L.tileLayer('https://{{s}}.basemaps.cartocdn.com/light_all/{{z}}/{{x}}/{{y}}{{r}}.png').addTo(map);
+          L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{{z}}/{{x}}/{{y}}{{r}}.png', {{
+            attribution: '&copy; Stadia Maps, &copy; Stamen Design, &copy; OSM'
+          }}).addTo(map);
           var cities = [
             {{name:'武汉', lat:30.59, lng:114.31, size:8, color:'#2ecc71'}},
             {{name:'哥伦布', lat:40.00, lng:-83.01, size:7, color:'#3498db'}},
