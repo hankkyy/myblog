@@ -1,6 +1,6 @@
 ---
 title: "Rust 正式进入 Linux 内核主线，C 语言的黄昏到了？"
-date: 2026-03-15T09:00:00+08:00
+date: 2026-05-25T09:00:00+08:00
 categories: ["技术", "新闻"]
 description: "Linux 6.15 内核合并了 Rust 实现的 Ext4 文件系统驱动，Rust 在内核中的占比首次超过 5%。"
 ---

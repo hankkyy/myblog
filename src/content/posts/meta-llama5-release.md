@@ -1,6 +1,6 @@
 ---
 title: "Meta 发布 Llama 5：开源模型正式超越 GPT-4"
-date: 2025-07-10T10:00:00+08:00
+date: 2026-04-20T10:00:00+08:00
 categories: ["AI", "新闻"]
 description: "Llama 5 在多个评测上超越 GPT-4，开源大模型首次达到闭源旗舰水平。"
 ---

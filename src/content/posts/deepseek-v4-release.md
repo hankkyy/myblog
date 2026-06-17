@@ -1,6 +1,6 @@
 ---
 title: "DeepSeek V4 发布：国产大模型再突破"
-date: 2026-05-20T10:00:00+08:00
+date: 2026-06-05T10:00:00+08:00
 categories: ["AI", "新闻"]
 description: "DeepSeek 发布 V4 版本，推理能力大幅提升，成本仅为 GPT-5 的十分之一。"
 ---
