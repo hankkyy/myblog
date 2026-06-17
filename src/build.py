@@ -16,7 +16,7 @@ CSS_DIR = ROOT / "css"
 SITE = {"title":"纵横四海","url":"https://hankzhang.us/","desc":"但行好事，莫问前程"}
 AUTHOR = "张子豪"
 YEAR = str(datetime.now().year)
-MENU = [("首页","/"),("关于","/about/"),("管理","https://vercel.com/hankkyys-projects/myblog")]
+MENU = [("首页","/"),("文章列表","/posts/"),("留言板","/guestbook/"),("关于","/about/"),("管理","https://vercel.com/hankkyys-projects/myblog")]
 SAFE = {".git","src","vercel.json",".gitignore","README.md","pagefind"}
 
 
@@ -72,7 +72,7 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
   <div class="tg-header-bottom">
     <div class="header-bottom-top">
       <div class="container">
-        <div class="site-branding" style="text-align:left;margin:0">
+        <div class="site-branding" style="margin:0">
           <{site_title_tag} class="site-title"><a href="{SITE['url']}" rel="home">{st}</a></{site_title_tag}>
           <p class="site-description">{SITE['desc']}</p>
         </div>
