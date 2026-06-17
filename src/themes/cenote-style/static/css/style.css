@@ -25,10 +25,10 @@ blockquote p{margin-bottom:0;font-style:italic}
 .tg-flex-item-centered{align-items:center}
 
 /* Featured article - full width at top */
-.tg-archive-featured article{width:100%!important;padding:0!important;margin-bottom:60px}
+.tg-archive-featured article{width:100%!important;padding:0!important;margin-bottom:0}
 
 /* Grid Archive — 3 columns */
-.tg-archive-style--big-block .site-main{display:flex;flex-wrap:wrap}
+.tg-archive-style--big-block .site-main{display:flex;flex-wrap:wrap;gap:60px 0}
 .tg-archive-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:60px 30px}
 .tg-archive-col--3.tg-archive-grid{margin-left:0;margin-right:0}
 .tg-archive-col--3 .tg-archive-grid article,

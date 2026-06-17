@@ -54,7 +54,7 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
   <div class="tg-header-bottom">
     <div class="header-bottom-top">
       <div class="container">
-        <div class="site-branding">
+        <div class="site-branding" style="text-align:left;margin:0">
           <{site_title_tag} class="site-title"><a href="{SITE['url']}" rel="home">{st}</a></{site_title_tag}>
           <p class="site-description">{SITE['desc']}</p>
         </div>
@@ -84,7 +84,7 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
   </div>
 </nav>
 <div id="content" class="site-content">
-  <div class="container" id="search-container" style="max-width:600px;margin-bottom:30px">
+  <div class="container" id="search-container" style="max-width:600px;margin-bottom:20px">
     <div id="search"></div>
   </div>
   <div class="container">
