@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>后端实习两个月，我学到的东西比大学两年都多 – 纵横四海</title>
+<title>分布式共识算法：Raft 为什么比 Paxos 更好懂 – 纵横四海</title>
 <link rel="stylesheet" href="/css/style.css">
-<meta name="description" content="从学校到企业的落差、代码 Review 的残酷、以及为什么 CRUD 没那么简单">
+<meta name="description" content="从 Leader 选举、日志复制到安全性保证，图解 Raft 共识算法">
 </head>
 <body class="layout--right-sidebar">
 <div id="page" class="site">
@@ -68,79 +68,81 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">张子豪</a></span></span><span class="posted-on"><a href="/posts/internship-thoughts/" rel="bookmark"><time class="entry-date published" datetime="2026-06-08">2026年6月8日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">张子豪</a></span></span><span class="posted-on"><a href="/posts/raft-consensus/" rel="bookmark"><time class="entry-date published" datetime="2026-05-28">2026年5月28日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">后端实习两个月，我学到的东西比大学两年都多</h1>
+                <h1 class="entry-title">分布式共识算法：Raft 为什么比 Paxos 更好懂</h1>
               </header>
-              <div class="entry-content"><p>在学校的时候，我以为后端开发就是 Spring Boot 连 MySQL，写几个 CRUD 接口。</p>
-<p>实习两个月后，我发现 <strong>CRUD 是工作中最简单的部分</strong>。</p>
-<h2>学校不会教的事</h2>
-<h3>1. 代码 Review 是真正的学习</h3>
-<p>学校作业交了就是交了，没人告诉你哪里写得烂。</p>
-<p>公司的代码 Review：</p>
-<div class="codehilite"><pre><span></span><code>「这个循环里查了 N 次数据库，改成批量查询」
-「异常吞掉了，出问题没法排查」
-「变量名 data 是什么意思？要写清楚是 orderData」
+              <div class="entry-content"><p>分布式系统的核心难题：多个节点如何对一个值达成一致？Raft 是目前最流行的共识算法。</p>
+<h2>Raft 的三个角色</h2>
+<div class="codehilite"><pre><span></span><code>┌──────────────────────────────────────┐
+│  Leader   ← 处理所有客户端请求       │
+│  Follower ← 被动响应 Leader          │
+│  Candidate ← 选举中的临时状态        │
+└──────────────────────────────────────┘
 </code></pre></div>
 
-<p>第一次被 Review 的时候，我的 PR 被打了 47 条 comment。脸很疼，但学的东西比之前两个月加起来都多。</p>
-<h3>2. 环境比代码难搞</h3>
-<p>写功能花 2 小时。配 Docker、配 Nginx、配 CI/CD、配监控告警、配日志采集……</p>
-<p>花了两天。然后发现是配置文件里少了一个空格。</p>
-<h3>3. 沟通成本 &gt; 编码成本</h3>
-<ul>
-<li>需求文档写得不清楚 → 来回确认 → 半天没了</li>
-<li>接口格式没对齐 → 联调失败 → 又半天没了</li>
-<li>数据库表结构改了没通知 → 线上炸了 → 一天没了</li>
-</ul>
-<p><strong>「把话说清楚」是后端最被低估的能力。</strong></p>
-<h2>写 CRUD 也有讲究</h2>
-<p>你以为的 CRUD：</p>
-<div class="codehilite"><pre><span></span><code><span class="nd">@PostMapping</span><span class="p">(</span><span class="s">&quot;/order&quot;</span><span class="p">)</span>
-<span class="kd">public</span><span class="w"> </span><span class="n">Result</span><span class="w"> </span><span class="nf">createOrder</span><span class="p">(</span><span class="nd">@RequestBody</span><span class="w"> </span><span class="n">OrderDTO</span><span class="w"> </span><span class="n">dto</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">orderMapper</span><span class="p">.</span><span class="na">insert</span><span class="p">(</span><span class="n">dto</span><span class="p">);</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">Result</span><span class="p">.</span><span class="na">ok</span><span class="p">();</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<p>实际生产环境的 CRUD：</p>
-<div class="codehilite"><pre><span></span><code><span class="nd">@PostMapping</span><span class="p">(</span><span class="s">&quot;/order&quot;</span><span class="p">)</span>
-<span class="nd">@Transactional</span><span class="p">(</span><span class="n">rollbackFor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Exception</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
-<span class="kd">public</span><span class="w"> </span><span class="n">Result</span><span class="w"> </span><span class="nf">createOrder</span><span class="p">(</span><span class="nd">@Valid</span><span class="w"> </span><span class="nd">@RequestBody</span><span class="w"> </span><span class="n">OrderDTO</span><span class="w"> </span><span class="n">dto</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="c1">// 1. 参数校验 + 业务校验</span>
-<span class="w">    </span><span class="c1">// 2. 幂等性检查（防止重复提交）</span>
-<span class="w">    </span><span class="c1">// 3. 库存扣减（注意并发，用乐观锁）</span>
-<span class="w">    </span><span class="c1">// 4. 创建订单</span>
-<span class="w">    </span><span class="c1">// 5. 发送消息队列（异步通知）</span>
-<span class="w">    </span><span class="c1">// 6. 记录操作日志</span>
-<span class="w">    </span><span class="c1">// 7. 异常回滚 + 补偿逻辑</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">Result</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">orderId</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<p>一个「简单」的创建订单，实际要考虑：</p>
-<ul>
-<li><strong>事务边界</strong>：哪些操作要原子？</li>
-<li><strong>幂等性</strong>：用户点了两次怎么办？</li>
-<li><strong>并发安全</strong>：库存超卖怎么处理？</li>
-<li><strong>失败补偿</strong>：消息发失败了怎么恢复？</li>
-</ul>
-<h2>给也在实习的同学</h2>
+<h2>Leader 选举</h2>
 <ol>
-<li><strong>主动要 Code Review</strong>——这是成长最快的方式</li>
-<li><strong>问为什么</strong>——不只问「怎么做」，更要问「为什么这样做」</li>
-<li><strong>看老代码</strong>——了解系统演进历史，比文档有用</li>
-<li><strong>别怕犯错</strong>——实习就是来犯错的，只要同一个错不犯两遍</li>
+<li>Follower 在 election timeout（150-300ms 随机）内没收到心跳 → 变成 Candidate</li>
+<li>Candidate 给自己投一票，向所有节点发送 RequestVote</li>
+<li>获得多数票 → 成为 Leader，开始发送心跳</li>
+<li>票数相同 → 重新选举（随机超时避免死循环）</li>
 </ol>
+<h2>日志复制</h2>
+<div class="codehilite"><pre><span></span><code>Client → Leader: SET x = 1
+Leader → Followers: AppendEntries(x=1, term=3, prevLogIndex=4)
+Followers → Leader: ACK
+Leader → Client: OK (多数确认后)
+</code></pre></div>
+
+<p><strong>关键</strong>：Leader 只提交当前 term 的日志。这保证了安全性。</p>
+<h2>Raft vs Paxos</h2>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>Paxos</th>
+<th>Raft</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>理解难度</td>
+<td>非常高</td>
+<td>相对低</td>
+</tr>
+<tr>
+<td>工程实现</td>
+<td>复杂</td>
+<td>简单</td>
+</tr>
+<tr>
+<td>日志连续性</td>
+<td>允许空洞</td>
+<td>严格连续</td>
+</tr>
+<tr>
+<td>成员变更</td>
+<td>复杂</td>
+<td>两阶段 Joint Consensus</td>
+</tr>
+</tbody>
+</table>
+<h2>实际应用</h2>
+<ul>
+<li><strong>etcd</strong>：K8s 的后端存储，使用 Raft</li>
+<li><strong>TiKV</strong>：TiDB 的存储层</li>
+<li><strong>Consul</strong>：HashiCorp 的服务发现</li>
+</ul>
 <blockquote>
-<p>企业代码和 LeetCode 的区别，就是生活和大富翁的区别。</p>
+<p>Raft 的成功在于：用「可理解性」换来了「可实现性」。</p>
 </blockquote></div>
-              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/杂谈/" rel="category">杂谈</a></span></footer>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/分布式/" rel="category">分布式</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/k8s-network/" rel="prev"><span class="nav-links__label">上一篇文章</span> Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></div><div class="nav-next"><a href="/posts/hello-world/" rel="next"><span class="nav-links__label">下一篇文章</span> 你好，世界</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/rag-from-scratch/" rel="prev"><span class="nav-links__label">上一篇文章</span> RAG 架构实战：从零搭建一个文档问答系统</a></div><div class="nav-next"><a href="/posts/mysql-btree/" rel="next"><span class="nav-links__label">下一篇文章</span> MySQL 索引原理：B+Tree 为什么统治了数据库世界</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">
