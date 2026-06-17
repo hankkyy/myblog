@@ -282,9 +282,16 @@ def build():
         extra_body_class="tg-archive-style--big-block")
     (ROOT / "index.html").write_text(homepage)
 
-    # ===== /posts/ = 文章列表 (full archive, single column) =====
+    # ===== /posts/ = 文章列表 with timeline =====
     (ROOT / "posts").mkdir(parents=True, exist_ok=True)
-    all_cards = "\n".join(article_card(p) for p in posts)
+    all_cards_groups = []
+    from itertools import groupby
+    # Group by year-month
+    for (year, month), group in groupby(posts, key=lambda p: (p["date"].year, p["date"].month)):
+        month_label = f"{year}年{month}月"
+        cards_html = "\n".join(article_card(p) for p in group)
+        all_cards_groups.append(f'<div class="timeline-group"><h2 class="timeline-heading">{month_label}</h2>{cards_html}</div>')
+    all_cards = "\n".join(all_cards_groups)
     archive = page_html(f"文章列表 – {SITE['title']}",
         f"""<div id="primary" class="content-area">
           <main id="main" class="site-main">
