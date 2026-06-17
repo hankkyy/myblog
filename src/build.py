@@ -385,7 +385,7 @@ def build():
                 <p>欢迎交流，可以通过以下方式联系我：</p>
                 <ul>
                   <li><strong>GitHub</strong>：<a href="https://github.com/hankkyy" target="_blank">hankkyy</a></li>
-                  <li><strong>Email</strong>：hankzhang@example.com</li>
+                  <li><strong>Email</strong>：hank.zihao@gmail.com</li>
                 </ul>
                 <p>或者直接在本页面留言。</p>
               </div>
