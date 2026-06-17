@@ -268,11 +268,13 @@ def build():
 
     home_title = f"{SITE['title']} – {SITE['desc']}"
 
-    # ===== HOMEPAGE: all articles in 3-column grid =====
-    cards = "\n".join(article_card(p) for p in posts)
+    # ===== HOMEPAGE: first article full-width, rest in 3-column grid =====
+    first_card = article_card(posts[0]) if posts else ""
+    rest_cards = "\n".join(article_card(p) for p in posts[1:]) if len(posts) > 1 else ""
     home_body = f"""<div id="primary" class="content-area">
-          <main id="main" class="site-main tg-archive-grid tg-archive-col--3">
-            {cards}
+          <main id="main" class="site-main">
+            <div class="tg-archive-featured">{first_card}</div>
+            <div class="tg-archive-grid tg-archive-col--3">{rest_cards}</div>
           </main>
         </div>"""
     homepage = page_html(home_title,
