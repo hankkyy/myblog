@@ -63,14 +63,19 @@
           <main id="main" class="site-main">
             
           <section class="about-intro">
+            <div class="about-hero-decor">
+              <span class="hero-blob hero-blob-1"></span>
+              <span class="hero-blob hero-blob-2"></span>
+              <span class="hero-blob hero-blob-3"></span>
+            </div>
             <div class="about-intro-left">
-              <p class="about-greeting">Hi, I'm</p>
+              <img src="/avatar.jpg" alt="张子豪" class="about-avatar" width="80" height="80">
+              <p class="about-greeting"><span class="greeting-dot"></span>Hi, I'm</p>
               <h1 class="about-name">张子豪<span class="about-name-en"> · Hank Zhang</span></h1>
               <p class="about-bio">后端开发工程师，专注于数据基础设施与 AI Agent 开发。</p>
               <div class="about-stats">
                 <div class="about-stat"><strong>127</strong><span>篇文章</span></div>
                 <div class="about-stat"><strong>9</strong><span>个分类</span></div>
-                <div class="about-stat"><strong>47</strong><span>座城市</span></div>
               </div>
             </div>
           </section>
@@ -78,49 +83,58 @@
           <section class="about-block">
             <h2 class="about-label">技术栈</h2>
             <div class="skill-grid">
-              <div class="skill-card"><span class="skill-label">语言</span><span class="skill-value">Java · Python · SQL</span></div>
-              <div class="skill-card"><span class="skill-label">框架</span><span class="skill-value">Spring Boot · Spring MVC · MyBatis · LangChain</span></div>
-              <div class="skill-card"><span class="skill-label">数据库</span><span class="skill-value">MySQL · Redis · Apache Doris</span></div>
-              <div class="skill-card"><span class="skill-label">中间件</span><span class="skill-value">Kafka · Flink</span></div>
-              <div class="skill-card"><span class="skill-label">基础设施</span><span class="skill-value">Docker · Kubernetes · Nginx</span></div>
-              <div class="skill-card"><span class="skill-label">AI / Agent</span><span class="skill-value">RAG · Chroma · Prompt Engineering · MCP</span></div>
-              <div class="skill-card"><span class="skill-label">工具</span><span class="skill-value">Git · Linux · PySpark</span></div>
+              <div class="skill-card skill-card-feat"><span class="skill-icon">☕</span><span class="skill-label">语言</span><span class="skill-value">Java · Python · SQL</span></div>
+              <div class="skill-card skill-card-feat"><span class="skill-icon">⚙️</span><span class="skill-label">框架</span><span class="skill-value">Spring Boot · Spring MVC · MyBatis · LangChain</span></div>
+              <div class="skill-card"><span class="skill-icon">🗄️</span><span class="skill-label">数据库</span><span class="skill-value">MySQL · Redis · Apache Doris</span></div>
+              <div class="skill-card"><span class="skill-icon">📨</span><span class="skill-label">中间件</span><span class="skill-value">Kafka · Flink</span></div>
+              <div class="skill-card"><span class="skill-icon">🐳</span><span class="skill-label">基础设施</span><span class="skill-value">Docker · Kubernetes · Nginx</span></div>
+              <div class="skill-card skill-card-feat"><span class="skill-icon">🤖</span><span class="skill-label">AI / Agent</span><span class="skill-value">RAG · Chroma · Prompt Engineering · MCP</span></div>
+              <div class="skill-card"><span class="skill-icon">🔧</span><span class="skill-label">工具</span><span class="skill-value">Git · Linux · PySpark</span></div>
             </div>
           </section>
 
           <section class="about-block">
             <h2 class="about-label">关注方向</h2>
-            <div class="focus-grid">
-              <div class="focus-card"><div class="focus-num">01</div><div class="focus-text">分布式系统与微服务架构</div></div>
-              <div class="focus-card"><div class="focus-num">02</div><div class="focus-text">OLAP 数据库与实时数仓</div></div>
-              <div class="focus-card"><div class="focus-num">03</div><div class="focus-text">AI Agent 开发与应用</div></div>
-              <div class="focus-card"><div class="focus-num">04</div><div class="focus-text">后端性能优化</div></div>
+            <div class="focus-list">
+              <div class="focus-item"><div class="focus-marker"><span class="focus-num">01</span></div><div class="focus-body"><strong class="focus-text">分布式系统与微服务架构</strong><p class="focus-desc">高并发、高可用、服务治理</p></div></div>
+              <div class="focus-item"><div class="focus-marker"><span class="focus-num">02</span></div><div class="focus-body"><strong class="focus-text">OLAP 数据库与实时数仓</strong><p class="focus-desc">Apache Doris、ClickHouse、数据湖</p></div></div>
+              <div class="focus-item"><div class="focus-marker"><span class="focus-num">03</span></div><div class="focus-body"><strong class="focus-text">AI Agent 开发与应用</strong><p class="focus-desc">RAG、MCP、LLM 应用架构</p></div></div>
+              <div class="focus-item"><div class="focus-marker"><span class="focus-num">04</span></div><div class="focus-body"><strong class="focus-text">后端性能优化</strong><p class="focus-desc">JVM 调优、SQL 优化、缓存策略</p></div></div>
             </div>
           </section>
 
           <section class="about-block">
             <h2 class="about-label">兴趣爱好</h2>
-            <p class="about-text">
-              热爱旅行和航空。喜欢靠窗的座位，起飞时引擎轰鸣的那一刻是旅途中最享受的瞬间。<br>
-              相信眼界决定世界——去更多地方，见更多人，理解更多事。
-            </p>
+            <div class="hobby-card">
+              <p class="about-text">
+                热爱旅行和航空。喜欢靠窗的座位，起飞时引擎轰鸣的那一刻是旅途中最享受的瞬间。<br>
+                相信眼界决定世界——去更多地方，见更多人，理解更多事。
+              </p>
+              <div class="travel-stats">
+                <div class="travel-stat"><strong>316<span class="stat-unit">h</span>&thinsp;18<span class="stat-unit">min</span></strong><span>累计飞行时长</span></div>
+                <div class="travel-stat"><strong>237,032<span class="stat-unit">km</span></strong><span>累计飞行里程</span></div>
+                <div class="travel-stat"><strong>47</strong><span>个城市</span></div>
+              </div>
+            </div>
           </section>
 
           <section class="about-block">
             <h2 class="about-label">关于这个博客</h2>
-            <p class="about-text">
-              用 Python 构建的静态站点，部署在 Vercel。外观参考 WordPress Cenote 主题。<br>
-              写技术笔记、项目复盘、行业观察。不追求日更，追求每篇都值得读。
-            </p>
+            <div class="blog-about-card">
+              <p class="about-text">
+                用 Python 构建的静态站点，部署在 Vercel。外观参考 WordPress Cenote 主题。<br>
+                写技术笔记、项目复盘、行业观察。不追求日更，追求每篇都值得读。
+              </p>
+            </div>
           </section>
 
           <section class="about-block contact-block">
             <h2 class="about-label">欢迎交流</h2>
             <div class="contact-links">
-              <a href="https://github.com/hankkyy" target="_blank" class="contact-link">🐙 GitHub @hankkyy</a>
-              <a href="mailto:hank.zihao@gmail.com" class="contact-link">📧 hank.zihao@gmail.com</a>
+              <a href="https://github.com/hankkyy" target="_blank" class="contact-link"><img src="/github-logo.svg" alt="" class="contact-icon" width="20" height="20"> GitHub @hankkyy</a>
+              <a href="https://www.linkedin.com/in/hankzhang-ky" target="_blank" class="contact-link"><svg class="contact-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="3" fill="#0A66C2"/><text x="12" y="17" text-anchor="middle" fill="#fff" font-size="14" font-weight="700" font-family="sans-serif">in</text></svg> LinkedIn</a>
+              <a href="mailto:hank.zihao@gmail.com" class="contact-link"><svg class="contact-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#EA4335"/><path d="M4 6l8 6 8-6" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 6v12H4V6" stroke="#fff" stroke-width="2.2" fill="none"/></svg> hank.zihao@gmail.com</a>
             </div>
-            <p class="about-text" style="color:#adb5bd;font-size:.85rem;margin-top:12px">或者直接在本页面留言</p>
           </section>
         
           </main>

@@ -135,31 +135,89 @@ blockquote p{margin-bottom:0;font-style:italic}
 .cat-index-articles{padding-top:20px}
 
 /* About page */
-.about-intro{{padding:48px 0 36px}}
-.about-greeting{{font-size:.85rem;color:#adb5bd;text-transform:uppercase;letter-spacing:3px;margin:0 0 4px}}
-.about-name{{font-size:2.2rem;color:#16181a;margin:0 0 12px;font-weight:700}}
-.about-name-en{{font-weight:400;color:#868e96;font-size:1.6rem}}
-.about-bio{{font-size:1.05rem;color:#495057;line-height:1.7;margin:0 0 28px;max-width:520px}}
-.about-stats{{display:flex;gap:32px}}
-.about-stat strong{{display:block;font-size:1.8rem;color:#146bb7;font-weight:700;line-height:1.2}}
-.about-stat span{{font-size:.8rem;color:#adb5bd;text-transform:uppercase;letter-spacing:1px}}
-.about-block{{margin-bottom:52px}}
-.about-label{{font-size:.8rem;text-transform:uppercase;color:#adb5bd;letter-spacing:2px;font-weight:600;margin:0 0 20px;padding-bottom:10px;border-bottom:1px solid #f1f3f5}}
-.about-text{{font-size:.95rem;color:#495057;line-height:1.9;margin:0}}
-.skill-grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}}
-.skill-card{{background:#fff;border:1px solid #e9ecef;border-radius:8px;padding:12px 16px;transition:border-color .2s}}
-.skill-card:hover{{border-color:#146bb7}}
-.skill-label{{display:block;font-size:.65rem;text-transform:uppercase;color:#adb5bd;letter-spacing:1px;margin-bottom:2px}}
-.skill-value{{display:block;font-size:.85rem;color:#363b40;font-weight:500;line-height:1.5}}
-.focus-grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}}
-.focus-card{{display:flex;align-items:center;gap:14px;padding:16px 18px;background:#fff;border:1px solid #e9ecef;border-radius:8px;transition:all .2s}}
-.focus-card:hover{{border-color:#146bb7;box-shadow:0 2px 8px rgba(20,107,183,.06)}}
-.focus-num{{font-size:1.4rem;font-weight:700;color:#146bb7;opacity:0.3;min-width:32px}}
-.focus-text{{font-size:.9rem;color:#363b40;font-weight:500}}
-.contact-block{{background:#f8f9fa;border-radius:12px;padding:28px 32px;margin-top:48px}}
-.contact-links{{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}}
-.contact-link{{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:#fff;border:1px solid #dee2e6;border-radius:8px;color:#16181a;font-size:.9rem;text-decoration:none;font-weight:500;transition:all .2s}}
-.contact-link:hover{{border-color:#146bb7;color:#146bb7;background:#f0f7ff;text-decoration:none}}
+.about-intro{padding:72px 0 48px;position:relative;overflow:hidden}
+.about-intro::after{content:'';position:absolute;bottom:0;left:0;width:56px;height:4px;background:linear-gradient(90deg,#146bb7,#90caf9);border-radius:2px}
+/* Floating blobs */
+.about-hero-decor{position:absolute;inset:0;pointer-events:none;z-index:0}
+.hero-blob{position:absolute;border-radius:50%;opacity:.12;animation:blobFloat 12s ease-in-out infinite}
+.hero-blob-1{width:300px;height:300px;background:radial-gradient(circle,#146bb7,transparent 70%);top:-80px;right:-60px;animation-delay:0s}
+.hero-blob-2{width:200px;height:200px;background:radial-gradient(circle,#90caf9,transparent 70%);bottom:20px;left:-40px;animation-delay:-4s;animation-duration:15s}
+.hero-blob-3{width:160px;height:160px;background:radial-gradient(circle,#bbdefb,transparent 70%);top:50%;right:120px;animation-delay:-8s;animation-duration:10s}
+@keyframes blobFloat{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(15px,-20px) scale(1.05)}50%{transform:translate(-10px,10px) scale(.95)}75%{transform:translate(-20px,-5px) scale(1.02)}}
+/* Avatar */
+.about-intro-left{position:relative;z-index:1}
+.about-avatar{width:80px;height:80px;border-radius:50%;object-fit:cover;margin-bottom:24px;box-shadow:0 8px 24px rgba(20,107,183,.25);display:block}
+.about-greeting{font-size:.82rem;color:#146bb7;text-transform:uppercase;letter-spacing:4px;margin:0 0 8px;font-weight:600;display:flex;align-items:center;gap:8px}
+.greeting-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#146bb7;animation:dotPulse 2s ease-in-out infinite}
+@keyframes dotPulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(20,107,183,.4)}50%{opacity:.6;box-shadow:0 0 0 8px rgba(20,107,183,0)}}
+.about-name{font-size:3rem;color:#16181a;margin:0 0 14px;font-weight:800;letter-spacing:-.5px}
+.about-name-en{font-weight:400;color:#868e96;font-size:1.7rem}
+.about-bio{font-size:1.08rem;color:#495057;line-height:1.8;margin:0 0 36px;max-width:560px}
+.about-stats{display:flex;gap:14px;flex-wrap:wrap}
+.about-stat{display:flex;flex-direction:column;align-items:center;background:#f8f9fa;border-radius:12px;padding:18px 28px;transition:all .3s;border:1px solid transparent;min-width:100px}
+.about-stat:hover{border-color:#90caf9;background:#f0f7ff;transform:translateY(-3px);box-shadow:0 6px 18px rgba(20,107,183,.1)}
+.about-stat strong{font-size:2rem;color:#146bb7;font-weight:800;line-height:1.2}
+.about-stat .stat-unit{font-size:1rem;font-weight:500;color:#868e96}
+.about-stat span{font-size:.78rem;color:#868e96;font-weight:500;margin-top:4px}
+/* Sections */
+.about-block{margin-bottom:56px}
+.about-label{font-size:.82rem;text-transform:uppercase;color:#146bb7;letter-spacing:2.5px;font-weight:700;margin:0 0 24px;padding-left:16px;border-left:3px solid #146bb7}
+.about-text{font-size:.95rem;color:#495057;line-height:2;margin:0}
+/* Skill cards - Bento grid */
+.skill-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.skill-card{background:#fff;border:1px solid #e9ecef;border-radius:12px;padding:20px 22px;transition:all .35s;position:relative;overflow:hidden}
+.skill-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#146bb7,#90caf9);transform:scaleY(0);transition:transform .35s;border-radius:0 2px 2px 0}
+.skill-card:hover{border-color:#146bb7;box-shadow:0 6px 24px rgba(20,107,183,.12);transform:translateY(-3px)}
+.skill-card:hover::before{transform:scaleY(1)}
+.skill-card-feat{grid-column:span 2}
+.skill-icon{font-size:1.3rem;display:block;margin-bottom:8px}
+.skill-label{display:block;font-size:.68rem;text-transform:uppercase;color:#adb5bd;letter-spacing:1.5px;margin-bottom:5px;font-weight:600}
+.skill-value{display:block;font-size:.88rem;color:#16181a;font-weight:600;line-height:1.6}
+/* Focus timeline */
+.focus-list{position:relative;padding-left:0}
+.focus-list::before{content:'';position:absolute;left:24px;top:8px;bottom:8px;width:2px;background:linear-gradient(180deg,#146bb7,#e8f4fd);border-radius:1px}
+.focus-item{display:flex;align-items:flex-start;gap:20px;padding:14px 0;position:relative}
+.focus-item:first-child{padding-top:0}
+.focus-item:last-child{padding-bottom:0}
+.focus-marker{flex-shrink:0;width:50px;height:50px;display:flex;align-items:center;justify-content:center;background:#fff;border:2px solid #e8f4fd;border-radius:50%;position:relative;z-index:1;transition:all .3s}
+.focus-item:hover .focus-marker{border-color:#146bb7;background:#f0f7ff;box-shadow:0 0 0 6px rgba(20,107,183,.08)}
+.focus-num{font-size:.85rem;font-weight:800;color:#146bb7}
+.focus-body{padding-top:4px}
+.focus-text{font-size:1rem;color:#16181a;font-weight:700;display:block;margin-bottom:4px}
+.focus-desc{font-size:.82rem;color:#868e96;margin:0;line-height:1.5}
+/* Hobby card */
+.hobby-card{background:linear-gradient(135deg,#fff9f5,#fff5f0);border:1px solid #ffe0cc;border-radius:14px;padding:28px 32px;position:relative}
+.hobby-card::before{content:'"';position:absolute;top:8px;left:20px;font-family:Georgia,serif;font-size:72px;color:#de7b85;opacity:.25;line-height:1;pointer-events:none}
+.hobby-card .about-text{position:relative;z-index:1;padding-top:12px}
+.travel-stats{display:flex;gap:16px;margin-top:20px;position:relative;z-index:1}
+.travel-stat{display:flex;flex-direction:column;align-items:center;background:#fff;border-radius:10px;padding:14px 22px;border:1px solid #ffe0cc;transition:all .3s;min-width:90px}
+.travel-stat:hover{border-color:#de7b85;transform:translateY(-2px);box-shadow:0 4px 12px rgba(222,123,133,.1)}
+.travel-stat strong{font-size:1.6rem;color:#de7b85;font-weight:800;line-height:1.2}
+.travel-stat .stat-unit{font-size:.8rem;font-weight:500;color:#c9878e}
+.travel-stat span{font-size:.72rem;color:#adb5bd;font-weight:500;margin-top:2px}
+/* Blog about card */
+.blog-about-card{background:#f8f9fa;border-radius:14px;padding:28px 32px;border:1px solid #e9ecef;position:relative}
+.blog-about-card::before{content:'📝';position:absolute;top:-16px;right:24px;font-size:1.5rem;background:#fff;padding:0 8px;border-radius:8px}
+/* Contact */
+.contact-block{background:linear-gradient(135deg,#e8f4fd,#f0f7ff);border-radius:18px;padding:40px 44px;margin-top:64px;border:1px solid #d0e8f9;position:relative;overflow:hidden}
+.contact-block::after{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:rgba(20,107,183,.06);pointer-events:none}
+.contact-links{display:flex;flex-wrap:wrap;gap:14px;margin-top:20px;position:relative;z-index:1}
+.contact-link{display:inline-flex;align-items:center;gap:8px;padding:14px 24px;background:#fff;border:1px solid #dee2e6;border-radius:10px;color:#16181a;font-size:.92rem;text-decoration:none;font-weight:600;transition:all .3s;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.contact-link .contact-icon{flex-shrink:0;opacity:.9;transition:opacity .3s;vertical-align:middle}
+.contact-link:hover{border-color:#146bb7;color:#146bb7;background:#fff;transform:translateY(-2px);box-shadow:0 6px 20px rgba(20,107,183,.12);text-decoration:none}
+.contact-link:hover .contact-icon{opacity:1}
+
+/* Responsive */
+@media(max-width:768px){
+  .skill-grid{grid-template-columns:1fr}
+  .skill-card-feat{grid-column:span 1}
+  .about-name{font-size:2rem}
+  .about-name-en{font-size:1.2rem;display:block}
+  .about-stats{flex-wrap:wrap}
+  .focus-list::before{left:20px}
+  .focus-marker{width:40px;height:40px}
+  .contact-block{padding:28px 20px}
+}
 
 .cenote-breadcrumb{padding:15px 0}
 .cenote-breadcrumb ul{list-style:none;display:flex;flex-wrap:wrap;margin:0;padding:0}
