@@ -84,14 +84,17 @@ blockquote p{margin-bottom:0;font-style:italic}
 .page-header .page-title span{color:#146bb7}
 
 .timeline-group{margin-top:40px;margin-bottom:60px}
-.timeline-heading{font-family:"Catamaran",sans-serif;font-size:2rem;font-weight:700;color:#16181a;padding:0 0 12px 0;margin:0 0 30px 0;border-bottom:2px solid #f1f3f5;position:relative;letter-spacing:2px;cursor:pointer;user-select:none}
-.timeline-heading::after{content:"";position:absolute;bottom:-2px;left:0;width:50px;height:2px;background:#146bb7}
+.timeline-heading{font-family:"Catamaran",sans-serif;font-size:2rem;font-weight:700;color:#16181a;padding:0 0 12px 0;margin:0 0 30px 0;border-bottom:2px solid #f1f3f5;position:relative;letter-spacing:2px;cursor:pointer;user-select:none;transition:color .2s}
+.timeline-heading:hover{color:#146bb7}
+.timeline-heading::after{content:"";position:absolute;bottom:-2px;left:0;width:50px;height:2px;background:#146bb7;transition:width .3s}
+.timeline-heading:hover::after{width:80px}
 .timeline-heading .toggle-icon{font-size:1rem;color:#868e96;margin-left:12px;transition:transform .3s;display:inline-block}
 .timeline-heading.collapsed .toggle-icon{transform:rotate(-90deg)}
 .timeline-group.collapsed .timeline-month-group{display:none}
 .timeline-month-group{padding-top:30px}
 .timeline-month-group:first-child{padding-top:0}
-.timeline-month-heading{font-family:"Catamaran",sans-serif;font-size:1.2rem;font-weight:600;color:#363b40;padding:8px 0;margin:0 0 20px 20px;border-bottom:1px solid #f1f3f5;cursor:pointer;user-select:none}
+.timeline-month-heading{font-family:"Catamaran",sans-serif;font-size:1.2rem;font-weight:600;color:#363b40;padding:8px 0 8px 14px;margin:0 0 20px 20px;border-left:3px solid transparent;border-bottom:1px solid #f1f3f5;cursor:pointer;user-select:none;transition:all .2s}
+.timeline-month-heading:hover{color:#146bb7;border-left-color:#146bb7}
 .timeline-month-heading .toggle-icon{font-size:.8rem;color:#adb5bd;margin-left:8px;transition:transform .3s;display:inline-block}
 .timeline-month-heading.collapsed .toggle-icon{transform:rotate(-90deg)}
 .timeline-month-group.collapsed .hentry{display:none}
@@ -110,8 +113,8 @@ blockquote p{margin-bottom:0;font-style:italic}
 
 .cat-index-group{margin-bottom:30px}
 .cat-index-group.collapsed .cat-index-articles{display:none}
-.cat-index-heading{font-family:"Catamaran",sans-serif;font-size:1.3rem;font-weight:700;color:#16181a;padding:12px 0;border-bottom:1px solid #f1f3f5;cursor:pointer;user-select:none;transition:color .2s;display:flex;align-items:center;gap:4px}
-.cat-index-heading:hover{color:#146bb7}
+.cat-index-heading{font-family:"Catamaran",sans-serif;font-size:1.3rem;font-weight:700;color:#16181a;padding:12px 0;border-bottom:1px solid #f1f3f5;cursor:pointer;user-select:none;transition:all .2s;display:flex;align-items:center;gap:4px}
+.cat-index-heading:hover{color:#146bb7;padding-left:8px}
 .cat-index-heading .toggle-icon{font-size:.9rem;color:#adb5bd;margin-left:8px;transition:transform .3s;display:inline-block}
 .cat-index-heading.collapsed .toggle-icon{transform:rotate(-90deg)}
 @keyframes pulse {{
@@ -230,8 +233,18 @@ blockquote p{margin-bottom:0;font-style:italic}
 .site-content{padding:40px 0}
 
 /* Articles in grid */
-article.hentry,article.post{margin-bottom:80px;line-height:1.6}
+article.hentry,article.post{margin-bottom:80px;line-height:1.6;border-radius:8px;padding:20px;margin-left:-20px;margin-right:-20px;transition:all .3s;position:relative}
+article.hentry::before,article.post::before{content:'';position:absolute;left:0;top:12px;bottom:12px;width:3px;background:linear-gradient(180deg,#146bb7,#90caf9);border-radius:0 2px 2px 0;transform:scaleY(0);transition:transform .35s;opacity:0}
+article.hentry:hover,article.post:hover{box-shadow:0 4px 20px rgba(0,0,0,.06)}
+article.hentry:hover::before,article.post:hover::before{transform:scaleY(1);opacity:1}
 article:last-of-type{margin-bottom:0}
+/* Grid articles — no extra padding to avoid breaking layout */
+.tg-archive-grid article.hentry,.tg-archive-grid article.post{padding:0;margin-left:0;margin-right:0;border-radius:0;box-shadow:none}
+.tg-archive-grid article.hentry:hover,.tg-archive-grid article.post:hover{box-shadow:none;transform:translateY(-2px)}
+.tg-archive-grid article.hentry::before,.tg-archive-grid article.post::before{display:none}
+/* Featured article */
+.tg-archive-featured article{border-left:4px solid #146bb7;padding-left:28px;border-radius:0 8px 8px 0}
+.tg-archive-featured article::before{display:none}
 
 .entry-meta{font-size:12px;margin-bottom:12px;display:flex;align-items:center;flex-wrap:wrap}
 .entry-meta .cat-links,.entry-meta .posted-on,.entry-meta .byline{letter-spacing:1px}
@@ -261,10 +274,12 @@ article:last-of-type{margin-bottom:0}
 .entry-content table td,.entry-content table th{border:1px solid #dee2e6;padding:8px 12px}
 .entry-content table th{background:#f8f9fa;font-weight:700}
 
-.tg-readmore-link{position:relative;padding-left:40px;font-weight:700;font-size:14px;display:inline-block;color:#16181a}
-.tg-readmore-link::before{content:"";position:absolute;left:0;display:block;top:calc(50% - 1px);width:30px;height:1px;background-color:#212529;transition:.5s cubic-bezier(.19,1,.22,1)}
-.tg-readmore-link:hover::before{background-color:#16181a}
-.tg-readmore-link:hover{text-decoration:none}
+.tg-readmore-link{position:relative;padding-left:40px;padding-right:20px;font-weight:700;font-size:14px;display:inline-block;color:#16181a;transition:color .3s}
+.tg-readmore-link::before{content:"";position:absolute;left:0;display:block;top:calc(50% - 1px);width:30px;height:1px;background-color:#212529;transition:.4s cubic-bezier(.19,1,.22,1)}
+.tg-readmore-link::after{content:"→";position:absolute;right:0;top:50%;transform:translateY(-50%);opacity:0;transition:all .4s cubic-bezier(.19,1,.22,1)}
+.tg-readmore-link:hover{color:#146bb7;text-decoration:none}
+.tg-readmore-link:hover::before{width:36px;background-color:#146bb7}
+.tg-readmore-link:hover::after{opacity:1;right:-4px;color:#146bb7}
 
 .entry-footer{margin-top:40px;padding-top:20px;border-top:1px solid #f1f3f5}
 .entry-footer .cat-links,.entry-footer .tags-links{display:block;margin-bottom:20px}
