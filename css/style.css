@@ -175,6 +175,8 @@ article:last-of-type{margin-bottom:0}
   .single .hentry .entry-title{font-size:1.75rem!important}
   .entry-meta{flex-wrap:wrap}
 }
-#search-inline input{height:30px!important;font-size:13px!important;padding:2px 8px!important}
-#search-inline .pagefind-ui__form{height:30px!important}
-#search-inline .pagefind-ui__search-input{height:30px!important;font-size:13px!important;padding:0 8px!important}
+#search-inline input{height:28px!important;font-size:13px!important;padding:0 8px!important;border-radius:4px!important}
+#search-inline .pagefind-ui__form{height:28px!important;margin:0!important}
+#search-inline .pagefind-ui__search-input{height:28px!important;font-size:13px!important;padding:0 8px!important}
+#search-inline .pagefind-ui__drawer{display:none!important}
+#search-inline .pagefind-ui__button{display:none!important}
