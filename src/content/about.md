@@ -5,8 +5,6 @@ date: 2026-06-17T12:00:00+08:00
 
 ## 张子豪 · Hank Zhang
 
-俄亥俄州立大学计算机科学与工程本科在读（2023-2027）。目前在医疗数据公司实习，从事后端开发。
-
 ### 技术栈
 
 | 类别 | 技术 |
@@ -14,8 +12,8 @@ date: 2026-06-17T12:00:00+08:00
 | **语言** | Java, Python, SQL |
 | **框架** | Spring Boot, Spring MVC, MyBatis, LangChain |
 | **数据库/缓存** | MySQL, Redis, Apache Doris |
-| **中间件** | Kafka, Flink（学习） |
-| **基础设施** | Docker, Kubernetes（了解）, Nginx |
+| **中间件** | Kafka, Flink |
+| **基础设施** | Docker, Kubernetes, Nginx |
 | **AI/Agent** | RAG, Chroma, Prompt Engineering, MCP |
 | **工具** | Git, Linux, PySpark |
 
