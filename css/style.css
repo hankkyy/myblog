@@ -88,7 +88,8 @@ blockquote p{margin-bottom:0;font-style:italic}
 .timeline-heading .toggle-icon{font-size:1rem;color:#868e96;margin-left:12px;transition:transform .3s;display:inline-block}
 .timeline-heading.collapsed .toggle-icon{transform:rotate(-90deg)}
 .timeline-group.collapsed .timeline-month-group{display:none}
-.timeline-month-heading{font-family:"Catamaran",sans-serif;font-size:1.2rem;font-weight:600;color:#363b40;padding:8px 0;margin:0 0 20px 20px;border-bottom:1px solid #f1f3f5;cursor:pointer;user-select:none}
+.timeline-month-heading{font-family:"Catamaran",sans-serif;font-size:1.2rem;font-weight:600;color:#363b40;padding:8px 0;margin:30px 0 20px 20px;border-bottom:1px solid #f1f3f5;cursor:pointer;user-select:none}
+.timeline-month-heading:first-child{margin-top:0}
 .timeline-month-heading .toggle-icon{font-size:.8rem;color:#adb5bd;margin-left:8px;transition:transform .3s;display:inline-block}
 .timeline-month-heading.collapsed .toggle-icon{transform:rotate(-90deg)}
 .timeline-month-group.collapsed .hentry{display:none}
