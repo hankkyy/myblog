@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>gRPC vs REST：什么时候该用 gRPC？ – 纵横四海</title>
+<title>开源项目从 0 到 1000 Star 的真实复盘 – 纵横四海</title>
 <link rel="stylesheet" href="/css/style.css">
 
-<meta name="description" content="Protobuf 编码、HTTP/2 多路复用、流式传输——gRPC 的优劣势分析">
+<meta name="description" content="一个开源项目的完整成长路径：从 idea 到社区运营，每步踩过的坑">
 </head>
 <body class="layout--right-sidebar">
 <div id="page" class="site">
@@ -52,87 +52,48 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">张子豪</a></span></span><span class="posted-on"><a href="/posts/grpc-vs-rest/" rel="bookmark"><time class="entry-date published" datetime="2026-05-18">2026年5月18日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">张子豪</a></span></span><span class="posted-on"><a href="/posts/open-source-growth/" rel="bookmark"><time class="entry-date published" datetime="2026-05-10">2026年5月10日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">gRPC vs REST：什么时候该用 gRPC？</h1>
+                <h1 class="entry-title">开源项目从 0 到 1000 Star 的真实复盘</h1>
               </header>
-              <div class="entry-content"><p>微服务通信选 REST 还是 gRPC？</p>
-<h2>核心差异</h2>
-<table>
-<thead>
-<tr>
-<th>维度</th>
-<th>REST</th>
-<th>gRPC</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>协议</td>
-<td>HTTP/1.1</td>
-<td>HTTP/2</td>
-</tr>
-<tr>
-<td>数据格式</td>
-<td>JSON (文本)</td>
-<td>Protobuf (二进制)</td>
-</tr>
-<tr>
-<td>接口定义</td>
-<td>无强制约定</td>
-<td>.proto 文件</td>
-</tr>
-<tr>
-<td>代码生成</td>
-<td>手动/OpenAPI</td>
-<td>自动</td>
-</tr>
-<tr>
-<td>流式传输</td>
-<td>不支持</td>
-<td>原生支持</td>
-</tr>
-</tbody>
-</table>
-<h2>Protobuf：体积就是优势</h2>
-<div class="codehilite"><pre><span></span><code><span class="kd">message</span><span class="w"> </span><span class="nc">User</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="kt">int64</span><span class="w"> </span><span class="na">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">  </span><span class="kt">string</span><span class="w"> </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
-<span class="w">  </span><span class="kt">string</span><span class="w"> </span><span class="na">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
-<span class="p">}</span>
+              <div class="entry-content"><p>维护开源项目一年后，分享一些没人告诉你的真相。</p>
+<h2>前 100 个 Star 最难</h2>
+<p>第一个月，每天刷新 GitHub 几十次。Issue 比 Star 多。</p>
+<p>破局点：在 Reddit / V2EX / Twitter 发了三篇长文介绍项目。带来前 200 个 Star。</p>
+<h2>README 比代码重要</h2>
+<p>用户第一眼看到的是 README：</p>
+<ul>
+<li>3 秒决定是否继续看</li>
+<li>要有截图/GIF</li>
+<li>5 行内说清楚这个项目做什么</li>
+<li>快速开始 &lt; 3 个命令</li>
+</ul>
+<h2>Issue 是免费的产品经理</h2>
+<p>早期用户提的 Issue 价值连城。每一条都是真实需求。</p>
+<p>学到了：
+- 24 小时内回复每个 Issue
+- 不要怕说「不」
+- good first issue 标签吸引贡献者</p>
+<h2>中文社区 vs 英文社区</h2>
+<p>英文社区反馈更友好，但中文社区传播更快。</p>
+<p>建议：README 中英双语，Issue 用英文。</p>
+<h2>真实数据</h2>
+<div class="codehilite"><pre><span></span><code>第 1 周:    3 Star
+第 1 月:   50 Star
+第 3 月:  200 Star（V2EX 热帖）
+第 6 月:  500 Star（GitHub Trending）
+第 12 月: 1200 Star
 </code></pre></div>
 
-<p>JSON 渲染：<code>{"id": 123, "name": "张三", "email": "zhang@test.com"}</code> → 58 bytes
-Protobuf 编码：→ ~30 bytes，节省 ~50%</p>
-<p>在高频调用场景，累计带宽差距显著。</p>
-<h2>HTTP/2 多路复用</h2>
-<div class="codehilite"><pre><span></span><code>HTTP/1.1:  连接1 [req1 → res1] | 连接2 [req2 → res2]  ← Head-of-line blocking
-HTTP/2:    单连接 [req1,req2,req3] → [res2,res1,res3]  ← 多路复用
-</code></pre></div>
-
-<h2>什么时候用 gRPC</h2>
-<ul>
-<li>✅ 微服务间高频内部调用</li>
-<li>✅ 需要流式传输（实时推送、大文件）</li>
-<li>✅ 多语言环境（代码自动生成）</li>
-<li>✅ 性能敏感场景</li>
-</ul>
-<h2>什么时候用 REST</h2>
-<ul>
-<li>✅ 对外 API（浏览器兼容）</li>
-<li>✅ 简单 CRUD</li>
-<li>✅ 需要缓存（HTTP 缓存天然支持）</li>
-<li>✅ 团队不熟悉 Protobuf</li>
-</ul>
 <blockquote>
-<p>内部用 gRPC，对外用 REST——这是目前的主流选择。</p>
+<p>开源不是写代码，是做产品。</p>
 </blockquote></div>
-              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span></footer>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/杂谈/" rel="category">杂谈</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/docker-internals/" rel="prev"><span class="nav-links__label">上一篇文章</span> Docker 底层原理：Namespace、Cgroups 与 UnionFS</a></div><div class="nav-next"><a href="/posts/ai-coding-tools/" rel="next"><span class="nav-links__label">下一篇文章</span> AI 编程助手横评：Cursor、Copilot、Claude Code 怎么选</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/ai-coding-tools/" rel="prev"><span class="nav-links__label">上一篇文章</span> AI 编程助手横评：Cursor、Copilot、Claude Code 怎么选</a></div><div class="nav-next"><a href="/posts/hello-world/" rel="next"><span class="nav-links__label">下一篇文章</span> 你好，世界</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">
