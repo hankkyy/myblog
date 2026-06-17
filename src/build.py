@@ -377,8 +377,8 @@ def build():
             month_posts = list(month_group)
             month_label = f'{month}<span class="timeline-sep">月</span>'
             cards_html = "\n".join(article_card(p) for p in month_posts)
-            month_sections.append(f'<div class="timeline-month-group"><h3 class="timeline-month-heading" onclick="this.parentElement.classList.toggle(\'collapsed\');this.classList.toggle(\'collapsed\')">{month_label}<span class="toggle-icon">▼</span></h3>{cards_html}</div>')
-        all_cards_groups.append(f'<div class="timeline-group"><h2 class="timeline-heading" onclick="this.parentElement.classList.toggle(\'collapsed\');this.classList.toggle(\'collapsed\')">{year_label}<span class="toggle-icon">▼</span></h2>' + "".join(month_sections) + '</div>')
+            month_sections.append('<div class="timeline-month-group collapsed"><h3 class="timeline-month-heading collapsed" onclick="this.parentElement.classList.toggle(\'collapsed\');this.classList.toggle(\'collapsed\')">' + month_label + '<span class="toggle-icon">▼</span></h3>' + cards_html + '</div>')
+        all_cards_groups.append('<div class="timeline-group collapsed"><h2 class="timeline-heading collapsed" onclick="this.parentElement.classList.toggle(\'collapsed\');this.classList.toggle(\'collapsed\')">' + year_label + '<span class="toggle-icon">▼</span></h2>' + "".join(month_sections) + '</div>')
     all_cards = "\n".join(all_cards_groups)
     archive = page_html(f"文章列表 – {SITE['title']}",
         f"""<div id="primary" class="content-area">
