@@ -79,7 +79,7 @@ blockquote p{margin-bottom:0;font-style:italic}
 .cenote-sticky-main{padding:10px 0}
 .cenote-sticky-main .sticky-title{font-family:"Catamaran",sans-serif;font-weight:700;font-size:1rem;color:#16181a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:600px}
 
-.page-header{padding:20px 0;margin-bottom:60px;border-bottom:1px solid #f1f3f5}
+.page-header{padding:20px 0;margin-bottom:40px;border-bottom:1px solid #f1f3f5}
 .page-header .page-title{font-size:1.313rem;font-weight:700;color:#16181a}
 .page-header .page-title span{color:#146bb7}
 
@@ -110,7 +110,7 @@ blockquote p{margin-bottom:0;font-style:italic}
 
 .cat-index-group{margin-bottom:30px}
 .cat-index-group.collapsed .cat-index-articles{display:none}
-.cat-index-heading{font-family:"Catamaran",sans-serif;font-size:1.3rem;font-weight:700;color:#16181a;padding:12px 0 20px;border-bottom:1px solid #f1f3f5;cursor:pointer;user-select:none;transition:color .2s;display:flex;align-items:center;gap:4px}
+.cat-index-heading{font-family:"Catamaran",sans-serif;font-size:1.3rem;font-weight:700;color:#16181a;padding:12px 0;border-bottom:1px solid #f1f3f5;cursor:pointer;user-select:none;transition:color .2s;display:flex;align-items:center;gap:4px}
 .cat-index-heading:hover{color:#146bb7}
 .cat-index-heading .toggle-icon{font-size:.9rem;color:#adb5bd;margin-left:8px;transition:transform .3s;display:inline-block}
 .cat-index-heading.collapsed .toggle-icon{transform:rotate(-90deg)}
@@ -132,8 +132,7 @@ blockquote p{margin-bottom:0;font-style:italic}
 .travel-card-header{{font-weight:700;font-size:1.1rem;margin-bottom:4px}}
 .travel-card-count{{font-size:1.5rem;font-weight:700;color:#16181a;margin-bottom:12px}}
 .travel-card-cities{{font-size:.82rem;color:#6c757d;line-height:1.8}}}
-.cat-index-articles{padding-top:60px}
-.cat-index-articles > article:first-child{margin-top:0}
+.cat-index-articles{padding-top:20px}
 
 /* About page */
 .about-intro{padding:72px 0 48px;position:relative;overflow:hidden}

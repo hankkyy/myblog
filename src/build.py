@@ -437,7 +437,7 @@ def build():
     for cat_name, cat_posts in sorted(cats.items(), key=lambda x: -len(x[1])):
         slug = cat_name.lower().replace(" ", "-")
         cards = "\n".join(article_card(p) for p in cat_posts)
-        cat_groups.append('<div class="cat-index-group collapsed"><h2 class="cat-index-heading collapsed" onclick="this.parentElement.classList.toggle(\'collapsed\');this.classList.toggle(\'collapsed\')">' + cat_name + ' <span class="cat-count">（' + str(len(cat_posts)) + ' 篇）</span><span class="toggle-icon">▼</span></h2><div class="cat-index-articles" style="padding-top:60px">' + cards + '</div></div>')
+        cat_groups.append('<div class="cat-index-group collapsed"><h2 class="cat-index-heading collapsed" onclick="this.parentElement.classList.toggle(\'collapsed\');this.classList.toggle(\'collapsed\')">' + cat_name + ' <span class="cat-count">（' + str(len(cat_posts)) + ' 篇）</span><span class="toggle-icon">▼</span></h2><div class="cat-index-articles">' + cards + '</div></div>')
     cats_index = page_html(f"分类 – {SITE['title']}",
         f"""<div id="primary" class="content-area">
           <main id="main" class="site-main">
