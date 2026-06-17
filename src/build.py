@@ -247,12 +247,14 @@ def article_single(p, all_posts):
               <footer class="entry-footer">{cat_links_footer(p['categories'])}</footer>
             </article>
             {nav}
+            <a href="/about/" class="author-bio-link">
             <div class="author-bio">
               <div class="author-bio-content">
                 <h3>关于 {AUTHOR}</h3>
                 <p>后端开发工程师。关注 Java/Spring Boot/Redis/MySQL 技术栈，分布式系统，OLAP 数据库，AI Agent 开发与应用。</p>
               </div>
             </div>
+            </a>
             <div class="comments-area">
               <h3>评论</h3>
               <p class="no-comments">评论已关闭。</p>
