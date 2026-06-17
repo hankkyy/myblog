@@ -151,10 +151,15 @@ def parse_page(md_path):
         except ValueError:
             date = datetime.now()
 
+    # 日期格式：2026年6月17日（无前导零，和原版一致）
+    month = date.month
+    day = date.day
+    date_formatted = f"{date.year}年{month}月{day}日"
+
     return {
         "title": post.get("title", "Untitled"),
         "date": date,
-        "date_formatted": date.strftime("%Y年%m月%d日"),
+        "date_formatted": date_formatted,
         "date_iso": date.strftime("%Y-%m-%d"),
         "categories": post.get("categories", []),
         "description": post.get("description", ""),
@@ -186,8 +191,7 @@ def posted_on(post):
 def article_list_item(post):
     return f"""          <article class="post type-post hentry">
             <div class="entry-meta">
-              {cat_links(post['categories'])}
-              {posted_on(post)}
+              {cat_links(post['categories'])}{posted_on(post)}
             </div>
             <header class="entry-header">
               <h2 class="entry-title"><a href="/posts/{post['slug']}/" rel="bookmark">{post['title']}</a></h2>
@@ -317,8 +321,10 @@ def build():
         for md_file in sorted(posts_dir.glob("*.md"), reverse=True):
             posts.append(parse_page(md_file))
 
+    HOME_TITLE = f"{SITE_TITLE} – {SITE_DESC}"
+
     # ======= HOMEPAGE =======
-    (ROOT / "index.html").write_text(list_page(posts[:10], SITE_TITLE))
+    (ROOT / "index.html").write_text(list_page(posts[:10], HOME_TITLE))
 
     # /posts/ list
     (ROOT / "posts").mkdir(parents=True, exist_ok=True)
