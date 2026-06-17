@@ -226,11 +226,11 @@ def article_single(p, all_posts):
     idx = next((i for i, pp in enumerate(all_posts) if pp["slug"] == p["slug"]), None)
     prev_html = next_html = ""
     if idx is not None:
-        if idx > 0:
-            prev = all_posts[idx - 1]
-            prev_html = f'<div class="nav-previous"><a href="/posts/{prev["slug"]}/" rel="prev"><span class="nav-links__label">上一篇文章</span> {prev["title"]}</a></div>'
         if idx < len(all_posts) - 1:
-            nxt = all_posts[idx + 1]
+            prev = all_posts[idx + 1]
+            prev_html = f'<div class="nav-previous"><a href="/posts/{prev["slug"]}/" rel="prev"><span class="nav-links__label">上一篇文章</span> {prev["title"]}</a></div>'
+        if idx > 0:
+            nxt = all_posts[idx - 1]
             next_html = f'<div class="nav-next"><a href="/posts/{nxt["slug"]}/" rel="next"><span class="nav-links__label">下一篇文章</span> {nxt["title"]}</a></div>'
     nav = ""
     if prev_html or next_html:
