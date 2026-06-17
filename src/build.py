@@ -129,12 +129,24 @@ window.addEventListener('scroll',function(){{document.getElementById('back-to-to
 def parse_page(md_path):
     post = frontmatter.load(md_path)
     content_html = markdown(post.content, extensions=["extra", "codehilite"])
-    plain = re.sub(r"<[^>]+>", "", content_html).strip()
-    plain = re.sub(r"\s+", " ", plain)
+    # Clean: remove code blocks (```...```) and inline code from original markdown
+    raw_md = re.sub(r'```[\s\S]*?```', '', post.content)
+    raw_md = re.sub(r'`[^`]+`', '', raw_md)
+    # Remove ASCII box-drawing lines and other non-prose content
+    raw_md = re.sub(r'[┌└┐┘│─├┤┬┴┼═║╒╓╔╕╖╗╘╙╚╛╜╝╞╟╠╡╢╣╤╥╦╧╨╩╪╫╬]+', '', raw_md)
+    # Remove separator lines and markdown artifacts
+    raw_md = re.sub(r'^[-*=]{3,}\s*$', '', raw_md, flags=re.MULTILINE)
+    raw_md = re.sub(r'^#{1,6}\s', '', raw_md, flags=re.MULTILINE)
+    raw_md = re.sub(r'^\|.*\|$', '', raw_md, flags=re.MULTILINE)  # table rows
+    # Convert remaining markdown to plain text
+    plain = re.sub(r'[\*\|\>\<\[]+', '', raw_md)
+    plain = re.sub(r'\s+', ' ', plain).strip()
     summary = plain[:55]
-    long_summary = plain[:200]
+    # Use description for featured card when available (cleaner)
+    desc = post.get("description", "")
+    long_summary = desc if desc else plain[:200]
     truncated = len(plain) > 55
-    long_truncated = len(plain) > 200
+    long_truncated = not desc and len(plain) > 200
     date = post.get("date", datetime.now())
     if isinstance(date, str):
         try: date = datetime.fromisoformat(date)
