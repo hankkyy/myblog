@@ -238,7 +238,7 @@ def article_single(p, all_posts):
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">{AUTHOR}</a></span></span>{posted_on(p)}
+                <span class="cat-links">{cat_links_meta(p["categories"])}</span>{posted_on(p)}
               </div>
               <header class="entry-header">
                 <h1 class="entry-title">{p['title']}</h1>
