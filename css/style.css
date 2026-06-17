@@ -242,6 +242,9 @@ article:last-of-type{margin-bottom:0}
 .tg-archive-grid article.hentry,.tg-archive-grid article.post{padding:0 0 0 12px;margin-left:0;margin-right:0;border-radius:0;border-left:3px solid transparent;box-shadow:none;transition:all .3s}
 .tg-archive-grid article.hentry:hover,.tg-archive-grid article.post:hover{box-shadow:0 4px 20px rgba(0,0,0,.06);transform:translateY(-2px);border-left-color:#146bb7}
 .tg-archive-grid article.hentry::before,.tg-archive-grid article.post::before{display:none}
+.single .hentry::before,.single .post::before{display:none}
+.single .hentry,.single .post{padding:0;margin-left:0;margin-right:0;border-radius:0}
+.single .hentry:hover,.single .post:hover{box-shadow:none}
 /* Featured article */
 .tg-archive-featured article{border-left:4px solid #146bb7;padding-left:28px;border-radius:0 8px 8px 0}
 .tg-archive-featured article::before{display:none}
