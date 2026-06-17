@@ -36,7 +36,7 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
     desc_meta = f'<meta name="description" content="{desc}">' if desc else ""
     pagefind_css = '<link rel="stylesheet" href="/pagefind/pagefind-ui.css">' if is_home else ""
     bc = f"{body_class} {extra_body_class}".strip()
-    search_html = '<div id="search-inline" style="width:180px"></div>' if is_home else ""
+    search_html = '<div id="search-inline" style="width:200px"></div>' if is_home else ""
 
     return f"""<!DOCTYPE html>
 <html lang="zh-Hans">
@@ -82,9 +82,9 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
       <div class="container" style="text-align:center">
         <nav id="site-navigation" class="main-navigation tg-site-menu--default" style="display:inline-flex;align-items:center;gap:10px">
           <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu" style="justify-content:center">{main_nav}</ul></div>
-          <span style="display:inline-flex;align-items:center;gap:4px">{search_html}</span>
         </nav>
       </div>
+      {f'<div style="max-width:250px;margin:8px auto 0;text-align:center">{search_html}</div>' if search_html else ''}
     </div>
   </div>
 </header>
