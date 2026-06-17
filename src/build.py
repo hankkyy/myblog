@@ -82,7 +82,7 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
     <div class="header-bottom-bottom">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
         <nav id="site-navigation" class="main-navigation tg-site-menu--default" style="flex:1;text-align:center">
-          <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu">{main_nav}</ul></div>
+          <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu" style="justify-content:center">{main_nav}</ul></div>
         </nav>
         <span class="tg-search-toggle" onclick="var s=document.getElementById('search-inline');s.style.display=s.style.display==='none'?'block':'none';" style="cursor:pointer;font-size:18px;color:#16181a">🔍</span>
       </div>
