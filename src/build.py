@@ -136,13 +136,11 @@ def build_html(title_tag, body_html, current_menu="/", description="", is_home=F
 def parse_page(md_path):
     post = frontmatter.load(md_path)
     content_html = markdown(post.content, extensions=["extra", "codehilite"])
-    summary_html = content_html[:300]
-    if len(content_html) > 300:
-        lt = summary_html.rfind('<')
-        gt = summary_html.rfind('>')
-        if lt > gt:
-            summary_html = summary_html[:lt]
-    truncated = len(content_html) > 300
+    # 摘要：纯文本，约 200 字（和原版一样显示 [&hellip;]）
+    plain_text = re.sub(r"<[^>]+>", "", content_html).strip()
+    plain_text = re.sub(r"\s+", " ", plain_text)
+    summary_text = plain_text[:200]
+    truncated = len(plain_text) > 200
 
     date = post.get("date", datetime.now())
     if isinstance(date, str):
@@ -164,7 +162,7 @@ def parse_page(md_path):
         "categories": post.get("categories", []),
         "description": post.get("description", ""),
         "content": content_html,
-        "summary": summary_html,
+        "summary": summary_text,
         "truncated": truncated,
         "slug": md_path.stem,
     }
@@ -193,7 +191,7 @@ def article_list_item(post):
               <h2 class="entry-title"><a href="/posts/{post['slug']}/" rel="bookmark">{post['title']}</a></h2>
             </header>
             <div class="entry-content">
-              {post['summary']}{'&hellip;' if post['truncated'] else ''}
+              <p>{post['summary']}{' [&hellip;]' if post['truncated'] else ''}</p>
             </div>
             <footer class="entry-footer">
               <a href="/posts/{post['slug']}/" class="read-more">阅读更多</a>

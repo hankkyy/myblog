@@ -50,11 +50,7 @@
               <h2 class="entry-title"><a href="/posts/spring-virtual-threads/" rel="bookmark">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></h2>
             </header>
             <div class="entry-content">
-              <p>Java 21 的 Virtual Threads（虚拟线程）是 Project Loom 的最终成果。Spring Boot 3.2 开始正式支持。我最近在项目里做了测试。</p>
-<h2>配置方式</h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># application.yml</span>
-<span class="nt">spring</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">thre&hellip;
+              <p>Java 21 的 Virtual Threads（虚拟线程）是 Project Loom 的最终成果。Spring Boot 3.2 开始正式支持。我最近在项目里做了测试。 配置方式 # application.yml spring: threads: virtual: enabled: true # Spring Boot 3.2+ 或者在代码里： @Bean public TomcatPro [&hellip;]</p>
             </div>
             <footer class="entry-footer">
               <a href="/posts/spring-virtual-threads/" class="read-more">阅读更多</a>
@@ -68,9 +64,7 @@
               <h2 class="entry-title"><a href="/posts/rust-ownership/" rel="bookmark">Rust 写给 Java 程序员：所有权机制深度解析</a></h2>
             </header>
             <div class="entry-content">
-              <p>Rust 的所有权（Ownership）是让 Java 程序员最头疼的概念。Java 里我们只管 <code>new</code>，GC 会处理一切。Rust 完全不同——<strong>没有 GC，编译器在编译时就知道每块内存何时释放</strong>。</p>
-<h2>Java 的视角</h2>
-<div class="codehilite"><pre><span></span><code><span class="n">String</span><span class="w"> </span><span class="n">s1</span><span class="w"> &hellip;
+              <p>Rust 的所有权（Ownership）是让 Java 程序员最头疼的概念。Java 里我们只管 new，GC 会处理一切。Rust 完全不同——没有 GC，编译器在编译时就知道每块内存何时释放。 Java 的视角 String s1 = new String(&quot;hello&quot;); String s2 = s1; // s1 和 s2 指向同一个对象 // GC 会在没有任何引用 [&hellip;]</p>
             </div>
             <footer class="entry-footer">
               <a href="/posts/rust-ownership/" class="read-more">阅读更多</a>
@@ -84,12 +78,7 @@
               <h2 class="entry-title"><a href="/posts/k8s-network/" rel="bookmark">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></h2>
             </header>
             <div class="entry-content">
-              <p>Kubernetes 的网络模型是面试高频题，但很多人只是背了「每个 Pod 一个 IP」，实际数据包怎么走的并不清楚。</p>
-<h2>K8s 网络的三层模型</h2>
-<div class="codehilite"><pre><span></span><code>┌─────────────────────────────────────────────┐
-│  Node                                      │
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐    │
-│  │  Pod A  │  │  Pod&hellip;
+              <p>Kubernetes 的网络模型是面试高频题，但很多人只是背了「每个 Pod 一个 IP」，实际数据包怎么走的并不清楚。 K8s 网络的三层模型 ┌─────────────────────────────────────────────┐ │ Node │ │ ┌─────────┐ ┌─────────┐ ┌─────────┐ │ │ │ Pod A │ │ Pod B │ │ Pod C  [&hellip;]</p>
             </div>
             <footer class="entry-footer">
               <a href="/posts/k8s-network/" class="read-more">阅读更多</a>
@@ -103,13 +92,7 @@
               <h2 class="entry-title"><a href="/posts/doris-3-features/" rel="bookmark">2026 年 Apache Doris 3.0 新特性全解析</a></h2>
             </header>
             <div class="entry-content">
-              <p>Apache Doris 3.0 在 2026 年 4 月正式 GA。作为 OLAP 领域增长最快的项目，这次大版本带来了几个关键变革。</p>
-<h2>1. 存算分离正式 GA</h2>
-<p>Doris 传统架构是存算一体的 Shared-Nothing：</p>
-<div class="codehilite"><pre><span></span><code>┌──────────────────────────────────────┐
-│  FE (Frontend)  ← 元数据 + 查询计划   │
-│  BE (Backend)   ← 计算 + 存储在一起   │
-└──&hellip;
+              <p>Apache Doris 3.0 在 2026 年 4 月正式 GA。作为 OLAP 领域增长最快的项目，这次大版本带来了几个关键变革。 1. 存算分离正式 GA Doris 传统架构是存算一体的 Shared-Nothing： ┌──────────────────────────────────────┐ │ FE (Frontend) ← 元数据 + 查询计划 │ │ BE (Backend [&hellip;]</p>
             </div>
             <footer class="entry-footer">
               <a href="/posts/doris-3-features/" class="read-more">阅读更多</a>
@@ -123,10 +106,7 @@
               <h2 class="entry-title"><a href="/posts/columnar-storage/" rel="bookmark">为什么 ClickHouse 比 MySQL 快 100 倍？列式存储原理</a></h2>
             </header>
             <div class="entry-content">
-              <p>面试经常被问：「为什么 OLAP 数据库用列存，而不是行存？」</p>
-<p>直接用数据说话。假设有一张表：</p>
-<div class="codehilite"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="p">(</span>
-&hellip;
+              <p>面试经常被问：「为什么 OLAP 数据库用列存，而不是行存？」 直接用数据说话。假设有一张表： CREATE TABLE orders ( id INT, user_id INT, amount DECIMAL, status VARCHAR, created_at DATETIME ); -- 1 亿行数据 查询：SELECT SUM(amount) FROM orders WHERE stat [&hellip;]</p>
             </div>
             <footer class="entry-footer">
               <a href="/posts/columnar-storage/" class="read-more">阅读更多</a>
