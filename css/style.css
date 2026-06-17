@@ -144,7 +144,7 @@ article:last-of-type{margin-bottom:0}
 .entry-footer .cat-links a:hover{background-color:#363b40;text-decoration:none}
 
 .post-navigation{margin-top:40px;padding-top:30px;border-top:1px solid #f1f3f5}
-.post-navigation .nav-links{display:flex;justify-content:space-between}
+.post-navigation .nav-links{display:flex;justify-content:space-between;gap:60px}
 .post-navigation .nav-links__label{display:block;font-size:12px;color:#adb5bd;margin-bottom:5px}
 .post-navigation a{font-size:1.1rem;font-weight:700;color:#16181a}
 .post-navigation a:hover{color:#146bb7}
