@@ -95,8 +95,11 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
 <footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
   <div class="tg-footer-bottom">
     <div class="container">
-      <div class="site-info">
-        Copyright &copy; {YEAR} <a href="{SITE['url']}" title="{st}"><span>{st}</span></a>. All rights reserved.
+      <div class="site-info" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Copyright &copy; {YEAR} <a href="{SITE['url']}" title="{st}"><span>{st}</span></a>. All rights reserved.</span>
+        <nav style="display:flex;gap:15px">
+          {"".join(f'<a href=\"{url}\"{(" target=\"_blank\" rel=\"noopener\"" if url.startswith("http") else "")}>{label}</a>' for label, url in MENU)}
+        </nav>
       </div>
     </div>
   </div>
