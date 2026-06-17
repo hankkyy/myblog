@@ -21,16 +21,15 @@ SAFE = {".git","src","vercel.json",".gitignore","README.md"}
 
 
 def menu_html(current="/"):
-    top, main = [], []
+    parts = []
     for label, url in MENU:
         a = ' class="active"' if current == url else ""
-        top.append(f'<li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="{url}"{a}>{label}</a></li>')
-        main.append(f'<li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="{url}"{a}>{label}</a></li>')
-    return "".join(top), "".join(main)
+        parts.append(f'<li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="{url}"{a}>{label}</a></li>')
+    return "".join(parts)
 
 
 def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_class="layout--no-sidebar", extra_body_class=""):
-    top_nav, main_nav = menu_html(current)
+    main_nav = menu_html(current)
     st = SITE["title"]
     site_title_tag = "h1" if is_home else "p"
     bc = f"{body_class} {extra_body_class}".strip()
@@ -48,13 +47,6 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
 <div id="page" class="site">
 <a class="skip-link screen-reader-text" href="#content">跳到内容</a>
 <header id="masthead" class="site-header tg-site-header tg-site-header--default">
-  <div class="tg-header-top">
-    <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-      <nav class="tg-header-navigation">
-        <div class="menu-menu-container"><ul id="header-menu" class="menu">{top_nav}</ul></div>
-      </nav>
-    </div>
-  </div>
   <div class="tg-header-bottom">
     <div class="header-bottom-top">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
