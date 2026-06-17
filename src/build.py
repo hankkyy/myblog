@@ -16,7 +16,7 @@ CSS_DIR = ROOT / "css"
 SITE = {"title":"纵横四海","url":"https://hankzhang.us/","desc":"但行好事，莫问前程"}
 AUTHOR = "张子豪"
 YEAR = str(datetime.now().year)
-MENU = [("首页","/"),("文章列表","/posts/"),("留言板","/guestbook/"),("关于","/about/")]
+MENU = [("首页","/"),("文章列表","/posts/"),("留言板","/guestbook/"),("关于","/about/"),("管理","https://github.com/hankkyy/myblog")]
 SAFE = {".git","src","vercel.json",".gitignore","README.md","pagefind"}
 
 
@@ -62,8 +62,9 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
     </div>
     <div class="header-bottom-bottom">
       <div class="container" style="justify-content:center">
-        <nav class="main-navigation tg-site-menu--default" style="text-align:center">
+        <nav class="main-navigation tg-site-menu--default" style="text-align:center;display:flex;align-items:center;gap:20px">
           <div class="menu-menu-container"><ul class="nav-menu" style="justify-content:center">{main_nav}</ul></div>
+          <div id="search-inline" style="width:180px"></div>
         </nav>
       </div>
     </div>
@@ -84,17 +85,13 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
   </div>
 </nav>
 <div id="content" class="site-content">
-  <div class="container" id="search-container" style="max-width:600px;margin-bottom:20px">
-    <div id="search"></div>
-  </div>
   <div class="container">
 {body}
   </div>
 </div>
 <script src="/pagefind/pagefind-ui.js"></script>
 <script>
-  new PagefindUI({{ element: "#search", showSubResults: true }});
-  document.getElementById('search-container').style.display = document.body.className.includes('right-sidebar') ? 'none' : '';
+  new PagefindUI({{ element: "#search-inline", showSubResults: false, showImages: false }});
 </script>
 <footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
   <div class="tg-footer-bottom">

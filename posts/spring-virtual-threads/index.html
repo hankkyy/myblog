@@ -24,8 +24,9 @@
     </div>
     <div class="header-bottom-bottom">
       <div class="container" style="justify-content:center">
-        <nav class="main-navigation tg-site-menu--default" style="text-align:center">
-          <div class="menu-menu-container"><ul class="nav-menu" style="justify-content:center"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/" class="active">首页</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/posts/">文章列表</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/guestbook/">留言板</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/about/">关于</a></li></ul></div>
+        <nav class="main-navigation tg-site-menu--default" style="text-align:center;display:flex;align-items:center;gap:20px">
+          <div class="menu-menu-container"><ul class="nav-menu" style="justify-content:center"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/" class="active">首页</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/posts/">文章列表</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/guestbook/">留言板</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/about/">关于</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="https://github.com/hankkyy/myblog">管理</a></li></ul></div>
+          <div id="search-inline" style="width:180px"></div>
         </nav>
       </div>
     </div>
@@ -39,16 +40,13 @@
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
         <nav class="main-navigation cenote-sticky-navigation tg-site-menu--default">
-          <div class="menu-menu-container"><ul class="menu" style="justify-content:center"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/" class="active">首页</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/posts/">文章列表</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/guestbook/">留言板</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/about/">关于</a></li></ul></div>
+          <div class="menu-menu-container"><ul class="menu" style="justify-content:center"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/" class="active">首页</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/posts/">文章列表</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/guestbook/">留言板</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/about/">关于</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="https://github.com/hankkyy/myblog">管理</a></li></ul></div>
         </nav>
       </div>
     </div>
   </div>
 </nav>
 <div id="content" class="site-content">
-  <div class="container" id="search-container" style="max-width:600px;margin-bottom:20px">
-    <div id="search"></div>
-  </div>
   <div class="container">
 <div class="tg-flex-container tg-flex-space-between"><div id="primary" class="content-area">
           <main id="main" class="site-main">
@@ -219,8 +217,7 @@
 </div>
 <script src="/pagefind/pagefind-ui.js"></script>
 <script>
-  new PagefindUI({ element: "#search", showSubResults: true });
-  document.getElementById('search-container').style.display = document.body.className.includes('right-sidebar') ? 'none' : '';
+  new PagefindUI({ element: "#search-inline", showSubResults: false, showImages: false });
 </script>
 <footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
   <div class="tg-footer-bottom">
