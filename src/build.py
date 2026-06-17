@@ -52,14 +52,6 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
 <div id="page" class="site">
 <a class="skip-link screen-reader-text" href="#content">跳到内容</a>
 <header id="masthead" class="site-header tg-site-header tg-site-header--default">
-  <div class="tg-header-top">
-    <div class="container" style="display:flex;justify-content:center;align-items:center;gap:20px">
-      <nav class="tg-header-navigation" style="display:flex;align-items:center">
-        <div class="menu-menu-container"><ul class="menu" style="display:flex;justify-content:center;gap:15px">{main_nav}</ul></div>
-        {search_html}
-      </nav>
-    </div>
-  </div>
   <div class="tg-header-bottom">
     <div class="header-bottom-top">
       <div class="container">
@@ -67,6 +59,14 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
           <{site_title_tag} class="site-title"><a href="{SITE['url']}" rel="home">{st}</a></{site_title_tag}>
           <p class="site-description">{SITE['desc']}</p>
         </div>
+      </div>
+    </div>
+    <div class="header-bottom-bottom">
+      <div class="container" style="justify-content:center">
+        <nav class="main-navigation tg-site-menu--default" style="text-align:center;display:flex;align-items:center;gap:20px">
+          <div class="menu-menu-container"><ul class="nav-menu" style="justify-content:center">{main_nav}</ul></div>
+          {search_html}
+        </nav>
       </div>
     </div>
   </div>
