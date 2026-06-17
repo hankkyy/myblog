@@ -291,6 +291,8 @@ def build():
     CSS_DIR.mkdir(exist_ok=True)
     css_src = THEME / "static" / "css" / "style.css"
     if css_src.exists(): shutil.copy(css_src, CSS_DIR / "style.css")
+    favicon_src = THEME / "static" / "favicon.png"
+    if favicon_src.exists(): shutil.copy(favicon_src, ROOT / "favicon.png")
 
     posts = []
     posts_dir = CONTENT / "posts"
@@ -310,13 +312,26 @@ def build():
         if total_pages <= 1:
             return ""
         links = []
-        for pg in range(1, total_pages + 1):
+        # Show: 1 2 3 ... (second-last) (last)
+        show_pages = set()
+        show_pages.add(1)
+        show_pages.add(total_pages)
+        for pg in [2, 3, current_page - 1, current_page, current_page + 1, total_pages - 1]:
+            if 1 < pg < total_pages:
+                show_pages.add(pg)
+        sorted_pages = sorted(show_pages)
+        prev_page = 0
+        for pg in sorted_pages:
+            if pg > prev_page + 1:
+                links.append('<span class="page-numbers dots">&hellip;</span>')
             if pg == current_page:
                 links.append(f'<span class="page-numbers current">{pg}</span>')
             else:
                 href = "/" if pg == 1 else f"/page/{pg}/"
                 links.append(f'<a class="page-numbers" href="{href}">{pg}</a>')
-        return f'<nav class="navigation pagination" aria-label="文章分页"><div class="nav-links">{"".join(links)}</div></nav>'
+            prev_page = pg
+        jump = f'<span class="page-jump"><input type="number" min="1" max="{total_pages}" placeholder="{current_page}/{total_pages}" onkeydown="if(event.key===\'Enter\'){{var v=parseInt(this.value);if(v>=1&&v<={total_pages})location.href=v===1?\'/\':\'/page/\'+v+\'/\'}}" style="width:50px;text-align:center;border:1px solid #e9ecef;border-radius:4px;padding:4px 0;font-size:.9rem"></span>'
+        return f'<nav class="navigation pagination" aria-label="文章分页"><div class="nav-links">{"".join(links)}{jump}</div></nav>'
 
     for page_num in range(1, total_pages + 1):
         start = (page_num - 1) * PER_PAGE
