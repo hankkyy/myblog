@@ -326,7 +326,7 @@ def build():
     for (year, month), group in groupby(posts, key=lambda p: (p["date"].year, p["date"].month)):
         month_label = f'{year}<span class="timeline-sep">年</span>{month}<span class="timeline-sep">月</span>'
         cards_html = "\n".join(article_card(p) for p in group)
-        all_cards_groups.append(f'<div class="timeline-group"><h2 class="timeline-heading">{month_label}</h2>{cards_html}</div>')
+        all_cards_groups.append(f'<div class="timeline-group"><h2 class="timeline-heading" onclick="this.parentElement.classList.toggle(\'collapsed\');this.classList.toggle(\'collapsed\')">{month_label}<span class="toggle-icon">▼</span></h2>{cards_html}</div>')
     all_cards = "\n".join(all_cards_groups)
     archive = page_html(f"文章列表 – {SITE['title']}",
         f"""<div id="primary" class="content-area">

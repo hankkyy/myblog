@@ -82,9 +82,12 @@ blockquote p{margin-bottom:0;font-style:italic}
 .page-header .page-title{font-size:1.313rem;font-weight:700;color:#16181a}
 .page-header .page-title span{color:#146bb7}
 
-.timeline-group{margin-bottom:60px}
-.timeline-heading{font-family:"Catamaran",sans-serif;font-size:2rem;font-weight:700;color:#16181a;padding:0 0 12px 0;margin:0 0 30px 0;border-bottom:2px solid #f1f3f5;position:relative;letter-spacing:2px}
+.timeline-group{margin-top:40px;margin-bottom:60px}
+.timeline-heading{font-family:"Catamaran",sans-serif;font-size:2rem;font-weight:700;color:#16181a;padding:0 0 12px 0;margin:0 0 30px 0;border-bottom:2px solid #f1f3f5;position:relative;letter-spacing:2px;cursor:pointer;user-select:none}
 .timeline-heading::after{content:"";position:absolute;bottom:-2px;left:0;width:50px;height:2px;background:#146bb7}
+.timeline-heading .toggle-icon{font-size:1rem;color:#868e96;margin-left:12px;transition:transform .3s;display:inline-block}
+.timeline-heading.collapsed .toggle-icon{transform:rotate(-90deg)}
+.timeline-group.collapsed .hentry{display:none}
 .timeline-sep{font-size:1rem;font-weight:400;color:#868e96;margin:0 2px}
 
 .cenote-breadcrumb{padding:15px 0}
