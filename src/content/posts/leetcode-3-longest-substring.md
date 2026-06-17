@@ -1,7 +1,7 @@
 ---
 title: "LeetCode 3. 无重复字符的最长子串：滑动窗口模板速通"
 date: 2025-11-08T10:00:00+08:00
-categories: ['技术']
+categories: ['LeetCode']
 description: "用滑动窗口模板解决无重复字符的最长子串，一通百通——这套模板能解决 90% 的滑动窗口题。"
 ---
 

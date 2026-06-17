@@ -1,7 +1,7 @@
 ---
 title: "LeetCode 146. LRU Cache：面试官最爱的设计题，手写双向链表+哈希表"
 date: 2025-03-30T10:00:00+08:00
-categories: ['技术']
+categories: ['LeetCode']
 description: "用 Java 实现 O(1) 的 LRU 缓存，面试中这道题几乎必考，理解双向链表的精妙之处。"
 ---
 

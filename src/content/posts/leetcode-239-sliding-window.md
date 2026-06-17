@@ -1,7 +1,7 @@
 ---
 title: "LeetCode 239. 滑动窗口最大值：单调队列的经典应用"
 date: 2025-05-15T11:00:00+08:00
-categories: ['技术']
+categories: ['LeetCode']
 description: "用双端队列（Deque）在 O(n) 时间内解决滑动窗口最大值，理解单调队列的核心思想。"
 ---
 

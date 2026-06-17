@@ -1,7 +1,7 @@
 ---
 title: "LeetCode 25. K 个一组翻转链表：递归解法的简洁与优雅"
 date: 2025-07-08T16:00:00+08:00
-categories: ['技术']
+categories: ['LeetCode']
 description: "用递归思路解决链表翻转的 Hard 题，代码虽短但逻辑极强，面试中能写出递归解会加分很多。"
 ---
 

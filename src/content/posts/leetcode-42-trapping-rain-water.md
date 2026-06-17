@@ -1,7 +1,7 @@
 ---
 title: "LeetCode 42. 接雨水：从暴力到双指针的思维提升"
 date: 2026-01-15T15:00:00+08:00
-categories: ['技术']
+categories: ['LeetCode']
 description: "用三种解法层层递进——暴力、动态规划、双指针，理解如何一步步优化空间复杂度。"
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "LeetCode 560. 和为 K 的子数组：前缀和 + HashMap 的巧妙组合"
 date: 2025-09-10T14:00:00+08:00
-categories: ['技术']
+categories: ['LeetCode']
 description: "从 O(n²) 的暴力到 O(n) 的哈希表优化，理解前缀和这种「空间换时间」的经典技巧。"
 ---
 
