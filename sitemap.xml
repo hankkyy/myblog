@@ -51,12 +51,15 @@
   <url><loc>https://hankzhang.us/posts/uber-acquires-coupang-eats/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/netflix-gaming-exit/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/xai-grok-4/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/concurrenthashmap-vs-hashtable/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/openai-stargate-project/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/kafka-alternatives-2025/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/hashmap-source-code/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/shopee-layoffs-2025/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/tencent-cloud-price-war/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/learning-from-failure/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/tesla-optimus-robot-2025/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/how-i-prepare-interviews/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/microsoft-nuclear-ai/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/database-sharding-practice/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/api-design-philosophy/</loc><changefreq>weekly</changefreq></url>
@@ -65,24 +68,30 @@
   <url><loc>https://hankzhang.us/posts/bytedance-ai-video-generator/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/why-chinese-devs-should-blog/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/baidu-ernie-5/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/thread-pool-interview/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/neovim-setup-guide/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/redis-cluster-practice/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/mysql-index-interview/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/aws-reinvent-2025/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/on-call-experience/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/jvm-gc-interview/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/cdn-edge-computing/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/reading-source-code/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/git-workflow-best-practices/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/twitter-x-rebrand-one-year/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/system-design-tinyurl/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/doris-vs-clickhouse-2025/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/terminal-tools-i-use/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/postgres-vs-mysql-2025/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/distributed-lock-deep-dive/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/why-we-over-engineer/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/anthropic-claude-4/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/redis-interview-questions/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/apache-pulsar-intro/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/deepseek-r1-open-source/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/tech-winter-2025/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/learn-rust-as-java-dev/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/spring-ioc-aop-interview/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/sam-altman-fired-return/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/docker-layer-caching/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/http3-quic-explained/</loc><changefreq>weekly</changefreq></url>

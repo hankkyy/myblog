@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？ – 纵横四海</title>
-<meta name="description" content="边缘计算让代码在全球 CDN 节点上运行，显著降低延迟。了解它适合和不适合的场景。">
-<meta property="og:title" content="CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？ – 纵横四海">
-<meta property="og:description" content="边缘计算让代码在全球 CDN 节点上运行，显著降低延迟。了解它适合和不适合的场景。">
+<title>线程池面试八连问：核心参数、拒绝策略和调优思路 – 纵横四海</title>
+<meta name="description" content="把 Java 线程池的核心参数和执行流程讲透，面试时对答如流。">
+<meta property="og:title" content="线程池面试八连问：核心参数、拒绝策略和调优思路 – 纵横四海">
+<meta property="og:description" content="把 Java 线程池的核心参数和执行流程讲透，面试时对答如流。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？ – 纵横四海",
-  "description": "边缘计算让代码在全球 CDN 节点上运行，显著降低延迟。了解它适合和不适合的场景。",
+  "headline": "线程池面试八连问：核心参数、拒绝策略和调优思路 – 纵横四海",
+  "description": "把 Java 线程池的核心参数和执行流程讲透，面试时对答如流。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -68,43 +68,59 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/cdn-edge-computing/" rel="bookmark"><time class="entry-date published" datetime="2025-05-18">2025年5月18日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/thread-pool-interview/" rel="bookmark"><time class="entry-date published" datetime="2025-07-05">2025年7月5日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？</h1>
+                <h1 class="entry-title">线程池面试八连问：核心参数、拒绝策略和调优思路</h1>
               </header>
-              <div class="entry-content"><p>边缘计算（Edge Computing）是 CDN 的进化版——不仅缓存静态文件，还能在离用户最近的节点上运行代码。</p>
-<h2>为什么需要边缘计算</h2>
-<p>传统架构：用户 → CDN（静态） → 源站（动态处理）</p>
-<p>边缘计算：用户 → 边缘节点（动态 + 静态都在这里处理）</p>
-<p>一个用户在新加坡，源站在美国。传统模式下动态请求要跨半个地球（200ms+）。边缘计算模式下直接在最近节点处理（10ms）。</p>
-<h2>适用场景</h2>
+              <div class="entry-content"><p>线程池是 Java 并发编程面试的高频题。</p>
+<h2>七个核心参数</h2>
+<div class="codehilite"><pre><span></span><code><span class="k">new</span><span class="w"> </span><span class="n">ThreadPoolExecutor</span><span class="p">(</span>
+<span class="w">    </span><span class="n">corePoolSize</span><span class="p">,</span><span class="w">   </span><span class="c1">// 核心线程数</span>
+<span class="w">    </span><span class="n">maximumPoolSize</span><span class="p">,</span><span class="c1">// 最大线程数</span>
+<span class="w">    </span><span class="n">keepAliveTime</span><span class="p">,</span><span class="w">  </span><span class="c1">// 空闲线程存活时间</span>
+<span class="w">    </span><span class="n">unit</span><span class="p">,</span><span class="w">           </span><span class="c1">// 时间单位</span>
+<span class="w">    </span><span class="n">workQueue</span><span class="p">,</span><span class="w">      </span><span class="c1">// 阻塞队列</span>
+<span class="w">    </span><span class="n">threadFactory</span><span class="p">,</span><span class="w">  </span><span class="c1">// 线程工厂</span>
+<span class="w">    </span><span class="n">handler</span><span class="w">         </span><span class="c1">// 拒绝策略</span>
+<span class="p">)</span>
+</code></pre></div>
+
+<h2>执行流程</h2>
+<ol>
+<li>任务来了，如果线程数 &lt; corePoolSize，创建新线程执行</li>
+<li>如果达到了 corePoolSize，任务放入 workQueue</li>
+<li>如果 workQueue 满了，创建新线程（不超过 maximumPoolSize）</li>
+<li>如果达到了 maximumPoolSize，执行拒绝策略</li>
+</ol>
+<h2>常见阻塞队列</h2>
 <ul>
-<li>A/B 测试（在边缘根据 cookie 返回不同版本）</li>
-<li>图片优化（实时缩放、转格式）</li>
-<li>API 网关（认证、限流、路由在边缘完成）</li>
-<li>地理位置相关的逻辑</li>
-<li>简单的服务端渲染</li>
+<li><strong>LinkedBlockingQueue</strong>（默认）：无界队列（理论上），可能导致 OOM</li>
+<li><strong>ArrayBlockingQueue</strong>：有界队列，必须指定容量</li>
+<li><strong>SynchronousQueue</strong>：不存储任务，提交后必须立刻被线程处理</li>
 </ul>
-<h2>不适合的场景</h2>
+<h2>四种拒绝策略</h2>
 <ul>
-<li>需要数据库的操作（延迟和不一致问题）</li>
-<li>计算密集型任务（边缘节点的 CPU 有限）</li>
-<li>有状态的逻辑（边缘节点之间不共享状态）</li>
+<li><strong>AbortPolicy</strong>（默认）：抛异常</li>
+<li><strong>CallerRunsPolicy</strong>：由提交任务的线程自己执行</li>
+<li><strong>DiscardPolicy</strong>：直接丢弃</li>
+<li><strong>DiscardOldestPolicy</strong>：丢弃队列最老的任务</li>
 </ul>
-<h2>主流平台</h2>
+<h2>ThreadPoolExecutor 的坑</h2>
+<p><code>Executors.newCachedThreadPool()</code> 的最大线程数是 <code>Integer.MAX_VALUE</code>——相当于没有上限，极端情况下会创建大量线程导致 OOM。</p>
+<p>阿里规约明确禁止用 Executors 创建线程池，必须用 <code>new ThreadPoolExecutor</code> 显式传参。</p>
+<h2>线程数怎么定</h2>
 <ul>
-<li>Cloudflare Workers：全球最大边缘网络，支持 JS/TS/WASM</li>
-<li>Vercel Edge Functions：和 Next.js 深度集成</li>
-<li>Deno Deploy：基于 Deno 的边缘平台</li>
-<li>AWS Lambda@Edge：跟 CloudFront 绑定</li>
+<li>CPU 密集型：N(CPU) + 1</li>
+<li>IO 密集型：N(CPU) * 2</li>
 </ul>
-<p>边缘计算是一个重要的趋势——不是替代传统的后端，而是让某些关键路径变得更快。</p></div>
+<p>但这只是经验值。最好的方式是压测。</p>
+<p>线程池是每个后端开发必须掌握的。面试把这几个点答全，基本就过关了。</p></div>
               <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/reading-source-code/" rel="prev"><span class="nav-links__label">上一篇文章</span> 读源码是成为更好程序员的最佳捷径</a></div><div class="nav-next"><a href="/posts/jvm-gc-interview/" rel="next"><span class="nav-links__label">下一篇文章</span> JVM 垃圾回收面试精讲：从 CMS 到 G1 到 ZGC</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/neovim-setup-guide/" rel="prev"><span class="nav-links__label">上一篇文章</span> Neovim 配置指南：2025 年的终端编辑器还能打吗</a></div><div class="nav-next"><a href="/posts/baidu-ernie-5/" rel="next"><span class="nav-links__label">下一篇文章</span> 百度发布文心大模型 5.0：在国内 AI 竞争中还能保持领先吗？</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">

@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？ – 纵横四海</title>
-<meta name="description" content="边缘计算让代码在全球 CDN 节点上运行，显著降低延迟。了解它适合和不适合的场景。">
-<meta property="og:title" content="CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？ – 纵横四海">
-<meta property="og:description" content="边缘计算让代码在全球 CDN 节点上运行，显著降低延迟。了解它适合和不适合的场景。">
+<title>HashMap 源码深度解析：JDK 8 的红黑树化和扩容机制 – 纵横四海</title>
+<meta name="description" content="逐行分析 HashMap 的 put 方法和扩容逻辑，理解为什么面试官总问 HashMap。">
+<meta property="og:title" content="HashMap 源码深度解析：JDK 8 的红黑树化和扩容机制 – 纵横四海">
+<meta property="og:description" content="逐行分析 HashMap 的 put 方法和扩容逻辑，理解为什么面试官总问 HashMap。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？ – 纵横四海",
-  "description": "边缘计算让代码在全球 CDN 节点上运行，显著降低延迟。了解它适合和不适合的场景。",
+  "headline": "HashMap 源码深度解析：JDK 8 的红黑树化和扩容机制 – 纵横四海",
+  "description": "逐行分析 HashMap 的 put 方法和扩容逻辑，理解为什么面试官总问 HashMap。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -68,43 +68,46 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/cdn-edge-computing/" rel="bookmark"><time class="entry-date published" datetime="2025-05-18">2025年5月18日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/hashmap-source-code/" rel="bookmark"><time class="entry-date published" datetime="2025-10-05">2025年10月5日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？</h1>
+                <h1 class="entry-title">HashMap 源码深度解析：JDK 8 的红黑树化和扩容机制</h1>
               </header>
-              <div class="entry-content"><p>边缘计算（Edge Computing）是 CDN 的进化版——不仅缓存静态文件，还能在离用户最近的节点上运行代码。</p>
-<h2>为什么需要边缘计算</h2>
-<p>传统架构：用户 → CDN（静态） → 源站（动态处理）</p>
-<p>边缘计算：用户 → 边缘节点（动态 + 静态都在这里处理）</p>
-<p>一个用户在新加坡，源站在美国。传统模式下动态请求要跨半个地球（200ms+）。边缘计算模式下直接在最近节点处理（10ms）。</p>
-<h2>适用场景</h2>
-<ul>
-<li>A/B 测试（在边缘根据 cookie 返回不同版本）</li>
-<li>图片优化（实时缩放、转格式）</li>
-<li>API 网关（认证、限流、路由在边缘完成）</li>
-<li>地理位置相关的逻辑</li>
-<li>简单的服务端渲染</li>
-</ul>
-<h2>不适合的场景</h2>
-<ul>
-<li>需要数据库的操作（延迟和不一致问题）</li>
-<li>计算密集型任务（边缘节点的 CPU 有限）</li>
-<li>有状态的逻辑（边缘节点之间不共享状态）</li>
-</ul>
-<h2>主流平台</h2>
-<ul>
-<li>Cloudflare Workers：全球最大边缘网络，支持 JS/TS/WASM</li>
-<li>Vercel Edge Functions：和 Next.js 深度集成</li>
-<li>Deno Deploy：基于 Deno 的边缘平台</li>
-<li>AWS Lambda@Edge：跟 CloudFront 绑定</li>
-</ul>
-<p>边缘计算是一个重要的趋势——不是替代传统的后端，而是让某些关键路径变得更快。</p></div>
+              <div class="entry-content"><p>HashMap 是 Java 面试出场率最高的数据结构。</p>
+<h2>数据结构</h2>
+<p>JDK 8 的 HashMap = 数组 + 链表 + 红黑树。数组的每个位置是一个「桶」（bucket），桶里可能是链表或红黑树。</p>
+<h2>put 方法的流程</h2>
+<div class="codehilite"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="n">V</span><span class="w"> </span><span class="nf">put</span><span class="p">(</span><span class="n">K</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">V</span><span class="w"> </span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 1. 计算 hash</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">hash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">key</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">(</span><span class="n">h</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">key</span><span class="p">.</span><span class="na">hashCode</span><span class="p">())</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="p">(</span><span class="n">h</span><span class="w"> </span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="mi">16</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// 2. 定位桶位置</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">hash</span><span class="p">;</span><span class="w">  </span><span class="c1">// 等价于 hash % n，但位运算更快</span>
+
+<span class="w">    </span><span class="c1">// 3. 如果桶为空，直接放</span>
+<span class="w">    </span><span class="c1">// 4. 如果桶不为空，遍历链表/树</span>
+<span class="w">    </span><span class="c1">//     - 找到相等的 key，更新 value</span>
+<span class="w">    </span><span class="c1">//     - 没找到，插入</span>
+<span class="w">    </span><span class="c1">// 5. 链表长度 &gt;= 8 且数组长度 &gt;= 64，转为红黑树</span>
+<span class="w">    </span><span class="c1">// 6. size &gt; threshold，扩容</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2>为什么用 (n-1) &amp; hash</h2>
+<p>因为 n（数组长度）总是 2 的幂，（n-1）的二进制全是 1。<code>(n-1) &amp; hash</code> 等价于 <code>hash % n</code>，但位运算比取模快得多。</p>
+<h2>为什么 hash 要 &gt;&gt;&gt; 16</h2>
+<p>把 hashCode 的高 16 位和低 16 位混合，让高位也参与索引计算。否则当数组较小时，只有低位参与运算，分布不均匀。</p>
+<h2>红黑树化</h2>
+<p>链表长度 &gt;= 8（TREEIFY_THRESHOLD）且数组长度 &gt;= 64（MIN_TREEIFY_CAPACITY）时转为红黑树，提升查找效率（O(n) → O(log n)）。</p>
+<p>为什么阈值是 8？官方注释说，在理想的 hash 分布下，链表达到 8 的概率是 0.00000006。</p>
+<h2>扩容</h2>
+<p>当 <code>size &gt; threshold</code>（容量 * 负载因子，默认 0.75）时扩容为原来的两倍。扩容时重新计算每个元素的位置——要么在原来位置，要么在原来位置 + 旧容量。</p>
+<p>HashMap 的设计处处体现着对性能的极致追求。理解了它的源码，你对数据结构的理解会上一个台阶。</p></div>
               <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/reading-source-code/" rel="prev"><span class="nav-links__label">上一篇文章</span> 读源码是成为更好程序员的最佳捷径</a></div><div class="nav-next"><a href="/posts/jvm-gc-interview/" rel="next"><span class="nav-links__label">下一篇文章</span> JVM 垃圾回收面试精讲：从 CMS 到 G1 到 ZGC</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/shopee-layoffs-2025/" rel="prev"><span class="nav-links__label">上一篇文章</span> Shopee 母公司冬海集团裁员 15%：东南亚电商的寒冬还没结束</a></div><div class="nav-next"><a href="/posts/kafka-alternatives-2025/" rel="next"><span class="nav-links__label">下一篇文章</span> Kafka 不再是唯一选择：2025 消息队列选型指南</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">

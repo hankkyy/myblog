@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？ – 纵横四海</title>
-<meta name="description" content="边缘计算让代码在全球 CDN 节点上运行，显著降低延迟。了解它适合和不适合的场景。">
-<meta property="og:title" content="CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？ – 纵横四海">
-<meta property="og:description" content="边缘计算让代码在全球 CDN 节点上运行，显著降低延迟。了解它适合和不适合的场景。">
+<title>系统设计面试攻略：设计一个短链接服务（TinyURL） – 纵横四海</title>
+<meta name="description" content="分解系统设计面试的结构化思路——需求分析、估算、数据模型、接口设计、扩展方案。">
+<meta property="og:title" content="系统设计面试攻略：设计一个短链接服务（TinyURL） – 纵横四海">
+<meta property="og:description" content="分解系统设计面试的结构化思路——需求分析、估算、数据模型、接口设计、扩展方案。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？ – 纵横四海",
-  "description": "边缘计算让代码在全球 CDN 节点上运行，显著降低延迟。了解它适合和不适合的场景。",
+  "headline": "系统设计面试攻略：设计一个短链接服务（TinyURL） – 纵横四海",
+  "description": "分解系统设计面试的结构化思路——需求分析、估算、数据模型、接口设计、扩展方案。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -68,43 +68,56 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/cdn-edge-computing/" rel="bookmark"><time class="entry-date published" datetime="2025-05-18">2025年5月18日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/system-design-tinyurl/" rel="bookmark"><time class="entry-date published" datetime="2025-04-18">2025年4月18日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？</h1>
+                <h1 class="entry-title">系统设计面试攻略：设计一个短链接服务（TinyURL）</h1>
               </header>
-              <div class="entry-content"><p>边缘计算（Edge Computing）是 CDN 的进化版——不仅缓存静态文件，还能在离用户最近的节点上运行代码。</p>
-<h2>为什么需要边缘计算</h2>
-<p>传统架构：用户 → CDN（静态） → 源站（动态处理）</p>
-<p>边缘计算：用户 → 边缘节点（动态 + 静态都在这里处理）</p>
-<p>一个用户在新加坡，源站在美国。传统模式下动态请求要跨半个地球（200ms+）。边缘计算模式下直接在最近节点处理（10ms）。</p>
-<h2>适用场景</h2>
+              <div class="entry-content"><p>设计短链接服务是系统设计面试的经典题。用一个结构化框架来分析。</p>
+<h2>1. 需求澄清</h2>
+<p>不要急着画图，先问清楚：
+- 只做短链接生成和跳转吗？
+- 需要统计点击量吗？
+- 每天生成多少短链接？
+- 短链接多长？
+- 需要自定义短链接吗？</p>
+<h2>2. 粗略估算</h2>
 <ul>
-<li>A/B 测试（在边缘根据 cookie 返回不同版本）</li>
-<li>图片优化（实时缩放、转格式）</li>
-<li>API 网关（认证、限流、路由在边缘完成）</li>
-<li>地理位置相关的逻辑</li>
-<li>简单的服务端渲染</li>
+<li>每天 1 亿条新短链接</li>
+<li>读写比：100:1（读远多于写）</li>
+<li>存储 5 年：约 1800 亿条</li>
+<li>短链接长度：7 位字符（62 进制，7 位 = 3.5 万亿种组合）</li>
 </ul>
-<h2>不适合的场景</h2>
+<h2>3. 短链接生成算法</h2>
 <ul>
-<li>需要数据库的操作（延迟和不一致问题）</li>
-<li>计算密集型任务（边缘节点的 CPU 有限）</li>
-<li>有状态的逻辑（边缘节点之间不共享状态）</li>
+<li><strong>Hash 函数（MD5/SHA256）取前 N 位</strong>：简单但有碰撞风险</li>
+<li><strong>自增 ID + Base62 编码</strong>：无碰撞但依赖计数器</li>
+<li><strong>预生成方案</strong>：提前批量生成短码存入池中</li>
 </ul>
-<h2>主流平台</h2>
+<p>最常用的是自增 ID 方案。</p>
+<h2>4. 数据模型</h2>
 <ul>
-<li>Cloudflare Workers：全球最大边缘网络，支持 JS/TS/WASM</li>
-<li>Vercel Edge Functions：和 Next.js 深度集成</li>
-<li>Deno Deploy：基于 Deno 的边缘平台</li>
-<li>AWS Lambda@Edge：跟 CloudFront 绑定</li>
+<li>短链接表：short_code（主键）、original_url、user_id、created_at、expires_at</li>
+<li>访问日志表（可选）：short_code、timestamp、ip、user_agent</li>
 </ul>
-<p>边缘计算是一个重要的趋势——不是替代传统的后端，而是让某些关键路径变得更快。</p></div>
-              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span></footer>
+<h2>5. 架构设计</h2>
+<div class="codehilite"><pre><span></span><code>用户 → CDN → API Gateway → 短链接服务 → 缓存(Redis) → 数据库(MySQL)
+                                    ↓
+                              302 Redirect
+</code></pre></div>
+
+<h2>6. 扩展考虑</h2>
+<ul>
+<li>缓存：热门短链接缓存在 Redis 里</li>
+<li>分库分表：按 short_code 前缀分片</li>
+<li>限流：防止单用户滥用</li>
+</ul>
+<p>系统设计面试没有标准答案。你展现的是分析问题的思路，而不是结果。</p></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/分布式/" rel="category">分布式</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/reading-source-code/" rel="prev"><span class="nav-links__label">上一篇文章</span> 读源码是成为更好程序员的最佳捷径</a></div><div class="nav-next"><a href="/posts/jvm-gc-interview/" rel="next"><span class="nav-links__label">下一篇文章</span> JVM 垃圾回收面试精讲：从 CMS 到 G1 到 ZGC</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/doris-vs-clickhouse-2025/" rel="prev"><span class="nav-links__label">上一篇文章</span> Doris vs ClickHouse：OLAP 数据库学习对比</a></div><div class="nav-next"><a href="/posts/twitter-x-rebrand-one-year/" rel="next"><span class="nav-links__label">下一篇文章</span> X（原 Twitter）改名一年半，马斯克亏了多少？</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">

@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？ – 纵横四海</title>
-<meta name="description" content="边缘计算让代码在全球 CDN 节点上运行，显著降低延迟。了解它适合和不适合的场景。">
-<meta property="og:title" content="CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？ – 纵横四海">
-<meta property="og:description" content="边缘计算让代码在全球 CDN 节点上运行，显著降低延迟。了解它适合和不适合的场景。">
+<title>ConcurrentHashMap 为什么比 Hashtable 快？锁分段到 CAS 的优化之路 – 纵横四海</title>
+<meta name="description" content="从 JDK 7 的 Segment 锁到 JDK 8 的 CAS + synchronized，理解并发容器的演进。">
+<meta property="og:title" content="ConcurrentHashMap 为什么比 Hashtable 快？锁分段到 CAS 的优化之路 – 纵横四海">
+<meta property="og:description" content="从 JDK 7 的 Segment 锁到 JDK 8 的 CAS + synchronized，理解并发容器的演进。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？ – 纵横四海",
-  "description": "边缘计算让代码在全球 CDN 节点上运行，显著降低延迟。了解它适合和不适合的场景。",
+  "headline": "ConcurrentHashMap 为什么比 Hashtable 快？锁分段到 CAS 的优化之路 – 纵横四海",
+  "description": "从 JDK 7 的 Segment 锁到 JDK 8 的 CAS + synchronized，理解并发容器的演进。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -68,43 +68,49 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/cdn-edge-computing/" rel="bookmark"><time class="entry-date published" datetime="2025-05-18">2025年5月18日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/concurrenthashmap-vs-hashtable/" rel="bookmark"><time class="entry-date published" datetime="2025-11-05">2025年11月5日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？</h1>
+                <h1 class="entry-title">ConcurrentHashMap 为什么比 Hashtable 快？锁分段到 CAS 的优化之路</h1>
               </header>
-              <div class="entry-content"><p>边缘计算（Edge Computing）是 CDN 的进化版——不仅缓存静态文件，还能在离用户最近的节点上运行代码。</p>
-<h2>为什么需要边缘计算</h2>
-<p>传统架构：用户 → CDN（静态） → 源站（动态处理）</p>
-<p>边缘计算：用户 → 边缘节点（动态 + 静态都在这里处理）</p>
-<p>一个用户在新加坡，源站在美国。传统模式下动态请求要跨半个地球（200ms+）。边缘计算模式下直接在最近节点处理（10ms）。</p>
-<h2>适用场景</h2>
+              <div class="entry-content"><p>Hashtable 和 ConcurrentHashMap 都是线程安全的 Map，但性能天差地别。</p>
+<h2>Hashtable 的问题</h2>
+<p>Hashtable 用 <code>synchronized</code> 修饰所有方法。这意味着任何时候只有一个线程能操作整个 Map——读也锁，写也锁。并发度 = 1。</p>
+<h2>JDK 7：分段锁（Segment）</h2>
+<p>JDK 7 的 ConcurrentHashMap 把整个 Map 分成 16 个 Segment（默认），每个 Segment 自带一把锁。</p>
 <ul>
-<li>A/B 测试（在边缘根据 cookie 返回不同版本）</li>
-<li>图片优化（实时缩放、转格式）</li>
-<li>API 网关（认证、限流、路由在边缘完成）</li>
-<li>地理位置相关的逻辑</li>
-<li>简单的服务端渲染</li>
+<li>写操作：只锁对应的 Segment，其他 Segment 不受影响</li>
+<li>读操作：不加锁（volatile 保证可见性）</li>
+<li>并发度 = 16</li>
 </ul>
-<h2>不适合的场景</h2>
+<p>分段锁的思想：不要把一整条路封了，只封正在施工的那一段。</p>
+<h2>JDK 8：CAS + synchronized</h2>
+<p>JDK 8 放弃了 Segment 设计，改为更细粒度的锁：</p>
 <ul>
-<li>需要数据库的操作（延迟和不一致问题）</li>
-<li>计算密集型任务（边缘节点的 CPU 有限）</li>
-<li>有状态的逻辑（边缘节点之间不共享状态）</li>
+<li>桶为空 → CAS 操作直接插入（无锁）</li>
+<li>桶不为空 → synchronized 锁住桶的头节点</li>
+<li>链表转红黑树 → 提升查找效率</li>
 </ul>
-<h2>主流平台</h2>
-<ul>
-<li>Cloudflare Workers：全球最大边缘网络，支持 JS/TS/WASM</li>
-<li>Vercel Edge Functions：和 Next.js 深度集成</li>
-<li>Deno Deploy：基于 Deno 的边缘平台</li>
-<li>AWS Lambda@Edge：跟 CloudFront 绑定</li>
-</ul>
-<p>边缘计算是一个重要的趋势——不是替代传统的后端，而是让某些关键路径变得更快。</p></div>
+<p>读操作依然不需要锁。</p>
+<h2>为什么放弃分段锁</h2>
+<ol>
+<li>Segment 的数量一开始就固定了（16），无法动态调整</li>
+<li>粒度还是不够细——一个 Segment 里有多个桶</li>
+<li>JDK 8 的 synchronized 优化后性能不输 ReentrantLock</li>
+</ol>
+<h2>面试怎么答</h2>
+<ol>
+<li>Hashtable 全表锁，性能差</li>
+<li>JDK 7 ConcurrentHashMap 用分段锁，并发度 16</li>
+<li>JDK 8 用 CAS + synchronized 锁桶头节点，粒度更细</li>
+<li>结合红黑树的查找优化</li>
+</ol>
+<p>能讲清楚 JDK 7 到 JDK 8 的演进，面试官会对你印象深刻。</p></div>
               <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/reading-source-code/" rel="prev"><span class="nav-links__label">上一篇文章</span> 读源码是成为更好程序员的最佳捷径</a></div><div class="nav-next"><a href="/posts/jvm-gc-interview/" rel="next"><span class="nav-links__label">下一篇文章</span> JVM 垃圾回收面试精讲：从 CMS 到 G1 到 ZGC</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/openai-stargate-project/" rel="prev"><span class="nav-links__label">上一篇文章</span> OpenAI 和软银启动「星际之门」计划：5000 亿美元建 AI 超级算力</a></div><div class="nav-next"><a href="/posts/xai-grok-4/" rel="next"><span class="nav-links__label">下一篇文章</span> 马斯克 xAI 发布 Grok-4：主打「反政治正确」的 AI 能走多远？</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">

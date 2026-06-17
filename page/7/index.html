@@ -66,7 +66,49 @@
   <div class="container">
 <div id="primary" class="content-area">
           <main id="main" class="site-main">
-            <div class="tg-archive-featured"><article id="post-post-quantum-crypto" class="post type-post status-publish format-standard hentry">
+            <div class="tg-archive-featured"><article id="post-database-sharding-practice" class="post type-post status-publish format-standard hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/数据库/" rel="category">数据库</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/database-sharding-practice/" rel="bookmark"><time class="entry-date published" datetime="2025-08-15">2025年8月15日</time></a></span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/database-sharding-practice/" rel="bookmark">MySQL 分库分表学习笔记：从单库到分片的完整思路</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>最近在学习分库分表的方案，整理一下理解。 为什么需要分库分表 当一个表的数据量超过千万级别时，单库的性能会遇到瓶颈。虽然索引能帮助查询，但 B+Tree 层级变深，buffer pool 也装不下那么多数据。 分片键怎么选 这是最关键的一步。常见的选择： - 用户 ID：同一用户的数据在同一分片，用户维度查询快 - 订单 ID：按订单号分散，但用户查自己所有 [&hellip;]</p>
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/database-sharding-practice/" class="tg-readmore-link">阅读更多</a>
+            </footer>
+          </article></div>
+            <div class="tg-archive-grid tg-archive-col--3"><article id="post-api-design-philosophy" class="post type-post status-publish format-standard hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/api-design-philosophy/" rel="bookmark"><time class="entry-date published" datetime="2025-08-10">2025年8月10日</time></a></span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/api-design-philosophy/" rel="bookmark">API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>REST、gRPC、GraphQL 各有各的好，但好的 API 设计跟选择什么协议关系不大。 REST RES [&hellip;]</p>
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/api-design-philosophy/" class="tg-readmore-link">阅读更多</a>
+            </footer>
+          </article>
+<article id="post-huawei-ascend-910c" class="post type-post status-publish format-standard hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/ai/" rel="category">AI</a><span class="cat-seperator">, </span><a href="/categories/新闻/" rel="category">新闻</a></span><span class="posted-on"><a href="/posts/huawei-ascend-910c/" rel="bookmark"><time class="entry-date published" datetime="2025-08-05">2025年8月5日</time></a></span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/huawei-ascend-910c/" rel="bookmark">华为昇腾 910C 量产：国产 AI 芯片能替代英伟达吗？</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>华为的昇腾 910C AI 芯片正式量产了。 性能 - FP16 算力：约 320 TFLOPS（H100 是 [&hellip;]</p>
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/huawei-ascend-910c/" class="tg-readmore-link">阅读更多</a>
+            </footer>
+          </article>
+<article id="post-post-quantum-crypto" class="post type-post status-publish format-standard hentry">
             <div class="entry-meta">
               <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/post-quantum-crypto/" rel="bookmark"><time class="entry-date published" datetime="2025-07-30">2025年7月30日</time></a></span>
             </div>
@@ -74,13 +116,13 @@
               <h2 class="entry-title"><a href="/posts/post-quantum-crypto/" rel="bookmark">后量子密码学入门：量子计算机会破解 HTTPS 吗？</a></h2>
             </header>
             <div class="entry-content">
-              <p>量子计算机离实用还有距离，但加密算法的过渡已经开始了。 量子计算机为什么威胁加密 现在的 HTTPS 依赖两种加密： - 对称加密（AES）：量子计算机用 Grover 算法可以把破解时间从 2^128 降到 2^64。解决方法是把密钥加长到 256 位。 - 非对称加密（RSA/ECC）：用量子计算机的 Shor 算法可以在多项式时间内破解。这个是致命的— [&hellip;]</p>
+              <p>量子计算机离实用还有距离，但加密算法的过渡已经开始了。 量子计算机为什么威胁加密 现在的 HTTPS 依赖两种 [&hellip;]</p>
             </div>
             <footer class="entry-footer">
               <a href="/posts/post-quantum-crypto/" class="tg-readmore-link">阅读更多</a>
             </footer>
-          </article></div>
-            <div class="tg-archive-grid tg-archive-col--3"><article id="post-bytedance-ai-video-generator" class="post type-post status-publish format-standard hentry">
+          </article>
+<article id="post-bytedance-ai-video-generator" class="post type-post status-publish format-standard hentry">
             <div class="entry-meta">
               <span class="cat-links"><a href="/categories/ai/" rel="category">AI</a><span class="cat-seperator">, </span><a href="/categories/新闻/" rel="category">新闻</a></span><span class="posted-on"><a href="/posts/bytedance-ai-video-generator/" rel="bookmark"><time class="entry-date published" datetime="2025-07-25">2025年7月25日</time></a></span>
             </div>
@@ -122,6 +164,20 @@
               <a href="/posts/baidu-ernie-5/" class="tg-readmore-link">阅读更多</a>
             </footer>
           </article>
+<article id="post-thread-pool-interview" class="post type-post status-publish format-standard hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/thread-pool-interview/" rel="bookmark"><time class="entry-date published" datetime="2025-07-05">2025年7月5日</time></a></span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/thread-pool-interview/" rel="bookmark">线程池面试八连问：核心参数、拒绝策略和调优思路</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>线程池是 Java 并发编程面试的高频题。 七个核心参数 执行流程 1. 任务来了，如果线程数 corePoo [&hellip;]</p>
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/thread-pool-interview/" class="tg-readmore-link">阅读更多</a>
+            </footer>
+          </article>
 <article id="post-neovim-setup-guide" class="post type-post status-publish format-standard hentry">
             <div class="entry-meta">
               <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/neovim-setup-guide/" rel="bookmark"><time class="entry-date published" datetime="2025-06-25">2025年6月25日</time></a></span>
@@ -149,64 +205,8 @@
             <footer class="entry-footer">
               <a href="/posts/redis-cluster-practice/" class="tg-readmore-link">阅读更多</a>
             </footer>
-          </article>
-<article id="post-aws-reinvent-2025" class="post type-post status-publish format-standard hentry">
-            <div class="entry-meta">
-              <span class="cat-links"><a href="/categories/新闻/" rel="category">新闻</a></span><span class="posted-on"><a href="/posts/aws-reinvent-2025/" rel="bookmark"><time class="entry-date published" datetime="2025-06-10">2025年6月10日</time></a></span>
-            </div>
-            <header class="entry-header">
-              <h2 class="entry-title"><a href="/posts/aws-reinvent-2025/" rel="bookmark">AWS re:Invent 2025：Amazon 的 AI 全线反击</a></h2>
-            </header>
-            <div class="entry-content">
-              <p>AWS re:Invent 2025 的重点全是 AI。 Trainium 3 芯片 Amazon 自研的第三 [&hellip;]</p>
-            </div>
-            <footer class="entry-footer">
-              <a href="/posts/aws-reinvent-2025/" class="tg-readmore-link">阅读更多</a>
-            </footer>
-          </article>
-<article id="post-on-call-experience" class="post type-post status-publish format-standard hentry">
-            <div class="entry-meta">
-              <span class="cat-links"><a href="/categories/杂谈/" rel="category">杂谈</a></span><span class="posted-on"><a href="/posts/on-call-experience/" rel="bookmark"><time class="entry-date published" datetime="2025-06-05">2025年6月5日</time></a></span>
-            </div>
-            <header class="entry-header">
-              <h2 class="entry-title"><a href="/posts/on-call-experience/" rel="bookmark">第一次 On-Call 的体验：凌晨两点的告警电话</a></h2>
-            </header>
-            <div class="entry-content">
-              <p>实习第二个月，我被加入了团队的 On-Call 轮值表。 第一次告警 凌晨两点，手机响了。告警信息：「订单服务 [&hellip;]</p>
-            </div>
-            <footer class="entry-footer">
-              <a href="/posts/on-call-experience/" class="tg-readmore-link">阅读更多</a>
-            </footer>
-          </article>
-<article id="post-cdn-edge-computing" class="post type-post status-publish format-standard hentry">
-            <div class="entry-meta">
-              <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/cdn-edge-computing/" rel="bookmark"><time class="entry-date published" datetime="2025-05-18">2025年5月18日</time></a></span>
-            </div>
-            <header class="entry-header">
-              <h2 class="entry-title"><a href="/posts/cdn-edge-computing/" rel="bookmark">CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？</a></h2>
-            </header>
-            <div class="entry-content">
-              <p>边缘计算（Edge Computing）是 CDN 的进化版——不仅缓存静态文件，还能在离用户最近的节点上运行 [&hellip;]</p>
-            </div>
-            <footer class="entry-footer">
-              <a href="/posts/cdn-edge-computing/" class="tg-readmore-link">阅读更多</a>
-            </footer>
-          </article>
-<article id="post-reading-source-code" class="post type-post status-publish format-standard hentry">
-            <div class="entry-meta">
-              <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a><span class="cat-seperator">, </span><a href="/categories/杂谈/" rel="category">杂谈</a></span><span class="posted-on"><a href="/posts/reading-source-code/" rel="bookmark"><time class="entry-date published" datetime="2025-05-08">2025年5月8日</time></a></span>
-            </div>
-            <header class="entry-header">
-              <h2 class="entry-title"><a href="/posts/reading-source-code/" rel="bookmark">读源码是成为更好程序员的最佳捷径</a></h2>
-            </header>
-            <div class="entry-content">
-              <p>很多人觉得读源码太难了，其实有方法。 为什么读源码 - 文档会过时，代码不会骗你 - 理解为什么这样设计，而不 [&hellip;]</p>
-            </div>
-            <footer class="entry-footer">
-              <a href="/posts/reading-source-code/" class="tg-readmore-link">阅读更多</a>
-            </footer>
           </article></div>
-            <nav class="navigation pagination" aria-label="文章分页"><div class="nav-links"><a class="page-numbers" href="/">1</a><span class="page-numbers dots">&hellip;</span><a class="page-numbers" href="/page/5/">5</a><a class="page-numbers" href="/page/6/">6</a><span class="page-numbers current">7</span><a class="page-numbers" href="/page/8/">8</a><a class="page-numbers" href="/page/9/">9</a><span class="page-jump"><input type="number" min="1" max="9" placeholder="7/9" onkeydown="if(event.key==='Enter'){var v=parseInt(this.value);if(v>=1&&v<=9)location.href=v===1?'/':'/page/'+v+'/'}" style="width:50px;text-align:center;border:1px solid #e9ecef;border-radius:4px;padding:4px 0;font-size:.9rem"></span></div></nav>
+            <nav class="navigation pagination" aria-label="文章分页"><div class="nav-links"><a class="page-numbers" href="/">1</a><span class="page-numbers dots">&hellip;</span><a class="page-numbers" href="/page/5/">5</a><a class="page-numbers" href="/page/6/">6</a><span class="page-numbers current">7</span><a class="page-numbers" href="/page/8/">8</a><a class="page-numbers" href="/page/9/">9</a><a class="page-numbers" href="/page/10/">10</a><span class="page-jump"><input type="number" min="1" max="10" placeholder="7/10" onkeydown="if(event.key==='Enter'){var v=parseInt(this.value);if(v>=1&&v<=10)location.href=v===1?'/':'/page/'+v+'/'}" style="width:50px;text-align:center;border:1px solid #e9ecef;border-radius:4px;padding:4px 0;font-size:.9rem"></span></div></nav>
           </main>
         </div>
   </div>
