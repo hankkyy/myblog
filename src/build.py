@@ -214,7 +214,7 @@ def article_single(p, all_posts):
             <div class="author-bio">
               <div class="author-bio-content">
                 <h3>关于 {AUTHOR}</h3>
-                <p>后端开发工程师，关注分布式系统、OLAP 数据库、云原生技术。</p>
+                <p>后端开发工程师。关注 Java/Spring Boot/Redis/MySQL 传统技术栈，分布式系统，OLAP 数据库。</p>
               </div>
             </div>
             <div class="comments-area">
