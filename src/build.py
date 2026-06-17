@@ -257,8 +257,7 @@ def build():
     # ===== HOMEPAGE: first article full-width, rest in 3-column grid =====
     first_card = article_card(posts[0]) if posts else ""
     grid_cards = "\n".join(article_card(p) for p in posts[1:]) if len(posts) > 1 else ""
-    homepage = page_html(home_title,
-        f"""<div id="primary" class="content-area">
+    home_body = f"""<div id="primary" class="content-area">
           <main id="main" class="site-main">
             <div class="tg-archive-featured">
               {first_card}
@@ -267,9 +266,11 @@ def build():
               {grid_cards}
             </div>
           </main>
-        </div>""",
+        </div>"""
+    homepage = page_html(home_title,
+        f'<div class="tg-flex-container tg-flex-space-between">{home_body}{sidebar_html(posts)}</div>',
         is_home=True,
-        body_class="layout--no-sidebar",
+        body_class="layout--right-sidebar",
         extra_body_class="tg-archive-style--big-block")
     (ROOT / "index.html").write_text(homepage)
 
