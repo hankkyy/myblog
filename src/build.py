@@ -518,6 +518,7 @@ def build():
           });
           setTimeout(function() { map.invalidateSize(); }, 200);
           });
+          });
           </script>
           <div style="text-align:center;margin-top:8px;font-size:.8rem;color:#adb5bd">
             <span style="color:#3498db">●</span> 北美 &nbsp;
