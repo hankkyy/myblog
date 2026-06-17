@@ -24,7 +24,8 @@ def menu_html(current="/"):
     parts = []
     for label, url in MENU:
         a = ' class="active"' if current == url else ""
-        parts.append(f'<li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="{url}"{a}>{label}</a></li>')
+        ext = ' target="_blank" rel="noopener"' if url.startswith("http") else ""
+        parts.append(f'<li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="{url}"{a}{ext}>{label}</a></li>')
     return "".join(parts)
 
 
@@ -35,6 +36,7 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
     desc_meta = f'<meta name="description" content="{desc}">' if desc else ""
     pagefind_css = '<link rel="stylesheet" href="/pagefind/pagefind-ui.css">' if is_home else ""
     bc = f"{body_class} {extra_body_class}".strip()
+    search_html = '<div id="search-inline" style="width:180px"></div>' if is_home else ""
 
     return f"""<!DOCTYPE html>
 <html lang="zh-Hans">
@@ -64,7 +66,7 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
       <div class="container" style="justify-content:center">
         <nav class="main-navigation tg-site-menu--default" style="text-align:center;display:flex;align-items:center;gap:20px">
           <div class="menu-menu-container"><ul class="nav-menu" style="justify-content:center">{main_nav}</ul></div>
-          <div id="search-inline" style="width:180px"></div>
+          {search_html}
         </nav>
       </div>
     </div>
@@ -89,10 +91,7 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
 {body}
   </div>
 </div>
-<script src="/pagefind/pagefind-ui.js"></script>
-<script>
-  new PagefindUI({{ element: "#search-inline", showSubResults: false, showImages: false }});
-</script>
+{"<script src=\"/pagefind/pagefind-ui.js\"></script>\n<script>\n  new PagefindUI({ element: \"#search-inline\", showSubResults: false, showImages: false });\n</script>" if is_home else ""}
 <footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
   <div class="tg-footer-bottom">
     <div class="container">
