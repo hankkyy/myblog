@@ -132,7 +132,9 @@ def parse_page(md_path):
     plain = re.sub(r"<[^>]+>", "", content_html).strip()
     plain = re.sub(r"\s+", " ", plain)
     summary = plain[:55]
+    long_summary = plain[:200]
     truncated = len(plain) > 55
+    long_truncated = len(plain) > 200
     date = post.get("date", datetime.now())
     if isinstance(date, str):
         try: date = datetime.fromisoformat(date)
@@ -146,7 +148,9 @@ def parse_page(md_path):
         "description": post.get("description", ""),
         "content": content_html,
         "summary": summary,
+        "long_summary": long_summary,
         "truncated": truncated,
+        "long_truncated": long_truncated,
         "slug": md_path.stem,
     }
 
@@ -182,6 +186,23 @@ def article_card(p):
             </header>
             <div class="entry-content">
               <p>{p['summary']}{' [&hellip;]' if p['truncated'] else ''}</p>
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/{p['slug']}/" class="tg-readmore-link">阅读更多</a>
+            </footer>
+          </article>"""
+
+def featured_card(p):
+    cats_html = cat_links_meta(p["categories"])
+    return f"""<article id="post-{p['slug']}" class="post type-post status-publish format-standard hentry">
+            <div class="entry-meta">
+              <span class="cat-links">{cats_html}</span>{posted_on(p)}
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/{p['slug']}/" rel="bookmark">{p['title']}</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>{p['long_summary']}{' [&hellip;]' if p['long_truncated'] else ''}</p>
             </div>
             <footer class="entry-footer">
               <a href="/posts/{p['slug']}/" class="tg-readmore-link">阅读更多</a>
@@ -290,7 +311,7 @@ def build():
         end = start + PER_PAGE
         page_posts = posts[start:end]
 
-        first_card = article_card(page_posts[0]) if page_posts else ""
+        first_card = featured_card(page_posts[0]) if page_posts else ""
         rest_cards = "\n".join(article_card(p) for p in page_posts[1:]) if len(page_posts) > 1 else ""
         pgn = pagination_html(page_num)
 
