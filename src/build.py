@@ -451,7 +451,7 @@ def build():
         about = parse_page(about_md)
         (ROOT / "about").mkdir(parents=True, exist_ok=True)
         travel_map = """
-          <h3 style="margin-top:40px">🗺️ 足迹 <span style="font-size:.8rem;color:#adb5bd;font-weight:400;margin-left:8px">45 座城市</span></h3>
+          <h3 style="margin-top:40px">🗺️ 足迹 <span style="font-size:.8rem;color:#adb5bd;font-weight:400;margin-left:8px">47 座城市</span></h3>
           <div id="travel-map" style="height:450px;border-radius:8px;margin:20px 0;overflow:hidden"></div>
           <script>
           document.addEventListener('DOMContentLoaded', function() {
@@ -487,6 +487,8 @@ def build():
             {name:'休斯敦', lat:29.76, lng:-95.37, size:4, color:'#3498db'},
             {name:'亚特兰大', lat:33.75, lng:-84.39, size:4, color:'#3498db'},
             {name:'丹佛', lat:39.74, lng:-104.99, size:4, color:'#3498db'},
+            {name:'芝加哥', lat:41.88, lng:-87.63, size:5, color:'#3498db'},
+            {name:'凤凰城', lat:33.45, lng:-112.07, size:4, color:'#3498db'},
             {name:'底特律', lat:42.33, lng:-83.05, size:4, color:'#3498db'},
             {name:'波特兰', lat:45.52, lng:-122.68, size:4, color:'#3498db'},
             {name:'圣安东尼奥', lat:29.42, lng:-98.49, size:4, color:'#3498db'},
