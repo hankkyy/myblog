@@ -313,7 +313,7 @@ article:last-of-type{margin-bottom:0}
 .widget ul li a{color:#363b40;font-size:14px}
 .widget ul li a:hover{color:#146bb7}
 
-.pagination{display:flex;justify-content:center;gap:8px;margin-top:64px}
+.pagination{display:flex;justify-content:center;gap:8px;margin-top:90px}
 .pagination a,.pagination span{display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:36px;padding:0 8px;border:1px solid #e9ecef;border-radius:4px;font-size:.9rem;color:#363b40}
 .pagination .current,.pagination .page-numbers.current{background:#146bb7;color:#fff;border-color:#146bb7}
 .pagination a:hover{background:#146bb7;color:#fff;border-color:#146bb7;text-decoration:none}
