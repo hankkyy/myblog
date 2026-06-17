@@ -16,7 +16,7 @@ CSS_DIR = ROOT / "css"
 SITE = {"title":"纵横四海","url":"https://hankzhang.us/","desc":"但行好事，莫问前程"}
 AUTHOR = "张子豪"
 YEAR = str(datetime.now().year)
-MENU = [("首页","/"),("文章列表","/posts/"),("留言板","/guestbook/"),("关于","/about/"),("管理","https://vercel.com/hankkyys-projects/myblog")]
+MENU = [("首页","/"),("关于","/about/"),("管理","https://vercel.com/hankkyys-projects/myblog")]
 SAFE = {".git","src","vercel.json",".gitignore","README.md","pagefind"}
 
 
@@ -79,11 +79,11 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
       </div>
     </div>
     <div class="header-bottom-bottom">
-      <div class="container" style="justify-content:center">
-        <nav class="main-navigation tg-site-menu--default" style="text-align:center;display:flex;align-items:center;gap:20px">
+      <div class="container" style="text-align:center">
+        <nav class="main-navigation tg-site-menu--default" style="display:inline-block">
           <div class="menu-menu-container"><ul class="nav-menu" style="justify-content:center">{main_nav}</ul></div>
-          {search_html}
         </nav>
+        {(' <div style="max-width:300px;margin:10px auto 0">' + search_html + '</div>') if search_html else ''}
       </div>
     </div>
   </div>
