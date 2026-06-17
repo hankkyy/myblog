@@ -427,12 +427,16 @@ def build():
             body_class="layout--no-sidebar"))
 
     # ===== CATEGORIES INDEX =====
-    cats_list = "".join(f'<li><a href="/categories/{cat.lower().replace(" ", "-")}/">{cat}</a> <span class="cat-count">（{len(cat_posts)} 篇）</span></li>' for cat, cat_posts in sorted(cats.items(), key=lambda x: -len(x[1])))
+    cat_groups = []
+    for cat_name, cat_posts in sorted(cats.items(), key=lambda x: -len(x[1])):
+        slug = cat_name.lower().replace(" ", "-")
+        cards = "\n".join(article_card(p) for p in cat_posts)
+        cat_groups.append(f'<div class="cat-index-group"><h2 class="cat-index-heading" onclick="this.parentElement.classList.toggle(\'collapsed\');this.classList.toggle(\'collapsed\')">{cat_name} <span class="cat-count">（{len(cat_posts)} 篇）</span><span class="toggle-icon">▼</span></h2><div class="cat-index-articles">{cards}</div></div>')
     cats_index = page_html(f"分类 – {SITE['title']}",
         f"""<div id="primary" class="content-area">
           <main id="main" class="site-main">
             <header class="page-header"><h1 class="page-title">分类</h1></header>
-            <ul class="category-list">{cats_list}</ul>
+            {"".join(cat_groups)}
           </main>
         </div>""",
         current="/categories/",
