@@ -62,8 +62,6 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
 </script>
 <link rel="stylesheet" href="/css/style.css">
 <link rel="icon" type="image/png" href="/favicon.png">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body class="{bc}">
 <div id="page" class="site">
@@ -451,73 +449,29 @@ def build():
         about = parse_page(about_md)
         (ROOT / "about").mkdir(parents=True, exist_ok=True)
         travel_map = f"""
-          <h3 style="margin-top:40px;margin-bottom:20px">🗺️ 足迹 <span style="font-size:.8rem;color:#adb5bd;font-weight:400;margin-left:8px">47 座城市</span></h3>
-          <div id="travel-map" style="height:420px;border-radius:8px;margin:20px 0;overflow:hidden"></div>
-          <script>
-          document.addEventListener('DOMContentLoaded', function() {{
-          setTimeout(function() {{
-          var el = document.getElementById('travel-map');
-          if (!el) return;
-          var map = L.map('travel-map', {{scrollWheelZoom: false, zoomControl: false, worldCopyJump: true, attributionControl: false}}).setView([35, -170], 2);
-          L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_watercolor/{{z}}/{{x}}/{{y}}.jpg', {{
-            attribution: '&copy; Stadia Maps, &copy; Stamen Design, &copy; OSM'
-          }}).addTo(map);
-          var cities = [
-            {{name:'武汉', lat:30.59, lng:114.31, size:8, color:'#2ecc71'}},
-            {{name:'哥伦布', lat:40.00, lng:-83.01, size:7, color:'#3498db'}},
-            {{name:'北京', lat:39.90, lng:116.41, size:6, color:'#2ecc71'}},
-            {{name:'上海', lat:31.23, lng:121.47, size:6, color:'#2ecc71'}},
-            {{name:'深圳', lat:22.54, lng:114.06, size:5, color:'#2ecc71'}},
-            {{name:'香港', lat:22.32, lng:114.17, size:5, color:'#2ecc71'}},
-            {{name:'厦门', lat:24.48, lng:118.09, size:5, color:'#2ecc71'}},
-            {{name:'三亚', lat:18.25, lng:109.51, size:5, color:'#2ecc71'}},
-            {{name:'桂林', lat:25.27, lng:110.29, size:4, color:'#2ecc71'}},
-            {{name:'太原', lat:37.87, lng:112.55, size:5, color:'#2ecc71'}},
-            {{name:'琼海', lat:19.25, lng:110.47, size:4, color:'#2ecc71'}},
-            {{name:'福州', lat:26.07, lng:119.30, size:5, color:'#2ecc71'}},
-            {{name:'南昌', lat:28.68, lng:115.86, size:4, color:'#2ecc71'}},
-            {{name:'宁波', lat:29.87, lng:121.55, size:4, color:'#2ecc71'}},
-            {{name:'南京', lat:32.06, lng:118.80, size:5, color:'#2ecc71'}},
-            {{name:'无锡', lat:31.49, lng:120.31, size:4, color:'#2ecc71'}},
-            {{name:'台北', lat:25.03, lng:121.57, size:5, color:'#2ecc71'}},
-            {{name:'洛杉矶', lat:34.05, lng:-118.24, size:5, color:'#3498db'}},
-            {{name:'旧金山', lat:37.77, lng:-122.42, size:6, color:'#3498db'}},
-            {{name:'西雅图', lat:47.61, lng:-122.33, size:5, color:'#3498db'}},
-            {{name:'拉斯维加斯', lat:36.17, lng:-115.14, size:4, color:'#3498db'}},
-            {{name:'达拉斯', lat:32.78, lng:-96.80, size:4, color:'#3498db'}},
-            {{name:'休斯敦', lat:29.76, lng:-95.37, size:4, color:'#3498db'}},
-            {{name:'亚特兰大', lat:33.75, lng:-84.39, size:4, color:'#3498db'}},
-            {{name:'丹佛', lat:39.74, lng:-104.99, size:4, color:'#3498db'}},
-            {{name:'芝加哥', lat:41.88, lng:-87.63, size:5, color:'#3498db'}},
-            {{name:'凤凰城', lat:33.45, lng:-112.07, size:4, color:'#3498db'}},
-            {{name:'底特律', lat:42.33, lng:-83.05, size:4, color:'#3498db'}},
-            {{name:'波特兰', lat:45.52, lng:-122.68, size:4, color:'#3498db'}},
-            {{name:'圣安东尼奥', lat:29.42, lng:-98.49, size:4, color:'#3498db'}},
-            {{name:'坦帕', lat:27.95, lng:-82.46, size:4, color:'#3498db'}},
-            {{name:'劳德代尔堡', lat:26.12, lng:-80.14, size:4, color:'#3498db'}},
-            {{name:'里诺', lat:39.53, lng:-119.81, size:4, color:'#3498db'}},
-            {{name:'长滩', lat:33.77, lng:-118.19, size:4, color:'#3498db'}},
-            {{name:'伯克利', lat:37.87, lng:-122.27, size:4, color:'#3498db'}},
-            {{name:'奥克兰', lat:37.80, lng:-122.27, size:4, color:'#3498db'}},
-            {{name:'大阪', lat:34.69, lng:135.50, size:5, color:'#e67e22'}},
-            {{name:'京都', lat:35.01, lng:135.77, size:5, color:'#e67e22'}},
-            {{name:'神户', lat:34.69, lng:135.20, size:4, color:'#e67e22'}},
-            {{name:'奈良', lat:34.69, lng:135.83, size:4, color:'#e67e22'}},
-            {{name:'镰仓', lat:35.32, lng:139.55, size:4, color:'#e67e22'}},
-            {{name:'首尔', lat:37.57, lng:126.98, size:5, color:'#e67e22'}},
-          ];
-          cities.forEach(function(c) {{
-            var m = L.circleMarker([c.lat, c.lng], {{radius: c.size+2, fillColor: c.color, color: '#fff', weight: 2, fillOpacity: 0.9, opacity: 0.8}}).addTo(map);
-            m.bindPopup('<b>' + c.name + '</b>');
-            m.on('mouseover', function() {{ this.setRadius(this.options.radius * 2); this.setStyle({{fillOpacity:1, opacity:1}}); }});
-            m.on('mouseout', function() {{ this.setRadius(this.options.radius); this.setStyle({{fillOpacity:0.9, opacity:0.8}}); }});
-            // Pulse animation
-            var pulse = L.circleMarker([c.lat, c.lng], {{radius: c.size+2, fillColor: c.color, fillOpacity: 0.2, color: c.color, weight: 1, opacity: 0.4, className: 'pulse-marker'}}).addTo(map);
-          }});
-          setTimeout(function() {{ map.invalidateSize(); }}, 300);
-          }}, 200);
-          }});
-          </script>
+          <h3 style="margin-top:40px;margin-bottom:24px">🗺️ 足迹 <span style="font-size:.8rem;color:#adb5bd;font-weight:400;margin-left:8px">47 座城市</span></h3>
+          <div class="travel-regions">
+            <div class="travel-card na">
+              <div class="travel-card-header">🇺🇸 北美</div>
+              <div class="travel-card-count">20 城</div>
+              <div class="travel-card-cities">哥伦布 · 洛杉矶 · 旧金山 · 西雅图 · 拉斯维加斯 · 达拉斯 · 休斯敦 · 亚特兰大 · 丹佛 · 芝加哥 · 凤凰城 · 底特律 · 波特兰 · 圣安东尼奥 · 坦帕 · 劳德代尔堡 · 里诺 · 长滩 · 伯克利 · 奥克兰</div>
+            </div>
+            <div class="travel-card cn">
+              <div class="travel-card-header">🇨🇳 中国</div>
+              <div class="travel-card-count">17 城</div>
+              <div class="travel-card-cities">武汉 · 北京 · 上海 · 深圳 · 香港 · 厦门 · 三亚 · 桂林 · 太原 · 琼海 · 福州 · 南昌 · 宁波 · 南京 · 无锡 · 台北</div>
+            </div>
+            <div class="travel-card jpkr">
+              <div class="travel-card-header">🇯🇵🇰🇷 日韩</div>
+              <div class="travel-card-count">7 城</div>
+              <div class="travel-card-cities">大阪 · 京都 · 神户 · 奈良 · 镰仓 · 首尔</div>
+            </div>
+            <div class="travel-card extra">
+              <div class="travel-card-header" style="font-size:2rem;font-weight:400">🌏</div>
+              <div class="travel-card-count" style="margin-top:8px">3 大洲 · 3 个国家</div>
+              <div class="travel-card-cities" style="margin-top:8px">保持好奇心，继续探索世界</div>
+            </div>
+          </div>
         """
         (ROOT / "about" / "index.html").write_text(page_html(
             f"{about['title']} – {SITE['title']}",
