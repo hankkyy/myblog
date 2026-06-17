@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思 – 纵横四海</title>
-<meta name="description" content="好的 API 设计不是跟风用最新的协议，而是理解每种范式的适用场景和取舍。">
-<meta property="og:title" content="API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思 – 纵横四海">
-<meta property="og:description" content="好的 API 设计不是跟风用最新的协议，而是理解每种范式的适用场景和取舍。">
+<title>SQL 优化面试指南：从 EXPLAIN 到索引设计的实战思路 – 纵横四海</title>
+<meta name="description" content="用实际慢 SQL 案例讲解 EXPLAIN 的输出字段和索引优化的核心原则。">
+<meta property="og:title" content="SQL 优化面试指南：从 EXPLAIN 到索引设计的实战思路 – 纵横四海">
+<meta property="og:description" content="用实际慢 SQL 案例讲解 EXPLAIN 的输出字段和索引优化的核心原则。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思 – 纵横四海",
-  "description": "好的 API 设计不是跟风用最新的协议，而是理解每种范式的适用场景和取舍。",
+  "headline": "SQL 优化面试指南：从 EXPLAIN 到索引设计的实战思路 – 纵横四海",
+  "description": "用实际慢 SQL 案例讲解 EXPLAIN 的输出字段和索引优化的核心原则。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -68,56 +68,85 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/api-design-philosophy/" rel="bookmark"><time class="entry-date published" datetime="2025-08-10">2025年8月10日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/sql-optimization-guide/" rel="bookmark"><time class="entry-date published" datetime="2025-05-20">2025年5月20日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思</h1>
+                <h1 class="entry-title">SQL 优化面试指南：从 EXPLAIN 到索引设计的实战思路</h1>
               </header>
-              <div class="entry-content"><p>REST、gRPC、GraphQL 各有各的好，但好的 API 设计跟选择什么协议关系不大。</p>
-<h2>REST</h2>
-<p>REST 的核心是资源（Resource）：</p>
-<div class="codehilite"><pre><span></span><code>GET    /users/123      # 获取用户
-POST   /users           # 创建用户
-PUT    /users/123       # 更新用户
-DELETE /users/123       # 删除用户
+              <div class="entry-content"><p>SQL 优化是后端面试的高频题，也是日常开发必备技能。</p>
+<h2>EXPLAIN 核心字段</h2>
+<div class="codehilite"><pre><span></span><code><span class="k">EXPLAIN</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;paid&#39;</span><span class="p">;</span>
 </code></pre></div>
 
-<p>优点：简单、可缓存、用 HTTP 状态码表达语义。
-缺点：多资源操作时比较麻烦（「获取用户的所有订单中未支付的」需要嵌套 URL 或多轮请求）。</p>
-<h2>gRPC</h2>
-<p>gRPC 的核心是 RPC（远程过程调用）：</p>
-<div class="codehilite"><pre><span></span><code><span class="kd">service</span><span class="w"> </span><span class="n">OrderService</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="k">rpc</span><span class="w"> </span><span class="n">CreateOrder</span><span class="p">(</span><span class="n">CreateOrderReq</span><span class="p">)</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="p">(</span><span class="n">CreateOrderResp</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<p>优点：强类型、高性能、流式传输。
-缺点：浏览器支持差（需要 gRPC-Web）、可读性不如 REST。</p>
-<h2>GraphQL</h2>
-<p>GraphQL 的核心是让客户端决定要什么数据：</p>
-<div class="codehilite"><pre><span></span><code><span class="k">query</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">user</span><span class="p">(</span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">name</span>
-<span class="w">    </span><span class="n">orders</span><span class="p">(</span><span class="n">status</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;pending&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="p">}</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<p>优点：一次请求获取所有需要的数据。
-缺点：查询复杂度不可控（一个 GraphQL 查询可能拖垮后端）、缓存困难。</p>
-<h2>怎么选</h2>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+<th>好的表现</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>type</td>
+<td>访问类型</td>
+<td>const &gt; ref &gt; range &gt; index &gt; ALL</td>
+</tr>
+<tr>
+<td>key</td>
+<td>使用的索引</td>
+<td>不是 NULL</td>
+</tr>
+<tr>
+<td>rows</td>
+<td>扫描行数</td>
+<td>越少越好</td>
+</tr>
+<tr>
+<td>Extra</td>
+<td>额外信息</td>
+<td>Using index（覆盖索引）</td>
+</tr>
+</tbody>
+</table>
+<h2>type 字段（从好到差）</h2>
 <ul>
-<li>对外开放的简单 API → REST</li>
-<li>内部微服务通信 → gRPC</li>
-<li>前端需要复杂数据聚合 → GraphQL</li>
-<li>实时数据 → WebSocket / SSE</li>
+<li><strong>const</strong>：主键或唯一索引等值查询（最快）</li>
+<li><strong>ref</strong>：非唯一索引等值查询</li>
+<li><strong>range</strong>：索引范围查询（&gt;、&lt;、BETWEEN、LIKE 'abc%'）</li>
+<li><strong>index</strong>：全索引扫描</li>
+<li><strong>ALL</strong>：全表扫描（最差，必须优化）</li>
 </ul>
-<p>没有银弹。好的 API 设计是让调用者能猜到该怎么用，而不是让调用者去翻文档。</p></div>
-              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span></footer>
+<h2>索引设计原则</h2>
+<ol>
+<li><strong>最左前缀</strong>：联合索引 <code>(a, b, c)</code> 只能用 <code>WHERE a = 1</code> 或 <code>WHERE a = 1 AND b = 2</code></li>
+<li><strong>高选择性</strong>：字段的值越分散越好（性别只有男女，选择性低；用户 ID 有百万个，选择性高）</li>
+<li><strong>避免索引失效</strong>：</li>
+<li>WHERE 中使用函数：<code>WHERE YEAR(create_time) = 2025</code> 不走索引</li>
+<li>隐式类型转换：<code>WHERE phone = 13800138000</code> 如果 phone 是 varchar，不走索引</li>
+<li>OR 连接非索引列会导致全表扫描</li>
+<li><strong>覆盖索引</strong>：查询的列都在索引里，Using index，不回表</li>
+</ol>
+<h2>一个典型案例</h2>
+<div class="codehilite"><pre><span></span><code><span class="c1">-- 慢查询：type=ALL, rows=1000000</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">123</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">create_time</span><span class="w"> </span><span class="k">DESC</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+
+<span class="c1">-- 优化：加联合索引</span>
+<span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_user_time</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">create_time</span><span class="p">);</span>
+
+<span class="c1">-- 优化后：type=ref, rows=100, Extra=Using index</span>
+</code></pre></div>
+
+<h2>面试话术</h2>
+<blockquote>
+<p>遇到慢 SQL，先用 EXPLAIN 看访问类型和扫描行数。ALL 类型全表扫描必须优化。加索引的核心原则是最左前缀+高选择性。覆盖索引能避免回表，性能更好。最后用 profiles 对比优化前后的耗时。</p>
+</blockquote>
+<p>会 EXPLAIN 比会写 SQL 更重要。</p></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/数据库/" rel="category">数据库</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/spring-mvc-flow/" rel="prev"><span class="nav-links__label">上一篇文章</span> Spring MVC 请求处理流程：从 DispatcherServlet 到视图渲染</a></div><div class="nav-next"><a href="/posts/database-sharding-practice/" rel="next"><span class="nav-links__label">下一篇文章</span> MySQL 分库分表学习笔记：从单库到分片的完整思路</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/cdn-edge-computing/" rel="prev"><span class="nav-links__label">上一篇文章</span> CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？</a></div><div class="nav-next"><a href="/posts/jvm-gc-interview/" rel="next"><span class="nav-links__label">下一篇文章</span> JVM 垃圾回收面试精讲：从 CMS 到 G1 到 ZGC</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">

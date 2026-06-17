@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思 – 纵横四海</title>
-<meta name="description" content="好的 API 设计不是跟风用最新的协议，而是理解每种范式的适用场景和取舍。">
-<meta property="og:title" content="API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思 – 纵横四海">
-<meta property="og:description" content="好的 API 设计不是跟风用最新的协议，而是理解每种范式的适用场景和取舍。">
+<title>计算机架构面试入门：CPU 缓存和伪共享（False Sharing） – 纵横四海</title>
+<meta name="description" content="理解 CPU 三级缓存的工作机制，以及为什么伪共享会让多线程程序变慢。">
+<meta property="og:title" content="计算机架构面试入门：CPU 缓存和伪共享（False Sharing） – 纵横四海">
+<meta property="og:description" content="理解 CPU 三级缓存的工作机制，以及为什么伪共享会让多线程程序变慢。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思 – 纵横四海",
-  "description": "好的 API 设计不是跟风用最新的协议，而是理解每种范式的适用场景和取舍。",
+  "headline": "计算机架构面试入门：CPU 缓存和伪共享（False Sharing） – 纵横四海",
+  "description": "理解 CPU 三级缓存的工作机制，以及为什么伪共享会让多线程程序变慢。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -68,56 +68,61 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/api-design-philosophy/" rel="bookmark"><time class="entry-date published" datetime="2025-08-10">2025年8月10日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/computer-architecture-cache/" rel="bookmark"><time class="entry-date published" datetime="2025-10-10">2025年10月10日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思</h1>
+                <h1 class="entry-title">计算机架构面试入门：CPU 缓存和伪共享（False Sharing）</h1>
               </header>
-              <div class="entry-content"><p>REST、gRPC、GraphQL 各有各的好，但好的 API 设计跟选择什么协议关系不大。</p>
-<h2>REST</h2>
-<p>REST 的核心是资源（Resource）：</p>
-<div class="codehilite"><pre><span></span><code>GET    /users/123      # 获取用户
-POST   /users           # 创建用户
-PUT    /users/123       # 更新用户
-DELETE /users/123       # 删除用户
+              <div class="entry-content"><p>计算机架构的知识让你写出高性能代码。</p>
+<h2>存储层次</h2>
+<div class="codehilite"><pre><span></span><code>寄存器（0 延迟）
+  ↓
+L1 Cache（~4 个时钟周期，32KB）
+  ↓
+L2 Cache（~12 个时钟周期，256KB）
+  ↓
+L3 Cache（~40 个时钟周期，8MB-32MB，共享）
+  ↓
+主存（~200 个时钟周期）
+  ↓
+SSD（~100μs）
 </code></pre></div>
 
-<p>优点：简单、可缓存、用 HTTP 状态码表达语义。
-缺点：多资源操作时比较麻烦（「获取用户的所有订单中未支付的」需要嵌套 URL 或多轮请求）。</p>
-<h2>gRPC</h2>
-<p>gRPC 的核心是 RPC（远程过程调用）：</p>
-<div class="codehilite"><pre><span></span><code><span class="kd">service</span><span class="w"> </span><span class="n">OrderService</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="k">rpc</span><span class="w"> </span><span class="n">CreateOrder</span><span class="p">(</span><span class="n">CreateOrderReq</span><span class="p">)</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="p">(</span><span class="n">CreateOrderResp</span><span class="p">);</span>
+<p>每往下走一层，速度差一个数量级。这就是为什么局部性原理（时间局部性 + 空间局部性）如此重要。</p>
+<h2>CPU 缓存行（Cache Line）</h2>
+<p>CPU 缓存不是按字节存取的，而是按「缓存行」——固定大小的块（通常 64 字节）。即使你只读一个 int（4 字节），CPU 也会加载整个缓存行。</p>
+<h2>伪共享（False Sharing）</h2>
+<p><strong>什么是伪共享</strong>：</p>
+<div class="codehilite"><pre><span></span><code><span class="kd">class</span> <span class="nc">Counter</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">volatile</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">a</span><span class="p">;</span><span class="w">  </span><span class="c1">// 线程 1 只写 a</span>
+<span class="w">    </span><span class="kd">volatile</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">b</span><span class="p">;</span><span class="w">  </span><span class="c1">// 线程 2 只写 b</span>
 <span class="p">}</span>
 </code></pre></div>
 
-<p>优点：强类型、高性能、流式传输。
-缺点：浏览器支持差（需要 gRPC-Web）、可读性不如 REST。</p>
-<h2>GraphQL</h2>
-<p>GraphQL 的核心是让客户端决定要什么数据：</p>
-<div class="codehilite"><pre><span></span><code><span class="k">query</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">user</span><span class="p">(</span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">name</span>
-<span class="w">    </span><span class="n">orders</span><span class="p">(</span><span class="n">status</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;pending&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="p">}</span>
-<span class="w">  </span><span class="p">}</span>
+<p>a 和 b 可能在同一个 64 字节的缓存行里。线程 1 修改 a 时，整个缓存行被标记为「脏」，线程 2 在另一个核心上的缓存行副本就失效了。即使它们操作的是不同的变量，也要反复同步缓存行。</p>
+<p><strong>解决</strong>：填充（Padding）。</p>
+<div class="codehilite"><pre><span></span><code><span class="kd">class</span> <span class="nc">Counter</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Contended</span><span class="w">  </span><span class="c1">// JDK 8+ 的注解（需要 -XX:-RestrictContended）</span>
+<span class="w">    </span><span class="kd">volatile</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
+<span class="w">    </span><span class="nd">@Contended</span>
+<span class="w">    </span><span class="kd">volatile</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div>
 
-<p>优点：一次请求获取所有需要的数据。
-缺点：查询复杂度不可控（一个 GraphQL 查询可能拖垮后端）、缓存困难。</p>
-<h2>怎么选</h2>
-<ul>
-<li>对外开放的简单 API → REST</li>
-<li>内部微服务通信 → gRPC</li>
-<li>前端需要复杂数据聚合 → GraphQL</li>
-<li>实时数据 → WebSocket / SSE</li>
-</ul>
-<p>没有银弹。好的 API 设计是让调用者能猜到该怎么用，而不是让调用者去翻文档。</p></div>
+<p>或者手动填充：</p>
+<div class="codehilite"><pre><span></span><code><span class="kd">class</span> <span class="nc">PaddedLong</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">volatile</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">p1</span><span class="p">,</span><span class="w"> </span><span class="n">p2</span><span class="p">,</span><span class="w"> </span><span class="n">p3</span><span class="p">,</span><span class="w"> </span><span class="n">p4</span><span class="p">,</span><span class="w"> </span><span class="n">p5</span><span class="p">,</span><span class="w"> </span><span class="n">p6</span><span class="p">,</span><span class="w"> </span><span class="n">p7</span><span class="p">;</span><span class="w"> </span><span class="c1">// 填充到 64 字节</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2>为什么要学这个</h2>
+<p>Disruptor（高性能队列）利用了对缓存行的深刻理解，比 ArrayBlockingQueue 快 5-10 倍。高性能编程的瓶颈往往不在算法，而在硬件。</p></div>
               <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/spring-mvc-flow/" rel="prev"><span class="nav-links__label">上一篇文章</span> Spring MVC 请求处理流程：从 DispatcherServlet 到视图渲染</a></div><div class="nav-next"><a href="/posts/database-sharding-practice/" rel="next"><span class="nav-links__label">下一篇文章</span> MySQL 分库分表学习笔记：从单库到分片的完整思路</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/hashmap-source-code/" rel="prev"><span class="nav-links__label">上一篇文章</span> HashMap 源码深度解析：JDK 8 的红黑树化和扩容机制</a></div><div class="nav-next"><a href="/posts/kafka-alternatives-2025/" rel="next"><span class="nav-links__label">下一篇文章</span> Kafka 不再是唯一选择：2025 消息队列选型指南</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">

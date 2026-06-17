@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思 – 纵横四海</title>
-<meta name="description" content="好的 API 设计不是跟风用最新的协议，而是理解每种范式的适用场景和取舍。">
-<meta property="og:title" content="API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思 – 纵横四海">
-<meta property="og:description" content="好的 API 设计不是跟风用最新的协议，而是理解每种范式的适用场景和取舍。">
+<title>Spring MVC 请求处理流程：从 DispatcherServlet 到视图渲染 – 纵横四海</title>
+<meta name="description" content="跟踪一个 HTTP 请求在 Spring MVC 中的完整处理路径，面试时可以画图解释。">
+<meta property="og:title" content="Spring MVC 请求处理流程：从 DispatcherServlet 到视图渲染 – 纵横四海">
+<meta property="og:description" content="跟踪一个 HTTP 请求在 Spring MVC 中的完整处理路径，面试时可以画图解释。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思 – 纵横四海",
-  "description": "好的 API 设计不是跟风用最新的协议，而是理解每种范式的适用场景和取舍。",
+  "headline": "Spring MVC 请求处理流程：从 DispatcherServlet 到视图渲染 – 纵横四海",
+  "description": "跟踪一个 HTTP 请求在 Spring MVC 中的完整处理路径，面试时可以画图解释。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -68,56 +68,52 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/api-design-philosophy/" rel="bookmark"><time class="entry-date published" datetime="2025-08-10">2025年8月10日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/spring-mvc-flow/" rel="bookmark"><time class="entry-date published" datetime="2025-08-08">2025年8月8日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思</h1>
+                <h1 class="entry-title">Spring MVC 请求处理流程：从 DispatcherServlet 到视图渲染</h1>
               </header>
-              <div class="entry-content"><p>REST、gRPC、GraphQL 各有各的好，但好的 API 设计跟选择什么协议关系不大。</p>
-<h2>REST</h2>
-<p>REST 的核心是资源（Resource）：</p>
-<div class="codehilite"><pre><span></span><code>GET    /users/123      # 获取用户
-POST   /users           # 创建用户
-PUT    /users/123       # 更新用户
-DELETE /users/123       # 删除用户
+              <div class="entry-content"><p>Spring MVC 的请求处理流程是经典面试题。</p>
+<h2>完整流程</h2>
+<div class="codehilite"><pre><span></span><code>HTTP 请求
+    ↓
+DispatcherServlet（前端控制器）
+    ↓
+HandlerMapping（找到处理器）
+    ↓
+HandlerAdapter（调用处理器）
+    ↓
+Handler（Controller 方法）
+    ↓
+ModelAndView（返回结果）
+    ↓
+ViewResolver（解析视图）
+    ↓
+View（渲染视图）
+    ↓
+HTTP 响应
 </code></pre></div>
 
-<p>优点：简单、可缓存、用 HTTP 状态码表达语义。
-缺点：多资源操作时比较麻烦（「获取用户的所有订单中未支付的」需要嵌套 URL 或多轮请求）。</p>
-<h2>gRPC</h2>
-<p>gRPC 的核心是 RPC（远程过程调用）：</p>
-<div class="codehilite"><pre><span></span><code><span class="kd">service</span><span class="w"> </span><span class="n">OrderService</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="k">rpc</span><span class="w"> </span><span class="n">CreateOrder</span><span class="p">(</span><span class="n">CreateOrderReq</span><span class="p">)</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="p">(</span><span class="n">CreateOrderResp</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<p>优点：强类型、高性能、流式传输。
-缺点：浏览器支持差（需要 gRPC-Web）、可读性不如 REST。</p>
-<h2>GraphQL</h2>
-<p>GraphQL 的核心是让客户端决定要什么数据：</p>
-<div class="codehilite"><pre><span></span><code><span class="k">query</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">user</span><span class="p">(</span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">name</span>
-<span class="w">    </span><span class="n">orders</span><span class="p">(</span><span class="n">status</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;pending&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="p">}</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<p>优点：一次请求获取所有需要的数据。
-缺点：查询复杂度不可控（一个 GraphQL 查询可能拖垮后端）、缓存困难。</p>
-<h2>怎么选</h2>
+<h2>每一步详解</h2>
+<p><strong>1. DispatcherServlet</strong>：Spring MVC 的核心，所有请求的入口。它在 <code>web.xml</code> 或通过 <code>AbstractAnnotationConfigDispatcherServletInitializer</code> 配置。</p>
+<p><strong>2. HandlerMapping</strong>：根据请求 URL 找到对应的 Controller 方法。<code>@RequestMapping</code> 注解的信息就存在这里。常见的实现：<code>RequestMappingHandlerMapping</code>。</p>
+<p><strong>3. HandlerAdapter</strong>：调用 Handler 方法的适配器。因为 Handler 可能返回不同类型的值（ModelAndView、String、ResponseEntity 等），需要适配器做统一处理。</p>
+<p><strong>4. ViewResolver</strong>：把逻辑视图名（"userList"）解析为物理视图（"/WEB-INF/views/userList.jsp"）。</p>
+<h2>拦截器 vs 过滤器</h2>
 <ul>
-<li>对外开放的简单 API → REST</li>
-<li>内部微服务通信 → gRPC</li>
-<li>前端需要复杂数据聚合 → GraphQL</li>
-<li>实时数据 → WebSocket / SSE</li>
+<li><strong>过滤器（Filter）</strong>：Servlet 层面的，在请求进入 DispatcherServlet 之前执行</li>
+<li><strong>拦截器（Interceptor）</strong>：Spring 层面的，在 HandlerMapping 之后、HandlerAdapter 之前执行</li>
 </ul>
-<p>没有银弹。好的 API 设计是让调用者能猜到该怎么用，而不是让调用者去翻文档。</p></div>
+<h2>面试话术</h2>
+<blockquote>
+<p>一个 HTTP 请求先到达 DispatcherServlet，它通过 HandlerMapping 找到对应的 Controller 方法，通过 HandlerAdapter 调用方法并处理返回值，最后通过 ViewResolver 解析视图或直接返回数据。</p>
+</blockquote>
+<p>掌握这个流程是你理解「Spring Boot 背后发生了什么」的第一步。</p></div>
               <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/spring-mvc-flow/" rel="prev"><span class="nav-links__label">上一篇文章</span> Spring MVC 请求处理流程：从 DispatcherServlet 到视图渲染</a></div><div class="nav-next"><a href="/posts/database-sharding-practice/" rel="next"><span class="nav-links__label">下一篇文章</span> MySQL 分库分表学习笔记：从单库到分片的完整思路</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/huawei-ascend-910c/" rel="prev"><span class="nav-links__label">上一篇文章</span> 华为昇腾 910C 量产：国产 AI 芯片能替代英伟达吗？</a></div><div class="nav-next"><a href="/posts/api-design-philosophy/" rel="next"><span class="nav-links__label">下一篇文章</span> API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">

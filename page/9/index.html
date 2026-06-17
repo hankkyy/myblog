@@ -66,7 +66,63 @@
   <div class="container">
 <div id="primary" class="content-area">
           <main id="main" class="site-main">
-            <div class="tg-archive-featured"><article id="post-cdn-edge-computing" class="post type-post status-publish format-standard hentry">
+            <div class="tg-archive-featured"><article id="post-on-call-experience" class="post type-post status-publish format-standard hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/杂谈/" rel="category">杂谈</a></span><span class="posted-on"><a href="/posts/on-call-experience/" rel="bookmark"><time class="entry-date published" datetime="2025-06-05">2025年6月5日</time></a></span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/on-call-experience/" rel="bookmark">第一次 On-Call 的体验：凌晨两点的告警电话</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>实习第二个月，我被加入了团队的 On-Call 轮值表。 第一次告警 凌晨两点，手机响了。告警信息：「订单服务 P99 延迟超过 5 秒」。我完全不知道从哪里开始排查。 给带我的 mentor 打了电话。他三分钟定位到问题：Redis 连接池满了。重启后恢复。 学到的教训 1. 告警要有可操作的 Runbook 好的告警应该附带排查步骤。那次之后我花了三天整 [&hellip;]</p>
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/on-call-experience/" class="tg-readmore-link">阅读更多</a>
+            </footer>
+          </article></div>
+            <div class="tg-archive-grid tg-archive-col--3"><article id="post-syncronized-vs-reentrantlock" class="post type-post status-publish format-standard hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/syncronized-vs-reentrantlock/" rel="bookmark"><time class="entry-date published" datetime="2025-05-30">2025年5月30日</time></a></span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/syncronized-vs-reentrantlock/" rel="bookmark">synchronized vs ReentrantLock：从面试被问到源码实现</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>synchronized 和 ReentrantLock 有什么区别？十个面试九个问。 用法对比 核心区别 J [&hellip;]</p>
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/syncronized-vs-reentrantlock/" class="tg-readmore-link">阅读更多</a>
+            </footer>
+          </article>
+<article id="post-jvm-gc-interview" class="post type-post status-publish format-standard hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/jvm-gc-interview/" rel="bookmark"><time class="entry-date published" datetime="2025-05-25">2025年5月25日</time></a></span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/jvm-gc-interview/" rel="bookmark">JVM 垃圾回收面试精讲：从 CMS 到 G1 到 ZGC</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>JVM 垃圾回收是 Java 面试的高频考点。别再只说「标记-清除」了。 GC 算法的演进 - 标记-清除：最 [&hellip;]</p>
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/jvm-gc-interview/" class="tg-readmore-link">阅读更多</a>
+            </footer>
+          </article>
+<article id="post-sql-optimization-guide" class="post type-post status-publish format-standard hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/数据库/" rel="category">数据库</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/sql-optimization-guide/" rel="bookmark"><time class="entry-date published" datetime="2025-05-20">2025年5月20日</time></a></span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/sql-optimization-guide/" rel="bookmark">SQL 优化面试指南：从 EXPLAIN 到索引设计的实战思路</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>SQL 优化是后端面试的高频题，也是日常开发必备技能。 EXPLAIN 核心字段 type 字段（从好到差）  [&hellip;]</p>
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/sql-optimization-guide/" class="tg-readmore-link">阅读更多</a>
+            </footer>
+          </article>
+<article id="post-cdn-edge-computing" class="post type-post status-publish format-standard hentry">
             <div class="entry-meta">
               <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/cdn-edge-computing/" rel="bookmark"><time class="entry-date published" datetime="2025-05-18">2025年5月18日</time></a></span>
             </div>
@@ -74,13 +130,13 @@
               <h2 class="entry-title"><a href="/posts/cdn-edge-computing/" rel="bookmark">CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？</a></h2>
             </header>
             <div class="entry-content">
-              <p>边缘计算（Edge Computing）是 CDN 的进化版——不仅缓存静态文件，还能在离用户最近的节点上运行代码。 为什么需要边缘计算 传统架构：用户 → CDN（静态） → 源站（动态处理） 边缘计算：用户 → 边缘节点（动态 + 静态都在这里处理） 一个用户在新加坡，源站在美国。传统模式下动态请求要跨半个地球（200ms+）。边缘计算模式下直接在最近节 [&hellip;]</p>
+              <p>边缘计算（Edge Computing）是 CDN 的进化版——不仅缓存静态文件，还能在离用户最近的节点上运行 [&hellip;]</p>
             </div>
             <footer class="entry-footer">
               <a href="/posts/cdn-edge-computing/" class="tg-readmore-link">阅读更多</a>
             </footer>
-          </article></div>
-            <div class="tg-archive-grid tg-archive-col--3"><article id="post-reading-source-code" class="post type-post status-publish format-standard hentry">
+          </article>
+<article id="post-reading-source-code" class="post type-post status-publish format-standard hentry">
             <div class="entry-meta">
               <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a><span class="cat-seperator">, </span><a href="/categories/杂谈/" rel="category">杂谈</a></span><span class="posted-on"><a href="/posts/reading-source-code/" rel="bookmark"><time class="entry-date published" datetime="2025-05-08">2025年5月8日</time></a></span>
             </div>
@@ -149,64 +205,8 @@
             <footer class="entry-footer">
               <a href="/posts/system-design-tinyurl/" class="tg-readmore-link">阅读更多</a>
             </footer>
-          </article>
-<article id="post-doris-vs-clickhouse-2025" class="post type-post status-publish format-standard hentry">
-            <div class="entry-meta">
-              <span class="cat-links"><a href="/categories/数据库/" rel="category">数据库</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/doris-vs-clickhouse-2025/" rel="bookmark"><time class="entry-date published" datetime="2025-04-10">2025年4月10日</time></a></span>
-            </div>
-            <header class="entry-header">
-              <h2 class="entry-title"><a href="/posts/doris-vs-clickhouse-2025/" rel="bookmark">Doris vs ClickHouse：OLAP 数据库学习对比</a></h2>
-            </header>
-            <div class="entry-content">
-              <p>最近在学习 OLAP 数据库，把 Doris 和 ClickHouse 做了一个对比。 架构差异 ClickH [&hellip;]</p>
-            </div>
-            <footer class="entry-footer">
-              <a href="/posts/doris-vs-clickhouse-2025/" class="tg-readmore-link">阅读更多</a>
-            </footer>
-          </article>
-<article id="post-terminal-tools-i-use" class="post type-post status-publish format-standard hentry">
-            <div class="entry-meta">
-              <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a><span class="cat-seperator">, </span><a href="/categories/杂谈/" rel="category">杂谈</a></span><span class="posted-on"><a href="/posts/terminal-tools-i-use/" rel="bookmark"><time class="entry-date published" datetime="2025-04-05">2025年4月5日</time></a></span>
-            </div>
-            <header class="entry-header">
-              <h2 class="entry-title"><a href="/posts/terminal-tools-i-use/" rel="bookmark">我的终端工具链：2025 年开发效率套件分享</a></h2>
-            </header>
-            <div class="entry-content">
-              <p>分享一下我日常高频使用的终端工具。 文件操作 - fd：比 find 更快更好用的文件搜索 - ripgrep [&hellip;]</p>
-            </div>
-            <footer class="entry-footer">
-              <a href="/posts/terminal-tools-i-use/" class="tg-readmore-link">阅读更多</a>
-            </footer>
-          </article>
-<article id="post-mysql-transaction-isolation" class="post type-post status-publish format-standard hentry">
-            <div class="entry-meta">
-              <span class="cat-links"><a href="/categories/数据库/" rel="category">数据库</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/mysql-transaction-isolation/" rel="bookmark"><time class="entry-date published" datetime="2025-03-25">2025年3月25日</time></a></span>
-            </div>
-            <header class="entry-header">
-              <h2 class="entry-title"><a href="/posts/mysql-transaction-isolation/" rel="bookmark">MySQL 事务隔离级别面试精讲：脏读、幻读、不可重复读到底怎么区分？</a></h2>
-            </header>
-            <div class="entry-content">
-              <p>事务隔离级别几乎是 MySQL 面试必问题。 三种并发问题 脏读：读了别人还没提交的数据。别人回滚了，你读到的 [&hellip;]</p>
-            </div>
-            <footer class="entry-footer">
-              <a href="/posts/mysql-transaction-isolation/" class="tg-readmore-link">阅读更多</a>
-            </footer>
-          </article>
-<article id="post-postgres-vs-mysql-2025" class="post type-post status-publish format-standard hentry">
-            <div class="entry-meta">
-              <span class="cat-links"><a href="/categories/数据库/" rel="category">数据库</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/postgres-vs-mysql-2025/" rel="bookmark"><time class="entry-date published" datetime="2025-03-20">2025年3月20日</time></a></span>
-            </div>
-            <header class="entry-header">
-              <h2 class="entry-title"><a href="/posts/postgres-vs-mysql-2025/" rel="bookmark">PostgreSQL 还是 MySQL？2025 年数据库选型的重新思考</a></h2>
-            </header>
-            <div class="entry-content">
-              <p>MySQL 和 PostgreSQL 的争论从来没有停过。2025 年了，情况有些变化。 PostgreSQL [&hellip;]</p>
-            </div>
-            <footer class="entry-footer">
-              <a href="/posts/postgres-vs-mysql-2025/" class="tg-readmore-link">阅读更多</a>
-            </footer>
           </article></div>
-            <nav class="navigation pagination" aria-label="文章分页"><div class="nav-links"><a class="page-numbers" href="/">1</a><span class="page-numbers dots">&hellip;</span><a class="page-numbers" href="/page/7/">7</a><a class="page-numbers" href="/page/8/">8</a><span class="page-numbers current">9</span><a class="page-numbers" href="/page/10/">10</a><a class="page-numbers" href="/page/11/">11</a><span class="page-jump"><input type="number" min="1" max="11" placeholder="9/11" onkeydown="if(event.key==='Enter'){var v=parseInt(this.value);if(v>=1&&v<=11)location.href=v===1?'/':'/page/'+v+'/'}" style="width:50px;text-align:center;border:1px solid #e9ecef;border-radius:4px;padding:4px 0;font-size:.9rem"></span></div></nav>
+            <nav class="navigation pagination" aria-label="文章分页"><div class="nav-links"><a class="page-numbers" href="/">1</a><span class="page-numbers dots">&hellip;</span><a class="page-numbers" href="/page/7/">7</a><a class="page-numbers" href="/page/8/">8</a><span class="page-numbers current">9</span><a class="page-numbers" href="/page/10/">10</a><a class="page-numbers" href="/page/11/">11</a><a class="page-numbers" href="/page/12/">12</a><span class="page-jump"><input type="number" min="1" max="12" placeholder="9/12" onkeydown="if(event.key==='Enter'){var v=parseInt(this.value);if(v>=1&&v<=12)location.href=v===1?'/':'/page/'+v+'/'}" style="width:50px;text-align:center;border:1px solid #e9ecef;border-radius:4px;padding:4px 0;font-size:.9rem"></span></div></nav>
           </main>
         </div>
   </div>

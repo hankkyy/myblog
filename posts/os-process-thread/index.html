@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思 – 纵横四海</title>
-<meta name="description" content="好的 API 设计不是跟风用最新的协议，而是理解每种范式的适用场景和取舍。">
-<meta property="og:title" content="API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思 – 纵横四海">
-<meta property="og:description" content="好的 API 设计不是跟风用最新的协议，而是理解每种范式的适用场景和取舍。">
+<title>操作系统面试核心：进程和线程到底有什么区别？ – 纵横四海</title>
+<meta name="description" content="从进程间通信到线程同步，面试中最常见的操作系统考点一次讲清楚。">
+<meta property="og:title" content="操作系统面试核心：进程和线程到底有什么区别？ – 纵横四海">
+<meta property="og:description" content="从进程间通信到线程同步，面试中最常见的操作系统考点一次讲清楚。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思 – 纵横四海",
-  "description": "好的 API 设计不是跟风用最新的协议，而是理解每种范式的适用场景和取舍。",
+  "headline": "操作系统面试核心：进程和线程到底有什么区别？ – 纵横四海",
+  "description": "从进程间通信到线程同步，面试中最常见的操作系统考点一次讲清楚。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -68,56 +68,86 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/api-design-philosophy/" rel="bookmark"><time class="entry-date published" datetime="2025-08-10">2025年8月10日</time></a></span>
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/os-process-thread/" rel="bookmark"><time class="entry-date published" datetime="2025-06-10">2025年6月10日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思</h1>
+                <h1 class="entry-title">操作系统面试核心：进程和线程到底有什么区别？</h1>
               </header>
-              <div class="entry-content"><p>REST、gRPC、GraphQL 各有各的好，但好的 API 设计跟选择什么协议关系不大。</p>
-<h2>REST</h2>
-<p>REST 的核心是资源（Resource）：</p>
-<div class="codehilite"><pre><span></span><code>GET    /users/123      # 获取用户
-POST   /users           # 创建用户
-PUT    /users/123       # 更新用户
-DELETE /users/123       # 删除用户
-</code></pre></div>
-
-<p>优点：简单、可缓存、用 HTTP 状态码表达语义。
-缺点：多资源操作时比较麻烦（「获取用户的所有订单中未支付的」需要嵌套 URL 或多轮请求）。</p>
-<h2>gRPC</h2>
-<p>gRPC 的核心是 RPC（远程过程调用）：</p>
-<div class="codehilite"><pre><span></span><code><span class="kd">service</span><span class="w"> </span><span class="n">OrderService</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="k">rpc</span><span class="w"> </span><span class="n">CreateOrder</span><span class="p">(</span><span class="n">CreateOrderReq</span><span class="p">)</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="p">(</span><span class="n">CreateOrderResp</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<p>优点：强类型、高性能、流式传输。
-缺点：浏览器支持差（需要 gRPC-Web）、可读性不如 REST。</p>
-<h2>GraphQL</h2>
-<p>GraphQL 的核心是让客户端决定要什么数据：</p>
-<div class="codehilite"><pre><span></span><code><span class="k">query</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="n">user</span><span class="p">(</span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">name</span>
-<span class="w">    </span><span class="n">orders</span><span class="p">(</span><span class="n">status</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;pending&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="p">}</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
-<p>优点：一次请求获取所有需要的数据。
-缺点：查询复杂度不可控（一个 GraphQL 查询可能拖垮后端）、缓存困难。</p>
-<h2>怎么选</h2>
-<ul>
-<li>对外开放的简单 API → REST</li>
-<li>内部微服务通信 → gRPC</li>
-<li>前端需要复杂数据聚合 → GraphQL</li>
-<li>实时数据 → WebSocket / SSE</li>
-</ul>
-<p>没有银弹。好的 API 设计是让调用者能猜到该怎么用，而不是让调用者去翻文档。</p></div>
+              <div class="entry-content"><p>进程和线程是操作系统面试的基础。</p>
+<h2>核心区别</h2>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>进程</th>
+<th>线程</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>资源</td>
+<td>独立的内存空间</td>
+<td>共享进程的内存</td>
+</tr>
+<tr>
+<td>创建开销</td>
+<td>大（分配内存、复制页表）</td>
+<td>小</td>
+</tr>
+<tr>
+<td>通信</td>
+<td>IPC（管道、共享内存等）</td>
+<td>直接读写共享变量</td>
+</tr>
+<tr>
+<td>切换开销</td>
+<td>大（切换页表、刷新 TLB）</td>
+<td>小</td>
+</tr>
+<tr>
+<td>独立性</td>
+<td>一个挂了不影响其他</td>
+<td>一个线程 OOM，整个进程挂</td>
+</tr>
+<tr>
+<td>调度</td>
+<td>操作系统调度</td>
+<td>操作系统调度（内核线程）</td>
+</tr>
+</tbody>
+</table>
+<h2>进程间通信（IPC）</h2>
+<ol>
+<li><strong>管道</strong>：父子进程间单向通信，<code>ps aux | grep java</code></li>
+<li><strong>消息队列</strong>：独立于进程，异步通信</li>
+<li><strong>共享内存</strong>：最快但需要同步机制</li>
+<li><strong>Socket</strong>：跨网络通信</li>
+</ol>
+<h2>线程同步</h2>
+<h3>synchronized（Java）</h3>
+<p>synchronized 保证原子性 + 可见性 + 有序性。JMM 的 happens-before 原则：解锁 happens-before 后续的加锁。</p>
+<h3>volatile</h3>
+<p>保证可见性 + 有序性（禁止指令重排），但不保证原子性。经典使用：DCL 单例中的 instance 变量必须用 volatile。</p>
+<h3>CAS（Compare And Swap）</h3>
+<p>无锁同步。AtomicInteger 底层就是 CAS + 自旋。ABA 问题：值从 A 变成 B 又变成 A，CAS 检测不到变化。解决：加版本号（AtomicStampedReference）。</p>
+<h2>死锁的条件</h2>
+<ol>
+<li>互斥：资源不能共享</li>
+<li>持有并等待：持有资源的同时等待新资源</li>
+<li>不可剥夺：别人不能抢你的资源</li>
+<li>循环等待：A 等 B，B 等 C，C 等 A</li>
+</ol>
+<p>破坏任意一个即可避免死锁。</p>
+<h2>面试话术</h2>
+<blockquote>
+<p>进程是资源分配的最小单位，线程是 CPU 调度的最小单位。进程间通信需要 IPC，线程间直接共享内存但需要同步。线程同步的核心是保证原子性、可见性和有序性。</p>
+</blockquote>
+<p>OS 基础决定了你能走多远——优化到最后都是在跟操作系统打交道。</p></div>
               <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/spring-mvc-flow/" rel="prev"><span class="nav-links__label">上一篇文章</span> Spring MVC 请求处理流程：从 DispatcherServlet 到视图渲染</a></div><div class="nav-next"><a href="/posts/database-sharding-practice/" rel="next"><span class="nav-links__label">下一篇文章</span> MySQL 分库分表学习笔记：从单库到分片的完整思路</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/aws-reinvent-2025/" rel="prev"><span class="nav-links__label">上一篇文章</span> AWS re:Invent 2025：Amazon 的 AI 全线反击</a></div><div class="nav-next"><a href="/posts/mysql-index-interview/" rel="next"><span class="nav-links__label">下一篇文章</span> MySQL 索引面试核心：为什么最左前缀匹配是面试最爱问的？</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">
