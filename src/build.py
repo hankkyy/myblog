@@ -87,7 +87,7 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
     </div>
     <div class="header-bottom-bottom">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <nav id="site-navigation" class="main-navigation tg-site-menu--default">
+        <nav id="site-navigation" class="main-navigation tg-site-menu--default" style="flex:1;text-align:center">
           <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu">{main_nav}</ul></div>
         </nav>
         <nav class="tg-header-action-navigation">
