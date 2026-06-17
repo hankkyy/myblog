@@ -47,6 +47,7 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
 <div id="page" class="site">
 <a class="skip-link screen-reader-text" href="#content">跳到内容</a>
 <header id="masthead" class="site-header tg-site-header tg-site-header--default">
+  <div class="tg-header-top"><div class="container"></div></div>
   <div class="tg-header-bottom">
     <div class="header-bottom-top">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">

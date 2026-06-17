@@ -1,7 +1,7 @@
 ---
 title: "RAG 架构实战：从零搭建一个文档问答系统"
 date: 2026-06-01T10:00:00+08:00
-categories: ["AI"]
+categories: ["人工智能"]
 description: "用 LangChain + Chroma + OpenAI 搭建 RAG 系统的完整步骤，附带性能优化技巧"
 ---
 

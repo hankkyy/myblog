@@ -30,9 +30,9 @@ blockquote p{margin-bottom:0;font-style:italic}
 /* Grid Archive — 3 columns */
 .tg-archive-style--big-block .site-main{display:flex;flex-wrap:wrap}
 .tg-archive-grid{display:flex;flex-wrap:wrap}
-.tg-archive-col--3.tg-archive-grid{margin-left:-20px;margin-right:-20px}
+.tg-archive-col--3.tg-archive-grid{margin-left:-30px;margin-right:-30px}
 .tg-archive-col--3 .tg-archive-grid article,
-.tg-archive-col--3.tg-archive-grid article{width:33.33%;padding-left:20px;padding-right:20px;margin-bottom:80px}
+.tg-archive-col--3.tg-archive-grid article{width:33.33%;padding-left:30px;padding-right:30px;margin-bottom:80px}
 
 /* No-sidebar pages (full width) */
 #primary.content-area{width:100%}
@@ -47,7 +47,7 @@ blockquote p{margin-bottom:0;font-style:italic}
 .skip-link:focus{top:0}
 
 /* Header */
-.tg-site-header .tg-header-top{background:#16181a;padding:10px 0}
+.tg-site-header .tg-header-top{background:#16181a;min-height:5px}
 .tg-site-header .tg-header-top ul{display:flex;list-style:none;margin:0}
 .tg-site-header .tg-header-top ul li a{color:#fff;font-size:14px;text-decoration:none;margin-right:1.2rem}
 .tg-site-header .tg-header-top ul li a:hover{color:#146bb7}
@@ -124,9 +124,9 @@ article:last-of-type{margin-bottom:0}
 .entry-content table td,.entry-content table th{border:1px solid #dee2e6;padding:8px 12px}
 .entry-content table th{background:#f8f9fa;font-weight:700}
 
-.tg-readmore-link{position:relative;padding-left:40px;font-weight:700;font-size:14px;display:inline-block;color:#146bb7;margin-top:5px}
+.tg-readmore-link{position:relative;padding-left:40px;font-weight:700;font-size:14px;display:inline-block;color:#16181a;margin-top:5px}
 .tg-readmore-link::before{content:"";position:absolute;left:0;display:block;top:calc(50% - 1px);width:30px;height:1px;background-color:#212529;transition:.5s cubic-bezier(.19,1,.22,1)}
-.tg-readmore-link:hover::before{background-color:#146bb7}
+.tg-readmore-link:hover::before{background-color:#16181a}
 .tg-readmore-link:hover{text-decoration:none}
 
 .entry-footer{margin-top:30px}
