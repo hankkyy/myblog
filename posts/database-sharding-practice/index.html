@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MySQL 分库分表实战：从单库 5000 万到分 16 库的完整方案 – 纵横四海</title>
-<meta name="description" content="详细记录一个订单系统的分库分表实践，包括分片键选择、数据迁移、跨分片查询等核心问题。">
-<meta property="og:title" content="MySQL 分库分表实战：从单库 5000 万到分 16 库的完整方案 – 纵横四海">
-<meta property="og:description" content="详细记录一个订单系统的分库分表实践，包括分片键选择、数据迁移、跨分片查询等核心问题。">
+<title>MySQL 分库分表学习笔记：从单库到分片的完整思路 – 纵横四海</title>
+<meta name="description" content="学习分库分表的核心概念、分片键选择策略和常见坑点，适合入门理解。">
+<meta property="og:title" content="MySQL 分库分表学习笔记：从单库到分片的完整思路 – 纵横四海">
+<meta property="og:description" content="学习分库分表的核心概念、分片键选择策略和常见坑点，适合入门理解。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "MySQL 分库分表实战：从单库 5000 万到分 16 库的完整方案 – 纵横四海",
-  "description": "详细记录一个订单系统的分库分表实践，包括分片键选择、数据迁移、跨分片查询等核心问题。",
+  "headline": "MySQL 分库分表学习笔记：从单库到分片的完整思路 – 纵横四海",
+  "description": "学习分库分表的核心概念、分片键选择策略和常见坑点，适合入门理解。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -70,41 +70,30 @@
                 <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/database-sharding-practice/" rel="bookmark"><time class="entry-date published" datetime="2025-08-15">2025年8月15日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">MySQL 分库分表实战：从单库 5000 万到分 16 库的完整方案</h1>
+                <h1 class="entry-title">MySQL 分库分表学习笔记：从单库到分片的完整思路</h1>
               </header>
-              <div class="entry-content"><p>上个月帮团队做了一个 MySQL 分库分表的方案，记录一下。</p>
-<h2>背景</h2>
-<p>订单表单表数据量超过 5000 万，查询越来越慢。虽然有索引，但 B+Tree 的层级变深，加上大量历史数据占用 buffer pool，整体性能下降明显。</p>
-<h2>分片键选择</h2>
-<p>最关键的决策。我们选了 <code>user_id</code> 作为分片键：</p>
-<ul>
-<li>好处：同一个用户的所有订单在一个分片中，用户维度的查询不需要跨分片</li>
-<li>坏处：按订单号查询需要路由（需要知道 user_id）</li>
-</ul>
-<h2>分片方案</h2>
-<ul>
-<li>16 个数据库（分布在 4 台物理机）</li>
-<li>每库 16 张表</li>
-<li>总共 256 个分片（16 × 16）</li>
-<li>分片算法：<code>user_id % 256</code></li>
-</ul>
-<h2>数据迁移</h2>
-<p>用了双写 + 灰度切流的方式：</p>
+              <div class="entry-content"><p>最近在学习分库分表的方案，整理一下理解。</p>
+<h2>为什么需要分库分表</h2>
+<p>当一个表的数据量超过千万级别时，单库的性能会遇到瓶颈。虽然索引能帮助查询，但 B+Tree 层级变深，buffer pool 也装不下那么多数据。</p>
+<h2>分片键怎么选</h2>
+<p>这是最关键的一步。常见的选择：
+- 用户 ID：同一用户的数据在同一分片，用户维度查询快
+- 订单 ID：按订单号分散，但用户查自己所有订单时需要跨分片
+- 时间：按月份或年份分，适合日志类数据</p>
+<h2>常见方案</h2>
+<p>用 ShardingSphere 或者自己实现路由逻辑：</p>
 <ol>
-<li>新建分片集群</li>
-<li>业务代码双写（写老库 + 新分片）</li>
-<li>历史数据批量迁移</li>
-<li>灰度切读流量（10% → 50% → 100%）</li>
-<li>下线老库</li>
+<li>先规划好分几个库、每个库几张表</li>
+<li>确定分片算法（取模、哈希、范围）</li>
+<li>数据迁移时做双写 + 灰度切换</li>
+<li>尽量避免跨分片查询，如果需要可以用 ES 做索引</li>
 </ol>
-<h2>跨分片查询</h2>
-<p>避免！如果实在需要（比如运营后台的全局订单查询），用 ES 做索引，或者异步同步到一个汇总表。</p>
-<p>分库分表不是银弹，能不分就不分。但数据量到了那个级别，该分就得分。</p></div>
+<p>分库分表不是银弹，能不分就不分。但随着数据增长，迟早要面对。</p></div>
               <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/数据库/" rel="category">数据库</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/tencent-cloud-price-war/" rel="prev"><span class="nav-links__label">上一篇文章</span> 腾讯云降价 60%：中国云计算进入价格战时代</a></div><div class="nav-next"><a href="/posts/redis-cluster-practice/" rel="next"><span class="nav-links__label">下一篇文章</span> Redis Cluster 生产环境踩坑记录：从 3 主 3 从到 9 主 9 从</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/tencent-cloud-price-war/" rel="prev"><span class="nav-links__label">上一篇文章</span> 腾讯云降价 60%：中国云计算进入价格战时代</a></div><div class="nav-next"><a href="/posts/redis-cluster-practice/" rel="next"><span class="nav-links__label">下一篇文章</span> Redis Cluster 入门：从单机到集群的那些坑</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">

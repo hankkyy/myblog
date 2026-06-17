@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>2026 年实时计算选型：Flink 还是 Spark Structured Streaming？ – 纵横四海</title>
-<meta name="description" content="对比 Flink 和 Spark Streaming 在 2026 年的技术现状、性能表现和生态发展。">
-<meta property="og:title" content="2026 年实时计算选型：Flink 还是 Spark Structured Streaming？ – 纵横四海">
-<meta property="og:description" content="对比 Flink 和 Spark Streaming 在 2026 年的技术现状、性能表现和生态发展。">
+<title>实时计算入门：Flink 和 Spark Structured Streaming 该怎么选？ – 纵横四海</title>
+<meta name="description" content="学习 Flink 和 Spark Structured Streaming 的区别，了解各自的适用场景。">
+<meta property="og:title" content="实时计算入门：Flink 和 Spark Structured Streaming 该怎么选？ – 纵横四海">
+<meta property="og:description" content="学习 Flink 和 Spark Structured Streaming 的区别，了解各自的适用场景。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "2026 年实时计算选型：Flink 还是 Spark Structured Streaming？ – 纵横四海",
-  "description": "对比 Flink 和 Spark Streaming 在 2026 年的技术现状、性能表现和生态发展。",
+  "headline": "实时计算入门：Flink 和 Spark Structured Streaming 该怎么选？ – 纵横四海",
+  "description": "学习 Flink 和 Spark Structured Streaming 的区别，了解各自的适用场景。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -70,37 +70,31 @@
                 <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/flink-vs-spark-2026/" rel="bookmark"><time class="entry-date published" datetime="2026-02-10">2026年2月10日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">2026 年实时计算选型：Flink 还是 Spark Structured Streaming？</h1>
+                <h1 class="entry-title">实时计算入门：Flink 和 Spark Structured Streaming 该怎么选？</h1>
               </header>
-              <div class="entry-content"><p>最近部门在选实时计算引擎，做了 Flink 和 Spark Structured Streaming 的对比调研。</p>
+              <div class="entry-content"><p>最近在看实时计算相关的资料，对比了 Flink 和 Spark Structured Streaming。</p>
 <h2>Flink</h2>
-<p><strong>优势：</strong>
-- 真正的流处理（每条数据独立处理）
-- 状态管理成熟（RocksDB 后端）
-- Checkpoint/Savepoint 机制可靠
-- 阿里大规模验证（双十一峰值数十亿/秒）</p>
-<p><strong>劣势：</strong>
-- 学习曲线陡峭（Watermark、Window 概念多）
-- SQL 功能不如 Spark 完善
-- 批处理性能一般</p>
-<h2>Spark Structured Streaming</h2>
-<p><strong>优势：</strong>
-- SQL 表达能力强
-- 批流一体（同一套代码）
-- 生态成熟（MLlib、GraphX）
-- Delta Lake 集成无缝</p>
-<p><strong>劣势：</strong>
-- 微批次架构导致延迟下限较高（100ms+）
-- 状态管理不如 Flink 灵活
-- 大规模集群稳定性有待验证</p>
-<h2>选型建议</h2>
 <ul>
-<li>纯实时场景（毫秒级延迟要求）：选 Flink</li>
-<li>批流混合（既有实时又有离线）：选 Spark + Delta Lake</li>
-<li>团队有 Java/Flink 经验：选 Flink</li>
-<li>团队有 Spark/Hive 经验：选 Spark</li>
+<li>真正的流处理，每条数据独立处理</li>
+<li>状态管理很强大</li>
+<li>阿里双十一验证过的技术</li>
+<li>学习曲线比较陡（Watermark、Window 概念多）</li>
 </ul>
-<p>我们最终选了 Flink，因为业务对延迟要求很高。</p></div>
+<h2>Spark Structured Streaming</h2>
+<ul>
+<li>底层是微批次处理，延迟稍高</li>
+<li>SQL 表达能力很强</li>
+<li>和 Spark 生态（MLlib、GraphX）集成好</li>
+<li>批流一体，同一套代码</li>
+</ul>
+<h2>选型思路</h2>
+<ul>
+<li>纯实时场景、毫秒级延迟要求 → Flink</li>
+<li>批流混合、团队有 Spark 经验 → Spark</li>
+<li>想深入学习流处理原理 → 先学 Flink</li>
+<li>公司有 Hadoop/Hive 生态 → Spark 更自然</li>
+</ul>
+<p>对于学习来说，建议两个都了解一下，理解它们的设计哲学区别更重要。</p></div>
               <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a><a href="/categories/分布式/" rel="category">分布式</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">

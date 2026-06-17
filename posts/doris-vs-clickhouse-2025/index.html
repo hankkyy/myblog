@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Doris vs ClickHouse：2025 年 OLAP 数据库怎么选？ – 纵横四海</title>
-<meta name="description" content="从架构、性能、SQL兼容性、运维成本等维度对比 Doris 和 ClickHouse。">
-<meta property="og:title" content="Doris vs ClickHouse：2025 年 OLAP 数据库怎么选？ – 纵横四海">
-<meta property="og:description" content="从架构、性能、SQL兼容性、运维成本等维度对比 Doris 和 ClickHouse。">
+<title>Doris vs ClickHouse：OLAP 数据库学习对比 – 纵横四海</title>
+<meta name="description" content="学习对比 Doris 和 ClickHouse 的架构差异、性能特点和适用场景。">
+<meta property="og:title" content="Doris vs ClickHouse：OLAP 数据库学习对比 – 纵横四海">
+<meta property="og:description" content="学习对比 Doris 和 ClickHouse 的架构差异、性能特点和适用场景。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Doris vs ClickHouse：2025 年 OLAP 数据库怎么选？ – 纵横四海",
-  "description": "从架构、性能、SQL兼容性、运维成本等维度对比 Doris 和 ClickHouse。",
+  "headline": "Doris vs ClickHouse：OLAP 数据库学习对比 – 纵横四海",
+  "description": "学习对比 Doris 和 ClickHouse 的架构差异、性能特点和适用场景。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -70,45 +70,35 @@
                 <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/doris-vs-clickhouse-2025/" rel="bookmark"><time class="entry-date published" datetime="2025-04-10">2025年4月10日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">Doris vs ClickHouse：2025 年 OLAP 数据库怎么选？</h1>
+                <h1 class="entry-title">Doris vs ClickHouse：OLAP 数据库学习对比</h1>
               </header>
-              <div class="entry-content"><p>团队在评估 OLAP 数据库，把 Doris 和 ClickHouse 做了个全面对比。</p>
-<h2>架构对比</h2>
+              <div class="entry-content"><p>最近在学习 OLAP 数据库，把 Doris 和 ClickHouse 做了一个对比。</p>
+<h2>架构差异</h2>
 <p><strong>ClickHouse：</strong>
-- 纯列存，MergeTree 引擎
-- 单表性能极致
-- JOIN 能力弱（不适合星型模型）
-- 物化视图功能有限</p>
+- 纯列存，MergeTree 引擎很强大
+- 单表聚合性能极致
+- JOIN 能力比较弱
+- 俄罗斯 Yandex 开源</p>
 <p><strong>Doris：</strong>
-- 列存 + MPP 架构
-- 标准 SQL 支持好
-- JOIN 能力强（支持 Broadcast/Shuffle Join）
-- 物化视图 + Rollup 灵活</p>
-<h2>性能</h2>
+- MPP + 列存架构
+- 标准 SQL 兼容性好
+- JOIN 能力强
+- 百度开源，国内社区活跃</p>
+<h2>性能对比</h2>
 <ul>
-<li>单表聚合：ClickHouse 略优（10-20% 优势）</li>
-<li>多表 JOIN：Doris 优（2-5 倍优势）</li>
-<li>高并发点查：Doris 优（支持主键索引）</li>
-<li>数据更新：Doris 优（Unique Key 模型天然支持 Upsert）</li>
+<li>单表聚合：ClickHouse 略快</li>
+<li>多表 JOIN：Doris 更强</li>
+<li>高并发查询：Doris 的 Unique Key 模型有优势</li>
+<li>数据更新：Doris 原生支持 Upsert</li>
 </ul>
-<h2>运维</h2>
-<ul>
-<li>ClickHouse：单机部署简单，但集群配置复杂。ZooKeeper 依赖是痛点。</li>
-<li>Doris：FE + BE 架构清晰，自动均衡，运维相对友好。</li>
-</ul>
-<h2>结论</h2>
-<ul>
-<li>纯日志分析 / 单表聚合场景 → ClickHouse</li>
-<li>需要 JOIN / 报表 / 实时写入 → Doris</li>
-<li>团队有 Java 经验（Doris 基于 Java）→ Doris</li>
-<li>团队有 C++ 经验（ClickHouse 基于 C++）→ ClickHouse</li>
-</ul>
-<p>最终我们选了 Doris，因为业务场景更复杂，Join 需求多。</p></div>
+<h2>学习建议</h2>
+<p>两个都是优秀的 OLAP 引擎。如果想入门数据分析，Doris 的 SQL 兼容性更好，上手更快。如果做纯日志分析，ClickHouse 的单表性能更极致。</p>
+<p>可以根据业务场景选择，或者两个都学，理解它们的架构设计思想。</p></div>
               <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/数据库/" rel="category">数据库</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/redis-cluster-practice/" rel="prev"><span class="nav-links__label">上一篇文章</span> Redis Cluster 生产环境踩坑记录：从 3 主 3 从到 9 主 9 从</a></div><div class="nav-next"><a href="/posts/distributed-lock-deep-dive/" rel="next"><span class="nav-links__label">下一篇文章</span> 分布式锁的三代演进：从 Redis 到 Etcd 再到无锁设计</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/redis-cluster-practice/" rel="prev"><span class="nav-links__label">上一篇文章</span> Redis Cluster 入门：从单机到集群的那些坑</a></div><div class="nav-next"><a href="/posts/distributed-lock-deep-dive/" rel="next"><span class="nav-links__label">下一篇文章</span> 分布式锁的三代演进：从 Redis 到 Etcd 再到无锁设计</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">

@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Redis Cluster 生产环境踩坑记录：从 3 主 3 从到 9 主 9 从 – 纵横四海</title>
-<meta name="description" content="总结 Redis Cluster 在生产环境中的扩容、故障转移和性能调优经验。">
-<meta property="og:title" content="Redis Cluster 生产环境踩坑记录：从 3 主 3 从到 9 主 9 从 – 纵横四海">
-<meta property="og:description" content="总结 Redis Cluster 在生产环境中的扩容、故障转移和性能调优经验。">
+<title>Redis Cluster 入门：从单机到集群的那些坑 – 纵横四海</title>
+<meta name="description" content="学习 Redis Cluster 的部署、扩容和常见故障处理，总结学习过程中踩过的坑。">
+<meta property="og:title" content="Redis Cluster 入门：从单机到集群的那些坑 – 纵横四海">
+<meta property="og:description" content="学习 Redis Cluster 的部署、扩容和常见故障处理，总结学习过程中踩过的坑。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -15,8 +15,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Redis Cluster 生产环境踩坑记录：从 3 主 3 从到 9 主 9 从 – 纵横四海",
-  "description": "总结 Redis Cluster 在生产环境中的扩容、故障转移和性能调优经验。",
+  "headline": "Redis Cluster 入门：从单机到集群的那些坑 – 纵横四海",
+  "description": "学习 Redis Cluster 的部署、扩容和常见故障处理，总结学习过程中踩过的坑。",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -70,33 +70,25 @@
                 <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">Zihao Zhang</a></span></span><span class="posted-on"><a href="/posts/redis-cluster-practice/" rel="bookmark"><time class="entry-date published" datetime="2025-06-20">2025年6月20日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">Redis Cluster 生产环境踩坑记录：从 3 主 3 从到 9 主 9 从</h1>
+                <h1 class="entry-title">Redis Cluster 入门：从单机到集群的那些坑</h1>
               </header>
-              <div class="entry-content"><p>记录一下 Redis Cluster 在生产环境踩过的坑。</p>
-<h2>背景</h2>
-<p>公司核心业务依赖 Redis 做缓存和分布式锁。最开始是 3 主 3 从的 Cluster 架构，随着流量增长逐步扩容到 9 主 9 从。</p>
-<h2>踩过的坑</h2>
-<h3>1. 槽位迁移导致超时</h3>
-<p>扩容时需要迁移 slot（哈希槽）。如果在迁移过程中有大量请求，Redis 会返回 MOVED 错误。</p>
-<p><strong>解决方案</strong>：选择低峰期（凌晨 3 点）做迁移，并且使用 <code>CLUSTER SETSLOT node_id MIGRATING</code> 做逐槽迁移。</p>
-<h3>2. 大 Key 问题</h3>
-<p>一个 Hash 存了 100 万条数据，导致迁移时非常慢。</p>
-<p><strong>解决方案</strong>：大 Key 拆分，比如 <code>user:{user_id}:info</code> 而不是一个大的 <code>users</code> hash。</p>
-<h3>3. 脑裂</h3>
-<p>网络抖动导致一个主节点被"孤立"，Cluster 重新选主。原来的主节点恢复后变成两个主节点同时写入，数据不一致。</p>
-<p><strong>解决方案</strong>：配置 <code>min-slaves-to-write 1</code>，确保主节点至少有一个从节点正常时才接受写入。</p>
-<h2>监控要点</h2>
-<ul>
-<li><code>cluster_state</code>：必须是 ok</li>
-<li><code>cluster_slots_ok</code>：所有槽位必须被覆盖</li>
-<li>每个主节点的内存使用率（避免不均衡）</li>
-</ul>
-<p>Redis Cluster 虽然复杂，但稳定性确实比 Sentinel + 主从好很多。</p></div>
+              <div class="entry-content"><p>最近在学习 Redis Cluster，搭了一套 3 主 3 从的环境，过程中踩了不少坑。</p>
+<h2>搭建过程</h2>
+<p>Redis Cluster 最少需要 6 个节点（3 主 3 从），用 <code>redis-cli --cluster create</code> 一条命令就能创建。关键是理解槽位（slot）的概念：整个集群有 16384 个哈希槽，每个主节点负责一部分。</p>
+<h2>扩容时的问题</h2>
+<p>手动做槽位迁移，如果在业务高峰期迁移，Redis 会返回 MOVED 错误。</p>
+<p>解决办法：选择低峰期迁移，并且用逐槽迁移的方式。</p>
+<h2>大 Key 的坑</h2>
+<p>一个 Hash 存了大量数据，迁移时非常慢。最好的做法是拆分大 Key，比如 <code>user:{id}:info</code> 而不是一个超大的 <code>users</code> hash。</p>
+<h2>脑裂问题</h2>
+<p>如果网络抖动导致主节点被孤立，Cluster 自动选主，可能出现两个主同时写入的情况。</p>
+<p>解决办法：配置 <code>min-slaves-to-write 1</code>，确保主节点至少有一个从节点正常时才接受写入。</p>
+<p>Redis Cluster 比单机 Redis 复杂不少，但对于需要高可用的场景来说值得学习。</p></div>
               <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a><a href="/categories/分布式/" rel="category">分布式</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/database-sharding-practice/" rel="prev"><span class="nav-links__label">上一篇文章</span> MySQL 分库分表实战：从单库 5000 万到分 16 库的完整方案</a></div><div class="nav-next"><a href="/posts/doris-vs-clickhouse-2025/" rel="next"><span class="nav-links__label">下一篇文章</span> Doris vs ClickHouse：2025 年 OLAP 数据库怎么选？</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/database-sharding-practice/" rel="prev"><span class="nav-links__label">上一篇文章</span> MySQL 分库分表学习笔记：从单库到分片的完整思路</a></div><div class="nav-next"><a href="/posts/doris-vs-clickhouse-2025/" rel="next"><span class="nav-links__label">下一篇文章</span> Doris vs ClickHouse：OLAP 数据库学习对比</a></div></div>
           </nav>
             <div class="author-bio">
               <div class="author-bio-content">
