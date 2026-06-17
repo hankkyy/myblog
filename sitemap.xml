@@ -44,6 +44,7 @@
   <url><loc>https://hankzhang.us/posts/flink-vs-spark-2026/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/tiktok-shop-global/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/meta-threads-growth/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/leetcode-42-trapping-rain-water/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/ollama-local-llm-trend/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/google-gemini-enterprise/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/pdd-temu-global-2025/</loc><changefreq>weekly</changefreq></url>
@@ -51,6 +52,7 @@
   <url><loc>https://hankzhang.us/posts/uber-acquires-coupang-eats/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/netflix-gaming-exit/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/xai-grok-4/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/leetcode-3-longest-substring/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/concurrenthashmap-vs-hashtable/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/design-patterns-singleton-factory/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/openai-stargate-project/</loc><changefreq>weekly</changefreq></url>
@@ -61,6 +63,7 @@
   <url><loc>https://hankzhang.us/posts/tencent-cloud-price-war/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/kafka-vs-rabbitmq-vs-rocketmq/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/learning-from-failure/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/leetcode-560-subarray-sum/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/tesla-optimus-robot-2025/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/how-i-prepare-interviews/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/microsoft-nuclear-ai/</loc><changefreq>weekly</changefreq></url>
@@ -74,6 +77,7 @@
   <url><loc>https://hankzhang.us/posts/why-chinese-devs-should-blog/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/baidu-ernie-5/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/spring-bean-lifecycle/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/leetcode-25-reverse-k-group/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/thread-pool-interview/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/spring-transactional/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/neovim-setup-guide/</loc><changefreq>weekly</changefreq></url>
@@ -86,6 +90,7 @@
   <url><loc>https://hankzhang.us/posts/jvm-gc-interview/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/sql-optimization-guide/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/cdn-edge-computing/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/leetcode-239-sliding-window/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/reading-source-code/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/git-workflow-best-practices/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/spring-boot-autoconfig/</loc><changefreq>weekly</changefreq></url>
@@ -94,6 +99,7 @@
   <url><loc>https://hankzhang.us/posts/http-https-explained/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/doris-vs-clickhouse-2025/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/terminal-tools-i-use/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/leetcode-146-lru-cache/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/mysql-transaction-isolation/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/postgres-vs-mysql-2025/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/distributed-lock-deep-dive/</loc><changefreq>weekly</changefreq></url>
