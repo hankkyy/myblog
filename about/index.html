@@ -118,7 +118,7 @@
           <h3 style="margin-top:40px">🗺️ 足迹 <span style="font-size:.8rem;color:#adb5bd;font-weight:400;margin-left:8px">45 座城市</span></h3>
           <div id="travel-map" style="height:450px;border-radius:8px;margin:20px 0;overflow:hidden"></div>
           <script>
-          var map = L.map('travel-map', {scrollWheelZoom: false, zoomControl: false}).setView([35, 120], 3);
+          var map = L.map('travel-map', {scrollWheelZoom: false, zoomControl: false}).setView([35, -150], 2);
           L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; OSM'
           }).addTo(map);
