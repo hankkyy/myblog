@@ -1,55 +1,385 @@
 /* ==========================================
-   Cenote-Style — 复刻 Cenote WordPress 主题
+   严格复刻 sinyalee.com/blog — Cenote 主题
+   字体: Roboto 400(正文) + Catamaran 700(标题)
+   主色: #146bb7 (Kirki 定制)
    ========================================== */
+
+/* ---- Google Fonts ---- */
 @import url('https://fonts.googleapis.com/css2?family=Catamaran:wght@700&family=Roboto:wght@400;700&display=swap');
+
+/* ---- Reset ---- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 16px; -webkit-text-size-adjust: 100%; }
-body { font-family: "Roboto", helvetica, arial, sans-serif; font-weight: 400; font-size: 1rem; color: #363b40; line-height: 1.8; background: #fff; }
-a { color: #146bb7; text-decoration: none; transition: color 0.2s; }
-a:hover { color: #146bb7; text-decoration: underline; }
-h1, h2, h3, h4, h5, h6 { font-family: "Catamaran", helvetica, arial, sans-serif; font-weight: 700; color: #16181a; line-height: 1.4; margin-bottom: 0.5em; }
-h1 { font-size: 2.5rem; } h2 { font-size: 2.25rem; } h3 { font-size: 1.75rem; } h4 { font-size: 1.5rem; } h5 { font-size: 1.313rem; } h6 { font-size: 1.125rem; }
-p { margin-bottom: 0.625rem; line-height: 1.8; }
-code { background: #f1f3f5; padding: 0.125em 0.25em; border-radius: 3px; font-size: 0.9em; }
-pre { background: #f8f9fa; padding: 1.25rem; overflow-x: auto; border-radius: 4px; margin-bottom: 1rem; }
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: "Roboto", helvetica, arial, sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  color: #363b40;
+  background: #fff;
+  line-height: 1.6;
+}
+
+/* ---- Links ---- */
+a {
+  color: #146bb7;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+a:hover, a:active, a:focus {
+  color: #146bb7;
+}
+
+/* ---- Typography ---- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Catamaran", helvetica, arial, sans-serif;
+  font-weight: 700;
+  color: #16181a;
+  line-height: 1.4;
+}
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2.25rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.313rem; }
+h6 { font-size: 1.125rem; }
+
+p { margin: 0 0 10px; line-height: 1.8; }
+
+/* ---- Code ---- */
+code {
+  background-color: #f1f3f5;
+  padding: 0.125em 0.25em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+pre {
+  background-color: #f8f9fa;
+  padding: 20px;
+  overflow-x: auto;
+  border-radius: 4px;
+}
 pre code { background: none; padding: 0; }
-blockquote { text-align: center; background: #fff9f5; padding: 1.25rem 2.5rem; margin: 1.5rem 0; position: relative; border-radius: 4px; }
-blockquote p { margin-bottom: 0; font-style: italic; }
-.container { width: 100%; max-width: 1160px; margin: 0 auto; padding: 0 15px; }
-.site-header { border-bottom: 1px solid #f1f3f5; }
-.header-top { border-bottom: 1px solid #f1f3f5; padding: 8px 0; }
-.header-top .container { display: flex; justify-content: space-between; align-items: center; }
-.header-top nav a { font-size: 0.875rem; color: #adb5bd; margin-right: 1.2rem; }
-.header-top nav a:hover, .header-top nav a.active { color: #146bb7; }
-.header-bottom { padding: 20px 0; }
-.site-branding .site-title { font-family: "Catamaran", helvetica, arial, sans-serif; font-size: 2.25rem; font-weight: 700; margin-bottom: 0; }
-.site-branding .site-title a { color: #16181a; }
-.site-branding .site-title a:hover { text-decoration: none; }
-.site-branding .site-description { font-size: 0.875rem; color: #adb5bd; margin-top: 4px; }
-.header-bottom-bottom { padding: 0 0 10px; }
-.header-bottom-bottom .container { display: flex; justify-content: space-between; align-items: center; }
-.main-navigation a { color: #363b40; margin-left: 1.5rem; font-size: 0.95rem; }
-.main-navigation a:hover, .main-navigation a.active { color: #146bb7; }
-.site-content { padding: 40px 0; }
-.content-area { width: 100%; max-width: 760px; margin: 0 auto; }
-article { margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid #f1f3f5; }
-article:last-of-type { border-bottom: none; }
-.entry-meta { font-size: 0.75rem; margin-bottom: 10px; display: flex; gap: 15px; align-items: center; }
-.entry-meta .cat-links a { color: #fff; background: #146bb7; padding: 2px 10px; border-radius: 3px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; }
-.entry-meta .cat-links a:hover { text-decoration: none; opacity: 0.85; }
-.entry-meta .posted-on a { color: #adb5bd; }
-.entry-meta .posted-on a:hover { color: #146bb7; }
-.entry-title { margin-bottom: 12px; }
-.entry-title a { color: #16181a; }
-.entry-title a:hover { color: #146bb7; text-decoration: none; }
-.entry-content { line-height: 1.8; }
-.read-more { display: inline-block; margin-top: 10px; font-size: 0.9rem; font-weight: 700; color: #146bb7; }
-.single .entry-header { margin-bottom: 30px; }
-.single .entry-title { font-size: 2.5rem; }
-.single .entry-content { font-size: 1.05rem; }
-.pagination { display: flex; justify-content: center; gap: 8px; margin-top: 40px; }
-.pagination a, .pagination span { display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px; padding: 0 8px; border: 1px solid #e9ecef; border-radius: 4px; font-size: 0.9rem; color: #363b40; }
-.pagination .current { background: #146bb7; color: #fff; border-color: #146bb7; }
-.pagination a:hover { background: #146bb7; color: #fff; border-color: #146bb7; text-decoration: none; }
-.site-footer { border-top: 1px solid #f1f3f5; padding: 25px 0; text-align: center; font-size: 0.85rem; color: #adb5bd; }
-@media (max-width: 768px) { .header-bottom-bottom .container { flex-direction: column; gap: 10px; } h1 { font-size: 1.75rem; } h2 { font-size: 1.5rem; } .site-branding .site-title { font-size: 1.5rem; } .content-area { padding: 0 10px; } }
+
+/* ---- Blockquote ---- */
+blockquote {
+  text-align: center;
+  background: #fff9f5;
+  padding: 20px 40px;
+  margin: 0;
+  position: relative;
+}
+blockquote p { margin-bottom: 0; }
+
+/* ---- Container ---- */
+.container {
+  width: 100%;
+  max-width: 1160px;
+  margin-right: auto;
+  margin-left: auto;
+  padding: 0 15px;
+}
+
+/* ========== HEADER ========== */
+/* 顶部深色导航条 */
+.header-top {
+  background: #16181a;
+  padding: 10px 0;
+}
+.header-top .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header-top ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+}
+.header-top nav a {
+  color: #fff;
+  font-size: 14px;
+  text-decoration: none;
+  margin-right: 1.2rem;
+}
+.header-top nav a:hover {
+  color: #146bb7;
+}
+
+/* 站点标题区 */
+.header-bottom { }
+.header-bottom-top {
+  padding: 30px 0 0;
+}
+.header-bottom-bottom {
+  /* border-top handled via .header-bottom-bottom .container */
+}
+.header-bottom-bottom .container {
+  padding: 20px 0;
+  border-top: 2px solid #fff0e6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 站点品牌 */
+.site-branding {
+  margin: 0 auto;
+  text-align: center;
+}
+.site-branding .site-title {
+  font-family: "Catamaran", helvetica, arial, sans-serif;
+  font-size: 1.313rem;
+  font-weight: 700;
+  margin: 0 0 10px;
+}
+.site-branding .site-title a {
+  color: #16181a;
+}
+.site-branding .site-title a:hover {
+  text-decoration: none;
+}
+.site-branding .site-description {
+  margin: 0 0 30px;
+  font-size: 14px;
+  color: #adb5bd;
+}
+
+/* 主导航 */
+.main-navigation {
+  flex: 6;
+}
+.main-navigation a {
+  font-size: 0.95rem;
+  color: #363b40;
+  margin-right: 1.5rem;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.main-navigation a:hover {
+  color: #146bb7;
+}
+
+/* ========== CONTENT ========== */
+.site-content {
+  padding: 40px 0;
+}
+.content-area {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+/* 文章条目 */
+article, .hentry {
+  margin-bottom: 80px;
+  line-height: 1.6;
+}
+article:last-of-type {
+  margin-bottom: 0;
+}
+
+/* 文章元信息 */
+.entry-meta {
+  font-size: 12px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.entry-meta .cat-links,
+.entry-meta .posted-on {
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+/* 分类链接（首页 - 纯文字，无背景） */
+.entry-meta .cat-links a {
+  color: #146bb7;
+  text-transform: uppercase;
+  display: inline-block;
+  font-size: 12px;
+}
+.entry-meta .cat-links a:hover {
+  color: #146bb7;
+}
+
+/* 发布日期 */
+.entry-meta .posted-on {
+  position: relative;
+  padding-left: 60px;
+}
+.entry-meta .posted-on::before {
+  content: "";
+  position: absolute;
+  width: 40px;
+  height: 1px;
+  background-color: #146bb7;
+  left: 10px;
+  top: calc(50% - 1px);
+}
+.entry-meta .posted-on a {
+  color: #adb5bd;
+  font-size: 12px;
+}
+.entry-meta .posted-on a:hover {
+  color: #146bb7;
+}
+
+/* 作者 */
+.byline a {
+  color: #146bb7;
+  font-size: 12px;
+}
+
+/* 文章标题 */
+.entry-title {
+  margin: 0 0 10px;
+  font-size: 1.313rem;
+}
+.entry-title a {
+  color: #16181a;
+}
+.entry-title a:hover {
+  color: #146bb7;
+  text-decoration: none;
+}
+
+/* 文章内容 */
+.entry-content {
+  line-height: 1.8;
+}
+.entry-content p {
+  line-height: inherit;
+}
+
+/* 阅读更多 */
+.read-more {
+  position: relative;
+  padding-left: 40px;
+  font-weight: 700;
+  font-size: 14px;
+  display: inline-block;
+  color: #146bb7;
+  margin-top: 5px;
+}
+.read-more::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  display: block;
+  top: calc(50% - 1px);
+  width: 30px;
+  height: 1px;
+  background-color: #212529;
+  transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.read-more:hover::before {
+  background-color: #146bb7;
+}
+.read-more:hover {
+  text-decoration: none;
+}
+
+/* ---- 单篇文章 ---- */
+.single .entry-header {
+  margin-bottom: 30px;
+}
+.single .hentry .entry-title,
+.single .entry-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+.single .hentry .entry-meta .posted-on::before {
+  background-color: #363b40;
+}
+
+/* 文章底部 - 分类标签（蓝色背景） */
+.entry-footer {
+  margin-top: 30px;
+}
+.entry-footer .cat-links {
+  display: block;
+  margin-bottom: 20px;
+}
+.entry-footer .cat-links a {
+  font-size: 12px;
+  text-transform: uppercase;
+  padding: 8px 15px;
+  display: inline-flex;
+  font-weight: 400;
+  background-color: #146bb7;
+  color: #fff;
+  margin: 0 5px 5px;
+}
+.entry-footer .cat-links a:first-child {
+  margin-left: 0;
+}
+.entry-footer .cat-links a:hover {
+  background-color: #363b40;
+  text-decoration: none;
+}
+
+/* ---- 分页 ---- */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 40px;
+}
+.pagination a,
+.pagination span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 8px;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: #363b40;
+}
+.pagination .current {
+  background: #146bb7;
+  color: #fff;
+  border-color: #146bb7;
+}
+.pagination a:hover {
+  background: #146bb7;
+  color: #fff;
+  border-color: #146bb7;
+  text-decoration: none;
+}
+
+/* ========== FOOTER ========== */
+.site-footer {
+  border-top: 1px solid #f1f3f5;
+  padding: 25px 0;
+  text-align: center;
+}
+.site-footer .site-info {
+  color: #bdbdbd;
+  font-size: 0.85rem;
+}
+.site-footer a {
+  color: #146bb7;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .header-bottom-bottom .container {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .site-branding { text-align: center; }
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: 1.5rem; }
+  .single .entry-title { font-size: 1.75rem !important; }
+  .content-area { padding: 0 10px; }
+  .entry-meta { flex-wrap: wrap; }
+}

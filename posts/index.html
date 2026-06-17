@@ -8,57 +8,56 @@
   
 </head>
 <body>
-<header class="site-header">
+<div id="page" class="site">
+
+<header id="masthead" class="site-header">
   <div class="header-top">
     <div class="container">
       <nav>
-        <a href="/" class="active">首页</a>
-        <a href="/about/">关于</a>
+        <ul><li><a href="/" class="active">首页</a></li><li><a href="/about/">关于</a></li></ul>
       </nav>
-      <div></div>
     </div>
   </div>
   <div class="header-bottom">
     <div class="header-bottom-top">
       <div class="container">
         <div class="site-branding">
-          <h1 class="site-title"><a href="https://hankzhang.us/">新的原野</a></h1>
+          <p class="site-title"><a href="https://hankzhang.us/" rel="home">新的原野</a></p>
           <p class="site-description">一片新的原野，一个充满爱与善良的博客</p>
         </div>
       </div>
     </div>
-  </div>
-  <div class="header-bottom-bottom">
-    <div class="container">
-      <nav class="main-navigation">
-        <a href="/" class="active">首页</a>
-        <a href="/about/">关于</a>
-      </nav>
+    <div class="header-bottom-bottom">
+      <div class="container">
+        <nav class="main-navigation">
+          <a href="/" class="active">首页</a>
+          <a href="/about/">关于</a>
+        </nav>
+      </div>
     </div>
   </div>
 </header>
 
-  <div class="site-content">
+  <div id="content" class="site-content">
     <div class="container">
-      <main class="content-area">
-      <article>
-        <div class="entry-meta">
-      <span class="cat-links">
-        <a href="/categories/杂谈集/">杂谈集</a>
-      </span>
-          <span class="posted-on">
-            <a href="/posts/hello-world/">
-              <time datetime="2026-06-17">2026年06月17日</time>
-            </a>
-          </span>
-        </div>
-        <header class="entry-header">
-          <h2 class="entry-title">
-            <a href="/posts/hello-world/">你好，世界</a>
-          </h2>
-        </header>
-        <div class="entry-content">
-          <p>这是我的第一篇博客。
+      <div id="primary" class="content-area">
+        <main id="main" class="site-main">
+          <article class="post type-post hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/杂谈集/" rel="category">杂谈集</a></span>
+            <span class="posted-on">
+              <a href="/posts/hello-world/" rel="bookmark">
+                <time class="entry-date published" datetime="2026-06-17">2026年06月17日</time>
+              </a>
+            </span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title">
+                <a href="/posts/hello-world/" rel="bookmark">你好，世界</a>
+              </h2>
+            </header>
+            <div class="entry-content">
+              <p>这是我的第一篇博客。
 为什么写博客
 写博客是整理思绪最好的方式。把想法写下来，才知道自己到底在想什么。
 这个博客怎么搭的
@@ -68,22 +67,26 @@
 Hugo：Go 写的静态网站生成器，构建速度极快
 Vercel：部署和托管，自带 CDN 和 HTTPS
 字体：Roboto（正文）+ Ca&hellip;</p>
-        </div>
-        <footer class="entry-footer">
-          <a href="/posts/hello-world/" class="read-more">阅读更多</a>
-        </footer>
-      </article>
-      </main>
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/hello-world/" class="read-more">阅读更多</a>
+            </footer>
+          </article>
+        </main>
+      </div>
     </div>
   </div>
 
-<footer class="site-footer">
+<footer id="colophon" class="site-footer">
   <div class="container">
-    Copyright &copy; 2026
-    <a href="https://hankzhang.us/">新的原野</a>.
-    All rights reserved.
-    Powered by <a href="https://gohugo.io">Hugo</a>.
+    <div class="site-info">
+      Copyright &copy; 2026
+      <a href="https://hankzhang.us/" title="新的原野">新的原野</a>.
+      All rights reserved.
+    </div>
   </div>
 </footer>
+
+</div>
 </body>
 </html>

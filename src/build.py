@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""构建脚本 — 把 src/content/ 中的 Markdown → 项目根目录的 HTML"""
+"""构建脚本 — 复刻 sinyalee.com/blog 的 HTML 结构"""
 
 import re
 from datetime import datetime
@@ -9,7 +9,7 @@ import frontmatter
 from markdown import markdown
 
 SRC = Path(__file__).parent          # src/
-ROOT = SRC.parent                    # myblog/ 项目根
+ROOT = SRC.parent                    # myblog/
 CONTENT = SRC / "content"
 THEME = SRC / "themes" / "cenote-style"
 CSS_DIR = ROOT / "css"
@@ -20,64 +20,63 @@ SITE_DESC = "一片新的原野，一个充满爱与善良的博客"
 MENU_ITEMS = [("首页", "/"), ("关于", "/about/")]
 CURRENT_YEAR = str(datetime.now().year)
 
-# 不会被清理的安全目录/文件
 SAFE = {".git", "src", "vercel.json", ".gitignore", "README.md"}
 
 
-def make_menu_html(current_path="/"):
-    parts = []
+def nav_html(current_path="/"):
+    """顶部导航 + 主导航 HTML"""
+    parts_top = []
+    parts_main = []
     for label, url in MENU_ITEMS:
         active = ' class="active"' if url == current_path else ""
-        parts.append(f'        <a href="{url}"{active}>{label}</a>')
-    return "\n".join(parts)
+        parts_top.append(f'<li><a href="{url}"{active}>{label}</a></li>')
+        parts_main.append(f'<a href="{url}"{active}>{label}</a>')
+    top = f'<ul>{"".join(parts_top)}</ul>'
+    main = "\n          ".join(parts_main)
+    return top, main
 
 
-def make_cat_links(categories):
-    if not categories:
-        return ""
-    parts = ['      <span class="cat-links">']
-    for cat in categories:
-        slug = cat.lower().replace(" ", "-")
-        parts.append(f'        <a href="/categories/{slug}/">{cat}</a>')
-    parts.append("      </span>")
-    return "\n".join(parts)
+def build_html(title_tag, body_html, current_menu="/", description="", is_home=False):
+    """组装完整 HTML 页面"""
+    top_nav, main_nav = nav_html(current_menu)
 
+    # 主页用 h1.site-title，内页用 p.site-title
+    site_title_tag = "h1" if is_home else "p"
 
-def build_html(title_tag, body_html, output_path, current_menu="/", description=""):
-    header = f"""<header class="site-header">
+    header = f"""<header id="masthead" class="site-header">
   <div class="header-top">
     <div class="container">
       <nav>
-{make_menu_html(current_menu)}
+        {top_nav}
       </nav>
-      <div></div>
     </div>
   </div>
   <div class="header-bottom">
     <div class="header-bottom-top">
       <div class="container">
         <div class="site-branding">
-          <h1 class="site-title"><a href="{SITE_URL}">{SITE_TITLE}</a></h1>
+          <{site_title_tag} class="site-title"><a href="{SITE_URL}" rel="home">{SITE_TITLE}</a></{site_title_tag}>
           <p class="site-description">{SITE_DESC}</p>
         </div>
       </div>
     </div>
-  </div>
-  <div class="header-bottom-bottom">
-    <div class="container">
-      <nav class="main-navigation">
-{make_menu_html(current_menu)}
-      </nav>
+    <div class="header-bottom-bottom">
+      <div class="container">
+        <nav class="main-navigation">
+          {main_nav}
+        </nav>
+      </div>
     </div>
   </div>
 </header>"""
 
-    footer = f"""<footer class="site-footer">
+    footer = f"""<footer id="colophon" class="site-footer">
   <div class="container">
-    Copyright &copy; {CURRENT_YEAR}
-    <a href="{SITE_URL}">{SITE_TITLE}</a>.
-    All rights reserved.
-    Powered by <a href="https://gohugo.io">Hugo</a>.
+    <div class="site-info">
+      Copyright &copy; {CURRENT_YEAR}
+      <a href="{SITE_URL}" title="{SITE_TITLE}">{SITE_TITLE}</a>.
+      All rights reserved.
+    </div>
   </div>
 </footer>"""
 
@@ -93,15 +92,23 @@ def build_html(title_tag, body_html, output_path, current_menu="/", description=
   {desc_meta}
 </head>
 <body>
+<div id="page" class="site">
+
 {header}
 
-  <div class="site-content">
+  <div id="content" class="site-content">
     <div class="container">
+      <div id="primary" class="content-area">
+        <main id="main" class="site-main">
 {body_html}
+        </main>
+      </div>
     </div>
   </div>
 
 {footer}
+
+</div>
 </body>
 </html>"""
 
@@ -134,56 +141,96 @@ def parse_page(md_path):
     }
 
 
+def entry_meta_cats(categories):
+    """分类链接（首页 - 纯文字，蓝色，大写）"""
+    if not categories:
+        return ""
+    parts = []
+    for cat in categories:
+        slug = cat.lower().replace(" ", "-")
+        parts.append(f'<a href="/categories/{slug}/" rel="category">{cat}</a>')
+    return f'<span class="cat-links">{"".join(parts)}</span>'
+
+
+def entry_meta_posted_on(post):
+    """发布日期（带 before 横线）"""
+    return f"""<span class="posted-on">
+              <a href="/posts/{post['slug']}/" rel="bookmark">
+                <time class="entry-date published" datetime="{post['date_iso']}">{post['date_formatted']}</time>
+              </a>
+            </span>"""
+
+
+def entry_byline():
+    """作者行（单页）"""
+    return f"""<span class="byline">
+              <span class="author vcard">
+                <a class="url fn n" href="/about/">Sinya</a>
+              </span>
+            </span>"""
+
+
 def article_list_item(post):
-    return f"""      <article>
-        <div class="entry-meta">
-{make_cat_links(post['categories'])}
-          <span class="posted-on">
-            <a href="/posts/{post['slug']}/">
-              <time datetime="{post['date_iso']}">{post['date_formatted']}</time>
-            </a>
-          </span>
-        </div>
-        <header class="entry-header">
-          <h2 class="entry-title">
-            <a href="/posts/{post['slug']}/">{post['title']}</a>
-          </h2>
-        </header>
-        <div class="entry-content">
-          <p>{post['summary']}{'&hellip;' if post['truncated'] else ''}</p>
-        </div>
-        <footer class="entry-footer">
-          <a href="/posts/{post['slug']}/" class="read-more">阅读更多</a>
-        </footer>
-      </article>"""
+    """首页文章条目"""
+    meta = f"""{entry_meta_cats(post['categories'])}
+            {entry_meta_posted_on(post)}"""
+
+    return f"""          <article class="post type-post hentry">
+            <div class="entry-meta">
+              {meta}
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title">
+                <a href="/posts/{post['slug']}/" rel="bookmark">{post['title']}</a>
+              </h2>
+            </header>
+            <div class="entry-content">
+              <p>{post['summary']}{'&hellip;' if post['truncated'] else ''}</p>
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/{post['slug']}/" class="read-more">阅读更多</a>
+            </footer>
+          </article>"""
 
 
 def article_full(post):
-    return f"""      <main class="content-area single">
-        <article>
-          <div class="entry-meta">
-{make_cat_links(post['categories'])}
-            <span class="posted-on">
-              <time datetime="{post['date_iso']}">{post['date_formatted']}</time>
-            </span>
-          </div>
-          <header class="entry-header">
-            <h1 class="entry-title">{post['title']}</h1>
-          </header>
-          <div class="entry-content">
-            {post['content']}
-          </div>
-        </article>
-      </main>"""
+    """文章详情页"""
+    footer_cats = ""
+    if post["categories"]:
+        cats_html = "".join(
+            f'<a href="/categories/{c.lower().replace(" ", "-")}/" rel="category">{c}</a>'
+            for c in post["categories"]
+        )
+        footer_cats = f"""<span class="cat-links">分类： {cats_html}</span>"""
+
+    return f"""          <article class="post type-post hentry">
+            <div class="entry-meta">
+              {entry_byline()}
+              <span class="posted-on">
+                <a href="/posts/{post['slug']}/" rel="bookmark">
+                  <time class="entry-date published" datetime="{post['date_iso']}">{post['date_formatted']}</time>
+                </a>
+              </span>
+            </div>
+            <header class="entry-header">
+              <h1 class="entry-title">{post['title']}</h1>
+            </header>
+            <div class="entry-content">
+              {post['content']}
+            </div>
+            <footer class="entry-footer">
+              {footer_cats}
+            </footer>
+          </article>"""
 
 
 def clean_output():
-    """安全清理：只删 HTML 目录，不删 src/"""
+    """安全清理输出目录"""
+    import shutil
     for item in ROOT.iterdir():
         if item.name in SAFE:
             continue
         if item.is_dir():
-            import shutil
             shutil.rmtree(item)
         else:
             item.unlink()
@@ -199,7 +246,7 @@ def build():
         import shutil
         shutil.copy(css_src, CSS_DIR / "style.css")
 
-    # 读取所有文章
+    # 读取文章
     posts_dir = CONTENT / "posts"
     posts = []
     if posts_dir.exists():
@@ -208,13 +255,14 @@ def build():
 
     # 首页
     list_items = "\n".join(article_list_item(p) for p in posts)
-    home_body = f'      <main class="content-area">\n{list_items}\n      </main>'
-    (ROOT / "index.html").write_text(build_html(SITE_TITLE, home_body, ""))
+    (ROOT / "index.html").write_text(
+        build_html(SITE_TITLE, list_items, is_home=True)
+    )
 
-    # /posts/
+    # /posts/ 列表
     (ROOT / "posts").mkdir(parents=True, exist_ok=True)
     (ROOT / "posts" / "index.html").write_text(
-        build_html(SITE_TITLE, home_body, "")
+        build_html(SITE_TITLE, list_items)
     )
 
     # 每篇文章
@@ -223,7 +271,6 @@ def build():
         page = build_html(
             f"{post['title']} – {SITE_TITLE}",
             body,
-            "",
             description=post["description"],
         )
         post_dir = ROOT / "posts" / post["slug"]
@@ -234,18 +281,18 @@ def build():
     about_md = CONTENT / "about.md"
     if about_md.exists():
         about = parse_page(about_md)
-        body = f"""      <main class="content-area single">
-        <article>
-          <header class="entry-header">
-            <h1 class="entry-title">{about['title']}</h1>
-          </header>
-          <div class="entry-content">
-            {about['content']}
-          </div>
-        </article>
-      </main>"""
+        body = f"""          <article class="page type-page hentry">
+            <header class="entry-header">
+              <h1 class="entry-title">{about['title']}</h1>
+            </header>
+            <div class="entry-content">
+              {about['content']}
+            </div>
+          </article>"""
         page = build_html(
-            f"{about['title']} – {SITE_TITLE}", body, "", current_menu="/about/"
+            f"{about['title']} – {SITE_TITLE}",
+            body,
+            current_menu="/about/",
         )
         (ROOT / "about").mkdir(parents=True, exist_ok=True)
         (ROOT / "about" / "index.html").write_text(page)
