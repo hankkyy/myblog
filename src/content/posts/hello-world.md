@@ -13,11 +13,11 @@ description: "这是我的第一篇博客文章。"
 
 ## 这个博客怎么搭的
 
-用 Hugo 搭建，部署在 Vercel 上。外观参考了 WordPress 的 Cenote 主题，干净、纯粹、专注于文字。
+用 Python 写了一个简单的静态网站生成器，部署在 Vercel 上。外观参考了 WordPress 的 Cenote 主题，干净、纯粹、专注于文字。
 
 ### 技术栈
 
-- **Hugo**：Go 写的静态网站生成器，构建速度极快
+- **Python**：自己写的构建脚本，解析 Markdown 生成 HTML
 - **Vercel**：部署和托管，自带 CDN 和 HTTPS
 - **字体**：Roboto（正文）+ Catamaran（标题），Google Fonts
 
