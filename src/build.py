@@ -329,8 +329,11 @@ def build():
                 href = "/" if pg == 1 else f"/page/{pg}/"
                 blocks.append(f'<a class="page-numbers" href="{href}">{pg}</a>')
             prev = pg
-        jump = f'<span class="page-jump"><input type="number" min="1" max="{total_pages}" placeholder="{current_page}/{total_pages}" onkeydown="if(event.key===\'Enter\'){{var v=parseInt(this.value);if(v>=1&&v<={total_pages})location.href=v===1?\'/\':\'/page/\'+v+\'/\'}}" style="width:50px;text-align:center;border:1px solid #e9ecef;border-radius:4px;padding:4px 0;font-size:.9rem"></span>'
-        return f'<nav class="navigation pagination" aria-label="文章分页"><div class="nav-links">{"".join(blocks)}{jump}</div></nav>'
+        jump_input = f'<span class="page-jump">'
+        jump_input += f'<input type="number" min="1" max="{total_pages}" placeholder="跳转" id="jump-input-{current_page}" style="width:48px;text-align:center;border:1px solid #e9ecef;border-radius:4px 0 0 4px;padding:4px 0;font-size:.9rem;outline:none">'
+        jump_input += f'<button onclick="var v=parseInt(document.getElementById(&quot;jump-input-{current_page}&quot;).value);if(v>=1&&v<={total_pages})location.href=v===1?&quot;/&quot;:&quot;/page/&quot;+v+&quot;/&quot;" style="border:1px solid #e9ecef;border-left:none;border-radius:0 4px 4px 0;padding:4px 8px;cursor:pointer;background:#fff;color:#363b40;font-size:.9rem;transition:all .2s" onmouseover="this.style.background=&#39;#146bb7&#39;;this.style.color=&#39;#fff&#39;" onmouseout="this.style.background=&#39;#fff&#39;;this.style.color=&#39;#363b40&#39;">→</button>'
+        jump_input += '</span>'
+        return f'<nav class="navigation pagination" aria-label="文章分页"><div class="nav-links">{"".join(blocks)}{jump_input}</div></nav>'
 
     for page_num in range(1, total_pages + 1):
         start = (page_num - 1) * PER_PAGE
