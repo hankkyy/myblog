@@ -51,6 +51,17 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
 <meta property="og:url" content="{SITE['url']}{'' if current == '/' else current}">
 <meta name="twitter:card" content="summary">
 <link rel="canonical" href="{SITE['url']}{'' if current == '/' else current}">
+<script type="application/ld+json">
+{{
+  "@context": "https://schema.org",
+  "@type": "{'Article' if not is_home and current != '/about/' and current != '/guestbook/' else 'WebSite'}",
+  "headline": "{title_tag}",
+  "description": "{desc or SITE['desc']}",
+  "url": "{SITE['url']}{'' if current == '/' else current}",
+  "datePublished": "2026-06-17",
+  "author": {{ "@type": "Person", "name": "{AUTHOR}" }}
+}}
+</script>
 <link rel="stylesheet" href="/css/style.css">
 {pagefind_css}
 </head>
