@@ -62,6 +62,8 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
 </script>
 <link rel="stylesheet" href="/css/style.css">
 <link rel="icon" type="image/png" href="/favicon.png">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body class="{bc}">
 <div id="page" class="site">
@@ -449,11 +451,10 @@ def build():
         about = parse_page(about_md)
         (ROOT / "about").mkdir(parents=True, exist_ok=True)
         travel_map = """
-          <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-          <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
           <h3 style="margin-top:40px">🗺️ 足迹 <span style="font-size:.8rem;color:#adb5bd;font-weight:400;margin-left:8px">45 座城市</span></h3>
           <div id="travel-map" style="height:450px;border-radius:8px;margin:20px 0;overflow:hidden"></div>
           <script>
+          document.addEventListener('DOMContentLoaded', function() {
           var map = L.map('travel-map', {scrollWheelZoom: false, zoomControl: false}).setView([35, -150], 2);
           L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; OSM'
@@ -511,6 +512,8 @@ def build():
             m.bindPopup('<b>' + c.name + '</b>');
             m.on('mouseover', function() { this.setRadius(this.options.radius * 1.5); this.setStyle({fillOpacity:1}); });
             m.on('mouseout', function() { this.setRadius(this.options.radius); this.setStyle({fillOpacity:0.85}); });
+          });
+          setTimeout(function() { map.invalidateSize(); }, 200);
           });
           </script>
           <div style="text-align:center;margin-top:8px;font-size:.8rem;color:#adb5bd">

@@ -24,6 +24,8 @@
 </script>
 <link rel="stylesheet" href="/css/style.css">
 <link rel="icon" type="image/png" href="/favicon.png">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body class="layout--no-sidebar">
 <div id="page" class="site">
@@ -113,11 +115,10 @@
 <h3>兴趣爱好</h3>
 <p>热爱旅行和航空。喜欢靠窗的座位，起飞时引擎轰鸣的那一刻是旅途中最享受的瞬间。相信眼界决定世界——去更多地方，见更多人，理解更多事。</p>
 
-          <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-          <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
           <h3 style="margin-top:40px">🗺️ 足迹 <span style="font-size:.8rem;color:#adb5bd;font-weight:400;margin-left:8px">45 座城市</span></h3>
           <div id="travel-map" style="height:450px;border-radius:8px;margin:20px 0;overflow:hidden"></div>
           <script>
+          document.addEventListener('DOMContentLoaded', function() {
           var map = L.map('travel-map', {scrollWheelZoom: false, zoomControl: false}).setView([35, -150], 2);
           L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; OSM'
@@ -175,6 +176,8 @@
             m.bindPopup('<b>' + c.name + '</b>');
             m.on('mouseover', function() { this.setRadius(this.options.radius * 1.5); this.setStyle({fillOpacity:1}); });
             m.on('mouseout', function() { this.setRadius(this.options.radius); this.setStyle({fillOpacity:0.85}); });
+          });
+          setTimeout(function() { map.invalidateSize(); }, 200);
           });
           </script>
           <div style="text-align:center;margin-top:8px;font-size:.8rem;color:#adb5bd">
