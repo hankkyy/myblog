@@ -448,6 +448,42 @@ def build():
     if about_md.exists():
         about = parse_page(about_md)
         (ROOT / "about").mkdir(parents=True, exist_ok=True)
+        travel_map = """
+          <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+          <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+          <h3 style="margin-top:40px">🗺️ 足迹</h3>
+          <div id="travel-map" style="height:380px;border-radius:8px;margin:20px 0"></div>
+          <script>
+          var map = L.map('travel-map', {scrollWheelZoom: false}).setView([35, 100], 3);
+          L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
+          }).addTo(map);
+          var places = [
+            {name:'武汉', lat:30.59, lng:114.31},
+            {name:'哥伦布', lat:40.00, lng:-83.01},
+            {name:'纽约', lat:40.71, lng:-74.01},
+            {name:'旧金山', lat:37.77, lng:-122.42},
+            {name:'洛杉矶', lat:34.05, lng:-118.24},
+            {name:'芝加哥', lat:41.88, lng:-87.63},
+            {name:'西雅图', lat:47.61, lng:-122.33},
+            {name:'北京', lat:39.90, lng:116.41},
+            {name:'上海', lat:31.23, lng:121.47},
+            {name:'东京', lat:35.68, lng:139.76},
+            {name:'首尔', lat:37.57, lng:126.98},
+            {name:'新加坡', lat:1.35, lng:103.82},
+            {name:'曼谷', lat:13.75, lng:100.50},
+            {name:'伦敦', lat:51.51, lng:-0.13},
+            {name:'巴黎', lat:48.86, lng:2.35},
+          ];
+          places.forEach(function(p) {
+            L.circleMarker([p.lat, p.lng], {
+              radius: 6, fillColor: '#146bb7', color: '#fff', weight: 2,
+              fillOpacity: 0.9
+            }).addTo(map).bindPopup(p.name);
+          });
+          </script>
+          <p style="text-align:center;color:#adb5bd;font-size:.85rem;margin-top:8px">滚动或拖拽地图查看</p>
+        """
         (ROOT / "about" / "index.html").write_text(page_html(
             f"{about['title']} – {SITE['title']}",
             f"""<div id="primary" class="content-area">
@@ -456,6 +492,7 @@ def build():
               <header class="entry-header"><h1 class="entry-title">{about['title']}</h1></header>
               <div class="entry-content">{about['content']}</div>
             </article>
+            {travel_map}
           </main>
         </div>""",
             current="/about/",
