@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程 – 新的原野</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <meta name="description" content="追踪一个请求从外部进入 K8s 集群到 Pod 的完整网络路径">
+</head>
+<body class="layout--right-sidebar">
+<div id="page" class="site">
+
+<header id="masthead" class="site-header">
+  <div class="header-top">
+    <div class="container"><nav><ul><li><a href="/" class="active">首页</a></li><li><a href="/categories/技术/">技术</a></li><li><a href="/categories/杂谈/">杂谈</a></li><li><a href="/about/">关于</a></li></ul></nav></div>
+  </div>
+  <div class="header-bottom">
+    <div class="header-bottom-top">
+      <div class="container">
+        <div class="site-branding">
+          <p class="site-title"><a href="https://hankzhang.us/" rel="home">新的原野</a></p>
+          <p class="site-description">一片新的原野，一个充满爱与善良的博客</p>
+        </div>
+      </div>
+    </div>
+    <div class="header-bottom-bottom">
+      <div class="container">
+        <nav class="main-navigation"><a href="/" class="active">首页</a>
+          <a href="/categories/技术/">技术</a>
+          <a href="/categories/杂谈/">杂谈</a>
+          <a href="/about/">关于</a></nav>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <div id="content" class="site-content">
+    <div class="container">
+      <div class="tg-flex-container tg-flex-space-between">
+        <div id="primary" class="content-area">
+          <main id="main" class="site-main">
+            <article class="post type-post hentry single">
+              <div class="entry-meta">
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">张子豪</a></span></span>
+                <span class="posted-on">
+                  <a href="/posts/k8s-network/" rel="bookmark">
+                    <time class="entry-date published" datetime="2026-06-14">2026年06月14日</time>
+                  </a>
+                </span>
+              </div>
+              <header class="entry-header">
+                <h1 class="entry-title">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</h1>
+              </header>
+              <div class="entry-content">
+                <p>Kubernetes 的网络模型是面试高频题，但很多人只是背了「每个 Pod 一个 IP」，实际数据包怎么走的并不清楚。</p>
+<h2>K8s 网络的三层模型</h2>
+<div class="codehilite"><pre><span></span><code>┌─────────────────────────────────────────────┐
+│  Node                                      │
+│  ┌─────────┐  ┌─────────┐  ┌─────────┐    │
+│  │  Pod A  │  │  Pod B  │  │  Pod C  │    │
+│  │10.244.1.2│  │10.244.1.3│  │10.244.2.2│   │
+│  └────┬────┘  └────┬────┘  └────┬────┘    │
+│       │            │            │          │
+│  ┌────┴────────────┴────────────┴────┐     │
+│  │         cni0 bridge               │     │
+│  └────────────────┬──────────────────┘     │
+│                   │                        │
+│              ┌────┴─────┐                  │
+│              │  eth0    │                  │
+│              │10.0.0.5  │                  │
+└──────────────┴──────────┴──────────────────┘
+</code></pre></div>
+
+<h2>场景一：同节点 Pod 通信</h2>
+<p>Pod A (10.244.1.2) → Pod B (10.244.1.3)：</p>
+<ol>
+<li>Pod A 发出包，目标 <code>10.244.1.3</code></li>
+<li>包经过 veth pair 到达 <code>cni0</code> 网桥</li>
+<li>cni0 查 ARP 表，发现目标在同一子网</li>
+<li><strong>直接二层转发</strong>，不经过 iptables</li>
+</ol>
+<h2>场景二：跨节点 Pod 通信</h2>
+<p>Pod A (Node1) → Pod C (Node2)：</p>
+<ol>
+<li>Pod A 发包，目标 <code>10.244.2.2</code></li>
+<li>到 cni0，发现目标不在本子网</li>
+<li>查路由表：<code>10.244.2.0/24 via 10.0.0.6</code>（Node2 的 IP）</li>
+<li>包被封装（VXLAN / IP-in-IP），发到 Node2</li>
+<li>Node2 解封装，交给本地 cni0</li>
+<li>cni0 转发给 Pod C</li>
+</ol>
+<p><strong>关键点：Overlay 网络用 VXLAN 隧道封装，每个包多了 50 字节的 VXLAN 头。</strong></p>
+<h2>场景三：ClusterIP Service</h2>
+<div class="codehilite"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">clusterIP</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10.96.0.1</span>
+<span class="w">  </span><span class="nt">selector</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nginx</span>
+</code></pre></div>
+
+<p>请求 <code>10.96.0.1:80</code> → Pod B：</p>
+<ol>
+<li>包到达 iptables/netfilter</li>
+<li>命中 kube-proxy 写入的 DNAT 规则</li>
+<li>目标改写为 <code>10.244.1.3:80</code></li>
+<li><strong>随机选一个后端 Pod</strong>（默认 iptables 概率模式）</li>
+<li>后续和正常 Pod 通信一样</li>
+</ol>
+<p><strong>iptables 模式的缺点</strong>：规则数量 O(n)，大量 Service 时性能下降。新版本推荐 <strong>IPVS 模式</strong>，用哈希表查找，O(1)。</p>
+<h2>场景四：外部流量 → NodePort → Pod</h2>
+<p>外部用户 → <code>NodeIP:30080</code> → Pod：</p>
+<div class="codehilite"><pre><span></span><code>Client → NodeIP:30080
+  → iptables DNAT → ClusterIP:80
+    → iptables DNAT → PodIP:80
+</code></pre></div>
+
+<blockquote>
+<p>注意：如果 Pod 不在收到请求的节点上，iptables 还会加一层 SNAT，导致 Pod 里看到的源 IP 是 Node IP。设置 <code>externalTrafficPolicy: Local</code> 可以保留源 IP。</p>
+</blockquote>
+<h2>总结</h2>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>关键技术</th>
+<th>性能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>同节点 Pod</td>
+<td>veth + bridge</td>
+<td>最高</td>
+</tr>
+<tr>
+<td>跨节点 Pod</td>
+<td>VXLAN/Calico BGP</td>
+<td>中等</td>
+</tr>
+<tr>
+<td>ClusterIP</td>
+<td>iptables/IPVS DNAT</td>
+<td>中等</td>
+</tr>
+<tr>
+<td>NodePort</td>
+<td>iptables SNAT+DNAT</td>
+<td>较低</td>
+</tr>
+</tbody>
+</table>
+              </div>
+              <footer class="entry-footer">
+                <span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span>
+              </footer>
+            </article>
+                      <nav class="navigation post-navigation">
+            <h2 class="screen-reader-text">文章导航</h2>
+            <div class="nav-links">
+              <div class="nav-previous">
+            <a href="/posts/rust-ownership/" rel="prev">
+              <span class="nav-links__label">上一篇文章</span>
+              Rust 写给 Java 程序员：所有权机制深度解析
+            </a>
+          </div>
+              <div class="nav-next">
+            <a href="/posts/internship-thoughts/" rel="next">
+              <span class="nav-links__label">下一篇文章</span>
+              后端实习两个月，我学到的东西比大学两年都多
+            </a>
+          </div>
+            </div>
+          </nav>
+          </main>
+        </div>
+          <aside id="secondary" class="widget-area">
+            <section class="widget widget_recent_entries">
+              <h2 class="widget-title">近期文章</h2>
+              <ul>
+                <li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li>
+<li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li>
+<li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li>
+<li><a href="/posts/internship-thoughts/">后端实习两个月，我学到的东西比大学两年都多</a></li>
+<li><a href="/posts/hello-world/">你好，世界</a></li>
+              </ul>
+            </section>
+            <section class="widget widget_tag_cloud">
+              <h2 class="widget-title">分类</h2>
+              <div class="tagcloud">
+                <a href="/categories/技术/">技术</a>
+<a href="/categories/杂谈/">杂谈</a>
+<a href="/categories/杂谈集/">杂谈集</a>
+              </div>
+            </section>
+          </aside>
+      </div>
+    </div>
+  </div>
+
+<footer id="colophon" class="site-footer">
+  <div class="container">
+    <div class="site-info">Copyright &copy; 2026 <a href="https://hankzhang.us/">新的原野</a>. All rights reserved.</div>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>

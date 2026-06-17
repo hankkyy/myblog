@@ -7,16 +7,12 @@
   <link rel="stylesheet" href="/css/style.css">
   
 </head>
-<body>
+<body class="layout--no-sidebar">
 <div id="page" class="site">
 
 <header id="masthead" class="site-header">
   <div class="header-top">
-    <div class="container">
-      <nav>
-        <ul><li><a href="/">首页</a></li><li><a href="/about/" class="active">关于</a></li></ul>
-      </nav>
-    </div>
+    <div class="container"><nav><ul><li><a href="/">首页</a></li><li><a href="/categories/技术/">技术</a></li><li><a href="/categories/杂谈/">杂谈</a></li><li><a href="/about/" class="active">关于</a></li></ul></nav></div>
   </div>
   <div class="header-bottom">
     <div class="header-bottom-top">
@@ -29,10 +25,10 @@
     </div>
     <div class="header-bottom-bottom">
       <div class="container">
-        <nav class="main-navigation">
-          <a href="/">首页</a>
-          <a href="/about/" class="active">关于</a>
-        </nav>
+        <nav class="main-navigation"><a href="/">首页</a>
+          <a href="/categories/技术/">技术</a>
+          <a href="/categories/杂谈/">杂谈</a>
+          <a href="/about/" class="active">关于</a></nav>
       </div>
     </div>
   </div>
@@ -40,31 +36,28 @@
 
   <div id="content" class="site-content">
     <div class="container">
-      <div id="primary" class="content-area">
-        <main id="main" class="site-main">
-          <article class="page type-page hentry">
-            <header class="entry-header">
-              <h1 class="entry-title">关于</h1>
-            </header>
-            <div class="entry-content">
-              <p>这里是一个博客。</p>
+      <div class="tg-flex-container tg-flex-space-between">
+        <div id="primary" class="content-area">
+          <main id="main" class="site-main">
+            <article class="page type-page hentry">
+              <header class="entry-header">
+                <h1 class="entry-title">关于</h1>
+              </header>
+              <div class="entry-content"><p>这里是一个博客。</p>
 <p>写一些自己想写的东西。</p>
 <hr />
-<p>联系方式：你可以在下面留言。</p>
-            </div>
-          </article>
-        </main>
+<p>联系方式：你可以在下面留言。</p></div>
+            </article>
+          </main>
+        </div>
+
       </div>
     </div>
   </div>
 
 <footer id="colophon" class="site-footer">
   <div class="container">
-    <div class="site-info">
-      Copyright &copy; 2026
-      <a href="https://hankzhang.us/" title="新的原野">新的原野</a>.
-      All rights reserved.
-    </div>
+    <div class="site-info">Copyright &copy; 2026 <a href="https://hankzhang.us/">新的原野</a>. All rights reserved.</div>
   </div>
 </footer>
 

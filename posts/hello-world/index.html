@@ -7,16 +7,12 @@
   <link rel="stylesheet" href="/css/style.css">
   <meta name="description" content="这是我的第一篇博客文章。">
 </head>
-<body>
+<body class="layout--right-sidebar">
 <div id="page" class="site">
 
 <header id="masthead" class="site-header">
   <div class="header-top">
-    <div class="container">
-      <nav>
-        <ul><li><a href="/" class="active">首页</a></li><li><a href="/about/">关于</a></li></ul>
-      </nav>
-    </div>
+    <div class="container"><nav><ul><li><a href="/" class="active">首页</a></li><li><a href="/categories/技术/">技术</a></li><li><a href="/categories/杂谈/">杂谈</a></li><li><a href="/about/">关于</a></li></ul></nav></div>
   </div>
   <div class="header-bottom">
     <div class="header-bottom-top">
@@ -29,10 +25,10 @@
     </div>
     <div class="header-bottom-bottom">
       <div class="container">
-        <nav class="main-navigation">
-          <a href="/" class="active">首页</a>
-          <a href="/about/">关于</a>
-        </nav>
+        <nav class="main-navigation"><a href="/" class="active">首页</a>
+          <a href="/categories/技术/">技术</a>
+          <a href="/categories/杂谈/">杂谈</a>
+          <a href="/about/">关于</a></nav>
       </div>
     </div>
   </div>
@@ -40,26 +36,23 @@
 
   <div id="content" class="site-content">
     <div class="container">
-      <div id="primary" class="content-area">
-        <main id="main" class="site-main">
-          <article class="post type-post hentry">
-            <div class="entry-meta">
-              <span class="byline">
-              <span class="author vcard">
-                <a class="url fn n" href="/about/">Sinya</a>
-              </span>
-            </span>
-              <span class="posted-on">
-                <a href="/posts/hello-world/" rel="bookmark">
-                  <time class="entry-date published" datetime="2026-06-17">2026年06月17日</time>
-                </a>
-              </span>
-            </div>
-            <header class="entry-header">
-              <h1 class="entry-title">你好，世界</h1>
-            </header>
-            <div class="entry-content">
-              <p>这是我的第一篇博客。</p>
+      <div class="tg-flex-container tg-flex-space-between">
+        <div id="primary" class="content-area">
+          <main id="main" class="site-main">
+            <article class="post type-post hentry single">
+              <div class="entry-meta">
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">张子豪</a></span></span>
+                <span class="posted-on">
+                  <a href="/posts/hello-world/" rel="bookmark">
+                    <time class="entry-date published" datetime="2026-06-17">2026年06月17日</time>
+                  </a>
+                </span>
+              </div>
+              <header class="entry-header">
+                <h1 class="entry-title">你好，世界</h1>
+              </header>
+              <div class="entry-content">
+                <p>这是我的第一篇博客。</p>
 <h2>为什么写博客</h2>
 <p>写博客是整理思绪最好的方式。把想法写下来，才知道自己到底在想什么。</p>
 <h2>这个博客怎么搭的</h2>
@@ -75,23 +68,57 @@
 留白就是对读者最大的尊重。</p>
 </blockquote>
 <p>开始写作吧。</p>
+              </div>
+              <footer class="entry-footer">
+                <span class="cat-links">分类： <a href="/categories/杂谈集/" rel="category">杂谈集</a></span>
+              </footer>
+            </article>
+                      <nav class="navigation post-navigation">
+            <h2 class="screen-reader-text">文章导航</h2>
+            <div class="nav-links">
+              <div class="nav-previous">
+            <a href="/posts/internship-thoughts/" rel="prev">
+              <span class="nav-links__label">上一篇文章</span>
+              后端实习两个月，我学到的东西比大学两年都多
+            </a>
+          </div>
+              <div class="nav-next">
+            <a href="/posts/doris-3-features/" rel="next">
+              <span class="nav-links__label">下一篇文章</span>
+              2026 年 Apache Doris 3.0 新特性全解析
+            </a>
+          </div>
             </div>
-            <footer class="entry-footer">
-              <span class="cat-links">分类： <a href="/categories/杂谈集/" rel="category">杂谈集</a></span>
-            </footer>
-          </article>
-        </main>
+          </nav>
+          </main>
+        </div>
+          <aside id="secondary" class="widget-area">
+            <section class="widget widget_recent_entries">
+              <h2 class="widget-title">近期文章</h2>
+              <ul>
+                <li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li>
+<li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li>
+<li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li>
+<li><a href="/posts/internship-thoughts/">后端实习两个月，我学到的东西比大学两年都多</a></li>
+<li><a href="/posts/hello-world/">你好，世界</a></li>
+              </ul>
+            </section>
+            <section class="widget widget_tag_cloud">
+              <h2 class="widget-title">分类</h2>
+              <div class="tagcloud">
+                <a href="/categories/技术/">技术</a>
+<a href="/categories/杂谈/">杂谈</a>
+<a href="/categories/杂谈集/">杂谈集</a>
+              </div>
+            </section>
+          </aside>
       </div>
     </div>
   </div>
 
 <footer id="colophon" class="site-footer">
   <div class="container">
-    <div class="site-info">
-      Copyright &copy; 2026
-      <a href="https://hankzhang.us/" title="新的原野">新的原野</a>.
-      All rights reserved.
-    </div>
+    <div class="site-info">Copyright &copy; 2026 <a href="https://hankzhang.us/">新的原野</a>. All rights reserved.</div>
   </div>
 </footer>
 

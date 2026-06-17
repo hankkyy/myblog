@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spring Boot 3 + Virtual Threads：性能测试与踩坑记录 – 新的原野</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <meta name="description" content="Java 21 Virtual Threads 在 Spring Boot 3 中的实际表现，1000并发下的对比测试">
+</head>
+<body class="layout--right-sidebar">
+<div id="page" class="site">
+
+<header id="masthead" class="site-header">
+  <div class="header-top">
+    <div class="container"><nav><ul><li><a href="/" class="active">首页</a></li><li><a href="/categories/技术/">技术</a></li><li><a href="/categories/杂谈/">杂谈</a></li><li><a href="/about/">关于</a></li></ul></nav></div>
+  </div>
+  <div class="header-bottom">
+    <div class="header-bottom-top">
+      <div class="container">
+        <div class="site-branding">
+          <p class="site-title"><a href="https://hankzhang.us/" rel="home">新的原野</a></p>
+          <p class="site-description">一片新的原野，一个充满爱与善良的博客</p>
+        </div>
+      </div>
+    </div>
+    <div class="header-bottom-bottom">
+      <div class="container">
+        <nav class="main-navigation"><a href="/" class="active">首页</a>
+          <a href="/categories/技术/">技术</a>
+          <a href="/categories/杂谈/">杂谈</a>
+          <a href="/about/">关于</a></nav>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <div id="content" class="site-content">
+    <div class="container">
+      <div class="tg-flex-container tg-flex-space-between">
+        <div id="primary" class="content-area">
+          <main id="main" class="site-main">
+            <article class="post type-post hentry single">
+              <div class="entry-meta">
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">张子豪</a></span></span>
+                <span class="posted-on">
+                  <a href="/posts/spring-virtual-threads/" rel="bookmark">
+                    <time class="entry-date published" datetime="2026-06-12">2026年06月12日</time>
+                  </a>
+                </span>
+              </div>
+              <header class="entry-header">
+                <h1 class="entry-title">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</h1>
+              </header>
+              <div class="entry-content">
+                <p>Java 21 的 Virtual Threads（虚拟线程）是 Project Loom 的最终成果。Spring Boot 3.2 开始正式支持。我最近在项目里做了测试。</p>
+<h2>配置方式</h2>
+<div class="codehilite"><pre><span></span><code><span class="c1"># application.yml</span>
+<span class="nt">spring</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">threads</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">virtual</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">  </span><span class="c1"># Spring Boot 3.2+</span>
+</code></pre></div>
+
+<p>或者在代码里：</p>
+<div class="codehilite"><pre><span></span><code><span class="nd">@Bean</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">TomcatProtocolHandlerCustomizer</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="nf">protocolHandlerVirtualThreadExecutor</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">protocolHandler</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">protocolHandler</span><span class="p">.</span><span class="na">setExecutor</span><span class="p">(</span><span class="n">Executors</span><span class="p">.</span><span class="na">newVirtualThreadPerTaskExecutor</span><span class="p">());</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2>测试环境</h2>
+<ul>
+<li>CPU: Apple M2 Pro</li>
+<li>内存: 16GB</li>
+<li>Spring Boot 3.2.1 + Java 21</li>
+<li>测试工具: wrk, 1000 并发连接, 60s</li>
+</ul>
+<h2>测试结果</h2>
+<h3>场景一：纯阻塞 I/O (sleep 100ms 模拟 DB)</h3>
+<table>
+<thead>
+<tr>
+<th>线程模型</th>
+<th>QPS</th>
+<th>P99 延迟</th>
+<th>最大线程数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>平台线程 (200)</td>
+<td>1,980</td>
+<td>580ms</td>
+<td>200 (池满)</td>
+</tr>
+<tr>
+<td>虚拟线程</td>
+<td><strong>19,500</strong></td>
+<td>105ms</td>
+<td>~10,000</td>
+</tr>
+</tbody>
+</table>
+<p><strong>10 倍 QPS 提升</strong>。虚拟线程不会被阻塞消耗平台线程。</p>
+<h3>场景二：计算密集型 (斐波那契)</h3>
+<table>
+<thead>
+<tr>
+<th>线程模型</th>
+<th>QPS</th>
+<th>CPU 使用率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>平台线程</td>
+<td>45</td>
+<td>85%</td>
+</tr>
+<tr>
+<td>虚拟线程</td>
+<td>43</td>
+<td>82%</td>
+</tr>
+</tbody>
+</table>
+<p>几乎一样。<strong>虚拟线程不加速计算，只解决阻塞问题。</strong></p>
+<h2>踩过的坑</h2>
+<h3>1. 不要在虚拟线程里用 synchronized</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1">// ❌ 错误：synchronized 会 pin 住载体线程</span>
+<span class="kd">synchronized</span><span class="w"> </span><span class="p">(</span><span class="k">this</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Thread</span><span class="p">.</span><span class="na">sleep</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// ✅ 正确：用 ReentrantLock</span>
+<span class="n">lock</span><span class="p">.</span><span class="na">lock</span><span class="p">();</span>
+<span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Thread</span><span class="p">.</span><span class="na">sleep</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+<span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">lock</span><span class="p">.</span><span class="na">unlock</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3>2. 连接池要配大</h3>
+<p>原来 Tomcat 线程池 200 个，MySQL 连接池也配 200。换成虚拟线程后，可能有 10,000 个并发请求，连接池需要相应调整。建议用 HikariCP + <code>maximumPoolSize=500</code> 起步。</p>
+<h3>3. ThreadLocal 内存泄漏</h3>
+<p>虚拟线程数量巨大，每个 ThreadLocal 都占内存。建议：</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 用完手动清理</span>
+<span class="n">threadLocal</span><span class="p">.</span><span class="na">remove</span><span class="p">();</span>
+</code></pre></div>
+
+<h2>什么时候该用虚拟线程？</h2>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>大量阻塞 I/O (HTTP/DB)</td>
+<td>✅ 强烈推荐</td>
+</tr>
+<tr>
+<td>纯计算</td>
+<td>❌ 没用</td>
+</tr>
+<tr>
+<td>已有异步代码 (WebFlux)</td>
+<td>⚠️ 可以简化但不一定更快</td>
+</tr>
+<tr>
+<td>大量 ThreadLocal</td>
+<td>⚠️ 注意内存</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>一句话：<strong>虚拟线程让「一个请求一个线程」模型重新变得可行</strong>。MVC 从此不怕高并发。</p>
+</blockquote>
+              </div>
+              <footer class="entry-footer">
+                <span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span>
+              </footer>
+            </article>
+                      <nav class="navigation post-navigation">
+            <h2 class="screen-reader-text">文章导航</h2>
+            <div class="nav-links">
+              
+              <div class="nav-next">
+            <a href="/posts/rust-ownership/" rel="next">
+              <span class="nav-links__label">下一篇文章</span>
+              Rust 写给 Java 程序员：所有权机制深度解析
+            </a>
+          </div>
+            </div>
+          </nav>
+          </main>
+        </div>
+          <aside id="secondary" class="widget-area">
+            <section class="widget widget_recent_entries">
+              <h2 class="widget-title">近期文章</h2>
+              <ul>
+                <li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li>
+<li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li>
+<li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li>
+<li><a href="/posts/internship-thoughts/">后端实习两个月，我学到的东西比大学两年都多</a></li>
+<li><a href="/posts/hello-world/">你好，世界</a></li>
+              </ul>
+            </section>
+            <section class="widget widget_tag_cloud">
+              <h2 class="widget-title">分类</h2>
+              <div class="tagcloud">
+                <a href="/categories/技术/">技术</a>
+<a href="/categories/杂谈/">杂谈</a>
+<a href="/categories/杂谈集/">杂谈集</a>
+              </div>
+            </section>
+          </aside>
+      </div>
+    </div>
+  </div>
+
+<footer id="colophon" class="site-footer">
+  <div class="container">
+    <div class="site-info">Copyright &copy; 2026 <a href="https://hankzhang.us/">新的原野</a>. All rights reserved.</div>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>

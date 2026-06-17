@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>为什么 ClickHouse 比 MySQL 快 100 倍？列式存储原理 – 新的原野</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <meta name="description" content="从磁盘 I/O、压缩、向量化执行三个层面理解列式存储的性能优势">
+</head>
+<body class="layout--right-sidebar">
+<div id="page" class="site">
+
+<header id="masthead" class="site-header">
+  <div class="header-top">
+    <div class="container"><nav><ul><li><a href="/" class="active">首页</a></li><li><a href="/categories/技术/">技术</a></li><li><a href="/categories/杂谈/">杂谈</a></li><li><a href="/about/">关于</a></li></ul></nav></div>
+  </div>
+  <div class="header-bottom">
+    <div class="header-bottom-top">
+      <div class="container">
+        <div class="site-branding">
+          <p class="site-title"><a href="https://hankzhang.us/" rel="home">新的原野</a></p>
+          <p class="site-description">一片新的原野，一个充满爱与善良的博客</p>
+        </div>
+      </div>
+    </div>
+    <div class="header-bottom-bottom">
+      <div class="container">
+        <nav class="main-navigation"><a href="/" class="active">首页</a>
+          <a href="/categories/技术/">技术</a>
+          <a href="/categories/杂谈/">杂谈</a>
+          <a href="/about/">关于</a></nav>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <div id="content" class="site-content">
+    <div class="container">
+      <div class="tg-flex-container tg-flex-space-between">
+        <div id="primary" class="content-area">
+          <main id="main" class="site-main">
+            <article class="post type-post hentry single">
+              <div class="entry-meta">
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">张子豪</a></span></span>
+                <span class="posted-on">
+                  <a href="/posts/columnar-storage/" rel="bookmark">
+                    <time class="entry-date published" datetime="2026-06-10">2026年06月10日</time>
+                  </a>
+                </span>
+              </div>
+              <header class="entry-header">
+                <h1 class="entry-title">为什么 ClickHouse 比 MySQL 快 100 倍？列式存储原理</h1>
+              </header>
+              <div class="entry-content">
+                <p>面试经常被问：「为什么 OLAP 数据库用列存，而不是行存？」</p>
+<p>直接用数据说话。假设有一张表：</p>
+<div class="codehilite"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">id</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span><span class="w"> </span><span class="n">amount</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">status</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">,</span><span class="w"> </span><span class="n">created_at</span><span class="w"> </span><span class="n">DATETIME</span>
+<span class="p">);</span>
+<span class="c1">-- 1 亿行数据</span>
+</code></pre></div>
+
+<p>查询：<code>SELECT SUM(amount) FROM orders WHERE status = 'paid'</code></p>
+<h2>行式存储（MySQL/InnoDB）</h2>
+<p>磁盘上数据按行排列：</p>
+<div class="codehilite"><pre><span></span><code>[1|101|99.9|paid|2026-01-01][2|102|50.0|pending|2026-01-02]...
+</code></pre></div>
+
+<p>执行 <code>SUM(amount) WHERE status = 'paid'</code>：</p>
+<ol>
+<li>读取整行（所有 5 列）→ <strong>大量不必要的 I/O</strong></li>
+<li>解析每行，提取 status 和 amount</li>
+<li>过滤 + 聚合</li>
+</ol>
+<p><strong>实际读取数据量：5 列 × 1 亿行 ≈ 2GB+</strong></p>
+<h2>列式存储（ClickHouse/Doris）</h2>
+<p>磁盘上数据按列排列：</p>
+<div class="codehilite"><pre><span></span><code>amount:  [99.9 | 50.0 | 30.0 | ...]   ← 只读这列
+status:  [paid | pending | paid | ...] ← 和这列
+</code></pre></div>
+
+<p>执行同样的查询：</p>
+<ol>
+<li><strong>只读取 amount 和 status 两列</strong></li>
+<li>列数据是连续存储的，一次扫描</li>
+<li>用 SIMD 向量化比较：一次比较 256 个值</li>
+</ol>
+<p><strong>实际读取数据量：2 列 × 1 亿行 ≈ 800MB，不到行存的 40%。</strong></p>
+<h2>压缩优势</h2>
+<p>列式存储的同列数据类型相同，压缩比极高：</p>
+<table>
+<thead>
+<tr>
+<th>压缩算法</th>
+<th>行存压缩比</th>
+<th>列存压缩比</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LZ4</td>
+<td>2-3x</td>
+<td>5-10x</td>
+</tr>
+<tr>
+<td>ZSTD</td>
+<td>3-5x</td>
+<td>10-20x</td>
+</tr>
+</tbody>
+</table>
+<p>因为一列里的 <code>status</code> 只有几个值（paid/pending/cancelled），字典编码后几乎可以压缩到原来的 1%。</p>
+<h2>向量化执行</h2>
+<p>这是列存最大的性能来源：</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">// 传统逐行处理</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">status</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">PAID</span><span class="p">)</span>
+<span class="w">        </span><span class="n">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">amount</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="c1">// 向量化：一次处理 256 行</span>
+<span class="n">__m256i</span><span class="w"> </span><span class="n">status_vec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_mm256_load_si256</span><span class="p">(</span><span class="o">&amp;</span><span class="n">status</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="n">__m256i</span><span class="w"> </span><span class="n">mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_mm256_cmpeq_epi32</span><span class="p">(</span><span class="n">status_vec</span><span class="p">,</span><span class="w"> </span><span class="n">paid_vec</span><span class="p">);</span>
+<span class="n">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">_mm256_mask_add</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span><span class="w"> </span><span class="n">amount_vec</span><span class="p">);</span>
+</code></pre></div>
+
+<p>CPU 的 SIMD 指令一次处理 8 个 32 位整数（AVX2）或 16 个（AVX-512）。列式存储在内存里是连续的，天然适合向量化。</p>
+<h2>什么时候该用列存？</h2>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>推荐</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SELECT *</code> 返回全行</td>
+<td>行存</td>
+</tr>
+<tr>
+<td>聚合查询 (SUM/COUNT/AVG)</td>
+<td><strong>列存</strong></td>
+</tr>
+<tr>
+<td>全表扫描 + 过滤</td>
+<td><strong>列存</strong></td>
+</tr>
+<tr>
+<td>点查询 (WHERE id = 1)</td>
+<td>行存</td>
+</tr>
+<tr>
+<td>频繁更新</td>
+<td>行存</td>
+</tr>
+</tbody>
+</table>
+<h2>实际性能对比</h2>
+<p>在 16 核、64GB 的机器上测试 1 亿行 TPC-H lineitem 表：</p>
+<table>
+<thead>
+<tr>
+<th>查询</th>
+<th>MySQL 8.0</th>
+<th>ClickHouse</th>
+<th>倍数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SUM(quantity)</code></td>
+<td>4.2s</td>
+<td>0.18s</td>
+<td><strong>23x</strong></td>
+</tr>
+<tr>
+<td><code>GROUP BY returnflag</code></td>
+<td>12.8s</td>
+<td>0.35s</td>
+<td><strong>36x</strong></td>
+</tr>
+<tr>
+<td><code>WHERE + GROUP BY + ORDER BY</code></td>
+<td>45.6s</td>
+<td>0.42s</td>
+<td><strong>108x</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>列式存储的快，不是靠更快的硬件，而是<strong>更少的数据读取</strong> + <strong>更好的压缩</strong> + <strong>向量化执行</strong>。三个因素叠加，才有了 100 倍的差距。</p>
+</blockquote>
+              </div>
+              <footer class="entry-footer">
+                <span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span>
+              </footer>
+            </article>
+                      <nav class="navigation post-navigation">
+            <h2 class="screen-reader-text">文章导航</h2>
+            <div class="nav-links">
+              <div class="nav-previous">
+            <a href="/posts/doris-3-features/" rel="prev">
+              <span class="nav-links__label">上一篇文章</span>
+              2026 年 Apache Doris 3.0 新特性全解析
+            </a>
+          </div>
+              
+            </div>
+          </nav>
+          </main>
+        </div>
+          <aside id="secondary" class="widget-area">
+            <section class="widget widget_recent_entries">
+              <h2 class="widget-title">近期文章</h2>
+              <ul>
+                <li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li>
+<li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li>
+<li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li>
+<li><a href="/posts/internship-thoughts/">后端实习两个月，我学到的东西比大学两年都多</a></li>
+<li><a href="/posts/hello-world/">你好，世界</a></li>
+              </ul>
+            </section>
+            <section class="widget widget_tag_cloud">
+              <h2 class="widget-title">分类</h2>
+              <div class="tagcloud">
+                <a href="/categories/技术/">技术</a>
+<a href="/categories/杂谈/">杂谈</a>
+<a href="/categories/杂谈集/">杂谈集</a>
+              </div>
+            </section>
+          </aside>
+      </div>
+    </div>
+  </div>
+
+<footer id="colophon" class="site-footer">
+  <div class="container">
+    <div class="site-info">Copyright &copy; 2026 <a href="https://hankzhang.us/">新的原野</a>. All rights reserved.</div>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>

@@ -7,32 +7,28 @@
   <link rel="stylesheet" href="/css/style.css">
   
 </head>
-<body>
+<body class="layout--no-sidebar">
 <div id="page" class="site">
 
 <header id="masthead" class="site-header">
   <div class="header-top">
-    <div class="container">
-      <nav>
-        <ul><li><a href="/" class="active">首页</a></li><li><a href="/about/">关于</a></li></ul>
-      </nav>
-    </div>
+    <div class="container"><nav><ul><li><a href="/" class="active">首页</a></li><li><a href="/categories/技术/">技术</a></li><li><a href="/categories/杂谈/">杂谈</a></li><li><a href="/about/">关于</a></li></ul></nav></div>
   </div>
   <div class="header-bottom">
     <div class="header-bottom-top">
       <div class="container">
         <div class="site-branding">
-          <p class="site-title"><a href="https://hankzhang.us/" rel="home">新的原野</a></p>
+          <h1 class="site-title"><a href="https://hankzhang.us/" rel="home">新的原野</a></h1>
           <p class="site-description">一片新的原野，一个充满爱与善良的博客</p>
         </div>
       </div>
     </div>
     <div class="header-bottom-bottom">
       <div class="container">
-        <nav class="main-navigation">
-          <a href="/" class="active">首页</a>
-          <a href="/about/">关于</a>
-        </nav>
+        <nav class="main-navigation"><a href="/" class="active">首页</a>
+          <a href="/categories/技术/">技术</a>
+          <a href="/categories/杂谈/">杂谈</a>
+          <a href="/about/">关于</a></nav>
       </div>
     </div>
   </div>
@@ -40,50 +36,190 @@
 
   <div id="content" class="site-content">
     <div class="container">
-      <div id="primary" class="content-area">
-        <main id="main" class="site-main">
+      <div class="tg-flex-container tg-flex-space-between">
+        <div id="primary" class="content-area">
+          <main id="main" class="site-main">
+            
+                      <article class="post type-post hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span>
+              <span class="posted-on">
+              <a href="/posts/spring-virtual-threads/" rel="bookmark">
+                <time class="entry-date published" datetime="2026-06-12">2026年06月12日</time>
+              </a>
+            </span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/spring-virtual-threads/" rel="bookmark">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>Java 21 的 Virtual Threads（虚拟线程）是 Project Loom 的最终成果。Spring Boot 3.2 开始正式支持。我最近在项目里做了测试。</p>
+<h2>配置方式</h2>
+<div class="codehilite"><pre><span></span><code><span class="c1"># application.yml</span>
+<span class="nt">spring</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">thre&hellip;
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/spring-virtual-threads/" class="read-more">阅读更多</a>
+            </footer>
+          </article>
+          <article class="post type-post hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span>
+              <span class="posted-on">
+              <a href="/posts/rust-ownership/" rel="bookmark">
+                <time class="entry-date published" datetime="2026-06-16">2026年06月16日</time>
+              </a>
+            </span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/rust-ownership/" rel="bookmark">Rust 写给 Java 程序员：所有权机制深度解析</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>Rust 的所有权（Ownership）是让 Java 程序员最头疼的概念。Java 里我们只管 <code>new</code>，GC 会处理一切。Rust 完全不同——<strong>没有 GC，编译器在编译时就知道每块内存何时释放</strong>。</p>
+<h2>Java 的视角</h2>
+<div class="codehilite"><pre><span></span><code><span class="n">String</span><span class="w"> </span><span class="n">s1</span><span class="w"> &hellip;
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/rust-ownership/" class="read-more">阅读更多</a>
+            </footer>
+          </article>
+          <article class="post type-post hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span>
+              <span class="posted-on">
+              <a href="/posts/k8s-network/" rel="bookmark">
+                <time class="entry-date published" datetime="2026-06-14">2026年06月14日</time>
+              </a>
+            </span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/k8s-network/" rel="bookmark">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>Kubernetes 的网络模型是面试高频题，但很多人只是背了「每个 Pod 一个 IP」，实际数据包怎么走的并不清楚。</p>
+<h2>K8s 网络的三层模型</h2>
+<div class="codehilite"><pre><span></span><code>┌─────────────────────────────────────────────┐
+│  Node                                      │
+│  ┌─────────┐  ┌─────────┐  ┌─────────┐    │
+│  │  Pod A  │  │  Pod&hellip;
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/k8s-network/" class="read-more">阅读更多</a>
+            </footer>
+          </article>
+          <article class="post type-post hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/杂谈/" rel="category">杂谈</a></span>
+              <span class="posted-on">
+              <a href="/posts/internship-thoughts/" rel="bookmark">
+                <time class="entry-date published" datetime="2026-06-08">2026年06月08日</time>
+              </a>
+            </span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/internship-thoughts/" rel="bookmark">后端实习两个月，我学到的东西比大学两年都多</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>在学校的时候，我以为后端开发就是 Spring Boot 连 MySQL，写几个 CRUD 接口。</p>
+<p>实习两个月后，我发现 <strong>CRUD 是工作中最简单的部分</strong>。</p>
+<h2>学校不会教的事</h2>
+<h3>1. 代码 Review 是真正的学习</h3>
+<p>学校作业交了就是交了，没人告诉你哪里写得烂。</p>
+<p>公司的代码 Review：</p>
+<div class="codehilite"><pre><span></span><code>「这个循环里查了 N 次数据库，改成批量查询」
+「异常吞掉了，出问题没法排查」
+「变量名 d&hellip;
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/internship-thoughts/" class="read-more">阅读更多</a>
+            </footer>
+          </article>
           <article class="post type-post hentry">
             <div class="entry-meta">
               <span class="cat-links"><a href="/categories/杂谈集/" rel="category">杂谈集</a></span>
-            <span class="posted-on">
+              <span class="posted-on">
               <a href="/posts/hello-world/" rel="bookmark">
                 <time class="entry-date published" datetime="2026-06-17">2026年06月17日</time>
               </a>
             </span>
             </div>
             <header class="entry-header">
-              <h2 class="entry-title">
-                <a href="/posts/hello-world/" rel="bookmark">你好，世界</a>
-              </h2>
+              <h2 class="entry-title"><a href="/posts/hello-world/" rel="bookmark">你好，世界</a></h2>
             </header>
             <div class="entry-content">
-              <p>这是我的第一篇博客。
-为什么写博客
-写博客是整理思绪最好的方式。把想法写下来，才知道自己到底在想什么。
-这个博客怎么搭的
-用 Hugo 搭建，部署在 Vercel 上。外观参考了 WordPress 的 Cenote 主题，干净、纯粹、专注于文字。
-技术栈
-
-Hugo：Go 写的静态网站生成器，构建速度极快
-Vercel：部署和托管，自带 CDN 和 HTTPS
-字体：Roboto（正文）+ Ca&hellip;</p>
+              <p>这是我的第一篇博客。</p>
+<h2>为什么写博客</h2>
+<p>写博客是整理思绪最好的方式。把想法写下来，才知道自己到底在想什么。</p>
+<h2>这个博客怎么搭的</h2>
+<p>用 Hugo 搭建，部署在 Vercel 上。外观参考了 WordPress 的 Cenote 主题，干净、纯粹、专注于文字。</p>
+<h3>技术栈</h3>
+<ul>
+<li><strong>Hugo</strong>：Go 写的静态网站生成器，构建速度极快</li>
+<li><strong>Vercel</strong>：部署和托管，自带 CDN 和 HTTPS</li>
+<li><strong>字&hellip;
             </div>
             <footer class="entry-footer">
               <a href="/posts/hello-world/" class="read-more">阅读更多</a>
             </footer>
           </article>
-        </main>
+          <article class="post type-post hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span>
+              <span class="posted-on">
+              <a href="/posts/doris-3-features/" rel="bookmark">
+                <time class="entry-date published" datetime="2026-06-15">2026年06月15日</time>
+              </a>
+            </span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/doris-3-features/" rel="bookmark">2026 年 Apache Doris 3.0 新特性全解析</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>Apache Doris 3.0 在 2026 年 4 月正式 GA。作为 OLAP 领域增长最快的项目，这次大版本带来了几个关键变革。</p>
+<h2>1. 存算分离正式 GA</h2>
+<p>Doris 传统架构是存算一体的 Shared-Nothing：</p>
+<div class="codehilite"><pre><span></span><code>┌──────────────────────────────────────┐
+│  FE (Frontend)  ← 元数据 + 查询计划   │
+│  BE (Backend)   ← 计算 + 存储在一起   │
+└──&hellip;
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/doris-3-features/" class="read-more">阅读更多</a>
+            </footer>
+          </article>
+          <article class="post type-post hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span>
+              <span class="posted-on">
+              <a href="/posts/columnar-storage/" rel="bookmark">
+                <time class="entry-date published" datetime="2026-06-10">2026年06月10日</time>
+              </a>
+            </span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/columnar-storage/" rel="bookmark">为什么 ClickHouse 比 MySQL 快 100 倍？列式存储原理</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>面试经常被问：「为什么 OLAP 数据库用列存，而不是行存？」</p>
+<p>直接用数据说话。假设有一张表：</p>
+<div class="codehilite"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="p">(</span>
+&hellip;
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/columnar-storage/" class="read-more">阅读更多</a>
+            </footer>
+          </article>
+          </main>
+        </div>
+
       </div>
     </div>
   </div>
 
 <footer id="colophon" class="site-footer">
   <div class="container">
-    <div class="site-info">
-      Copyright &copy; 2026
-      <a href="https://hankzhang.us/" title="新的原野">新的原野</a>.
-      All rights reserved.
-    </div>
+    <div class="site-info">Copyright &copy; 2026 <a href="https://hankzhang.us/">新的原野</a>. All rights reserved.</div>
   </div>
 </footer>
 

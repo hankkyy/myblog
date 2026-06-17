@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rust 写给 Java 程序员：所有权机制深度解析 – 新的原野</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <meta name="description" content="从 Java GC 视角理解 Rust 的所有权、借用和生命周期">
+</head>
+<body class="layout--right-sidebar">
+<div id="page" class="site">
+
+<header id="masthead" class="site-header">
+  <div class="header-top">
+    <div class="container"><nav><ul><li><a href="/" class="active">首页</a></li><li><a href="/categories/技术/">技术</a></li><li><a href="/categories/杂谈/">杂谈</a></li><li><a href="/about/">关于</a></li></ul></nav></div>
+  </div>
+  <div class="header-bottom">
+    <div class="header-bottom-top">
+      <div class="container">
+        <div class="site-branding">
+          <p class="site-title"><a href="https://hankzhang.us/" rel="home">新的原野</a></p>
+          <p class="site-description">一片新的原野，一个充满爱与善良的博客</p>
+        </div>
+      </div>
+    </div>
+    <div class="header-bottom-bottom">
+      <div class="container">
+        <nav class="main-navigation"><a href="/" class="active">首页</a>
+          <a href="/categories/技术/">技术</a>
+          <a href="/categories/杂谈/">杂谈</a>
+          <a href="/about/">关于</a></nav>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <div id="content" class="site-content">
+    <div class="container">
+      <div class="tg-flex-container tg-flex-space-between">
+        <div id="primary" class="content-area">
+          <main id="main" class="site-main">
+            <article class="post type-post hentry single">
+              <div class="entry-meta">
+                <span class="byline"><span class="author vcard"><a class="url fn n" href="/about/">张子豪</a></span></span>
+                <span class="posted-on">
+                  <a href="/posts/rust-ownership/" rel="bookmark">
+                    <time class="entry-date published" datetime="2026-06-16">2026年06月16日</time>
+                  </a>
+                </span>
+              </div>
+              <header class="entry-header">
+                <h1 class="entry-title">Rust 写给 Java 程序员：所有权机制深度解析</h1>
+              </header>
+              <div class="entry-content">
+                <p>Rust 的所有权（Ownership）是让 Java 程序员最头疼的概念。Java 里我们只管 <code>new</code>，GC 会处理一切。Rust 完全不同——<strong>没有 GC，编译器在编译时就知道每块内存何时释放</strong>。</p>
+<h2>Java 的视角</h2>
+<div class="codehilite"><pre><span></span><code><span class="n">String</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
+<span class="n">String</span><span class="w"> </span><span class="n">s2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s1</span><span class="p">;</span><span class="w">  </span><span class="c1">// s1 和 s2 指向同一个对象</span>
+<span class="c1">// GC 会在没有任何引用时回收内存</span>
+</code></pre></div>
+
+<p>Java 的做法：<strong>引用计数 + GC 追踪</strong>。程序员不用想内存，运行时帮你管。</p>
+<h2>Rust 的做法</h2>
+<div class="codehilite"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">s2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s1</span><span class="p">;</span><span class="w">       </span><span class="c1">// s1 所有权转移给 s2</span>
+<span class="c1">// println!(&quot;{}&quot;, s1);  // 编译错误！s1 已失效</span>
+</code></pre></div>
+
+<p>Rust 的核心规则：</p>
+<ol>
+<li><strong>每个值有且只有一个所有者</strong></li>
+<li><strong>所有者离开作用域，值被 drop</strong></li>
+<li><strong>赋值/传参会转移所有权（move）</strong></li>
+</ol>
+<h2>为什么 Rust 要这样设计？</h2>
+<p>三个字：<strong>零成本抽象</strong>。</p>
+<p>Java GC 的问题：
+- Stop-the-world 停顿
+- 内存占用比实际需要多 30-50%
+- 不可预测的性能抖动</p>
+<p>Rust 的答案：<strong>编译期确定内存生命周期，运行时零开销</strong>。</p>
+<h2>借用（Borrowing）：不转移所有权的访问</h2>
+<div class="codehilite"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">print_len</span><span class="p">(</span><span class="n">s</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nb">String</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// 不可变借用</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;len: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">len</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
+<span class="n">print_len</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">);</span><span class="w">    </span><span class="c1">// 借出，不转移所有权</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">);</span><span class="w"> </span><span class="c1">// s 仍然可用</span>
+</code></pre></div>
+
+<h2>对 Java 程序员的建议</h2>
+<p>如果你从 Java 转 Rust，按这个顺序学：</p>
+<ol>
+<li>先忘掉继承，拥抱组合 + trait</li>
+<li>接受「编译器是你朋友」——每次编译错误都在教你内存安全</li>
+<li><code>clone()</code> 是你的逃生舱——先让代码跑起来，再优化</li>
+<li>理解 <code>String</code> vs <code>&amp;str</code>、<code>Vec</code> vs <code>&amp;[T]</code> 的区别</li>
+</ol>
+<blockquote>
+<p>Rust 的学习曲线陡峭，但翻过去之后，你会开始质疑 Java 的每一行代码为什么慢。</p>
+</blockquote>
+              </div>
+              <footer class="entry-footer">
+                <span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span>
+              </footer>
+            </article>
+                      <nav class="navigation post-navigation">
+            <h2 class="screen-reader-text">文章导航</h2>
+            <div class="nav-links">
+              <div class="nav-previous">
+            <a href="/posts/spring-virtual-threads/" rel="prev">
+              <span class="nav-links__label">上一篇文章</span>
+              Spring Boot 3 + Virtual Threads：性能测试与踩坑记录
+            </a>
+          </div>
+              <div class="nav-next">
+            <a href="/posts/k8s-network/" rel="next">
+              <span class="nav-links__label">下一篇文章</span>
+              Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程
+            </a>
+          </div>
+            </div>
+          </nav>
+          </main>
+        </div>
+          <aside id="secondary" class="widget-area">
+            <section class="widget widget_recent_entries">
+              <h2 class="widget-title">近期文章</h2>
+              <ul>
+                <li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li>
+<li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li>
+<li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li>
+<li><a href="/posts/internship-thoughts/">后端实习两个月，我学到的东西比大学两年都多</a></li>
+<li><a href="/posts/hello-world/">你好，世界</a></li>
+              </ul>
+            </section>
+            <section class="widget widget_tag_cloud">
+              <h2 class="widget-title">分类</h2>
+              <div class="tagcloud">
+                <a href="/categories/技术/">技术</a>
+<a href="/categories/杂谈/">杂谈</a>
+<a href="/categories/杂谈集/">杂谈集</a>
+              </div>
+            </section>
+          </aside>
+      </div>
+    </div>
+  </div>
+
+<footer id="colophon" class="site-footer">
+  <div class="container">
+    <div class="site-info">Copyright &copy; 2026 <a href="https://hankzhang.us/">新的原野</a>. All rights reserved.</div>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>
