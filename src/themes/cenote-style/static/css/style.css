@@ -281,7 +281,8 @@ article:last-of-type{margin-bottom:0}
 .tg-readmore-link:hover::before{width:36px;background-color:#146bb7}
 .tg-readmore-link:hover::after{opacity:1;right:-4px;color:#146bb7}
 
-.entry-footer{margin-top:40px;padding-top:20px;border-top:1px solid #f1f3f5}
+.entry-footer{margin-top:16px}
+.single .hentry .entry-footer{margin-top:40px;padding-top:20px;border-top:1px solid #f1f3f5}
 .entry-footer .cat-links,.entry-footer .tags-links{display:block;margin-bottom:20px}
 .entry-footer .cat-links a{font-size:12px;text-transform:uppercase;padding:8px 15px;display:inline-flex;font-weight:400;background-color:#146bb7;color:#fff;margin:0 5px 5px}
 .entry-footer .cat-links a:first-child{margin-left:0}
