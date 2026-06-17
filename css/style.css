@@ -24,8 +24,12 @@ blockquote p{margin-bottom:0;font-style:italic}
 .tg-flex-space-between{justify-content:space-between}
 .tg-flex-item-centered{align-items:center}
 
-/* Grid — 3 columns, first article spans full width */
+/* Featured article — full width at top */
+.tg-archive-featured article{width:100%!important;margin-bottom:60px!important}
+
+/* Grid — 3 columns */
 .tg-archive-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:60px 30px}
+.tg-archive-col--3.tg-archive-grid{margin-left:0;margin-right:0}
 
 /* No-sidebar pages (full width) */
 #primary.content-area{width:100%}

@@ -34,6 +34,7 @@
       <nav class="tg-header-navigation">
         <div class="menu-menu-container"><ul id="header-menu" class="menu"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/" class="active">首页</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/posts/">文章列表</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/guestbook/">留言板</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/about/">关于</a></li></ul></div>
       </nav>
+      <div id="search-inline" style="width:180px"></div>
     </div>
   </div>
   <div class="tg-header-bottom">
@@ -50,14 +51,7 @@
         <nav id="site-navigation" class="main-navigation tg-site-menu--default" style="flex:1;text-align:center">
           <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/" class="active">首页</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/posts/">文章列表</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/guestbook/">留言板</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/about/">关于</a></li></ul></div>
         </nav>
-        <nav class="tg-header-action-navigation">
-          <ul class="tg-header-action-menu">
-            <li class="tg-search-toggle" onclick="document.getElementById('search-inline').style.display=document.getElementById('search-inline').style.display==='none'?'block':'none'"><i class="tg-icon-search">🔍</i></li>
-            <li class="tg-mobile-menu-toggle"><span></span></li>
-          </ul>
-        </nav>
       </div>
-       <div id="search-inline" style="max-width:300px;margin:10px auto;display:none"></div>
     </div>
   </div>
 </header>
@@ -78,8 +72,8 @@
 <div id="content" class="site-content">
   <div class="container">
 <div id="primary" class="content-area">
-          <main id="main" class="site-main tg-archive-grid">
-            <article id="post-rust-ownership" class="post type-post status-publish format-standard hentry">
+          <main id="main" class="site-main">
+            <div class="tg-archive-featured"><article id="post-rust-ownership" class="post type-post status-publish format-standard hentry">
             <div class="entry-meta">
               <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/rust-ownership/" rel="bookmark"><time class="entry-date published" datetime="2026-06-16">2026年6月16日</time></a></span>
             </div>
@@ -92,8 +86,8 @@
             <footer class="entry-footer">
               <a href="/posts/rust-ownership/" class="tg-readmore-link">阅读更多</a>
             </footer>
-          </article>
-<article id="post-doris-3-features" class="post type-post status-publish format-standard hentry">
+          </article></div>
+            <div class="tg-archive-grid tg-archive-col--3"><article id="post-doris-3-features" class="post type-post status-publish format-standard hentry">
             <div class="entry-meta">
               <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/doris-3-features/" rel="bookmark"><time class="entry-date published" datetime="2026-06-15">2026年6月15日</time></a></span>
             </div>
@@ -344,7 +338,7 @@
             <footer class="entry-footer">
               <a href="/posts/hello-world/" class="tg-readmore-link">阅读更多</a>
             </footer>
-          </article>
+          </article></div>
           </main>
         </div>
   </div>

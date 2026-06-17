@@ -74,6 +74,7 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
       <nav class="tg-header-navigation">
         <div class="menu-menu-container"><ul id="header-menu" class="menu">{main_nav}</ul></div>
       </nav>
+      {search_html}
     </div>
   </div>
   <div class="tg-header-bottom">
@@ -90,14 +91,7 @@ def page_html(title_tag, body, *, current="/", desc="", is_home=False, body_clas
         <nav id="site-navigation" class="main-navigation tg-site-menu--default" style="flex:1;text-align:center">
           <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu">{main_nav}</ul></div>
         </nav>
-        <nav class="tg-header-action-navigation">
-          <ul class="tg-header-action-menu">
-            <li class="tg-search-toggle" onclick="document.getElementById('search-inline').style.display=document.getElementById('search-inline').style.display==='none'?'block':'none'"><i class="tg-icon-search">🔍</i></li>
-            <li class="tg-mobile-menu-toggle"><span></span></li>
-          </ul>
-        </nav>
       </div>
-      {(' <div id=\"search-inline\" style=\"max-width:300px;margin:10px auto;display:none\"></div>') if search_html else ''}
     </div>
   </div>
 </header>
@@ -281,11 +275,13 @@ def build():
 
     home_title = f"{SITE['title']} – {SITE['desc']}"
 
-    # ===== HOMEPAGE: single grid, first article spans 2 cols =====
-    cards = "\n".join(article_card(p) for p in posts)
+    # ===== HOMEPAGE: first article full-width, rest grid =====
+    first = article_card(posts[0]) if posts else ""
+    rest = "\n".join(article_card(p) for p in posts[1:]) if len(posts) > 1 else ""
     home_body = f"""<div id="primary" class="content-area">
-          <main id="main" class="site-main tg-archive-grid">
-            {cards}
+          <main id="main" class="site-main">
+            <div class="tg-archive-featured">{first}</div>
+            <div class="tg-archive-grid tg-archive-col--3">{rest}</div>
           </main>
         </div>"""
     homepage = page_html(home_title,
