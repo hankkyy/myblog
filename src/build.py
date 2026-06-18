@@ -505,7 +505,7 @@ def build():
             <h2 class="about-label">兴趣爱好</h2>
             <div class="hobby-card">
               <p class="about-text">
-                热爱旅行和航空。喜欢靠窗的座位，起飞时引擎轰鸣的那一刻是旅途中最享受的瞬间。<br>
+                热爱旅行和航空。<br>
                 相信眼界决定世界——去更多地方，见更多人，理解更多事。
               </p>
               <div class="travel-stats">
