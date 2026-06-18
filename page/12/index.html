@@ -61,7 +61,21 @@
   <div class="container">
 <div id="primary" class="content-area">
           <main id="main" class="site-main">
-            <div class="tg-archive-featured"><article id="post-postgres-vs-mysql-2025" class="post type-post status-publish format-standard hentry">
+            <div class="tg-archive-featured"><article id="post-mysql-transaction-isolation" class="post type-post status-publish format-standard hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/数据库/" rel="category">数据库</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/mysql-transaction-isolation/" rel="bookmark"><time class="entry-date published" datetime="2025-03-25">2025年3月25日</time></a></span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/mysql-transaction-isolation/" rel="bookmark">MySQL 事务隔离级别面试精讲：脏读、幻读、不可重复读到底怎么区分？</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>事务隔离级别几乎是 MySQL 面试必问题。 三种并发问题 脏读：读了别人还没提交的数据。别人回滚了，你读到的就是脏数据。 场景：A 转账给 B 100 元，但还没提交。B 查余额发现多了 100。A 回滚了。B 白高兴了。 不可重复读：同一个事务内，两次读同一行数据，结果不一样（别人 Update 了）。 场景：事务 A 读了余额是 500。事务 B 改了 [&hellip;]</p>
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/mysql-transaction-isolation/" class="tg-readmore-link">阅读更多</a>
+            </footer>
+          </article></div>
+            <div class="tg-archive-grid tg-archive-col--3"><article id="post-postgres-vs-mysql-2025" class="post type-post status-publish format-standard hentry">
             <div class="entry-meta">
               <span class="cat-links"><a href="/categories/数据库/" rel="category">数据库</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/postgres-vs-mysql-2025/" rel="bookmark"><time class="entry-date published" datetime="2025-03-20">2025年3月20日</time></a></span>
             </div>
@@ -69,13 +83,13 @@
               <h2 class="entry-title"><a href="/posts/postgres-vs-mysql-2025/" rel="bookmark">PostgreSQL 还是 MySQL？2025 年数据库选型的重新思考</a></h2>
             </header>
             <div class="entry-content">
-              <p>MySQL 和 PostgreSQL 的争论从来没有停过。2025 年了，情况有些变化。 PostgreSQL 的优势 - JSON 支持：Postgres 的 JSONB 类型支持索引，查询性能比 MySQL 的 JSON 好很多 - 窗口函数：更丰富的分析函数（但 MySQL 8.0+ 也追上来了） - 地理空间：PostGIS 扩展是地理数据处理的标准 [&hellip;]</p>
+              <p>MySQL 和 PostgreSQL 的争论从来没有停过。2025 年了，情况有些变化。 PostgreSQL [&hellip;]</p>
             </div>
             <footer class="entry-footer">
               <a href="/posts/postgres-vs-mysql-2025/" class="tg-readmore-link">阅读更多</a>
             </footer>
-          </article></div>
-            <div class="tg-archive-grid tg-archive-col--3"><article id="post-distributed-lock-deep-dive" class="post type-post status-publish format-standard hentry">
+          </article>
+<article id="post-distributed-lock-deep-dive" class="post type-post status-publish format-standard hentry">
             <div class="entry-meta">
               <span class="cat-links"><a href="/categories/分布式/" rel="category">分布式</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/distributed-lock-deep-dive/" rel="bookmark"><time class="entry-date published" datetime="2025-03-15">2025年3月15日</time></a></span>
             </div>
@@ -185,20 +199,6 @@
             </div>
             <footer class="entry-footer">
               <a href="/posts/deepseek-r1-open-source/" class="tg-readmore-link">阅读更多</a>
-            </footer>
-          </article>
-<article id="post-tech-winter-2025" class="post type-post status-publish format-standard hentry">
-            <div class="entry-meta">
-              <span class="cat-links"><a href="/categories/新闻/" rel="category">新闻</a><span class="cat-seperator">, </span><a href="/categories/杂谈/" rel="category">杂谈</a></span><span class="posted-on"><a href="/posts/tech-winter-2025/" rel="bookmark"><time class="entry-date published" datetime="2025-02-08">2025年2月8日</time></a></span>
-            </div>
-            <header class="entry-header">
-              <h2 class="entry-title"><a href="/posts/tech-winter-2025/" rel="bookmark">2025 科技寒冬：硅谷裁员潮背后的结构性变化</a></h2>
-            </header>
-            <div class="entry-content">
-              <p>2024-2025 年硅谷已经裁了超过 30 万人。 大厂裁员时间线 - Google：2024 年裁 120 [&hellip;]</p>
-            </div>
-            <footer class="entry-footer">
-              <a href="/posts/tech-winter-2025/" class="tg-readmore-link">阅读更多</a>
             </footer>
           </article></div>
             <nav class="navigation pagination" aria-label="文章分页"><div class="nav-links"><a class="page-numbers" href="/">1</a><span class="page-numbers dots">&hellip;</span><a class="page-numbers" href="/page/10/">10</a><a class="page-numbers" href="/page/11/">11</a><span class="page-numbers current">12</span><a class="page-numbers" href="/page/13/">13</a><span class="page-jump"><input type="number" min="1" max="13" placeholder="跳转" id="jump-input-12" style="width:56px;text-align:center;border:1px solid #dee2e6;border-right:none;border-radius:4px 0 0 4px;padding:5px 2px;font-size:.85rem;line-height:1.4;outline:none;color:#363b40;transition:border-color .2s" onfocus="this.style.borderColor=&#39;#146bb7&#39;" onblur="this.style.borderColor=&#39;#dee2e6&#39;"><button onclick="var v=parseInt(document.getElementById(&quot;jump-input-12&quot;).value);if(v>=1&&v<=13)location.href=v===1?&quot;/&quot;:&quot;/page/&quot;+v+&quot;/&quot;" style="border:1px solid #dee2e6;border-left:none;border-radius:0 4px 4px 0;padding:6px 10px;cursor:pointer;background:#f8f9fa;color:#495057;font-size:.85rem;transition:all .2s" onmouseover="this.style.background=&#39;#146bb7&#39;;this.style.color=&#39;#fff&#39;;this.style.borderColor=&#39;#146bb7&#39;" onmouseout="this.style.background=&#39;#f8f9fa&#39;;this.style.color=&#39;#495057&#39;;this.style.borderColor=&#39;#dee2e6&#39;">→</button></span></div></nav>

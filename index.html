@@ -61,7 +61,21 @@
   <div class="container">
 <div id="primary" class="content-area">
           <main id="main" class="site-main">
-            <div class="tg-archive-featured"><article id="post-rust-ownership" class="post type-post status-publish format-standard hentry">
+            <div class="tg-archive-featured"><article id="post-hikaricp-tuning" class="post type-post status-publish format-standard hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a><span class="cat-seperator">, </span><a href="/categories/数据库/" rel="category">数据库</a></span><span class="posted-on"><a href="/posts/hikaricp-tuning/" rel="bookmark"><time class="entry-date published" datetime="2026-06-17">2026年6月17日</time></a></span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/hikaricp-tuning/" rel="bookmark">后端性能优化：数据库连接池调优实战</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>连接池是后端系统中最容易被忽视的性能瓶颈之一。很多团队直接用 Spring Boot 默认参数上线，结果在流量高峰期出现连接超时、线程阻塞等问题。 这篇文章记录我最近一次连接池调优的过程，从发现问题到最终配置，附带实际压测数据。 为什么要调连接池 Spring Boot 2.x 开始默认使用 HikariCP，它的默认配置在低并发场景下完全够用。但当 QPS [&hellip;]</p>
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/hikaricp-tuning/" class="tg-readmore-link">阅读更多</a>
+            </footer>
+          </article></div>
+            <div class="tg-archive-grid tg-archive-col--3"><article id="post-rust-ownership" class="post type-post status-publish format-standard hentry">
             <div class="entry-meta">
               <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/rust-ownership/" rel="bookmark"><time class="entry-date published" datetime="2026-06-16">2026年6月16日</time></a></span>
             </div>
@@ -69,13 +83,13 @@
               <h2 class="entry-title"><a href="/posts/rust-ownership/" rel="bookmark">Rust 写给 Java 程序员：所有权机制深度解析</a></h2>
             </header>
             <div class="entry-content">
-              <p>Rust 的所有权（Ownership）是让 Java 程序员最头疼的概念。Java 里我们只管 ，GC 会处理一切。Rust 完全不同——没有 GC，编译器在编译时就知道每块内存何时释放。 Java 的视角 Java 的做法：引用计数 + GC 追踪。程序员不用想内存，运行时帮你管。 Rust 的做法 Rust 的核心规则： 1. 每个值有且只有一个所有者 [&hellip;]</p>
+              <p>Rust 的所有权（Ownership）是让 Java 程序员最头疼的概念。Java 里我们只管 ，GC 会处 [&hellip;]</p>
             </div>
             <footer class="entry-footer">
               <a href="/posts/rust-ownership/" class="tg-readmore-link">阅读更多</a>
             </footer>
-          </article></div>
-            <div class="tg-archive-grid tg-archive-col--3"><article id="post-doris-3-features" class="post type-post status-publish format-standard hentry">
+          </article>
+<article id="post-doris-3-features" class="post type-post status-publish format-standard hentry">
             <div class="entry-meta">
               <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/doris-3-features/" rel="bookmark"><time class="entry-date published" datetime="2026-06-15">2026年6月15日</time></a></span>
             </div>
@@ -185,20 +199,6 @@
             </div>
             <footer class="entry-footer">
               <a href="/posts/deepseek-v4-release/" class="tg-readmore-link">阅读更多</a>
-            </footer>
-          </article>
-<article id="post-mcp-protocol" class="post type-post status-publish format-standard hentry">
-            <div class="entry-meta">
-              <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/mcp-protocol/" rel="bookmark"><time class="entry-date published" datetime="2026-06-03">2026年6月3日</time></a></span>
-            </div>
-            <header class="entry-header">
-              <h2 class="entry-title"><a href="/posts/mcp-protocol/" rel="bookmark">MCP 协议：让 LLM 安全调用外部工具的标准化方案</a></h2>
-            </header>
-            <div class="entry-content">
-              <p>MCP（Model Context Protocol）是 Anthropic 2024 年底开源的标准协议。它 [&hellip;]</p>
-            </div>
-            <footer class="entry-footer">
-              <a href="/posts/mcp-protocol/" class="tg-readmore-link">阅读更多</a>
             </footer>
           </article></div>
             <nav class="navigation pagination" aria-label="文章分页"><div class="nav-links"><span class="page-numbers current">1</span><a class="page-numbers" href="/page/2/">2</a><a class="page-numbers" href="/page/3/">3</a><span class="page-numbers dots">&hellip;</span><a class="page-numbers" href="/page/13/">13</a><span class="page-jump"><input type="number" min="1" max="13" placeholder="跳转" id="jump-input-1" style="width:56px;text-align:center;border:1px solid #dee2e6;border-right:none;border-radius:4px 0 0 4px;padding:5px 2px;font-size:.85rem;line-height:1.4;outline:none;color:#363b40;transition:border-color .2s" onfocus="this.style.borderColor=&#39;#146bb7&#39;" onblur="this.style.borderColor=&#39;#dee2e6&#39;"><button onclick="var v=parseInt(document.getElementById(&quot;jump-input-1&quot;).value);if(v>=1&&v<=13)location.href=v===1?&quot;/&quot;:&quot;/page/&quot;+v+&quot;/&quot;" style="border:1px solid #dee2e6;border-left:none;border-radius:0 4px 4px 0;padding:6px 10px;cursor:pointer;background:#f8f9fa;color:#495057;font-size:.85rem;transition:all .2s" onmouseover="this.style.background=&#39;#146bb7&#39;;this.style.color=&#39;#fff&#39;;this.style.borderColor=&#39;#146bb7&#39;" onmouseout="this.style.background=&#39;#f8f9fa&#39;;this.style.color=&#39;#495057&#39;;this.style.borderColor=&#39;#dee2e6&#39;">→</button></span></div></nav>

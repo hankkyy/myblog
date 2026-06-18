@@ -146,6 +146,11 @@ def parse_page(md_path):
     if isinstance(date, str):
         try: date = datetime.fromisoformat(date)
         except ValueError: date = datetime.now()
+    from datetime import date as date_type
+    if isinstance(date, date_type) and not isinstance(date, datetime):
+        date = datetime.combine(date, datetime.min.time())
+    if hasattr(date, 'tzinfo') and date.tzinfo is not None:
+        date = date.replace(tzinfo=None)
     return {
         "title": post.get("title", "Untitled"),
         "date": date,

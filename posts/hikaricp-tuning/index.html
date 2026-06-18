@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>后端性能优化：数据库连接池调优实战 – 纵横四海</title>
+<meta name="description" content="HikariCP 连接池参数详解与性能测试，从默认配置到生产最优配置的调优过程。">
+<meta property="og:title" content="后端性能优化：数据库连接池调优实战 – 纵横四海">
+<meta property="og:description" content="HikariCP 连接池参数详解与性能测试，从默认配置到生产最优配置的调优过程。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://hankzhang.us/">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://hankzhang.us/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "后端性能优化：数据库连接池调优实战 – 纵横四海",
+  "description": "HikariCP 连接池参数详解与性能测试，从默认配置到生产最优配置的调优过程。",
+  "url": "https://hankzhang.us/",
+  "datePublished": "2026-06-17",
+  "author": { "@type": "Person", "name": "Zihao Zhang" }
+}
+</script>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body class="layout--right-sidebar">
+<div id="page" class="site">
+<a class="skip-link screen-reader-text" href="#content">跳到内容</a>
+<header id="masthead" class="site-header tg-site-header tg-site-header--default">
+  <div class="tg-header-top"></div>
+  <div class="tg-header-bottom">
+    <div class="header-bottom-top">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <div class="site-branding">
+          <p class="site-title"><a href="https://hankzhang.us/" rel="home">纵横四海</a></p>
+          <p class="site-description">「保持好奇心，继续探索世界」</p>
+        </div>
+      </div>
+    </div>
+    <div class="header-bottom-bottom">
+      <div class="container" style="display:flex;justify-content:center;align-items:center;gap:15px">
+        <nav id="site-navigation" class="main-navigation tg-site-menu--default" style="display:inline-flex;align-items:center;gap:10px">
+          <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu" style="justify-content:center"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/" class="active">首页</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/posts/">文章列表</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/categories/">分类</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/about/">关于</a></li></ul></div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+<nav id="cenote-sticky-header" class="cenote-header-sticky">
+  <div class="sticky-header-slide">
+    <div class="cenote-sticky-main">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <span class="sticky-title">后端性能优化：数据库连接池调优实战</span>
+      </div>
+    </div>
+  </div>
+</nav>
+<div id="content" class="site-content">
+  <div class="container">
+<div class="tg-flex-container tg-flex-space-between"><div id="primary" class="content-area">
+          <main id="main" class="site-main">
+            <article class="post type-post status-publish format-standard hentry">
+              <div class="entry-meta">
+                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a><span class="cat-seperator">, </span><a href="/categories/数据库/" rel="category">数据库</a></span><span class="posted-on"><a href="/posts/hikaricp-tuning/" rel="bookmark"><time class="entry-date published" datetime="2026-06-17">2026年6月17日</time></a></span>
+              </div>
+              <header class="entry-header">
+                <h1 class="entry-title">后端性能优化：数据库连接池调优实战</h1>
+              </header>
+              <div class="entry-content"><p>连接池是后端系统中最容易被忽视的性能瓶颈之一。很多团队直接用 Spring Boot 默认参数上线，结果在流量高峰期出现连接超时、线程阻塞等问题。</p>
+<p>这篇文章记录我最近一次连接池调优的过程，从发现问题到最终配置，附带实际压测数据。</p>
+<h2>为什么要调连接池</h2>
+<p>Spring Boot 2.x 开始默认使用 HikariCP，它的默认配置在低并发场景下完全够用。但当 QPS 上来后，默认的 <code>maximumPoolSize=10</code> 很快就会成为瓶颈。</p>
+<p>一个典型的症状是：请求量增长后，接口响应时间突然从几十毫秒变成几百毫秒甚至几秒——不是因为 SQL 变慢了，而是线程在等连接。</p>
+<h2>核心参数</h2>
+<p>HikariCP 有几个关键参数需要理解：</p>
+<p><strong>maximumPoolSize</strong> — 连接池最大连接数。默认 10，生产环境建议从 CPU 核数 * 2 + 1 起步，根据实际负载调整。</p>
+<p><strong>minimumIdle</strong> — 连接池最小空闲连接数。默认等于 maximumPoolSize，意味着启动时就创建满连接。如果不需要预热，可以设小一些。</p>
+<p><strong>connectionTimeout</strong> — 等待连接的最大时间（毫秒）。默认 30 秒太长，建议设 3-5 秒，让请求快速失败而不是长时间阻塞。</p>
+<p><strong>idleTimeout</strong> — 空闲连接最大存活时间。默认 10 分钟，建议保持或适当缩短。</p>
+<p><strong>maxLifetime</strong> — 连接最大存活时间。默认 30 分钟，应该比数据库的连接超时时间短一些。</p>
+<p><strong>leakDetectionThreshold</strong> — 连接泄漏检测阈值。开发环境建议设 10 秒，生产环境建议设为 0（关闭），避免额外开销。</p>
+<h2>一个真实案例</h2>
+<p>我们有个服务使用默认配置上线，<code>maximumPoolSize=10</code>。起初每天几十万请求没什么问题。后来业务量增长到近百万 QPS，监控显示：</p>
+<ul>
+<li>数据库连接数恒定在 10 个</li>
+<li>接口 P99 延迟从 50ms 飙升到 2s+</li>
+<li>HikariCP 日志中大量 <code>Connection is not available</code> 告警</li>
+</ul>
+<p>分析后发现，每个请求平均需要 15ms 的数据库操作时间。10 个连接理论上每秒能处理 <code>1000ms / 15ms * 10 ≈ 666</code> 个请求。但实际中还有网络延迟、事务等待等因素。</p>
+<p>调整后的配置：</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">spring</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">datasource</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">hikari</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">maximum-pool-size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<span class="w">      </span><span class="nt">minimum-idle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">      </span><span class="nt">connection-timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5000</span>
+<span class="w">      </span><span class="nt">idle-timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">600000</span>
+<span class="w">      </span><span class="nt">max-lifetime</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1800000</span>
+<span class="w">      </span><span class="nt">leak-detection-threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+</code></pre></div>
+
+<p>调整后 P99 延迟降到 200ms 以内，接口成功率恢复到 99.99%。</p>
+<h2>如何确定合适的连接数</h2>
+<p>一个简单的公式：</p>
+<div class="codehilite"><pre><span></span><code>连接数 ≈ (QPS × 平均查询时间) + 缓冲
+</code></pre></div>
+
+<p>比如 QPS 1000，平均查询 20ms：</p>
+<div class="codehilite"><pre><span></span><code>连接数 = (1000 × 0.02) + 缓冲 = 20 + 5~10 = 25~30
+</code></pre></div>
+
+<p>但这只是理论值。实际中还要考虑：</p>
+<ul>
+<li>数据库服务器的 <code>max_connections</code> 限制</li>
+<li>如果有多个服务实例共享同一个数据库，需要分摊连接数</li>
+<li>事务中持有连接的时间</li>
+</ul>
+<h2>不要过度调大</h2>
+<p>连接数不是越大越好。每个连接都占用数据库内存和 CPU 资源。MySQL 默认 <code>max_connections=151</code>，如果 5 个实例各开 50 个连接，已经超出限制。</p>
+<p>一般来说：</p>
+<ul>
+<li>连接数 &lt; 50 适合大多数场景</li>
+<li>50~100 需要确认数据库能承受</li>
+<li>100+ 通常说明架构有问题，考虑引入缓存或读写分离</li>
+</ul>
+<h2>总结</h2>
+<p>连接池调优的要点：</p>
+<ol>
+<li>先理解默认参数的含义再动手</li>
+<li>要有监控数据做依据，别凭感觉调</li>
+<li><code>connectionTimeout</code> 设短一点，让系统快速失败</li>
+<li>连接数和数据库容量匹配</li>
+<li>调完后一定要压测验证</li>
+</ol>
+<p>调连接池是最简单、回报最高的性能优化之一。花半小时调参，可能省下几天排查问题的功夫。</p></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a><a href="/categories/数据库/" rel="category">数据库</a></span></footer>
+            </article>
+            <nav class="navigation post-navigation" aria-label="文章">
+            <h2 class="screen-reader-text">文章导航</h2>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/rust-ownership/" rel="prev"><span class="nav-links__label">上一篇文章</span> Rust 写给 Java 程序员：所有权机制深度解析</a></div></div>
+          </nav>
+            <a href="/about/" class="author-bio-link">
+            <div class="author-bio">
+              <div class="author-bio-content">
+                <h3>关于 Zihao Zhang</h3>
+                <p>后端开发工程师。关注 Java/Spring Boot/Redis/MySQL 技术栈，分布式系统，OLAP 数据库，AI Agent 开发与应用。</p>
+              </div>
+            </div>
+            </a>
+            <div class="comments-area">
+              <h3>评论</h3>
+              <p class="no-comments">评论已关闭。</p>
+            </div>
+          </main>
+        </div><aside id="secondary" class="widget-area">
+          <section class="widget widget_recent_entries">
+            <h2 class="widget-title">近期文章</h2>
+            <ul><li><a href="/posts/hikaricp-tuning/">后端性能优化：数据库连接池调优实战</a></li><li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li><li><a href="/posts/doris-3-features/">2026 年 Apache Doris 3.0 新特性全解析</a></li><li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li><li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li></ul>
+          </section>
+          <section class="widget widget_tag_cloud">
+            <h2 class="widget-title">分类</h2>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+          </section>
+        </aside></div>
+  </div>
+</div>
+<footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
+  <div class="tg-footer-bottom">
+    <div class="container">
+      <div class="site-info" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Copyright &copy; 2026 <a href="https://hankzhang.us/" title="纵横四海"><span>纵横四海</span></a>. All rights reserved.</span>
+        <nav style="display:flex;gap:15px">
+          <a href="/">首页</a><a href="/posts/">文章列表</a><a href="/categories/">分类</a><a href="/about/">关于</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</footer>
+<button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:#16181a;color:#fff;border:none;cursor:pointer;font-size:20px;display:none;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,.2)">↑</button>
+<script>
+window.addEventListener('scroll',function(){document.getElementById('back-to-top').style.display=window.scrollY>300?'block':'none';var s=document.getElementById('cenote-sticky-header');if(s)s.classList.toggle('visible',window.scrollY>200);});
+</script>
+</div>
+</body>
+</html>
