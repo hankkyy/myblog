@@ -1,7 +1,4 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false,
-  "installCommand": "pip3 install -r requirements.txt",
-  "buildCommand": "python3 src/build.py",
-  "outputDirectory": "."
+  "trailingSlash": false
 }
