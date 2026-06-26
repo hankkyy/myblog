@@ -482,20 +482,20 @@ def build():
         about = parse_page(about_md)
         (ROOT / "about").mkdir(parents=True, exist_ok=True)
 
-        # 生成旅行城市卡片 HTML
-        cities_all = [city for _, _, cities in TRAVEL_CITIES for city in cities]
-        travel_card_parts = []
-        for region_name, region_class, cities in TRAVEL_CITIES:
-            city_count = len(cities)
-            city_list = "、".join(cities)
-            travel_card_parts.append(
-                f'<div class="travel-card {region_class}">'
-                f'<div class="travel-card-header">{region_name}</div>'
-                f'<div class="travel-card-count">{city_count} 座城市</div>'
-                f'<div class="travel-card-cities">{city_list}</div>'
-                f'</div>'
-            )
-        travel_cards = "".join(travel_card_parts)
+        # 生成旅行城市标签 HTML（左右两栏：中国大陆 / 国际）
+        mainland_cities = TRAVEL_CITIES[0][2]
+        international_cities = TRAVEL_CITIES[1][2]
+        total_cities = len(mainland_cities) + len(international_cities)
+        mainland_tags = "".join(f'<span class="travel-tag">{c}</span>' for c in mainland_cities)
+        international_tags = "".join(f'<span class="travel-tag">{c}</span>' for c in international_cities)
+        travel_cards = f"""<div class="travel-col">
+              <div class="travel-col-title">🇨🇳 中国大陆 <span class="travel-col-num">{len(mainland_cities)}</span></div>
+              <div class="travel-tags">{mainland_tags}</div>
+            </div>
+            <div class="travel-col">
+              <div class="travel-col-title">🌍 国际 · 港澳台 <span class="travel-col-num">{len(international_cities)}</span></div>
+              <div class="travel-tags">{international_tags}</div>
+            </div>"""
 
         about_html = f"""
           <section class="about-intro">
@@ -549,7 +549,7 @@ def build():
               <div class="travel-stats">
                 <div class="travel-stat"><strong>316<span class="stat-unit">h</span>&thinsp;18<span class="stat-unit">min</span></strong><span>累计飞行时长</span></div>
                 <div class="travel-stat"><strong>237,032<span class="stat-unit">km</span></strong><span>累计飞行里程</span></div>
-                <div class="travel-stat travel-stat-toggle" onclick="this.closest('.hobby-card').classList.toggle('expanded')"><strong>{len(cities_all)}</strong><span>个城市 <span class="toggle-arrow">▼</span></span></div>
+                <div class="travel-stat travel-stat-toggle" onclick="this.closest('.hobby-card').classList.toggle('expanded')"><strong>{total_cities}</strong><span>个城市 <span class="toggle-arrow">▼</span></span></div>
               </div>
             <div class="travel-regions">
               {travel_cards}

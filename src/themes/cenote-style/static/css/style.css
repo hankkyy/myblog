@@ -125,14 +125,13 @@ blockquote p{margin-bottom:0;font-style:italic}
   animation: pulse 2s ease-out infinite;
   transform-origin: center;
 }}
-.travel-regions{{display:none;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-top:20px}}
-.travel-card{{background:#f8f9fa;border-radius:12px;padding:20px;transition:all .3s;border:1px solid transparent}}
-.travel-card:hover{{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.08)}}
-.travel-card.mainland:hover{{border-color:#2ecc71}}
-.travel-card.international:hover{{border-color:#3498db}}
-.travel-card-header{{font-weight:700;font-size:1.1rem;margin-bottom:4px}}
-.travel-card-count{{font-size:1.5rem;font-weight:700;color:#16181a;margin-bottom:12px}}
-.travel-card-cities{{font-size:.82rem;color:#6c757d;line-height:1.8}}
+.travel-regions{{display:none;grid-template-columns:1fr 1fr;gap:32px;margin-top:24px;padding-top:24px;border-top:1px dashed #ffe0cc}}
+/* 城市标签云 */
+.travel-col-title{{font-size:.72rem;text-transform:uppercase;letter-spacing:2.5px;color:#adb5bd;margin-bottom:14px;font-weight:600}}
+.travel-col-num{{display:inline-block;background:#de7b85;color:#fff;font-size:.65rem;padding:1px 8px;border-radius:10px;margin-left:6px;vertical-align:2px;font-weight:700;letter-spacing:0}}
+.travel-tags{{display:flex;flex-wrap:wrap;gap:6px}}
+.travel-tag{{font-size:.78rem;padding:4px 12px;border-radius:16px;background:#fff;border:1px solid #e9ecef;color:#495057;transition:all .25s;cursor:default}}
+.travel-tag:hover{{border-color:#de7b85;color:#de7b85;transform:translateY(-1px);box-shadow:0 2px 8px rgba(222,123,133,.12)}}
 /* 城市列表折叠/展开 */
 .hobby-card.expanded .travel-regions{{display:grid}}
 .travel-stat-toggle{{cursor:pointer;user-select:none}}
@@ -224,6 +223,7 @@ blockquote p{margin-bottom:0;font-style:italic}
   .focus-list::before{left:20px}
   .focus-marker{width:40px;height:40px}
   .contact-block{padding:28px 20px}
+  .travel-regions{grid-template-columns:1fr;gap:20px}
 }
 
 .cenote-breadcrumb{padding:15px 0}
