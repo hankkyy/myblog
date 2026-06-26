@@ -19,6 +19,28 @@ YEAR = str(datetime.now().year)
 MENU = [("首页","/"),("文章列表","/posts/"),("分类","/categories/"),("关于","/about/")]
 SAFE = {".git","src","vercel.json",".gitignore","README.md","pagefind"}
 
+# 旅行城市数据 — 来源：航旅纵横行程导出（含广州、东莞）
+# 两栏：中国大陆 / 国际（含港澳台）
+TRAVEL_CITIES = [
+    ("🇨🇳 中国大陆", "mainland", [
+        "北京", "上海", "广州", "深圳", "武汉", "杭州",
+        "厦门", "福州", "三亚", "太原", "琼海", "东莞",
+        "珠海", "苏州", "无锡", "南京",
+        "桂林", "柳州", "阳朔", "海口", "甘孜",
+        "南昌", "长沙", "九江", "成都", "康定",
+    ]),
+    ("🌍 国际 · 港澳台", "international", [
+        "东京", "大阪", "京都", "神户", "奈良", "镰仓", "首尔",
+        "台北", "香港", "澳门",
+        "哥伦布", "洛杉矶", "旧金山", "西雅图", "达拉斯", "波特兰",
+        "丹佛", "亚特兰大", "休斯敦", "凤凰城", "拉斯维加斯",
+        "劳德代尔堡", "圣安东尼奥", "圣安娜", "坦帕",
+        "奥克兰", "安大略", "底特律", "长滩", "雷诺",
+        "圣何塞", "奥兰多", "迈阿密", "尔湾", "芝加哥",
+        "太浩湖", "伯克利", "圣克鲁兹",
+    ]),
+]
+
 
 def menu_html(current="/"):
     parts = []
@@ -459,6 +481,22 @@ def build():
     if about_md.exists():
         about = parse_page(about_md)
         (ROOT / "about").mkdir(parents=True, exist_ok=True)
+
+        # 生成旅行城市卡片 HTML
+        cities_all = [city for _, _, cities in TRAVEL_CITIES for city in cities]
+        travel_card_parts = []
+        for region_name, region_class, cities in TRAVEL_CITIES:
+            city_count = len(cities)
+            city_list = "、".join(cities)
+            travel_card_parts.append(
+                f'<div class="travel-card {region_class}">'
+                f'<div class="travel-card-header">{region_name}</div>'
+                f'<div class="travel-card-count">{city_count} 座城市</div>'
+                f'<div class="travel-card-cities">{city_list}</div>'
+                f'</div>'
+            )
+        travel_cards = "".join(travel_card_parts)
+
         about_html = f"""
           <section class="about-intro">
             <div class="about-hero-decor">
@@ -511,8 +549,11 @@ def build():
               <div class="travel-stats">
                 <div class="travel-stat"><strong>316<span class="stat-unit">h</span>&thinsp;18<span class="stat-unit">min</span></strong><span>累计飞行时长</span></div>
                 <div class="travel-stat"><strong>237,032<span class="stat-unit">km</span></strong><span>累计飞行里程</span></div>
-                <div class="travel-stat"><strong>47</strong><span>个城市</span></div>
+                <div class="travel-stat travel-stat-toggle" onclick="this.closest('.hobby-card').classList.toggle('expanded')"><strong>{len(cities_all)}</strong><span>个城市 <span class="toggle-arrow">▼</span></span></div>
               </div>
+            </div>
+            <div class="travel-regions">
+              {travel_cards}
             </div>
           </section>
 
