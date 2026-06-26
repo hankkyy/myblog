@@ -551,9 +551,9 @@ def build():
                 <div class="travel-stat"><strong>237,032<span class="stat-unit">km</span></strong><span>累计飞行里程</span></div>
                 <div class="travel-stat travel-stat-toggle" onclick="this.closest('.hobby-card').classList.toggle('expanded')"><strong>{len(cities_all)}</strong><span>个城市 <span class="toggle-arrow">▼</span></span></div>
               </div>
-            </div>
             <div class="travel-regions">
               {travel_cards}
+            </div>
             </div>
           </section>
 
