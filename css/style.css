@@ -117,27 +117,27 @@ blockquote p{margin-bottom:0;font-style:italic}
 .cat-index-heading:hover{color:#146bb7;padding-left:8px}
 .cat-index-heading .toggle-icon{font-size:.9rem;color:#adb5bd;margin-left:8px;transition:transform .3s;display:inline-block}
 .cat-index-heading.collapsed .toggle-icon{transform:rotate(-90deg)}
-@keyframes pulse {{
-  0% {{ transform: scale(1); opacity: 0.6; }}
-  100% {{ transform: scale(3); opacity: 0; }}
-}}
-.pulse-marker {{
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(3); opacity: 0; }
+}
+.pulse-marker {
   animation: pulse 2s ease-out infinite;
   transform-origin: center;
-}}
-.travel-regions{{display:none;grid-template-columns:1fr 1fr;gap:32px;margin-top:24px;padding-top:24px;border-top:1px dashed #ffe0cc}}
+}
+.travel-regions{display:none;grid-template-columns:1fr 1fr;gap:32px;margin-top:24px;padding-top:24px;border-top:1px dashed #ffe0cc}
 /* 城市标签云 */
-.travel-col-title{{font-size:.72rem;text-transform:uppercase;letter-spacing:2.5px;color:#adb5bd;margin-bottom:14px;font-weight:600}}
-.travel-col-num{{display:inline-block;background:#de7b85;color:#fff;font-size:.65rem;padding:1px 8px;border-radius:10px;margin-left:6px;vertical-align:2px;font-weight:700;letter-spacing:0}}
-.travel-tags{{display:flex;flex-wrap:wrap;gap:6px}}
-.travel-tag{{font-size:.78rem;padding:4px 12px;border-radius:16px;background:#fff;border:1px solid #e9ecef;color:#495057;transition:all .25s;cursor:default}}
-.travel-tag:hover{{border-color:#de7b85;color:#de7b85;transform:translateY(-1px);box-shadow:0 2px 8px rgba(222,123,133,.12)}}
+.travel-col-title{font-size:.72rem;text-transform:uppercase;letter-spacing:2.5px;color:#adb5bd;margin-bottom:14px;font-weight:600}
+.travel-col-num{display:inline-block;background:#de7b85;color:#fff;font-size:.65rem;padding:1px 8px;border-radius:10px;margin-left:6px;vertical-align:2px;font-weight:700;letter-spacing:0}
+.travel-tags{display:flex;flex-wrap:wrap;gap:6px}
+.travel-tag{font-size:.78rem;padding:4px 12px;border-radius:16px;background:#fff;border:1px solid #e9ecef;color:#495057;transition:all .25s;cursor:default}
+.travel-tag:hover{border-color:#de7b85;color:#de7b85;transform:translateY(-1px);box-shadow:0 2px 8px rgba(222,123,133,.12)}
 /* 城市列表折叠/展开 */
-.hobby-card.expanded .travel-regions{{display:grid}}
-.travel-stat-toggle{{cursor:pointer;user-select:none}}
-.travel-stat-toggle:hover{{border-color:#de7b85!important}}
-.travel-stat-toggle .toggle-arrow{{font-size:.65rem;margin-left:4px;transition:transform .3s;display:inline-block}}
-.hobby-card.expanded .toggle-arrow{{transform:rotate(180deg)}}
+.hobby-card.expanded .travel-regions{display:grid}
+.travel-stat-toggle{cursor:pointer;user-select:none}
+.travel-stat-toggle:hover{border-color:#de7b85!important}
+.travel-stat-toggle .toggle-arrow{font-size:.65rem;margin-left:4px;transition:transform .3s;display:inline-block}
+.hobby-card.expanded .toggle-arrow{transform:rotate(180deg)}
 .cat-index-articles{padding-top:20px}
 
 /* About page */
@@ -149,13 +149,13 @@ blockquote p{margin-bottom:0;font-style:italic}
 .hero-blob-1{width:300px;height:300px;background:radial-gradient(circle,#146bb7,transparent 70%);top:-80px;right:-60px;animation-delay:0s}
 .hero-blob-2{width:200px;height:200px;background:radial-gradient(circle,#90caf9,transparent 70%);bottom:20px;left:-40px;animation-delay:-4s;animation-duration:15s}
 .hero-blob-3{width:160px;height:160px;background:radial-gradient(circle,#bbdefb,transparent 70%);top:50%;right:120px;animation-delay:-8s;animation-duration:10s}
-@keyframes blobFloat{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(15px,-20px) scale(1.05)}50%{transform:translate(-10px,10px) scale(.95)}75%{transform:translate(-20px,-5px) scale(1.02)}}
+@keyframes blobFloat{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(15px,-20px) scale(1.05)}50%{transform:translate(-10px,10px) scale(.95)}75%{transform:translate(-20px,-5px) scale(1.02)}
 /* Avatar */
 .about-intro-left{position:relative;z-index:1}
 .about-avatar{width:80px;height:80px;border-radius:50%;object-fit:cover;margin-bottom:24px;box-shadow:0 8px 24px rgba(20,107,183,.25);display:block}
 .about-greeting{font-size:.82rem;color:#146bb7;text-transform:uppercase;letter-spacing:4px;margin:0 0 8px;font-weight:600;display:flex;align-items:center;gap:8px}
 .greeting-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#146bb7;animation:dotPulse 2s ease-in-out infinite}
-@keyframes dotPulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(20,107,183,.4)}50%{opacity:.6;box-shadow:0 0 0 8px rgba(20,107,183,0)}}
+@keyframes dotPulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(20,107,183,.4)}50%{opacity:.6;box-shadow:0 0 0 8px rgba(20,107,183,0)}
 .about-name{font-size:3rem;color:#16181a;margin:0 0 14px;font-weight:800;letter-spacing:-.5px}
 .about-name-en{font-weight:400;color:#868e96;font-size:1.7rem}
 .about-bio{font-size:1.08rem;color:#495057;line-height:1.8;margin:0 0 36px;max-width:560px}
