@@ -72,16 +72,16 @@
 <h2>层是什么</h2>
 <p>Docker 镜像由多个只读层叠加而成。Dockerfile 中的每一行指令（FROM、RUN、COPY 等）都会创建一个新的层。这些层会被缓存——如果某一层没有变化，Docker 直接复用缓存，跳过重建。</p>
 <h2>一个典型案例</h2>
-<div class="codehilite"><pre><span></span><code><span class="c"># 不好的写法</span>
-<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>/app
-<span class="k">RUN</span><span class="w"> </span>mvn<span class="w"> </span>package
+<pre class="codehilite"><code class="language-dockerfile"># 不好的写法
+COPY . /app
+RUN mvn package
 
-<span class="c"># 好的写法</span>
-<span class="k">COPY</span><span class="w"> </span>pom.xml<span class="w"> </span>/app
-<span class="k">RUN</span><span class="w"> </span>mvn<span class="w"> </span>dependency:resolve
-<span class="k">COPY</span><span class="w"> </span>src<span class="w"> </span>/app/src
-<span class="k">RUN</span><span class="w"> </span>mvn<span class="w"> </span>package
-</code></pre></div>
+# 好的写法
+COPY pom.xml /app
+RUN mvn dependency:resolve
+COPY src /app/src
+RUN mvn package
+</code></pre>
 
 <p>为什么第二种写法更快？因为 <code>pom.xml</code> 变化频率远低于源码。先把依赖下载好并缓存住，每次改代码只需要重新编译，不用重新下载依赖。</p>
 <h2>关键原则</h2>
@@ -113,7 +113,7 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">近期文章</h2>
-            <ul><li><a href="/posts/hikaricp-tuning/">后端性能优化：数据库连接池调优实战</a></li><li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li><li><a href="/posts/doris-3-features/">2026 年 Apache Doris 3.0 新特性全解析</a></li><li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li><li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li></ul>
+            <ul><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li><li><a href="/posts/kimi-k3-launch/">Kimi K3 炸场：2.8 万亿参数，48 小时自主设计芯片，开源模型的奇点时刻</a></li><li><a href="/posts/kimi-k2-launch/">Kimi K2 开源了：MoE × 1T 参数，中国大模型的成人礼</a></li><li><a href="/posts/chinese-llm-landscape-k2/">中国大模型走到哪了：Kimi K2 发布前夜的观察</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">分类</h2>

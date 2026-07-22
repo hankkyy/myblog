@@ -71,17 +71,17 @@
               <div class="entry-content"><p>Apache Doris 3.0 在 2026 年 4 月正式 GA。作为 OLAP 领域增长最快的项目，这次大版本带来了几个关键变革。</p>
 <h2>1. 存算分离正式 GA</h2>
 <p>Doris 传统架构是存算一体的 Shared-Nothing：</p>
-<div class="codehilite"><pre><span></span><code>┌──────────────────────────────────────┐
+<pre class="codehilite"><code>┌──────────────────────────────────────┐
 │  FE (Frontend)  ← 元数据 + 查询计划   │
 │  BE (Backend)   ← 计算 + 存储在一起   │
 └──────────────────────────────────────┘
-</code></pre></div>
+</code></pre>
 
 <p>3.0 支持<strong>计算和存储分离部署</strong>：</p>
-<div class="codehilite"><pre><span></span><code>┌────────────┐    ┌──────────────────┐
+<pre class="codehilite"><code>┌────────────┐    ┌──────────────────┐
 │  BE (计算) │───▶│ 共享存储 (S3/HDFS) │
 └────────────┘    └──────────────────┘
-</code></pre></div>
+</code></pre>
 
 <p>好处：
 - <strong>弹性扩缩</strong>：计算节点可以独立扩缩，不影响数据
@@ -89,10 +89,10 @@
 - <strong>多集群共享</strong>：多个计算集群共享同一份数据</p>
 <h2>2. Arrow Flight SQL：查询速度飞跃</h2>
 <p>之前 Doris 通过 MySQL 协议返回结果，序列化开销大。3.0 原生支持 <strong>Arrow Flight SQL</strong>：</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># 直接用 Arrow Flight SQL 连接</span>
-mysql<span class="w"> </span>-h<span class="w"> </span>fe_host<span class="w"> </span>-P<span class="w"> </span><span class="m">9040</span><span class="w"> </span>-u<span class="w"> </span>root<span class="w">  </span><span class="c1"># MySQL 协议</span>
-<span class="c1"># Arrow Flight: 端口 8060，列式传输</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-bash"># 直接用 Arrow Flight SQL 连接
+mysql -h fe_host -P 9040 -u root  # MySQL 协议
+# Arrow Flight: 端口 8060，列式传输
+</code></pre>
 
 <p>实测对比（1000 万行查询）：</p>
 <table>
@@ -119,16 +119,16 @@ mysql<span class="w"> </span>-h<span class="w"> </span>fe_host<span class="w"> <
 <p><strong>6 倍加速 + 60% 带宽节省</strong>，因为列式数据不需要反序列化为行式。</p>
 <h2>3. 半结构化数据支持</h2>
 <p><code>VARIANT</code> 类型正式 GA，可以在 Doris 里存 JSON 并高效查询：</p>
-<div class="codehilite"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">events</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="nb">BIGINT</span><span class="p">,</span><span class="w"> </span><span class="n">payload</span><span class="w"> </span><span class="n">VARIANT</span><span class="p">);</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="n">payload</span><span class="p">:</span><span class="k">user</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">events</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">payload</span><span class="p">:</span><span class="n">event_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;click&#39;</span><span class="p">;</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-sql">CREATE TABLE events (id BIGINT, payload VARIANT);
+SELECT payload:user.name FROM events WHERE payload:event_type = 'click';
+</code></pre>
 
 <p>底层用列式存储 JSON，查询时只读取需要的字段。</p>
 <h2>4. 倒排索引增强</h2>
 <p>全文检索能力大幅提升。现在可以在 Doris 里做类似 Elasticsearch 的文本搜索：</p>
-<div class="codehilite"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_content</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">articles</span><span class="p">(</span><span class="n">content</span><span class="p">)</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">INVERTED</span><span class="p">;</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">articles</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">content</span><span class="w"> </span><span class="k">MATCH</span><span class="w"> </span><span class="s1">&#39;Doris|OLAP&#39;</span><span class="p">;</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-sql">CREATE INDEX idx_content ON articles(content) USING INVERTED;
+SELECT * FROM articles WHERE content MATCH 'Doris|OLAP';
+</code></pre>
 
 <h2>总结</h2>
 <p>Doris 3.0 最大的意义：<strong>从 OLAP 引擎变成了统一的实时数据平台</strong>。存算分离 + Arrow Flight + 半结构化数据，让它能覆盖更多场景。</p>
@@ -155,7 +155,7 @@ mysql<span class="w"> </span>-h<span class="w"> </span>fe_host<span class="w"> <
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">近期文章</h2>
-            <ul><li><a href="/posts/hikaricp-tuning/">后端性能优化：数据库连接池调优实战</a></li><li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li><li><a href="/posts/doris-3-features/">2026 年 Apache Doris 3.0 新特性全解析</a></li><li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li><li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li></ul>
+            <ul><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li><li><a href="/posts/kimi-k3-launch/">Kimi K3 炸场：2.8 万亿参数，48 小时自主设计芯片，开源模型的奇点时刻</a></li><li><a href="/posts/kimi-k2-launch/">Kimi K2 开源了：MoE × 1T 参数，中国大模型的成人礼</a></li><li><a href="/posts/chinese-llm-landscape-k2/">中国大模型走到哪了：Kimi K2 发布前夜的观察</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">分类</h2>

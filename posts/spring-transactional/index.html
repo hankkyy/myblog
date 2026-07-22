@@ -70,54 +70,54 @@
               </header>
               <div class="entry-content"><p>@Transactional 看起来很美好，但它有好几种情况会静默失效。</p>
 <h2>1. 同类方法调用</h2>
-<div class="codehilite"><pre><span></span><code><span class="nd">@Service</span>
-<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">UserService</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nd">@Transactional</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">createUser</span><span class="p">(</span><span class="n">User</span><span class="w"> </span><span class="n">user</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// 这里的事务不会生效！</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">saveUser</span><span class="p">(</span><span class="n">user</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
+<pre class="codehilite"><code class="language-java">@Service
+public class UserService {
+    @Transactional
+    public void createUser(User user) {
+        // 这里的事务不会生效！
+        this.saveUser(user);
+    }
 
-<span class="w">    </span><span class="nd">@Transactional</span><span class="p">(</span><span class="n">propagation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Propagation</span><span class="p">.</span><span class="na">REQUIRES_NEW</span><span class="p">)</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">saveUser</span><span class="p">(</span><span class="n">User</span><span class="w"> </span><span class="n">user</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// ...</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void saveUser(User user) {
+        // ...
+    }
+}
+</code></pre>
 
 <p>原因：Spring 事务是通过 AOP 代理实现的。同类方法调用绕过了代理。</p>
 <p>解决：把方法拆到不同的 Service 里，或者用 <code>AopContext.currentProxy()</code>。</p>
 <h2>2. 非 public 方法</h2>
-<div class="codehilite"><pre><span></span><code><span class="nd">@Transactional</span>
-<span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">saveUser</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span><span class="w">  </span><span class="c1">// 事务不生效！</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-java">@Transactional
+private void saveUser() { }  // 事务不生效！
+</code></pre>
 
 <p>AOP 代理只能拦截 public 方法。</p>
 <h2>3. 异常被吞了</h2>
-<div class="codehilite"><pre><span></span><code><span class="nd">@Transactional</span>
-<span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">createUser</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// 抛异常的代码</span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">log</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;出错了&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">);</span><span class="w">  </span><span class="c1">// 事务不会回滚！</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-java">@Transactional
+public void createUser() {
+    try {
+        // 抛异常的代码
+    } catch (Exception e) {
+        log.error(&quot;出错了&quot;, e);  // 事务不会回滚！
+    }
+}
+</code></pre>
 
 <p>事务只在抛出未被捕获的 RuntimeException 时才回滚。你 catch 了又没抛出去，等于白搭。要在 catch 里手动回滚：</p>
-<div class="codehilite"><pre><span></span><code><span class="n">TransactionAspectSupport</span><span class="p">.</span><span class="na">currentTransactionStatus</span><span class="p">().</span><span class="na">setRollbackOnly</span><span class="p">();</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-java">TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+</code></pre>
 
 <h2>4. 数据库引擎不支持</h2>
 <p>MyISAM 不支持事务。你加了 @Transactional 也没用。</p>
 <h2>5. 多线程</h2>
-<div class="codehilite"><pre><span></span><code><span class="nd">@Transactional</span>
-<span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">batchProcess</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="n">Thread</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">userMapper</span><span class="p">.</span><span class="na">insert</span><span class="p">(</span><span class="n">user</span><span class="p">);</span><span class="w">  </span><span class="c1">// 不在当前事务中！</span>
-<span class="w">    </span><span class="p">}).</span><span class="na">start</span><span class="p">();</span>
-<span class="p">}</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-java">@Transactional
+public void batchProcess() {
+    new Thread(() -&gt; {
+        userMapper.insert(user);  // 不在当前事务中！
+    }).start();
+}
+</code></pre>
 
 <p>事务绑定在 ThreadLocal 上，新线程拿不到当前事务。</p>
 <h2>总结</h2>
@@ -144,7 +144,7 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">近期文章</h2>
-            <ul><li><a href="/posts/hikaricp-tuning/">后端性能优化：数据库连接池调优实战</a></li><li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li><li><a href="/posts/doris-3-features/">2026 年 Apache Doris 3.0 新特性全解析</a></li><li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li><li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li></ul>
+            <ul><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li><li><a href="/posts/kimi-k3-launch/">Kimi K3 炸场：2.8 万亿参数，48 小时自主设计芯片，开源模型的奇点时刻</a></li><li><a href="/posts/kimi-k2-launch/">Kimi K2 开源了：MoE × 1T 参数，中国大模型的成人礼</a></li><li><a href="/posts/chinese-llm-landscape-k2/">中国大模型走到哪了：Kimi K2 发布前夜的观察</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">分类</h2>

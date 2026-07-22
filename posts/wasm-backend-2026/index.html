@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WebAssembly 在后端：第三年了，拐点将至 – 纵横四海</title>
+<meta name="description" content="WASI 0.3 预览版发布后，Wasm 在服务端的生态正在加速。它不会取代 Docker，但它会取代那些 Docker 太重了的场景。">
+<meta property="og:title" content="WebAssembly 在后端：第三年了，拐点将至 – 纵横四海">
+<meta property="og:description" content="WASI 0.3 预览版发布后，Wasm 在服务端的生态正在加速。它不会取代 Docker，但它会取代那些 Docker 太重了的场景。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://hankzhang.us/">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://hankzhang.us/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "WebAssembly 在后端：第三年了，拐点将至 – 纵横四海",
+  "description": "WASI 0.3 预览版发布后，Wasm 在服务端的生态正在加速。它不会取代 Docker，但它会取代那些 Docker 太重了的场景。",
+  "url": "https://hankzhang.us/",
+  "datePublished": "2026-06-17",
+  "author": { "@type": "Person", "name": "Zihao Zhang" }
+}
+</script>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body class="layout--right-sidebar">
+<div id="page" class="site">
+<a class="skip-link screen-reader-text" href="#content">跳到内容</a>
+<header id="masthead" class="site-header tg-site-header tg-site-header--default">
+  <div class="tg-header-top"></div>
+  <div class="tg-header-bottom">
+    <div class="header-bottom-top">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <div class="site-branding">
+          <p class="site-title"><a href="https://hankzhang.us/" rel="home">纵横四海</a></p>
+          <p class="site-description">「保持好奇心，继续探索世界」</p>
+        </div>
+      </div>
+    </div>
+    <div class="header-bottom-bottom">
+      <div class="container" style="display:flex;justify-content:center;align-items:center;gap:15px">
+        <nav id="site-navigation" class="main-navigation tg-site-menu--default" style="display:inline-flex;align-items:center;gap:10px">
+          <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu" style="justify-content:center"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/" class="active">首页</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/posts/">文章列表</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/categories/">分类</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/about/">关于</a></li></ul></div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+<nav id="cenote-sticky-header" class="cenote-header-sticky">
+  <div class="sticky-header-slide">
+    <div class="cenote-sticky-main">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <span class="sticky-title">WebAssembly 在后端：第三年了，拐点将至</span>
+      </div>
+    </div>
+  </div>
+</nav>
+<div id="content" class="site-content">
+  <div class="container">
+<div class="tg-flex-container tg-flex-space-between"><div id="primary" class="content-area">
+          <main id="main" class="site-main">
+            <article class="post type-post status-publish format-standard hentry">
+              <div class="entry-meta">
+                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a><span class="cat-seperator">, </span><a href="/categories/云原生/" rel="category">云原生</a></span><span class="posted-on"><a href="/posts/wasm-backend-2026/" rel="bookmark"><time class="entry-date published" datetime="2026-07-22">2026年7月22日</time></a></span>
+              </div>
+              <header class="entry-header">
+                <h1 class="entry-title">WebAssembly 在后端：第三年了，拐点将至</h1>
+              </header>
+              <div class="entry-content"><p>这周 Kimi 和 Fable 5 抢了所有头条。但有一件事被低估了：WASI 0.3 预览版上个月发布了，带来了异步 I/O 支持。对于 WebAssembly 在后端的未来，这可能是一个转折点。</p>
+<h2>为什么 Wasm 值得关注</h2>
+<p>Wasm 最颠覆的特性是<strong>冷启动速度</strong>。</p>
+<p>Docker 容器的冷启动（拉镜像 → 解压 → 启动进程）至少要几百毫秒，Java 应用更是以秒为单位。Wasm 的冷启动是<strong>微秒级</strong>——因为 Wasm 模块就是一个编译好的字节码文件，不需要启动操作系统进程。</p>
+<p>这在 Serverless 场景下是革命性的：用户请求到达 → 冷启动 Wasm 模块 → 处理请求 → 销毁。整个生命周期不到 1 毫秒。这是 Serverless 的终极形态——每个请求一个独立的、安全的、瞬时的执行环境。</p>
+<h2>WASI 0.3 的关键突破</h2>
+<p>之前 WASI 只有同步 I/O，这意味着你没法在 Wasm 里高效处理网络请求。WASI 0.3 的 <code>wasi:io/poll</code> 接口终于让异步 I/O 成为可能。</p>
+<p>简单说：<strong>WASI 0.3 之前，Wasm 只能跑函数。之后，可以跑服务了。</strong></p>
+<p>另外，Wasm 的沙箱隔离是在语言 VM 层面的，不共享操作系统内核。和 Docker 相比，安全边界更强。这让它天然适合多租户平台——每个租户一个 Wasm 沙箱，比容器更安全也更便宜。</p>
+<h2>现实的差距</h2>
+<p>不吹不黑，Wasm 在后端的现实是这样的：</p>
+<ul>
+<li><strong>Rust</strong> 支持最好——wasm32-wasip2 target 已经可用，Tokio 异步运行时也能编译到 Wasm</li>
+<li><strong>Go</strong> 在追赶——Go 1.24 改进了 Wasm 支持，但 goroutine 调度还有限制</li>
+<li><strong>Java</strong> 还在早期——GraalVM 可以编译到 Wasm，但生态（数据库驱动、HTTP 客户端）远未成熟</li>
+<li><strong>可观测性</strong>是盲区——日志、Metrics、Tracing 在 Wasm 里怎么做？目前没有标准方案</li>
+</ul>
+<h2>谁在用？</h2>
+<ul>
+<li><strong>Cloudflare Workers</strong>：最成功的 Wasm 服务端应用，每天处理万亿次请求</li>
+<li><strong>Fermyon Spin</strong>：基于 Wasm 的 Serverless 框架，已经有一些企业 case</li>
+<li><strong>Docker</strong> 官方宣布支持 Wasm 作为容器运行时的替代</li>
+</ul>
+<h2>我的判断</h2>
+<p>Wasm 在后端的定位不是"替代 Docker"，而是"替代那些 Docker 太重了的场景"：</p>
+<ul>
+<li><strong>边缘计算</strong>：CDN 边缘节点、IoT 网关——需要极快启动、极小 footprint</li>
+<li><strong>事件驱动短任务</strong>：Webhook 处理、数据转换、图片缩放——生灭在毫秒之间</li>
+<li><strong>多租户平台</strong>：每个租户一个 Wasm 沙箱，比容器更安全、更便宜</li>
+</ul>
+<p>2027 年之前，应该会有一个用 Wasm 写的正经后端框架获得广泛关注。</p>
+<p>在 Kimi K3 和 Fable 5 抢走所有注意力的这一周，Wasm 的进步显得很安静。但历史的经验是：那些安静进步的技术，往往最终影响更大。</p></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a><a href="/categories/云原生/" rel="category">云原生</a></span></footer>
+            </article>
+            <nav class="navigation post-navigation" aria-label="文章">
+            <h2 class="screen-reader-text">文章导航</h2>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/ai-supply-limits-era/" rel="prev"><span class="nav-links__label">上一篇文章</span> 一周两件大事：AI 正在进入限量供应时代</a></div></div>
+          </nav>
+            <a href="/about/" class="author-bio-link">
+            <div class="author-bio">
+              <div class="author-bio-content">
+                <h3>关于 Zihao Zhang</h3>
+                <p>后端开发工程师。关注 Java/Spring Boot/Redis/MySQL 技术栈，分布式系统，OLAP 数据库，AI Agent 开发与应用。</p>
+              </div>
+            </div>
+            </a>
+            <div class="comments-area">
+              <h3>评论</h3>
+              <p class="no-comments">评论已关闭。</p>
+            </div>
+          </main>
+        </div><aside id="secondary" class="widget-area">
+          <section class="widget widget_recent_entries">
+            <h2 class="widget-title">近期文章</h2>
+            <ul><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li><li><a href="/posts/kimi-k3-launch/">Kimi K3 炸场：2.8 万亿参数，48 小时自主设计芯片，开源模型的奇点时刻</a></li><li><a href="/posts/kimi-k2-launch/">Kimi K2 开源了：MoE × 1T 参数，中国大模型的成人礼</a></li><li><a href="/posts/chinese-llm-landscape-k2/">中国大模型走到哪了：Kimi K2 发布前夜的观察</a></li></ul>
+          </section>
+          <section class="widget widget_tag_cloud">
+            <h2 class="widget-title">分类</h2>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+          </section>
+        </aside></div>
+  </div>
+</div>
+<footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
+  <div class="tg-footer-bottom">
+    <div class="container">
+      <div class="site-info" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Copyright &copy; 2026 <a href="https://hankzhang.us/" title="纵横四海"><span>纵横四海</span></a>. All rights reserved.</span>
+        <nav style="display:flex;gap:15px">
+          <a href="/">首页</a><a href="/posts/">文章列表</a><a href="/categories/">分类</a><a href="/about/">关于</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</footer>
+<button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:#16181a;color:#fff;border:none;cursor:pointer;font-size:20px;display:none;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,.2)">↑</button>
+<script>
+window.addEventListener('scroll',function(){document.getElementById('back-to-top').style.display=window.scrollY>300?'block':'none';var s=document.getElementById('cenote-sticky-header');if(s)s.classList.toggle('visible',window.scrollY>200);});
+</script>
+</div>
+</body>
+</html>

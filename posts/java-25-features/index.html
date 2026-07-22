@@ -71,22 +71,22 @@
               <div class="entry-content"><p>Java 25 正式发布，几个特性很值得关注。</p>
 <h2>虚拟线程（Virtual Threads）正式 GA</h2>
 <p>虚拟线程在 Java 21 里是 Preview，现在已经稳定。</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">// 以前：一个请求一个平台线程，线程池耗尽就阻塞</span>
-<span class="n">ExecutorService</span><span class="w"> </span><span class="n">exec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Executors</span><span class="p">.</span><span class="na">newFixedThreadPool</span><span class="p">(</span><span class="mi">200</span><span class="p">);</span>
+<pre class="codehilite"><code class="language-java">// 以前：一个请求一个平台线程，线程池耗尽就阻塞
+ExecutorService exec = Executors.newFixedThreadPool(200);
 
-<span class="c1">// 现在：一个请求一个虚拟线程，几乎没有限制</span>
-<span class="n">ExecutorService</span><span class="w"> </span><span class="n">exec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Executors</span><span class="p">.</span><span class="na">newVirtualThreadPerTaskExecutor</span><span class="p">();</span>
-</code></pre></div>
+// 现在：一个请求一个虚拟线程，几乎没有限制
+ExecutorService exec = Executors.newVirtualThreadPerTaskExecutor();
+</code></pre>
 
 <p>实测下来，同样的机器资源配置，使用虚拟线程后吞吐量提升了 3-5 倍。因为虚拟线程不占用 OS 线程，阻塞时会被自动挂起，释放底层平台线程。</p>
 <h2>字符串模板（String Templates）</h2>
 <p>告别 StringBuilder 地狱：</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">// 以前</span>
-<span class="n">String</span><span class="w"> </span><span class="n">sql</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;SELECT * FROM users WHERE id = &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">userId</span><span class="p">;</span>
+<pre class="codehilite"><code class="language-java">// 以前
+String sql = &quot;SELECT * FROM users WHERE id = &quot; + userId;
 
-<span class="c1">// 现在</span>
-<span class="n">String</span><span class="w"> </span><span class="n">sql</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">STR</span><span class="p">.</span><span class="s">&quot;SELECT * FROM users WHERE id = \{userId}&quot;</span><span class="p">;</span>
-</code></pre></div>
+// 现在
+String sql = STR.&quot;SELECT * FROM users WHERE id = \{userId}&quot;;
+</code></pre>
 
 <p>注意：字符串模板默认做了 SQL 注入防护，不同处理器有不同转义规则。</p>
 <h2>其他改进</h2>
@@ -118,7 +118,7 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">近期文章</h2>
-            <ul><li><a href="/posts/hikaricp-tuning/">后端性能优化：数据库连接池调优实战</a></li><li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li><li><a href="/posts/doris-3-features/">2026 年 Apache Doris 3.0 新特性全解析</a></li><li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li><li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li></ul>
+            <ul><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li><li><a href="/posts/kimi-k3-launch/">Kimi K3 炸场：2.8 万亿参数，48 小时自主设计芯片，开源模型的奇点时刻</a></li><li><a href="/posts/kimi-k2-launch/">Kimi K2 开源了：MoE × 1T 参数，中国大模型的成人礼</a></li><li><a href="/posts/chinese-llm-landscape-k2/">中国大模型走到哪了：Kimi K2 发布前夜的观察</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">分类</h2>
