@@ -70,7 +70,7 @@
               </header>
               <div class="entry-content"><p>Spring MVC 的请求处理流程是经典面试题。</p>
 <h2>完整流程</h2>
-<pre class="codehilite"><code>HTTP 请求
+<div class="codehilite"><pre><span></span><code>HTTP 请求
     ↓
 DispatcherServlet（前端控制器）
     ↓
@@ -87,7 +87,7 @@ ViewResolver（解析视图）
 View（渲染视图）
     ↓
 HTTP 响应
-</code></pre>
+</code></pre></div>
 
 <h2>每一步详解</h2>
 <p><strong>1. DispatcherServlet</strong>：Spring MVC 的核心，所有请求的入口。它在 <code>web.xml</code> 或通过 <code>AbstractAnnotationConfigDispatcherServletInitializer</code> 配置。</p>
@@ -126,7 +126,7 @@ HTTP 响应
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">近期文章</h2>
-            <ul><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li><li><a href="/posts/kimi-k3-launch/">Kimi K3 炸场：2.8 万亿参数，48 小时自主设计芯片，开源模型的奇点时刻</a></li><li><a href="/posts/kimi-k2-launch/">Kimi K2 开源了：MoE × 1T 参数，中国大模型的成人礼</a></li><li><a href="/posts/chinese-llm-landscape-k2/">中国大模型走到哪了：Kimi K2 发布前夜的观察</a></li></ul>
+            <ul><li><a href="/posts/hikaricp-tuning/">后端性能优化：数据库连接池调优实战</a></li><li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li><li><a href="/posts/doris-3-features/">2026 年 Apache Doris 3.0 新特性全解析</a></li><li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li><li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">分类</h2>

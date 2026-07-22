@@ -90,26 +90,26 @@
 </ul>
 <p>分析后发现，每个请求平均需要 15ms 的数据库操作时间。10 个连接理论上每秒能处理 <code>1000ms / 15ms * 10 ≈ 666</code> 个请求。但实际中还有网络延迟、事务等待等因素。</p>
 <p>调整后的配置：</p>
-<pre class="codehilite"><code class="language-yaml">spring:
-  datasource:
-    hikari:
-      maximum-pool-size: 30
-      minimum-idle: 10
-      connection-timeout: 5000
-      idle-timeout: 600000
-      max-lifetime: 1800000
-      leak-detection-threshold: 0
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="nt">spring</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">datasource</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">hikari</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">maximum-pool-size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<span class="w">      </span><span class="nt">minimum-idle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">      </span><span class="nt">connection-timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5000</span>
+<span class="w">      </span><span class="nt">idle-timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">600000</span>
+<span class="w">      </span><span class="nt">max-lifetime</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1800000</span>
+<span class="w">      </span><span class="nt">leak-detection-threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+</code></pre></div>
 
 <p>调整后 P99 延迟降到 200ms 以内，接口成功率恢复到 99.99%。</p>
 <h2>如何确定合适的连接数</h2>
 <p>一个简单的公式：</p>
-<pre class="codehilite"><code>连接数 ≈ (QPS × 平均查询时间) + 缓冲
-</code></pre>
+<div class="codehilite"><pre><span></span><code>连接数 ≈ (QPS × 平均查询时间) + 缓冲
+</code></pre></div>
 
 <p>比如 QPS 1000，平均查询 20ms：</p>
-<pre class="codehilite"><code>连接数 = (1000 × 0.02) + 缓冲 = 20 + 5~10 = 25~30
-</code></pre>
+<div class="codehilite"><pre><span></span><code>连接数 = (1000 × 0.02) + 缓冲 = 20 + 5~10 = 25~30
+</code></pre></div>
 
 <p>但这只是理论值。实际中还要考虑：</p>
 <ul>
@@ -139,7 +139,7 @@
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
             <h2 class="screen-reader-text">文章导航</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/rust-ownership/" rel="prev"><span class="nav-links__label">上一篇文章</span> Rust 写给 Java 程序员：所有权机制深度解析</a></div><div class="nav-next"><a href="/posts/fable5-export-control/" rel="next"><span class="nav-links__label">下一篇文章</span> 当美国政府叫停 Fable 5：AI 出口管制的第一枪</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/rust-ownership/" rel="prev"><span class="nav-links__label">上一篇文章</span> Rust 写给 Java 程序员：所有权机制深度解析</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -157,7 +157,7 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">近期文章</h2>
-            <ul><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li><li><a href="/posts/kimi-k3-launch/">Kimi K3 炸场：2.8 万亿参数，48 小时自主设计芯片，开源模型的奇点时刻</a></li><li><a href="/posts/kimi-k2-launch/">Kimi K2 开源了：MoE × 1T 参数，中国大模型的成人礼</a></li><li><a href="/posts/chinese-llm-landscape-k2/">中国大模型走到哪了：Kimi K2 发布前夜的观察</a></li></ul>
+            <ul><li><a href="/posts/hikaricp-tuning/">后端性能优化：数据库连接池调优实战</a></li><li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li><li><a href="/posts/doris-3-features/">2026 年 Apache Doris 3.0 新特性全解析</a></li><li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li><li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">分类</h2>

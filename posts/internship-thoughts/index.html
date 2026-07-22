@@ -74,10 +74,10 @@
 <h3>1. 代码 Review 是真正的学习</h3>
 <p>学校作业交了就是交了，没人告诉你哪里写得烂。</p>
 <p>公司的代码 Review：</p>
-<pre class="codehilite"><code>「这个循环里查了 N 次数据库，改成批量查询」
+<div class="codehilite"><pre><span></span><code>「这个循环里查了 N 次数据库，改成批量查询」
 「异常吞掉了，出问题没法排查」
 「变量名 data 是什么意思？要写清楚是 orderData」
-</code></pre>
+</code></pre></div>
 
 <p>第一次被 Review 的时候，我的 PR 被打了 47 条 comment。脸很疼，但学的东西比之前两个月加起来都多。</p>
 <h3>2. 环境比代码难搞</h3>
@@ -92,27 +92,27 @@
 <p><strong>「把话说清楚」是后端最被低估的能力。</strong></p>
 <h2>写 CRUD 也有讲究</h2>
 <p>你以为的 CRUD：</p>
-<pre class="codehilite"><code class="language-java">@PostMapping(&quot;/order&quot;)
-public Result createOrder(@RequestBody OrderDTO dto) {
-    orderMapper.insert(dto);
-    return Result.ok();
-}
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="nd">@PostMapping</span><span class="p">(</span><span class="s">&quot;/order&quot;</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">Result</span><span class="w"> </span><span class="nf">createOrder</span><span class="p">(</span><span class="nd">@RequestBody</span><span class="w"> </span><span class="n">OrderDTO</span><span class="w"> </span><span class="n">dto</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">orderMapper</span><span class="p">.</span><span class="na">insert</span><span class="p">(</span><span class="n">dto</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">Result</span><span class="p">.</span><span class="na">ok</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
 
 <p>实际生产环境的 CRUD：</p>
-<pre class="codehilite"><code class="language-java">@PostMapping(&quot;/order&quot;)
-@Transactional(rollbackFor = Exception.class)
-public Result createOrder(@Valid @RequestBody OrderDTO dto) {
-    // 1. 参数校验 + 业务校验
-    // 2. 幂等性检查（防止重复提交）
-    // 3. 库存扣减（注意并发，用乐观锁）
-    // 4. 创建订单
-    // 5. 发送消息队列（异步通知）
-    // 6. 记录操作日志
-    // 7. 异常回滚 + 补偿逻辑
-    return Result.ok(orderId);
-}
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="nd">@PostMapping</span><span class="p">(</span><span class="s">&quot;/order&quot;</span><span class="p">)</span>
+<span class="nd">@Transactional</span><span class="p">(</span><span class="n">rollbackFor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Exception</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">Result</span><span class="w"> </span><span class="nf">createOrder</span><span class="p">(</span><span class="nd">@Valid</span><span class="w"> </span><span class="nd">@RequestBody</span><span class="w"> </span><span class="n">OrderDTO</span><span class="w"> </span><span class="n">dto</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 1. 参数校验 + 业务校验</span>
+<span class="w">    </span><span class="c1">// 2. 幂等性检查（防止重复提交）</span>
+<span class="w">    </span><span class="c1">// 3. 库存扣减（注意并发，用乐观锁）</span>
+<span class="w">    </span><span class="c1">// 4. 创建订单</span>
+<span class="w">    </span><span class="c1">// 5. 发送消息队列（异步通知）</span>
+<span class="w">    </span><span class="c1">// 6. 记录操作日志</span>
+<span class="w">    </span><span class="c1">// 7. 异常回滚 + 补偿逻辑</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">Result</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">orderId</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 
 <p>一个「简单」的创建订单，实际要考虑：</p>
 <ul>
@@ -153,7 +153,7 @@ public Result createOrder(@Valid @RequestBody OrderDTO dto) {
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">近期文章</h2>
-            <ul><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li><li><a href="/posts/kimi-k3-launch/">Kimi K3 炸场：2.8 万亿参数，48 小时自主设计芯片，开源模型的奇点时刻</a></li><li><a href="/posts/kimi-k2-launch/">Kimi K2 开源了：MoE × 1T 参数，中国大模型的成人礼</a></li><li><a href="/posts/chinese-llm-landscape-k2/">中国大模型走到哪了：Kimi K2 发布前夜的观察</a></li></ul>
+            <ul><li><a href="/posts/hikaricp-tuning/">后端性能优化：数据库连接池调优实战</a></li><li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li><li><a href="/posts/doris-3-features/">2026 年 Apache Doris 3.0 新特性全解析</a></li><li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li><li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">分类</h2>

@@ -72,21 +72,21 @@
 <h2>联合索引的存储结构</h2>
 <p>假设有一个联合索引 <code>(a, b, c)</code>，它在 B+Tree 中先按 a 排序，a 相同的按 b 排序，b 相同的按 c 排序。就像字典——先拼音首字母、再第二个字母、再第三个字母。</p>
 <h2>哪些查询能用到这个索引</h2>
-<pre class="codehilite"><code class="language-sql">-- ✅ 能用：从 a 开始（最左列）
-WHERE a = 1
+<div class="codehilite"><pre><span></span><code><span class="c1">-- ✅ 能用：从 a 开始（最左列）</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
 
--- ✅ 能用：a = 常量，b 可以范围查询
-WHERE a = 1 AND b &gt; 2
+<span class="c1">-- ✅ 能用：a = 常量，b 可以范围查询</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">2</span>
 
--- ✅ 能用：a 和 b 都有等值条件
-WHERE a = 1 AND b = 2
+<span class="c1">-- ✅ 能用：a 和 b 都有等值条件</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
 
--- ❌ 不能用：跳过了 a
-WHERE b = 2
+<span class="c1">-- ❌ 不能用：跳过了 a</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
 
--- ❌ 不能用：范围查询后的列无法用索引
-WHERE a &gt; 1 AND b = 2  -- b 用不到索引
-</code></pre>
+<span class="c1">-- ❌ 不能用：范围查询后的列无法用索引</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w">  </span><span class="c1">-- b 用不到索引</span>
+</code></pre></div>
 
 <h2>为什么叫「最左前缀」</h2>
 <p>因为索引先按最左边的列排序。就像查字典，你不知道第一个字母，就没法用拼音索引。跟 <code>LIKE 'abc%'</code> 能用索引但 <code>LIKE '%abc'</code> 不能用的道理一样。</p>
@@ -123,7 +123,7 @@ WHERE a &gt; 1 AND b = 2  -- b 用不到索引
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">近期文章</h2>
-            <ul><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li><li><a href="/posts/kimi-k3-launch/">Kimi K3 炸场：2.8 万亿参数，48 小时自主设计芯片，开源模型的奇点时刻</a></li><li><a href="/posts/kimi-k2-launch/">Kimi K2 开源了：MoE × 1T 参数，中国大模型的成人礼</a></li><li><a href="/posts/chinese-llm-landscape-k2/">中国大模型走到哪了：Kimi K2 发布前夜的观察</a></li></ul>
+            <ul><li><a href="/posts/hikaricp-tuning/">后端性能优化：数据库连接池调优实战</a></li><li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li><li><a href="/posts/doris-3-features/">2026 年 Apache Doris 3.0 新特性全解析</a></li><li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li><li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">分类</h2>

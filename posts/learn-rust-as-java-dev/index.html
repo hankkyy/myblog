@@ -71,18 +71,18 @@
               <div class="entry-content"><p>最近开始学 Rust，作为写了几年 Java 的人，思维方式确实需要转换。</p>
 <h2>最大的不同：所有权</h2>
 <p>Java 的垃圾回收让我们习惯了「随便创建对象，GC 会处理」。Rust 让你自己管理内存，但编译器会帮你检查是否正确。</p>
-<pre class="codehilite"><code class="language-rust">let s1 = String::from(&quot;hello&quot;);
-let s2 = s1;  // s1 的所有权转移给了 s2
-println!(&quot;{}&quot;, s1);  // 编译错误！s1 已经无效了
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">s2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s1</span><span class="p">;</span><span class="w">  </span><span class="c1">// s1 的所有权转移给了 s2</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s1</span><span class="p">);</span><span class="w">  </span><span class="c1">// 编译错误！s1 已经无效了</span>
+</code></pre></div>
 
 <p>这跟 Java 完全不同——Java 里 <code>s1</code> 和 <code>s2</code> 可以指向同一个对象。</p>
 <h2>借用（Borrowing）</h2>
 <p>如果不想转移所有权，可以用引用（借用）：</p>
-<pre class="codehilite"><code class="language-rust">let s1 = String::from(&quot;hello&quot;);
-let s2 = &amp;s1;  // s2 借用 s1，s1 依然有效
-println!(&quot;{}&quot;, s1);  // 没问题
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">s2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">s1</span><span class="p">;</span><span class="w">  </span><span class="c1">// s2 借用 s1，s1 依然有效</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s1</span><span class="p">);</span><span class="w">  </span><span class="c1">// 没问题</span>
+</code></pre></div>
 
 <h2>Rust 对 Java 开发者的启发</h2>
 <p>即使不写 Rust，理解所有权和借用的概念能让你写出更好的 Java 代码：
@@ -114,7 +114,7 @@ println!(&quot;{}&quot;, s1);  // 没问题
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">近期文章</h2>
-            <ul><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li><li><a href="/posts/kimi-k3-launch/">Kimi K3 炸场：2.8 万亿参数，48 小时自主设计芯片，开源模型的奇点时刻</a></li><li><a href="/posts/kimi-k2-launch/">Kimi K2 开源了：MoE × 1T 参数，中国大模型的成人礼</a></li><li><a href="/posts/chinese-llm-landscape-k2/">中国大模型走到哪了：Kimi K2 发布前夜的观察</a></li></ul>
+            <ul><li><a href="/posts/hikaricp-tuning/">后端性能优化：数据库连接池调优实战</a></li><li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li><li><a href="/posts/doris-3-features/">2026 年 Apache Doris 3.0 新特性全解析</a></li><li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li><li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">分类</h2>

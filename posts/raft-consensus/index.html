@@ -70,12 +70,12 @@
               </header>
               <div class="entry-content"><p>分布式系统的核心难题：多个节点如何对一个值达成一致？Raft 是目前最流行的共识算法。</p>
 <h2>Raft 的三个角色</h2>
-<pre class="codehilite"><code>┌──────────────────────────────────────┐
+<div class="codehilite"><pre><span></span><code>┌──────────────────────────────────────┐
 │  Leader   ← 处理所有客户端请求       │
 │  Follower ← 被动响应 Leader          │
 │  Candidate ← 选举中的临时状态        │
 └──────────────────────────────────────┘
-</code></pre>
+</code></pre></div>
 
 <h2>Leader 选举</h2>
 <ol>
@@ -85,11 +85,11 @@
 <li>票数相同 → 重新选举（随机超时避免死循环）</li>
 </ol>
 <h2>日志复制</h2>
-<pre class="codehilite"><code>Client → Leader: SET x = 1
+<div class="codehilite"><pre><span></span><code>Client → Leader: SET x = 1
 Leader → Followers: AppendEntries(x=1, term=3, prevLogIndex=4)
 Followers → Leader: ACK
 Leader → Client: OK (多数确认后)
-</code></pre>
+</code></pre></div>
 
 <p><strong>关键</strong>：Leader 只提交当前 term 的日志。这保证了安全性。</p>
 <h2>Raft vs Paxos</h2>
@@ -155,7 +155,7 @@ Leader → Client: OK (多数确认后)
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">近期文章</h2>
-            <ul><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li><li><a href="/posts/kimi-k3-launch/">Kimi K3 炸场：2.8 万亿参数，48 小时自主设计芯片，开源模型的奇点时刻</a></li><li><a href="/posts/kimi-k2-launch/">Kimi K2 开源了：MoE × 1T 参数，中国大模型的成人礼</a></li><li><a href="/posts/chinese-llm-landscape-k2/">中国大模型走到哪了：Kimi K2 发布前夜的观察</a></li></ul>
+            <ul><li><a href="/posts/hikaricp-tuning/">后端性能优化：数据库连接池调优实战</a></li><li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li><li><a href="/posts/doris-3-features/">2026 年 Apache Doris 3.0 新特性全解析</a></li><li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li><li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">分类</h2>
