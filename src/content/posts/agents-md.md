@@ -57,3 +57,9 @@ tests/ — 测试
 - **放根目录**：AI 工具默认读取根目录的 `AGENTS.md` 或 `.cursorrules`
 
 > 花 20 分钟写 AGENTS.md，等于给每个 AI 协作者做一次 onboarding。
+
+---
+
+**参考来源：**
+
+- [Model Context Protocol 官方文档](https://modelcontextprotocol.io/)

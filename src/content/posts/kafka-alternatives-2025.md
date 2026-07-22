@@ -36,3 +36,10 @@ Kafka 统治消息队列领域十多年了，但最近出现了很多有意思�
 - 对延迟极度敏感 → Kafka (本地磁盘版本)
 
 消息队列的江湖不会只有 Kafka 一家独大了。
+
+---
+
+**参考来源：**
+
+- [Apache Kafka](https://kafka.apache.org/)
+- [Apache Pulsar](https://pulsar.apache.org/)

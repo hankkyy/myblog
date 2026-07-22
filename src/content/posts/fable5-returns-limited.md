@@ -4,6 +4,8 @@ date: 2026-07-02T10:00:00+08:00
 categories: ["AI", "新闻"]
 description: "7月1日，Fable 5 重新上线。但 50% 用量限制 + 7 月 7 日后只能买 credits + 身份验证——回来的不是一个模型，是一套管制体系。"
 ---
+![Anthropic — Redeploying Claude Fable 5 (July 1, 2026)](/images/fable5-redeploy.jpg)
+
 
 7 月 1 日，Fable 5 回来了。
 
@@ -48,3 +50,10 @@ Fable 5 的管制不是一个孤立事件。它是一个模式，一个可以被
 下一个可能是 GPT-5.6，再下一个可能是 Gemini 3.6。最有能力的 AI 正在从"公共基础设施"变成"受管制的战略资源"。
 
 这对全球技术社区来说不是好消息。但对开源模型和国产模型来说——是历史性的机遇窗口。
+
+---
+
+**参考来源：**
+
+- [Anthropic — Redeploying Claude Fable 5 (July 1, 2026)](https://www.anthropic.com/news/redeploying-fable-5)
+- [BuildFastWithAI — Claude Fable 5 Is Back: What Changed (July 2026)](https://www.buildfastwithai.com/blogs/claude-fable-5-returns-july-2026-what-changed)

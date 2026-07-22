@@ -52,3 +52,9 @@ answer = qa.run("Doris 3.0 有哪些新特性？")
 - **检索策略**：MMR（最大边际相关性）避免重复文档
 
 > RAG 的本质是把「LLM 不知道的东西」提前塞进 prompt。
+
+---
+
+**参考来源：**
+
+- [Lewis et al. — Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (2020)](https://arxiv.org/abs/2005.11401)

@@ -39,3 +39,9 @@ NIST 已经在 2024 年标准化了三组算法：
 - 不要在代码里硬编码加密算法，通过配置切换
 
 这不是一个紧急问题，但所有的加密体系都需要在十年内完成迁移。
+
+---
+
+**参考来源：**
+
+- [NIST — Post-Quantum Cryptography Standards](https://www.nist.gov/pqcrypto)

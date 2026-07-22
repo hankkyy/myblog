@@ -26,3 +26,9 @@ Anthropic 的战略跟 OpenAI 不同：
 Claude 在开发者市场的占有率还比较低。大部分开发者还是习惯用 ChatGPT 或 GPT API。Anthropic 需要找到差异化场景才能突围。
 
 不过他们的安全研究确实扎实，Dario Amodei（CEO）是 AI 安全领域最重要的声音之一。在 AI 监管越来越严格的趋势下，Anthropic 的「安全牌」可能是一个长期优势。
+
+---
+
+**参考来源：**
+
+- [Anthropic — Introducing Claude 4 (2025-03)](https://www.anthropic.com/news)

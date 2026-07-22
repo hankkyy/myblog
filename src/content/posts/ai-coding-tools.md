@@ -48,3 +48,11 @@ description: "实际使用三个主流 AI 编程工具一个月的体验对比�
 - **复杂问题** → Claude Code（按需使用，不贵）
 
 > 三个都会用才是常态。日常 Cursor，复杂问题切 Claude Code。
+
+---
+
+**参考来源：**
+
+- [Cursor](https://cursor.sh/)
+- [GitHub Copilot](https://github.com/features/copilot)
+- [Claude Code](https://claude.ai/code)

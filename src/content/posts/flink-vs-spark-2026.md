@@ -29,3 +29,10 @@ description: "学习 Flink 和 Spark Structured Streaming 的区别，了解各�
 - 公司有 Hadoop/Hive 生态 → Spark 更自然
 
 对于学习来说，建议两个都了解一下，理解它们的设计哲学区别更重要。
+
+---
+
+**参考来源：**
+
+- [Apache Flink](https://flink.apache.org/)
+- [Apache Spark](https://spark.apache.org/)

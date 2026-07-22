@@ -26,3 +26,9 @@ description: "苹果发布 Vision Pro 2，重量降低 40% 至 350g，售价降�
 Vision Pro 的硬件确实厉害，但"空间计算"这个概念还没被大众接受。可能需要到 Vision Pro 3 或 4 才能看到真正的市场爆发。
 
 有意思的是，Meta Quest 反而卖得不错——因为便宜（$499）而且游戏生态成熟。苹果的高端路线在这个品类里可能不太对。
+
+---
+
+**参考来源：**
+
+- [Apple Newsroom](https://www.apple.com/newsroom/)

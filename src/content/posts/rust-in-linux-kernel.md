@@ -25,3 +25,9 @@ Rust 版本的优势：
 这不止是技术问题。Linus 之前说过他"允许 Rust 进入内核"但要求"不要强迫现有 C 开发者学 Rust"。现在 Rust 生态已经足够成熟，很多内核子系统都在探索 Rust 重写。
 
 对于像我这样的 Java 后端来说，Rust 可能不会直接替代 Java，但了解 Rust 的思想（所有权、零成本抽象）对写好高性能 Java 代码也很有帮助。
+
+---
+
+**参考来源：**
+
+- [Linux Kernel Mailing List — Rust for Linux](https://lore.kernel.org/rust-for-linux/)

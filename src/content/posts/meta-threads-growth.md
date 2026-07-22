@@ -30,3 +30,9 @@ Threads 的月活用户突破 5 亿，正式超过了马斯克的 X。
 Facebook（30 亿）+ Instagram（20 亿）+ WhatsApp（20 亿）+ Threads（5 亿）+ Messenger，Meta 在社交领域的统治力没有减弱。
 
 扎克伯格这一波打得漂亮。
+
+---
+
+**参考来源：**
+
+- [Meta Newsroom](https://about.meta.com/)

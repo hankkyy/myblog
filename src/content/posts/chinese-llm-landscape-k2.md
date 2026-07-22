@@ -47,3 +47,10 @@ Kimi K2 的 benchmark 大概率会很漂亮——在代码、中文理解上可�
 Kimi K2 如果能在这些维度上做到接近 GPT-5 的水平，那它就不仅仅是一个"中国最强模型"，而是一个真正能和全球顶级模型竞争的选手。
 
 明天见分晓。
+
+---
+
+**参考来源：**
+
+- [月之暗面官网 — Kimi K2](https://www.moonshot.cn/)
+- [DeepSeek 官方](https://www.deepseek.com/)

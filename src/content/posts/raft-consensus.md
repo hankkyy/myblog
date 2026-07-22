@@ -51,3 +51,9 @@ Leader → Client: OK (多数确认后)
 - **Consul**：HashiCorp 的服务发现
 
 > Raft 的成功在于：用「可理解性」换来了「可实现性」。
+
+---
+
+**参考来源：**
+
+- [Diego Ongaro — Raft Consensus Algorithm (2014)](https://raft.github.io/)

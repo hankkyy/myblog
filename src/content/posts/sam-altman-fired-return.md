@@ -31,3 +31,9 @@ Altman 的说法是「这是正常的人才流动」，但外界解读为安全�
 - 跟苹果的合作（Apple Intelligence 集成 ChatGPT）
 
 OpenAI 不再是那个「非营利研究实验室」了，它正在变成另一个科技巨头。
+
+---
+
+**参考来源：**
+
+- [The Verge / OpenAI Blog](https://openai.com/blog/)

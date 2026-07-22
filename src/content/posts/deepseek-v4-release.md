@@ -27,3 +27,9 @@ DeepSeek V4 来了。
 作为后端工程师，我比较关注的是 API 的稳定性和生态。V4 的 API 兼容 OpenAI 格式，这意味着现有的 LangChain/AutoGPT 等工具可以直接接入，迁移成本很低。
 
 不管怎么说，2026 年 AI 赛道的竞争越来越精彩了。
+
+---
+
+**参考来源：**
+
+- [DeepSeek 官方](https://www.deepseek.com/)

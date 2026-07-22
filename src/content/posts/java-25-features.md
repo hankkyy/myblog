@@ -42,3 +42,9 @@ String sql = STR."SELECT * FROM users WHERE id = \{userId}";
 - ZGC 分代模式默认开启
 
 Java 这几年的演进速度真的快，跟上了云原生时代的需求。
+
+---
+
+**参考来源：**
+
+- [OpenJDK — JEP Index](https://openjdk.org/jeps/)

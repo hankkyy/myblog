@@ -35,3 +35,9 @@ description: "回顾 2024-2025 年硅谷裁员潮，分析背后的结构性原�
 - 积累开源贡献和实际项目经验
 
 寒冬总会过去，但行业对人才的要求会越来越高。
+
+---
+
+**参考来源：**
+
+- [Layoffs.fyi — Tech Layoffs Tracker](https://layoffs.fyi/)

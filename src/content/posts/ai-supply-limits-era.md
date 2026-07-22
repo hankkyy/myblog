@@ -52,3 +52,10 @@ AI 能力的供给瓶颈——不管是技术性的（算力不够）还是政�
 好消息是：竞争在加速。K2 发布一周后就是 K3。模型能力的军备竞赛没有减速的迹象。稀缺是暂时的，能力是增长的。
 
 但在这个过渡期，开发者的策略需要从"尽情使用"转向"精明使用"。限量供应的不是 AI——是**最好**的 AI。
+
+---
+
+**参考来源：**
+
+- [知乎 — 如何看待月之暗面Kimi宣布算力紧张暂停新用户 (2026-07-19)](https://www.zhihu.com/question/2062310754481656074)
+- [Anthropic — Redeploying Claude Fable 5](https://www.anthropic.com/news/redeploying-fable-5)

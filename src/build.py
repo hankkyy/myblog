@@ -17,7 +17,7 @@ SITE = {"title":"纵横四海","url":"https://hankzhang.us/","desc":"「保持�
 AUTHOR = "Zihao Zhang"
 YEAR = str(datetime.now().year)
 MENU = [("首页","/"),("文章列表","/posts/"),("分类","/categories/"),("关于","/about/")]
-SAFE = {".git","src","vercel.json",".gitignore","README.md","pagefind"}
+SAFE = {".git","src","vercel.json",".gitignore","README.md","pagefind","images"}
 
 # 旅行城市数据 — 来源：航旅纵横行程导出（含广州、东莞）
 # 两栏：中国大陆 / 国际（含港澳台）
@@ -321,6 +321,15 @@ def build():
     if gh_logo.exists(): shutil.copy(gh_logo, ROOT / "github-logo.svg")
     avatar_src = THEME / "static" / "avatar.jpg"
     if avatar_src.exists(): shutil.copy(avatar_src, ROOT / "avatar.jpg")
+
+    # 复制文章配图
+    images_dir = CONTENT / "images"
+    if images_dir.exists():
+        out_images = ROOT / "images"
+        out_images.mkdir(exist_ok=True)
+        for img in images_dir.iterdir():
+            if img.is_file():
+                shutil.copy(img, out_images / img.name)
 
     posts = []
     posts_dir = CONTENT / "posts"

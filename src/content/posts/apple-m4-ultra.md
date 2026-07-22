@@ -27,3 +27,9 @@ description: "M4 Ultra 搭载 256GB 统一内存，可本地运行 400B 参数�
 最顶配 Mac Studio M4 Ultra 256GB 售价 $12,999。对于个人开发者来说不便宜，但对比 A100/H100 的采购和运维成本，其实还算合理。
 
 以后本地 AI 开发的门槛会越来越低，这对整个行业是好消息。
+
+---
+
+**参考来源：**
+
+- [Apple Newsroom](https://www.apple.com/newsroom/)

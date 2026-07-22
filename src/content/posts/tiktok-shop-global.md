@@ -32,3 +32,9 @@ Shein 和 Temu 是低价电商，靠供应链和补贴。TikTok Shop 是内容�
 美国的数据安全审查还在进行中。TikTok 说已经把所有美国用户数据存在甲骨文的服务器上，但政治压力仍然存在。
 
 无论如何，TikTok 的商业化能力确实恐怖。
+
+---
+
+**参考来源：**
+
+- [TikTok Newsroom](https://newsroom.tiktok.com/)

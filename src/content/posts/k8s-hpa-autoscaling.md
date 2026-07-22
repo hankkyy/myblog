@@ -74,3 +74,9 @@ metrics:
 - 先观察应用的真实负载曲线，再设定 HPA 阈值
 - 生产环境至少 minReplicas=3，避免单点
 - 配合 PodDisruptionBudget 确保优雅缩容
+
+---
+
+**参考来源：**
+
+- [Kubernetes 文档 — Horizontal Pod Autoscaling](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)

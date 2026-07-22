@@ -70,16 +70,16 @@
               </header>
               <div class="entry-content"><p>线程池是 Java 并发编程面试的高频题。</p>
 <h2>七个核心参数</h2>
-<div class="codehilite"><pre><span></span><code><span class="k">new</span><span class="w"> </span><span class="n">ThreadPoolExecutor</span><span class="p">(</span>
-<span class="w">    </span><span class="n">corePoolSize</span><span class="p">,</span><span class="w">   </span><span class="c1">// 核心线程数</span>
-<span class="w">    </span><span class="n">maximumPoolSize</span><span class="p">,</span><span class="c1">// 最大线程数</span>
-<span class="w">    </span><span class="n">keepAliveTime</span><span class="p">,</span><span class="w">  </span><span class="c1">// 空闲线程存活时间</span>
-<span class="w">    </span><span class="n">unit</span><span class="p">,</span><span class="w">           </span><span class="c1">// 时间单位</span>
-<span class="w">    </span><span class="n">workQueue</span><span class="p">,</span><span class="w">      </span><span class="c1">// 阻塞队列</span>
-<span class="w">    </span><span class="n">threadFactory</span><span class="p">,</span><span class="w">  </span><span class="c1">// 线程工厂</span>
-<span class="w">    </span><span class="n">handler</span><span class="w">         </span><span class="c1">// 拒绝策略</span>
-<span class="p">)</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-java">new ThreadPoolExecutor(
+    corePoolSize,   // 核心线程数
+    maximumPoolSize,// 最大线程数
+    keepAliveTime,  // 空闲线程存活时间
+    unit,           // 时间单位
+    workQueue,      // 阻塞队列
+    threadFactory,  // 线程工厂
+    handler         // 拒绝策略
+)
+</code></pre>
 
 <h2>执行流程</h2>
 <ol>
@@ -133,7 +133,7 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">近期文章</h2>
-            <ul><li><a href="/posts/hikaricp-tuning/">后端性能优化：数据库连接池调优实战</a></li><li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li><li><a href="/posts/doris-3-features/">2026 年 Apache Doris 3.0 新特性全解析</a></li><li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li><li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li></ul>
+            <ul><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li><li><a href="/posts/kimi-k3-launch/">Kimi K3 炸场：2.8 万亿参数，48 小时自主设计芯片，开源模型的奇点时刻</a></li><li><a href="/posts/kimi-k2-launch/">Kimi K2 开源了：MoE × 1T 参数，中国大模型的成人礼</a></li><li><a href="/posts/chinese-llm-landscape-k2/">中国大模型走到哪了：Kimi K2 发布前夜的观察</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">分类</h2>

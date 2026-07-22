@@ -34,3 +34,9 @@ Google DeepMind 发布了 Gemini Robotics——把大模型放进机器人里。
 制造业、物流、家政服务可能最先被改变。Google 说他们会先跟物流公司合作做仓库机器人。
 
 物理世界的 AI 化可能比我们想象的更快。
+
+---
+
+**参考来源：**
+
+- [Google DeepMind](https://deepmind.google/)

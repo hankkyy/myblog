@@ -49,3 +49,11 @@ Wasm 在后端的定位不是"替代 Docker"，而是"替代那些 Docker 太重
 2027 年之前，应该会有一个用 Wasm 写的正经后端框架获得广泛关注。
 
 在 Kimi K3 和 Fable 5 抢走所有注意力的这一周，Wasm 的进步显得很安静。但历史的经验是：那些安静进步的技术，往往最终影响更大。
+
+---
+
+**参考来源：**
+
+- [WASI 0.3 预览版 — WASI Preview 3](https://github.com/WebAssembly/WASI)
+- [Cloudflare Workers — WebAssembly on the edge](https://developers.cloudflare.com/workers/)
+- [Fermyon — Spin: Serverless WebAssembly](https://www.fermyon.com/spin)

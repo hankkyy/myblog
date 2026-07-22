@@ -71,43 +71,43 @@
               <div class="entry-content"><p>ConfigMap 和 Secret 是 K8s 中管理配置的两大工具。</p>
 <h2>ConfigMap</h2>
 <p>存储非敏感配置——数据库地址、日志级别、环境变量等：</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
-<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConfigMap</span>
-<span class="nt">metadata</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app-config</span>
-<span class="nt">data</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">database-url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;jdbc:mysql://db:3306/mydb&quot;</span>
-<span class="w">  </span><span class="nt">log-level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;debug&quot;</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-yaml">apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  database-url: &quot;jdbc:mysql://db:3306/mydb&quot;
+  log-level: &quot;debug&quot;
+</code></pre>
 
 <h2>Secret</h2>
 <p>存储敏感信息——密码、Token、证书等。值需要 base64 编码：</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
-<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Secret</span>
-<span class="nt">metadata</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db-secret</span>
-<span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Opaque</span>
-<span class="nt">data</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">YWRtaW4=</span><span class="w">      </span><span class="c1"># base64(&quot;admin&quot;)</span>
-<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cGFzc3dvcmQ=</span><span class="w">  </span><span class="c1"># base64(&quot;password&quot;)</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: db-secret
+type: Opaque
+data:
+  username: YWRtaW4=      # base64(&quot;admin&quot;)
+  password: cGFzc3dvcmQ=  # base64(&quot;password&quot;)
+</code></pre>
 
 <h2>注入方式</h2>
 <h3>环境变量</h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">env</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DB_URL</span>
-<span class="w">  </span><span class="nt">valueFrom</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">configMapKeyRef</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app-config</span>
-<span class="w">      </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database-url</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-yaml">env:
+- name: DB_URL
+  valueFrom:
+    configMapKeyRef:
+      name: app-config
+      key: database-url
+</code></pre>
 
 <h3>挂载为文件</h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">volumes</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config-volume</span>
-<span class="w">  </span><span class="nt">configMap</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app-config</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-yaml">volumes:
+- name: config-volume
+  configMap:
+    name: app-config
+</code></pre>
 
 <p>文件挂载的好处：支持热更新（ConfigMap 更新后 Kubelet 会自动同步）。</p>
 <h2>Secret 的安全问题</h2>
@@ -147,7 +147,7 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">近期文章</h2>
-            <ul><li><a href="/posts/hikaricp-tuning/">后端性能优化：数据库连接池调优实战</a></li><li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li><li><a href="/posts/doris-3-features/">2026 年 Apache Doris 3.0 新特性全解析</a></li><li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li><li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li></ul>
+            <ul><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li><li><a href="/posts/kimi-k3-launch/">Kimi K3 炸场：2.8 万亿参数，48 小时自主设计芯片，开源模型的奇点时刻</a></li><li><a href="/posts/kimi-k2-launch/">Kimi K2 开源了：MoE × 1T 参数，中国大模型的成人礼</a></li><li><a href="/posts/chinese-llm-landscape-k2/">中国大模型走到哪了：Kimi K2 发布前夜的观察</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">分类</h2>

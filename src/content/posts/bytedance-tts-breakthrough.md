@@ -29,3 +29,9 @@ MegaTTS 4 用了一个新的架构叫 Voice Tokenizer + Flow Matching。简单�
 当然，这种技术也带来了 Deepfake 担忧。字节说他们会限制 API 的使用范围，要求用户上传自己的声音样本做验证。
 
 这对内容创作、教育、无障碍领域都有巨大价值，但监管也得跟上来。
+
+---
+
+**参考来源：**
+
+- [字节跳动技术博客](https://www.bytedance.com/)

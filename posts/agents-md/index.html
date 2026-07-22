@@ -71,19 +71,19 @@
               <div class="entry-content"><p>如果你用 AI 辅助编程（Copilot、Cursor、Claude Code），有个简单但被低估的做法：<strong>在项目根目录放一个 <code>AGENTS.md</code></strong>。</p>
 <h2>它是什么</h2>
 <p><code>AGENTS.md</code> 是一份写给 AI 的项目说明书。放在项目根目录，AI 编程助手会自动读取它。</p>
-<div class="codehilite"><pre><span></span><code><span class="gh"># Project Name - Development Guide</span>
+<pre class="codehilite"><code class="language-markdown"># Project Name - Development Guide
 
-<span class="gu">## Build &amp; Run</span>
+## Build &amp; Run
 npm install &amp;&amp; npm run dev
 
-<span class="gu">## Project Structure</span>
+## Project Structure
 src/ — 主代码
 tests/ — 测试
 
-<span class="gu">## Conventions</span>
-<span class="k">-</span><span class="w"> </span>TypeScript strict mode
-<span class="k">-</span><span class="w"> </span>组件用 named export
-</code></pre></div>
+## Conventions
+- TypeScript strict mode
+- 组件用 named export
+</code></pre>
 
 <h2>为什么重要</h2>
 <p>没有 AGENTS.md，AI 会：</p>
@@ -95,14 +95,14 @@ tests/ — 测试
 </ul>
 <p>有 AGENTS.md，AI 开局就知道项目规则。</p>
 <h2>常见内容</h2>
-<div class="codehilite"><pre><span></span><code><span class="mf">1.</span><span class="w"> </span><span class="n">项目简介</span><span class="err">（</span><span class="n">一句话</span><span class="err">）</span>
-<span class="mf">2.</span><span class="w"> </span><span class="n">环境要求</span><span class="err">（</span><span class="n">Node</span><span class="w"> </span><span class="mf">20</span><span class="o">+</span><span class="p">,</span><span class="w"> </span><span class="n">Python</span><span class="w"> </span><span class="mf">3.11</span><span class="o">+</span><span class="err">）</span>
-<span class="mf">3.</span><span class="w"> </span><span class="n">本地开发命令</span>
-<span class="mf">4.</span><span class="w"> </span><span class="n">项目结构速览</span>
-<span class="mf">5.</span><span class="w"> </span><span class="n">代码风格约定</span>
-<span class="mf">6.</span><span class="w"> </span><span class="n">Git</span><span class="w"> </span><span class="n">分支规范</span>
-<span class="mf">7.</span><span class="w"> </span><span class="n">注意事项</span><span class="o">/</span><span class="n">坑</span>
-</code></pre></div>
+<pre class="codehilite"><code>1. 项目简介（一句话）
+2. 环境要求（Node 20+, Python 3.11+）
+3. 本地开发命令
+4. 项目结构速览
+5. 代码风格约定
+6. Git 分支规范
+7. 注意事项/坑
+</code></pre>
 
 <h2>最佳实践</h2>
 <ul>
@@ -113,7 +113,12 @@ tests/ — 测试
 </ul>
 <blockquote>
 <p>花 20 分钟写 AGENTS.md，等于给每个 AI 协作者做一次 onboarding。</p>
-</blockquote></div>
+</blockquote>
+<hr />
+<p><strong>参考来源：</strong></p>
+<ul>
+<li><a href="https://modelcontextprotocol.io/">Model Context Protocol 官方文档</a></li>
+</ul></div>
               <footer class="entry-footer"><span class="cat-links">分类： <a href="/categories/技术/" rel="category">技术</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="文章">
@@ -136,7 +141,7 @@ tests/ — 测试
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">近期文章</h2>
-            <ul><li><a href="/posts/hikaricp-tuning/">后端性能优化：数据库连接池调优实战</a></li><li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li><li><a href="/posts/doris-3-features/">2026 年 Apache Doris 3.0 新特性全解析</a></li><li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li><li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li></ul>
+            <ul><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li><li><a href="/posts/kimi-k3-launch/">Kimi K3 炸场：2.8 万亿参数，48 小时自主设计芯片，开源模型的奇点时刻</a></li><li><a href="/posts/kimi-k2-launch/">Kimi K2 开源了：MoE × 1T 参数，中国大模型的成人礼</a></li><li><a href="/posts/chinese-llm-landscape-k2/">中国大模型走到哪了：Kimi K2 发布前夜的观察</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">分类</h2>

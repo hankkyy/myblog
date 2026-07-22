@@ -38,3 +38,9 @@ Fable 5 在 Agent 场景下的优势是公认的。被禁后，Agent 开发者�
 Fable 5 迟早会回来——要么是管制放松，要么是 Anthropic 找到了合规方案。但这两周已经改变了很多人的行为模式。就像芯片禁令促使中国加速半导体自研一样，AI 模型管制会加速开源模型的追赶。
 
 对被禁的不只是 Anthropic 的用户。被禁的是"把最先进 AI 当成随时可用的基础设施"这个假设本身。
+
+---
+
+**参考来源：**
+
+- [Anthropic — Fable 5 export control statement](https://www.anthropic.com/news/fable-mythos-access)

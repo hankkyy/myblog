@@ -31,3 +31,9 @@ Meta 发布了 Llama 4，开源社区炸了。
 ## 对开发者
 
 可以开始关注 LangChain + Llama 4 的本地部署方案了。8B 版本可以在消费级 GPU（4080 16GB）上运行，性能接近 GPT-4 mini。
+
+---
+
+**参考来源：**
+
+- [Meta AI — Llama 4](https://ai.meta.com/)

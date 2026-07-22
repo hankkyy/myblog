@@ -38,3 +38,9 @@ Doris 主要承担 DWS 和 ADS 层的查询，ODS/DWD 层使用 Flink 做实时 
 ## 对学习者的启示
 
 Doris 现在在国内越来越火。相比 ClickHouse，Doris 在标准 SQL 兼容性和运维友好度上更好。如果想进入数据基础设施方向，Doris 值得学习。
+
+---
+
+**参考来源：**
+
+- [Apache Doris 官方文档](https://doris.apache.org/)

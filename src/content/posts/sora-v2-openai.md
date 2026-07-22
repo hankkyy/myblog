@@ -29,3 +29,9 @@ OpenAI 发布了 Sora 2，视频生成质量又上了一个台阶。
 有意思的是，Adobe 是 OpenAI 的合作伙伴，Sora 2 会集成到 Premiere Pro 里。
 
 内容创作的门槛越来越低了——以后比的不是技术，而是创意和审美。
+
+---
+
+**参考来源：**
+
+- [OpenAI — Sora](https://openai.com/sora/)

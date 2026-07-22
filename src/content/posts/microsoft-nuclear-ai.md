@@ -26,3 +26,9 @@ description: "微软与 Constellation Energy 签署 20 年核电购电协议，�
 微软的环保承诺是 2030 年实现「负碳排」。签核电合同是为了在扩大 AI 算力的同时不至于打脸。
 
 AI 的未来不仅取决于算法，也取决于我们能不能找到足够便宜的清洁能源。
+
+---
+
+**参考来源：**
+
+- [Microsoft News](https://news.microsoft.com/)

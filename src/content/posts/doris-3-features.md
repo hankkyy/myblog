@@ -75,3 +75,9 @@ SELECT * FROM articles WHERE content MATCH 'Doris|OLAP';
 Doris 3.0 最大的意义：**从 OLAP 引擎变成了统一的实时数据平台**。存算分离 + Arrow Flight + 半结构化数据，让它能覆盖更多场景。
 
 如果你是数据后端方向，建议关注这三个方向：**存算分离架构**、**列式传输协议**、**倒排索引与 OLAP 融合**。
+
+---
+
+**参考来源：**
+
+- [Apache Doris 官方文档](https://doris.apache.org/)

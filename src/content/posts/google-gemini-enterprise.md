@@ -28,3 +28,9 @@ Gemini for Workspace 每位用户 $30/月，跟微软 Copilot 一样的价格。
 有人觉得效率提升巨大，有人觉得老板会要求同样的时间干更多活。AI 办公助手普及后，会不会导致 996 变成 007？
 
 不管怎样，不会用 AI 办公工具的人以后可能真的竞争不过。
+
+---
+
+**参考来源：**
+
+- [Google AI Blog](https://blog.google/technology/ai/)

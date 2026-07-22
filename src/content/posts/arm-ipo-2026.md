@@ -31,3 +31,9 @@ ARM 的股价从 2023 年 9 月 IPO（$51）涨到了 $120+。
 - ARM 的授权模式很赚钱但也很脆弱——如果大客户自研架构就少一笔收入
 
 AI 芯片大战中，ARM 成了卖铲子的人。
+
+---
+
+**参考来源：**
+
+- [Arm Newsroom](https://www.arm.com/company/news)

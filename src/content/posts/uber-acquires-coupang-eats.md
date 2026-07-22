@@ -31,3 +31,9 @@ Uber 宣布以 12 亿美元收购 Coupang Eats 的亚洲业务。
 外卖这个赛道，最终可能就是 3-4 家全球巨头 + 本地小玩家。
 
 Uber 的 Dara 说「外卖是我们增长最快的业务」，从收购节奏来看这话不是吹的。
+
+---
+
+**参考来源：**
+
+- [TechCrunch](https://techcrunch.com/)

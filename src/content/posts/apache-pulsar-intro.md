@@ -32,3 +32,9 @@ Pulsar 可以把冷数据自动迁移到廉价存储（S3、HDFS），热数据�
 - 团队有专门的运维团队（Pulsar 的运维复杂度比 Kafka 高）
 
 Kafka 依然是事实标准，但 Pulsar 在特定场景下确实更合适。
+
+---
+
+**参考来源：**
+
+- [Apache Pulsar 官方文档](https://pulsar.apache.org/)

@@ -54,3 +54,9 @@ HTTP/2:    单连接 [req1,req2,req3] → [res2,res1,res3]  ← 多路复用
 - ✅ 团队不熟悉 Protobuf
 
 > 内部用 gRPC，对外用 REST——这是目前的主流选择。
+
+---
+
+**参考来源：**
+
+- [gRPC 官方文档](https://grpc.io/)

@@ -71,3 +71,10 @@ npx @anthropic/mcp-server-filesystem /path/to/allowed/dir
 之前 AI 工具调用是碎片化的——每个平台自己定义格式。MCP 让「一次编写，到处运行」在 AI 工具领域成为可能。
 
 > 如果你在 2026 年做 AI Agent 开发，MCP 是绕不开的基础设施。
+
+---
+
+**参考来源：**
+
+- [Anthropic — Introducing the Model Context Protocol (2024-11)](https://www.anthropic.com/news/model-context-protocol)
+- [Model Context Protocol 规范](https://modelcontextprotocol.io/)

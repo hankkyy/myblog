@@ -72,46 +72,46 @@
 <h2>题目</h2>
 <p>给定 <code>"abcabcbb"</code>，找出不含重复字符的最长子串长度。答案是 3（<code>"abc"</code>）。</p>
 <h2>滑动窗口模板</h2>
-<div class="codehilite"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">maxLen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">right</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">length</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="c1">// 1. 扩大窗口：加入 right 位置的字符</span>
-<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">right</span><span class="p">);</span>
-<span class="w">    </span><span class="n">right</span><span class="o">++</span><span class="p">;</span>
-<span class="w">    </span><span class="c1">// 更新窗口数据...</span>
+<pre class="codehilite"><code class="language-java">int left = 0, right = 0, maxLen = 0;
+while (right &lt; s.length()) {
+    // 1. 扩大窗口：加入 right 位置的字符
+    char c = s.charAt(right);
+    right++;
+    // 更新窗口数据...
 
-<span class="w">    </span><span class="c1">// 2. 缩小窗口：当窗口不满足条件时</span>
-<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">窗口需要缩小</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">char</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">left</span><span class="p">);</span>
-<span class="w">        </span><span class="n">left</span><span class="o">++</span><span class="p">;</span>
-<span class="w">        </span><span class="c1">// 更新窗口数据...</span>
-<span class="w">    </span><span class="p">}</span>
+    // 2. 缩小窗口：当窗口不满足条件时
+    while (窗口需要缩小) {
+        char d = s.charAt(left);
+        left++;
+        // 更新窗口数据...
+    }
 
-<span class="w">    </span><span class="c1">// 3. 更新答案</span>
-<span class="w">    </span><span class="n">maxLen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">maxLen</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">left</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
+    // 3. 更新答案
+    maxLen = Math.max(maxLen, right - left);
+}
+</code></pre>
 
 <h2>本题代码</h2>
-<div class="codehilite"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">lengthOfLongestSubstring</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">Character</span><span class="p">,</span><span class="w"> </span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">window</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">maxLen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<pre class="codehilite"><code class="language-java">public int lengthOfLongestSubstring(String s) {
+    Map&lt;Character, Integer&gt; window = new HashMap&lt;&gt;();
+    int left = 0, right = 0, maxLen = 0;
 
-<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">right</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">length</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">right</span><span class="p">);</span>
-<span class="w">        </span><span class="n">right</span><span class="o">++</span><span class="p">;</span>
-<span class="w">        </span><span class="n">window</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">window</span><span class="p">.</span><span class="na">getOrDefault</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+    while (right &lt; s.length()) {
+        char c = s.charAt(right);
+        right++;
+        window.put(c, window.getOrDefault(c, 0) + 1);
 
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">window</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">char</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">left</span><span class="p">);</span>
-<span class="w">            </span><span class="n">left</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="n">window</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">window</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
+        while (window.get(c) &gt; 1) {
+            char d = s.charAt(left);
+            left++;
+            window.put(d, window.get(d) - 1);
+        }
 
-<span class="w">        </span><span class="n">maxLen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">maxLen</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">left</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">maxLen</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
+        maxLen = Math.max(maxLen, right - left);
+    }
+    return maxLen;
+}
+</code></pre>
 
 <h2>模板适用题</h2>
 <ul>
@@ -163,7 +163,7 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">近期文章</h2>
-            <ul><li><a href="/posts/hikaricp-tuning/">后端性能优化：数据库连接池调优实战</a></li><li><a href="/posts/rust-ownership/">Rust 写给 Java 程序员：所有权机制深度解析</a></li><li><a href="/posts/doris-3-features/">2026 年 Apache Doris 3.0 新特性全解析</a></li><li><a href="/posts/k8s-network/">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></li><li><a href="/posts/spring-virtual-threads/">Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></li></ul>
+            <ul><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li><li><a href="/posts/kimi-k3-launch/">Kimi K3 炸场：2.8 万亿参数，48 小时自主设计芯片，开源模型的奇点时刻</a></li><li><a href="/posts/kimi-k2-launch/">Kimi K2 开源了：MoE × 1T 参数，中国大模型的成人礼</a></li><li><a href="/posts/chinese-llm-landscape-k2/">中国大模型走到哪了：Kimi K2 发布前夜的观察</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">分类</h2>

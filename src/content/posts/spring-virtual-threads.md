@@ -97,3 +97,10 @@ threadLocal.remove();
 | 大量 ThreadLocal | ⚠️ 注意内存 |
 
 > 一句话：**虚拟线程让「一个请求一个线程」模型重新变得可行**。MVC 从此不怕高并发。
+
+---
+
+**参考来源：**
+
+- [OpenJDK — JEP 444: Virtual Threads](https://openjdk.org/jeps/444)
+- [Spring Boot 3.2 文档](https://docs.spring.io/spring-boot/)

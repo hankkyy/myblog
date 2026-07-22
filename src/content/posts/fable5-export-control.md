@@ -4,6 +4,8 @@ date: 2026-06-20T10:00:00+08:00
 categories: ["AI", "新闻"]
 description: "美国政府对 Claude Fable 5 和 Mythos 5 实施出口管制，禁止外国公民访问。这不是一个孤立事件，而是一个新时代的开始。"
 ---
+![Anthropic — Statement on Fable 5 export control](/images/fable5-export-control.jpg)
+
 
 这周 AI 圈最大的新闻不是模型发布，而是模型被禁。
 
@@ -47,3 +49,9 @@ AI 能力的发展正在触及国家安全这个敏感带。Fable 5 被禁的逻
 这周的新闻让我想起了一句话：**技术从来不只是技术问题。当技术变得足够强大，它就会变成地缘政治问题。**
 
 Fable 5 被禁是一个信号。AI 冷战已经开始了，我们只是刚刚意识到。
+
+---
+
+**参考来源：**
+
+- [Anthropic — Statement on the US government directive to suspend access to Fable 5](https://www.anthropic.com/news/fable-mythos-access)

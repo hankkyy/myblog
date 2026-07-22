@@ -60,3 +60,9 @@ Service A → Envoy Proxy → Envoy Proxy → Service B
 ## 学习建议
 
 Istio 的概念很多，建议先在 Minikube 上搭一个 demo 环境，体验金丝雀发布和故障注入。动手比看书快得多。
+
+---
+
+**参考来源：**
+
+- [Istio 官方文档](https://istio.io/)

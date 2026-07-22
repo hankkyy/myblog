@@ -46,3 +46,9 @@ GraphRAG 和传统 RAG 不是替代关系，是**互补关系**。80% 的用户 
 如果你在做的是一个真正要理解组织知识体系的系统（而不是 FAQ 客服机器人），GraphRAG 值得认真考虑。四个月前它是论文，现在它是可用的工程方案。
 
 有时候技术的进步不是"更快更好"，而是"能做以前做不了的事"。GraphRAG 属于这一类。
+
+---
+
+**参考来源：**
+
+- [Microsoft Research — GraphRAG: Unlocking LLM discovery on narrative private data (Feb 2026)](https://arxiv.org/abs/2404.16130)

@@ -23,3 +23,9 @@ description: "英伟达 GTC 2026 发布 Blackwell B200，单卡 AI 算力达到 
 B200 的量产意味着训练万亿参数模型成为可能。但电力消耗也是个问题——一个 10 万卡集群的功耗相当于一座小型城市的用电量。
 
 黄仁勋在发布会上说：「The more you buy, the more you save.」这话说了十年了，每次都是真的。
+
+---
+
+**参考来源：**
+
+- [NVIDIA — GTC 2026 Keynote](https://www.nvidia.com/en-us/gtc/)

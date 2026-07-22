@@ -28,3 +28,9 @@ description: "Shopee 母公司 Sea Limited 宣布裁员 15%，约 5000 人受影
 Shopee 虽然裁员，但市场份额还是第一（约 45%）。但竞争越来越激烈，利润率被严重挤压。
 
 电商这个行业太卷了——先是国内的淘宝/京东/拼多多卷，然后是 Amazon/Walmart，现在是 Shopee/Lazada/TikTok Shop/Temu。全球电商没有一块市场是平静的。
+
+---
+
+**参考来源：**
+
+- [Bloomberg / Tech in Asia](https://www.techinasia.com/)

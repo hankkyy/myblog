@@ -52,3 +52,10 @@ FAISS、ScaNN、HNSW——这些算法正在从实验室走进数据库内核。
 3. **看到趋势**。数据库是软件大厦的地基。地基在变，上层也会变
 
 四十年的 B+Tree 垄断正在结束。不是说 B+Tree 会被淘汰——而是终于有了足够好的替代方案，让你可以根据场景做最优选择。这才是技术进步真正的模样。
+
+---
+
+**参考来源：**
+
+- [Google AI — The Case for Learned Index Structures (Jeff Dean et al., 2018)](https://arxiv.org/abs/1712.01208)
+- [Facebook Research — FAISS: A Library for Efficient Similarity Search](https://github.com/facebookresearch/faiss)

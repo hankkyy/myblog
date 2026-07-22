@@ -33,3 +33,10 @@ description: "学习对比 Doris 和 ClickHouse 的架构差异、性能特点�
 两个都是优秀的 OLAP 引擎。如果想入门数据分析，Doris 的 SQL 兼容性更好，上手更快。如果做纯日志分析，ClickHouse 的单表性能更极致。
 
 可以根据业务场景选择，或者两个都学，理解它们的架构设计思想。
+
+---
+
+**参考来源：**
+
+- [Apache Doris](https://doris.apache.org/)
+- [ClickHouse](https://clickhouse.com/)

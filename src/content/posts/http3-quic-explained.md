@@ -31,3 +31,9 @@ QUIC 在 UDP 之上实现了类似 TCP 的可靠传输，但每个 Stream 是独
 - gRPC 也在推进基于 QUIC 的传输层
 
 HTTP/3 不是银弹（局域网里 HTTP/2 完全够用），但对于面向移动用户的 API 来说，HTTP/3 的弱网优化很有价值。
+
+---
+
+**参考来源：**
+
+- [IETF — QUIC: RFC 9000](https://www.rfc-editor.org/rfc/rfc9000)
