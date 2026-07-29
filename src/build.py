@@ -32,6 +32,7 @@ TRAVEL_CITIES = [
     ("🌍 国际 · 港澳台", "international", [
         "东京", "大阪", "京都", "神户", "奈良", "镰仓", "首尔",
         "台北", "香港", "澳门",
+        "河内", "宁平", "下龙", "海阳",
         "哥伦布", "洛杉矶", "旧金山", "西雅图", "达拉斯", "波特兰",
         "丹佛", "亚特兰大", "休斯敦", "凤凰城", "拉斯维加斯",
         "劳德代尔堡", "圣安东尼奥", "圣安娜", "坦帕",
@@ -556,8 +557,8 @@ def build():
                 相信眼界决定世界——去更多地方，见更多人，理解更多事。
               </p>
               <div class="travel-stats">
-                <div class="travel-stat"><strong>316<span class="stat-unit">h</span>&thinsp;18<span class="stat-unit">min</span></strong><span>累计飞行时长</span></div>
-                <div class="travel-stat"><strong>237,032<span class="stat-unit">km</span></strong><span>累计飞行里程</span></div>
+                <div class="travel-stat"><strong>319<span class="stat-unit">h</span>&thinsp;40<span class="stat-unit">min</span></strong><span>累计飞行时长</span></div>
+                <div class="travel-stat"><strong>238,719<span class="stat-unit">km</span></strong><span>累计飞行里程</span></div>
                 <div class="travel-stat travel-stat-toggle" onclick="this.closest('.hobby-card').classList.toggle('expanded')"><strong>{total_cities}</strong><span>个城市 <span class="toggle-arrow">▼</span></span></div>
               </div>
             <div class="travel-regions">
