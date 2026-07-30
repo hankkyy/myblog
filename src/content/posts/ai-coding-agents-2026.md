@@ -1,6 +1,6 @@
 ---
 title: "AI Coding Agent 正在重塑软件开发：不只是「写得更快」"
-date: 2026-07-30T17:00:00+08:00
+date: 2026-07-28T17:00:00+08:00
 categories: ["AI", "技术"]
 description: "Cursor、Claude Code、Copilot 等 AI 编程工具从「补全」进化到「Agent」，开发者的角色正在发生根本性转变。"
 ---
