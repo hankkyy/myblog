@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://hankzhang.us/</loc><changefreq>daily</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/ai-coding-agents-2026/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/posts/saga-pattern-decline/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/wasm-backend-2026/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/ai-supply-limits-era/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/kimi-k3-launch/</loc><changefreq>weekly</changefreq></url>
@@ -139,14 +141,14 @@
   <url><loc>https://hankzhang.us/posts/java-collection-framework/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/http3-quic-explained/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/hello-world/</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://hankzhang.us/categories/技术/</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://hankzhang.us/categories/云原生/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/categories/ai/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/categories/技术/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/categories/分布式/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/categories/系统设计/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us/categories/云原生/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/categories/新闻/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/categories/数据库/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/categories/杂谈/</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://hankzhang.us/categories/分布式/</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://hankzhang.us/categories/系统设计/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/categories/leetcode/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us/posts/</loc><changefreq>monthly</changefreq></url>
   <url><loc>https://hankzhang.us/about/</loc><changefreq>monthly</changefreq></url>
