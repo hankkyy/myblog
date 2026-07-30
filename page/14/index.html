@@ -61,7 +61,21 @@
   <div class="container">
 <div id="primary" class="content-area">
           <main id="main" class="site-main">
-            <div class="tg-archive-featured"><article id="post-jvm-memory-model" class="post type-post status-publish format-standard hentry">
+            <div class="tg-archive-featured"><article id="post-apache-pulsar-intro" class="post type-post status-publish format-standard hentry">
+            <div class="entry-meta">
+              <span class="cat-links"><a href="/categories/分布式/" rel="category">分布式</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/apache-pulsar-intro/" rel="bookmark"><time class="entry-date published" datetime="2025-02-22">2025年2月22日</time></a></span>
+            </div>
+            <header class="entry-header">
+              <h2 class="entry-title"><a href="/posts/apache-pulsar-intro/" rel="bookmark">Apache Pulsar 入门：下一代消息队列有什么不一样？</a></h2>
+            </header>
+            <div class="entry-content">
+              <p>Apache Pulsar 被称为「下一代消息队列」，它和 Kafka 最大的区别是架构。 存算分离 Kafka 的数据存储在 Broker 本地磁盘上，Broker 既负责计算也负责存储。扩容时要同时考虑计算和存储。 Pulsar 把计算（Broker）和存储（BookKeeper）分开了： - Broker：无状态，只负责消息路由和服务 - BookKe [&hellip;]</p>
+            </div>
+            <footer class="entry-footer">
+              <a href="/posts/apache-pulsar-intro/" class="tg-readmore-link">阅读更多</a>
+            </footer>
+          </article></div>
+            <div class="tg-archive-grid tg-archive-col--3"><article id="post-jvm-memory-model" class="post type-post status-publish format-standard hentry">
             <div class="entry-meta">
               <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/jvm-memory-model/" rel="bookmark"><time class="entry-date published" datetime="2025-02-20">2025年2月20日</time></a></span>
             </div>
@@ -69,13 +83,13 @@
               <h2 class="entry-title"><a href="/posts/jvm-memory-model/" rel="bookmark">JVM 内存模型面试精讲：堆、栈、方法区和元空间</a></h2>
             </header>
             <div class="entry-content">
-              <p>JVM 内存模型是理解 Java 程序运行的基础。 JVM 运行时数据区 堆（Heap） - 存放所有对象实例和数组 - 线程共享 - GC 的主要区域 - 分代：新生代（Eden + S0 + S1）+ 老年代 虚拟机栈（Stack） - 每个线程一个栈 - 每个方法调用 = 一个栈帧 - 栈帧包含：局部变量表、操作数栈、动态链接、返回值 - StackO [&hellip;]</p>
+              <p>JVM 内存模型是理解 Java 程序运行的基础。 JVM 运行时数据区 堆（Heap） - 存放所有对象实例 [&hellip;]</p>
             </div>
             <footer class="entry-footer">
               <a href="/posts/jvm-memory-model/" class="tg-readmore-link">阅读更多</a>
             </footer>
-          </article></div>
-            <div class="tg-archive-grid tg-archive-col--3"><article id="post-deepseek-r1-open-source" class="post type-post status-publish format-standard hentry">
+          </article>
+<article id="post-deepseek-r1-open-source" class="post type-post status-publish format-standard hentry">
             <div class="entry-meta">
               <span class="cat-links"><a href="/categories/ai/" rel="category">AI</a><span class="cat-seperator">, </span><a href="/categories/新闻/" rel="category">新闻</a></span><span class="posted-on"><a href="/posts/deepseek-r1-open-source/" rel="bookmark"><time class="entry-date published" datetime="2025-02-14">2025年2月14日</time></a></span>
             </div>
@@ -186,22 +200,8 @@
             <footer class="entry-footer">
               <a href="/posts/http3-quic-explained/" class="tg-readmore-link">阅读更多</a>
             </footer>
-          </article>
-<article id="post-hello-world" class="post type-post status-publish format-standard hentry">
-            <div class="entry-meta">
-              <span class="cat-links"><a href="/categories/杂谈/" rel="category">杂谈</a></span><span class="posted-on"><a href="/posts/hello-world/" rel="bookmark"><time class="entry-date published" datetime="2024-12-01">2024年12月1日</time></a></span>
-            </div>
-            <header class="entry-header">
-              <h2 class="entry-title"><a href="/posts/hello-world/" rel="bookmark">你好，世界</a></h2>
-            </header>
-            <div class="entry-content">
-              <p>这是我的第一篇博客。 为什么写博客 写博客是整理思绪最好的方式。把想法写下来，才知道自己到底在想什么。 这个博 [&hellip;]</p>
-            </div>
-            <footer class="entry-footer">
-              <a href="/posts/hello-world/" class="tg-readmore-link">阅读更多</a>
-            </footer>
           </article></div>
-            <nav class="navigation pagination" aria-label="文章分页"><div class="nav-links"><a class="page-numbers" href="/">1</a><span class="page-numbers dots">&hellip;</span><a class="page-numbers" href="/page/12/">12</a><a class="page-numbers" href="/page/13/">13</a><span class="page-numbers current">14</span><span class="page-jump"><input type="number" min="1" max="14" placeholder="跳转" id="jump-input-14" style="width:56px;text-align:center;border:1px solid #dee2e6;border-right:none;border-radius:4px 0 0 4px;padding:5px 2px;font-size:.85rem;line-height:1.4;outline:none;color:#363b40;transition:border-color .2s" onfocus="this.style.borderColor=&#39;#146bb7&#39;" onblur="this.style.borderColor=&#39;#dee2e6&#39;"><button onclick="var v=parseInt(document.getElementById(&quot;jump-input-14&quot;).value);if(v>=1&&v<=14)location.href=v===1?&quot;/&quot;:&quot;/page/&quot;+v+&quot;/&quot;" style="border:1px solid #dee2e6;border-left:none;border-radius:0 4px 4px 0;padding:6px 10px;cursor:pointer;background:#f8f9fa;color:#495057;font-size:.85rem;transition:all .2s" onmouseover="this.style.background=&#39;#146bb7&#39;;this.style.color=&#39;#fff&#39;;this.style.borderColor=&#39;#146bb7&#39;" onmouseout="this.style.background=&#39;#f8f9fa&#39;;this.style.color=&#39;#495057&#39;;this.style.borderColor=&#39;#dee2e6&#39;">→</button></span></div></nav>
+            <nav class="navigation pagination" aria-label="文章分页"><div class="nav-links"><a class="page-numbers" href="/">1</a><span class="page-numbers dots">&hellip;</span><a class="page-numbers" href="/page/12/">12</a><a class="page-numbers" href="/page/13/">13</a><span class="page-numbers current">14</span><a class="page-numbers" href="/page/15/">15</a><span class="page-jump"><input type="number" min="1" max="15" placeholder="跳转" id="jump-input-14" style="width:56px;text-align:center;border:1px solid #dee2e6;border-right:none;border-radius:4px 0 0 4px;padding:5px 2px;font-size:.85rem;line-height:1.4;outline:none;color:#363b40;transition:border-color .2s" onfocus="this.style.borderColor=&#39;#146bb7&#39;" onblur="this.style.borderColor=&#39;#dee2e6&#39;"><button onclick="var v=parseInt(document.getElementById(&quot;jump-input-14&quot;).value);if(v>=1&&v<=15)location.href=v===1?&quot;/&quot;:&quot;/page/&quot;+v+&quot;/&quot;" style="border:1px solid #dee2e6;border-left:none;border-radius:0 4px 4px 0;padding:6px 10px;cursor:pointer;background:#f8f9fa;color:#495057;font-size:.85rem;transition:all .2s" onmouseover="this.style.background=&#39;#146bb7&#39;;this.style.color=&#39;#fff&#39;;this.style.borderColor=&#39;#146bb7&#39;" onmouseout="this.style.background=&#39;#f8f9fa&#39;;this.style.color=&#39;#495057&#39;;this.style.borderColor=&#39;#dee2e6&#39;">→</button></span></div></nav>
           </main>
         </div>
   </div>

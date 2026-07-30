@@ -17,12 +17,17 @@ date: 2026-06-17T12:00:00+08:00
 | **AI/Agent** | RAG, Chroma, Prompt Engineering, MCP |
 | **工具** | Git, Linux, PySpark |
 
+### 项目
+
+- **[Eastwood Auction](https://github.com/hankkyy/EastWood-Auction)** — 古董拍卖平台。Next.js + TypeScript + Supabase 全栈应用。核心亮点：浏览器端视觉搜索引擎（多维特征签名、加权相似度、置信度门控），中英双语，暗色奢华主题设计系统。
+
 ### 关注方向
 
 - 分布式系统与微服务架构
 - OLAP 数据库与实时数仓
 - AI Agent 开发与应用（RAG、LLM 应用）
 - 后端性能优化
+- 前端工程与全栈实践（TypeScript, Next.js, React）
 
 ### 兴趣爱好
 
