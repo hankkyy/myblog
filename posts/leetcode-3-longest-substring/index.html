@@ -255,13 +255,47 @@ var closeIcon=document.getElementById('chat-toggle-close-emoji');
 var isOpen=false;
 var isStreaming=false;
 var sessionId='s'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
+var dragOffsetX=0,dragOffsetY=0;
+var isDragging=false,dragStartX=0,dragStartY=0;
+
+// Make panel draggable by header
+var chatHeader=document.getElementById('chat-header');
+chatHeader.style.cursor='move';
+chatHeader.addEventListener('mousedown',function(e){
+  if(e.target.tagName==='BUTTON')return;
+  isDragging=true;
+  dragStartX=e.clientX-dragOffsetX;
+  dragStartY=e.clientY-dragOffsetY;
+  panel.style.transition='none';
+});
+chatHeader.addEventListener('touchstart',function(e){
+  if(e.target.tagName==='BUTTON')return;
+  isDragging=true;
+  dragStartX=e.touches[0].clientX-dragOffsetX;
+  dragStartY=e.touches[0].clientY-dragOffsetY;
+  panel.style.transition='none';
+},{passive:false});
+document.addEventListener('mousemove',function(e){
+  if(!isDragging)return;
+  dragOffsetX=e.clientX-dragStartX;
+  dragOffsetY=e.clientY-dragStartY;
+  panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
+});
+document.addEventListener('touchmove',function(e){
+  if(!isDragging)return;
+  dragOffsetX=e.touches[0].clientX-dragStartX;
+  dragOffsetY=e.touches[0].clientY-dragStartY;
+  panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
+},{passive:false});
+document.addEventListener('mouseup',function(){isDragging=false;panel.style.transition='';});
+document.addEventListener('touchend',function(){isDragging=false;panel.style.transition='';});
 
 window.toggleChat=function(){
   isOpen=!isOpen;
   panel.classList.toggle('open',isOpen);
   chatIcon.style.display=isOpen?'none':'block';
   closeIcon.style.display=isOpen?'block':'none';
-  if(isOpen){input.focus();messages.scrollTop=messages.scrollHeight;}
+  if(isOpen){input.focus();messages.scrollTop=messages.scrollHeight;dragOffsetX=0;dragOffsetY=0;panel.style.transform='';}
 };
 
 function addMessage(role,text){
@@ -414,11 +448,12 @@ var currentPage=1;
 var clickCount=0;
 var clickTimer=null;
 
-// Triple click on footer copyright
-document.getElementById('footer-copyright').addEventListener('click',function(){
+// Triple click anywhere in footer to open admin panel
+document.getElementById('colophon').addEventListener('click',function(e){
+  if(e.target.closest('a'))return;
   clickCount++;
   if(clickCount===1){
-    clickTimer=setTimeout(function(){clickCount=0;},600);
+    clickTimer=setTimeout(function(){clickCount=0;},800);
   }
   if(clickCount===3){
     clearTimeout(clickTimer);
