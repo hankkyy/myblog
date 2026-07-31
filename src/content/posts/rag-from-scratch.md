@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "RAG 架构实战：从零搭建一个文档问答系统"
 date: 2026-06-01T10:00:00+08:00
 categories: ["AI"]

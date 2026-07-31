@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "ARM 股价翻倍：从 2023 年 IPO 到现在发生了什么？"
 date: 2026-03-25T10:00:00+08:00
 categories: ['新闻']

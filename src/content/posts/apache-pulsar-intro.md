@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Apache Pulsar 入门：下一代消息队列有什么不一样？"
 date: 2025-02-22T15:00:00+08:00
 categories: ['分布式', '技术']

@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "GraphRAG 正在改变检索增强生成：当知识图谱遇上 LLM"
 date: 2026-06-24T14:00:00+08:00
 categories: ["AI", "技术"]

@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "HTTP 和 HTTPS 面试全攻略：状态码、缓存、TLS 握手"
 date: 2025-04-15T11:00:00+08:00
 categories: ['技术']

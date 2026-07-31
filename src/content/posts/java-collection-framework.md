@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Java 集合框架面试全解：ArrayList、LinkedList、HashMap 底层原理"
 date: 2025-01-10T10:00:00+08:00
 categories: ['技术']

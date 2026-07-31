@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "synchronized vs ReentrantLock：从面试被问到源码实现"
 date: 2025-05-30T16:00:00+08:00
 categories: ['技术']

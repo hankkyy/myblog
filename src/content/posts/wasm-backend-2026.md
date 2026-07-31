@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "WebAssembly 在后端：第三年了，拐点将至"
 date: 2026-07-22T14:00:00+08:00
 categories: ["技术", "云原生"]

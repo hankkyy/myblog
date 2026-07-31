@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "中国大模型走到哪了：Kimi K2 发布前夜的观察"
 date: 2026-07-10T10:00:00+08:00
 categories: ["AI", "新闻"]

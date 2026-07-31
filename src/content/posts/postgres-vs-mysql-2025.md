@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "PostgreSQL 还是 MySQL？2025 年数据库选型的重新思考"
 date: 2025-03-20T14:00:00+08:00
 categories: ['数据库', '技术']

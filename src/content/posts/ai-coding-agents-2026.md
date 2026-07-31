@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "AI Coding Agent 正在重塑软件开发：不只是「写得更快」"
 date: 2026-07-28T17:00:00+08:00
 categories: ["AI", "技术"]

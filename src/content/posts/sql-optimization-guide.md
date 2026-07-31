@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "SQL 优化面试指南：从 EXPLAIN 到索引设计的实战思路"
 date: 2025-05-20T16:00:00+08:00
 categories: ['数据库', '技术']

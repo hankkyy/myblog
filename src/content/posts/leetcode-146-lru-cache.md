@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "LeetCode 146. LRU Cache：面试官最爱的设计题，手写双向链表+哈希表"
 date: 2025-03-30T10:00:00+08:00
 categories: ['LeetCode']

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HashMap 源码深度解析：JDK 8 的红黑树化和扩容机制 – Welcome To My Blog</title>
+<meta name="description" content="逐行分析 HashMap 的 put 方法和扩容逻辑，理解为什么面试官总问 HashMap。">
+<meta property="og:title" content="HashMap 源码深度解析：JDK 8 的红黑树化和扩容机制 – Welcome To My Blog">
+<meta property="og:description" content="逐行分析 HashMap 的 put 方法和扩容逻辑，理解为什么面试官总问 HashMap。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://hankzhang.us//">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://hankzhang.us//">
+<link rel="alternate" hreflang="en" href="https://hankzhang.us//">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "HashMap 源码深度解析：JDK 8 的红黑树化和扩容机制 – Welcome To My Blog",
+  "description": "逐行分析 HashMap 的 put 方法和扩容逻辑，理解为什么面试官总问 HashMap。",
+  "url": "https://hankzhang.us//",
+  "datePublished": "2026-06-17",
+  "author": { "@type": "Person", "name": "Zihao Zhang" }
+}
+</script>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body class="layout--right-sidebar">
+<div id="page" class="site">
+<a class="skip-link screen-reader-text" href="#content">跳到内容</a>
+<header id="masthead" class="site-header tg-site-header tg-site-header--default">
+  <div class="tg-header-top">
+    <div class="container" style="display:flex;justify-content:flex-end;align-items:center;padding:8px 0">
+      <div class="lang-switch"><a href="/" class="lang-link">EN</a></div>
+    </div>
+  </div>
+  <div class="tg-header-bottom">
+    <div class="header-bottom-top">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <div class="site-branding">
+          <p class="site-title"><a href="https://hankzhang.us//zh/" rel="home">Welcome To My Blog</a></p>
+          <p class="site-description">「保持好奇心，继续探索世界」</p>
+        </div>
+      </div>
+    </div>
+    <div class="header-bottom-bottom">
+      <div class="container" style="display:flex;justify-content:center;align-items:center;gap:15px">
+        <nav id="site-navigation" class="main-navigation tg-site-menu--default" style="display:inline-flex;align-items:center;gap:10px">
+          <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu" style="justify-content:center"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/zh/">首页</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/zh/posts/">文章列表</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/zh/categories/">分类</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/zh/about/">关于</a></li></ul></div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+<nav id="cenote-sticky-header" class="cenote-header-sticky">
+  <div class="sticky-header-slide">
+    <div class="cenote-sticky-main">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <span class="sticky-title">HashMap 源码深度解析：JDK 8 的红黑树化和扩容机制</span>
+      </div>
+    </div>
+  </div>
+</nav>
+<div id="content" class="site-content">
+  <div class="container">
+<div class="tg-flex-container tg-flex-space-between"><div id="primary" class="content-area">
+          <main id="main" class="site-main">
+            <article class="post type-post status-publish format-standard hentry">
+              <div class="entry-meta">
+                <span class="cat-links"><a href="/zh/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/zh/posts/hashmap-source-code/" rel="bookmark"><time class="entry-date published" datetime="2025-10-05">2025年10月5日</time></a></span>
+              </div>
+              <header class="entry-header">
+                <h1 class="entry-title">HashMap 源码深度解析：JDK 8 的红黑树化和扩容机制</h1>
+              </header>
+              <div class="entry-content"><p>HashMap 是 Java 面试出场率最高的数据结构。</p>
+<h2>数据结构</h2>
+<p>JDK 8 的 HashMap = 数组 + 链表 + 红黑树。数组的每个位置是一个「桶」（bucket），桶里可能是链表或红黑树。</p>
+<h2>put 方法的流程</h2>
+<pre class="codehilite"><code class="language-java">public V put(K key, V value) {
+    // 1. 计算 hash
+    int hash = (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16);
+
+    // 2. 定位桶位置
+    int index = (n - 1) &amp; hash;  // 等价于 hash % n，但位运算更快
+
+    // 3. 如果桶为空，直接放
+    // 4. 如果桶不为空，遍历链表/树
+    //     - 找到相等的 key，更新 value
+    //     - 没找到，插入
+    // 5. 链表长度 &gt;= 8 且数组长度 &gt;= 64，转为红黑树
+    // 6. size &gt; threshold，扩容
+}
+</code></pre>
+
+<h2>为什么用 (n-1) &amp; hash</h2>
+<p>因为 n（数组长度）总是 2 的幂，（n-1）的二进制全是 1。<code>(n-1) &amp; hash</code> 等价于 <code>hash % n</code>，但位运算比取模快得多。</p>
+<h2>为什么 hash 要 &gt;&gt;&gt; 16</h2>
+<p>把 hashCode 的高 16 位和低 16 位混合，让高位也参与索引计算。否则当数组较小时，只有低位参与运算，分布不均匀。</p>
+<h2>红黑树化</h2>
+<p>链表长度 &gt;= 8（TREEIFY_THRESHOLD）且数组长度 &gt;= 64（MIN_TREEIFY_CAPACITY）时转为红黑树，提升查找效率（O(n) → O(log n)）。</p>
+<p>为什么阈值是 8？官方注释说，在理想的 hash 分布下，链表达到 8 的概率是 0.00000006。</p>
+<h2>扩容</h2>
+<p>当 <code>size &gt; threshold</code>（容量 * 负载因子，默认 0.75）时扩容为原来的两倍。扩容时重新计算每个元素的位置——要么在原来位置，要么在原来位置 + 旧容量。</p>
+<p>HashMap 的设计处处体现着对性能的极致追求。理解了它的源码，你对数据结构的理解会上一个台阶。</p></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/zh/categories/技术/" rel="category">技术</a></span></footer>
+            </article>
+            <nav class="navigation post-navigation" aria-label="文章">
+            <h2 class="screen-reader-text">文章导航</h2>
+            <div class="nav-links"><div class="nav-previous"><a href="/zh/posts/service-mesh-istio-intro/" rel="prev"><span class="nav-links__label">上一篇文章</span> Service Mesh 入门：Istio 到底解决了什么问题？</a></div><div class="nav-next"><a href="/zh/posts/computer-architecture-cache/" rel="next"><span class="nav-links__label">下一篇文章</span> 计算机架构面试入门：CPU 缓存和伪共享（False Sharing）</a></div></div>
+          </nav>
+            <a href="/zh/about/" class="author-bio-link">
+            <div class="author-bio">
+              <div class="author-bio-content">
+                <h3>关于 Zihao Zhang</h3>
+                <p>数据平台工程师。关注分布式系统，OLAP 数据库，AI Agent 开发与应用。</p>
+              </div>
+            </div>
+            </a>
+            <div class="comments-area">
+              <h3>评论</h3>
+              <p class="no-comments">评论已关闭。</p>
+            </div>
+          </main>
+        </div><aside id="secondary" class="widget-area">
+          <section class="widget widget_recent_entries">
+            <h2 class="widget-title">近期文章</h2>
+            <ul><li><a href="/zh/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/zh/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/zh/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/zh/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/zh/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+          </section>
+          <section class="widget widget_tag_cloud">
+            <h2 class="widget-title">分类</h2>
+            <div class="tagcloud"><a href="/zh/categories/ai/">AI</a><a href="/zh/categories/leetcode/">LeetCode</a><a href="/zh/categories/ai/">ai</a><a href="/zh/categories/云原生/">云原生</a><a href="/zh/categories/分布式/">分布式</a><a href="/zh/categories/技术/">技术</a><a href="/zh/categories/数据库/">数据库</a><a href="/zh/categories/新闻/">新闻</a><a href="/zh/categories/杂谈/">杂谈</a><a href="/zh/categories/系统设计/">系统设计</a></div>
+          </section>
+        </aside></div>
+  </div>
+</div>
+<footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
+  <div class="tg-footer-bottom">
+    <div class="container">
+      <div class="site-info" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Copyright © 2026 <a href="https://hankzhang.us/" title="Welcome To My Blog"><span>Welcome To My Blog</span></a>. All rights reserved.</span>
+        <nav style="display:flex;gap:15px">
+          <a href="/zh/">首页</a><a href="/zh/posts/">文章列表</a><a href="/zh/categories/">分类</a><a href="/zh/about/">关于</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</footer>
+<button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:#16181a;color:#fff;border:none;cursor:pointer;font-size:20px;display:none;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,.2)">↑</button>
+<script>
+window.addEventListener('scroll',function(){document.getElementById('back-to-top').style.display=window.scrollY>300?'block':'none';var s=document.getElementById('cenote-sticky-header');if(s)s.classList.toggle('visible',window.scrollY>200);});
+</script>
+</div>
+</body>
+</html>

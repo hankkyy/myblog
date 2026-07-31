@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Vision Pro 2 发布：更轻更便宜，但依然卖不动？"
 date: 2026-04-01T10:00:00+08:00
 categories: ['新闻']

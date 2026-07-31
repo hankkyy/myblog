@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "LeetCode 42. 接雨水：从暴力到双指针的思维提升"
 date: 2026-01-15T15:00:00+08:00
 categories: ['LeetCode']

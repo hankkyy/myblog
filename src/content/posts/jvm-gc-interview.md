@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "JVM 垃圾回收面试精讲：从 CMS 到 G1 到 ZGC"
 date: 2025-05-25T09:00:00+08:00
 categories: ['技术']

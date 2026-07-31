@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "LeetCode 121/122/123. 股票买卖系列：从一道题到六道题的融会贯通"
 date: 2026-04-08T10:00:00+08:00
 categories: ['LeetCode']

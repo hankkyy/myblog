@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Rust 正式进入 Linux 内核主线，C 语言的黄昏到了？"
 date: 2026-05-25T09:00:00+08:00
 categories: ["技术", "新闻"]

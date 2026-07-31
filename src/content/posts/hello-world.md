@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "你好，世界"
 date: 2024-12-01T10:00:00+08:00
 categories: ["杂谈"]

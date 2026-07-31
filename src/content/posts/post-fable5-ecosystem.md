@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "没有 Fable 5 的日子里：开发者社区在用什么替代？"
 date: 2026-06-28T16:00:00+08:00
 categories: ["AI", "技术"]

@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "OpenAI 和软银启动「星际之门」计划：5000 亿美元建 AI 超级算力"
 date: 2025-10-20T11:00:00+08:00
 categories: ['AI', '新闻']

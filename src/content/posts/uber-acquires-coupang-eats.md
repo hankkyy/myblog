@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Uber 收购 Coupang Eats 亚洲业务：外卖行业的全球整合加速"
 date: 2025-11-25T15:00:00+08:00
 categories: ['新闻']

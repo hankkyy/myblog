@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Docker 镜像层缓存原理：为什么 COPY 顺序影响构建速度"
 date: 2025-01-18T10:00:00+08:00
 categories: ['技术']

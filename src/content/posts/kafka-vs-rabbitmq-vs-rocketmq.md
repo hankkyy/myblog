@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Kafka vs RabbitMQ vs RocketMQ：消息队列选型面试全攻略"
 date: 2025-09-18T14:00:00+08:00
 categories: ['分布式', '技术']

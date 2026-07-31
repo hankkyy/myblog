@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "ConcurrentHashMap 为什么比 Hashtable 快？锁分段到 CAS 的优化之路"
 date: 2025-11-05T16:00:00+08:00
 categories: ['技术']

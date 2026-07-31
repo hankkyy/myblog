@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Spring Boot + Redis 缓存实战：从注解到分布式锁"
 date: 2026-05-30T16:00:00+08:00
 categories: ["技术"]

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LeetCode 206. 反转链表：迭代和递归两种解法，面试必会 – Welcome To My Blog</title>
+<meta name="description" content="反转链表看似简单，但迭代和递归两种写法都要会，面试中让你换着写是常事。">
+<meta property="og:title" content="LeetCode 206. 反转链表：迭代和递归两种解法，面试必会 – Welcome To My Blog">
+<meta property="og:description" content="反转链表看似简单，但迭代和递归两种写法都要会，面试中让你换着写是常事。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://hankzhang.us//">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://hankzhang.us//">
+<link rel="alternate" hreflang="en" href="https://hankzhang.us//">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "LeetCode 206. 反转链表：迭代和递归两种解法，面试必会 – Welcome To My Blog",
+  "description": "反转链表看似简单，但迭代和递归两种写法都要会，面试中让你换着写是常事。",
+  "url": "https://hankzhang.us//",
+  "datePublished": "2026-06-17",
+  "author": { "@type": "Person", "name": "Zihao Zhang" }
+}
+</script>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body class="layout--right-sidebar">
+<div id="page" class="site">
+<a class="skip-link screen-reader-text" href="#content">跳到内容</a>
+<header id="masthead" class="site-header tg-site-header tg-site-header--default">
+  <div class="tg-header-top">
+    <div class="container" style="display:flex;justify-content:flex-end;align-items:center;padding:8px 0">
+      <div class="lang-switch"><a href="/" class="lang-link">EN</a></div>
+    </div>
+  </div>
+  <div class="tg-header-bottom">
+    <div class="header-bottom-top">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <div class="site-branding">
+          <p class="site-title"><a href="https://hankzhang.us//zh/" rel="home">Welcome To My Blog</a></p>
+          <p class="site-description">「保持好奇心，继续探索世界」</p>
+        </div>
+      </div>
+    </div>
+    <div class="header-bottom-bottom">
+      <div class="container" style="display:flex;justify-content:center;align-items:center;gap:15px">
+        <nav id="site-navigation" class="main-navigation tg-site-menu--default" style="display:inline-flex;align-items:center;gap:10px">
+          <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu" style="justify-content:center"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/zh/">首页</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/zh/posts/">文章列表</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/zh/categories/">分类</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/zh/about/">关于</a></li></ul></div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+<nav id="cenote-sticky-header" class="cenote-header-sticky">
+  <div class="sticky-header-slide">
+    <div class="cenote-sticky-main">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <span class="sticky-title">LeetCode 206. 反转链表：迭代和递归两种解法，面试必会</span>
+      </div>
+    </div>
+  </div>
+</nav>
+<div id="content" class="site-content">
+  <div class="container">
+<div class="tg-flex-container tg-flex-space-between"><div id="primary" class="content-area">
+          <main id="main" class="site-main">
+            <article class="post type-post status-publish format-standard hentry">
+              <div class="entry-meta">
+                <span class="cat-links"><a href="/zh/categories/leetcode/" rel="category">LeetCode</a></span><span class="posted-on"><a href="/zh/posts/leetcode-206-reverse-linkedlist/" rel="bookmark"><time class="entry-date published" datetime="2025-06-20">2025年6月20日</time></a></span>
+              </div>
+              <header class="entry-header">
+                <h1 class="entry-title">LeetCode 206. 反转链表：迭代和递归两种解法，面试必会</h1>
+              </header>
+              <div class="entry-content"><p>反转链表是链表操作的基础，面试官可能让你先写迭代，再写递归。</p>
+<h2>迭代解法</h2>
+<p>用三个指针：prev（前一个）、cur（当前）、next（下一个）。</p>
+<pre class="codehilite"><code class="language-java">public ListNode reverseList(ListNode head) {
+    ListNode prev = null;
+    ListNode cur = head;
+    while (cur != null) {
+        ListNode next = cur.next;  // 保存下一个
+        cur.next = prev;           // 反转指向
+        prev = cur;                // 前移
+        cur = next;                // 前移
+    }
+    return prev;
+}
+</code></pre>
+
+<p>画图理解：每次把 cur 的箭头从指向 next 变成指向 prev。</p>
+<h2>递归解法</h2>
+<pre class="codehilite"><code class="language-java">public ListNode reverseList(ListNode head) {
+    if (head == null || head.next == null) return head;
+
+    ListNode newHead = reverseList(head.next);
+    head.next.next = head;  // 把后一个节点指向自己
+    head.next = null;       // 断开原来的指向
+
+    return newHead;
+}
+</code></pre>
+
+<p>递归的思路：假设后面的链表已经反转好了，把当前节点接到已反转链表的末尾。</p>
+<h2>递归执行过程</h2>
+<p>以 <code>1→2→3→null</code> 为例：</p>
+<ol>
+<li>递归到最深处 <code>head=3</code>，返回 3</li>
+<li>回溯到 <code>head=2</code>：<code>2.next.next = 2</code>（3 指向 2），<code>2.next = null</code></li>
+<li>回溯到 <code>head=1</code>：<code>1.next.next = 1</code>（2 指向 1），<code>1.next = null</code></li>
+</ol>
+<p>结果：<code>3→2→1→null</code></p>
+<h2>面试要点</h2>
+<ul>
+<li>迭代解注意保存 next，否则反转后就找不到后续节点了</li>
+<li>递归解关键是 <code>head.next.next = head</code> 这一行</li>
+<li>两种方法都要会，面试官经常换着考</li>
+</ul></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/zh/categories/leetcode/" rel="category">LeetCode</a></span></footer>
+            </article>
+            <nav class="navigation post-navigation" aria-label="文章">
+            <h2 class="screen-reader-text">文章导航</h2>
+            <div class="nav-links"><div class="nav-previous"><a href="/zh/posts/mysql-index-interview/" rel="prev"><span class="nav-links__label">上一篇文章</span> MySQL 索引面试核心：为什么最左前缀匹配是面试最爱问的？</a></div><div class="nav-next"><a href="/zh/posts/redis-cluster-practice/" rel="next"><span class="nav-links__label">下一篇文章</span> Redis Cluster 入门：从单机到集群的那些坑</a></div></div>
+          </nav>
+            <a href="/zh/about/" class="author-bio-link">
+            <div class="author-bio">
+              <div class="author-bio-content">
+                <h3>关于 Zihao Zhang</h3>
+                <p>数据平台工程师。关注分布式系统，OLAP 数据库，AI Agent 开发与应用。</p>
+              </div>
+            </div>
+            </a>
+            <div class="comments-area">
+              <h3>评论</h3>
+              <p class="no-comments">评论已关闭。</p>
+            </div>
+          </main>
+        </div><aside id="secondary" class="widget-area">
+          <section class="widget widget_recent_entries">
+            <h2 class="widget-title">近期文章</h2>
+            <ul><li><a href="/zh/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/zh/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/zh/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/zh/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/zh/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+          </section>
+          <section class="widget widget_tag_cloud">
+            <h2 class="widget-title">分类</h2>
+            <div class="tagcloud"><a href="/zh/categories/ai/">AI</a><a href="/zh/categories/leetcode/">LeetCode</a><a href="/zh/categories/ai/">ai</a><a href="/zh/categories/云原生/">云原生</a><a href="/zh/categories/分布式/">分布式</a><a href="/zh/categories/技术/">技术</a><a href="/zh/categories/数据库/">数据库</a><a href="/zh/categories/新闻/">新闻</a><a href="/zh/categories/杂谈/">杂谈</a><a href="/zh/categories/系统设计/">系统设计</a></div>
+          </section>
+        </aside></div>
+  </div>
+</div>
+<footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
+  <div class="tg-footer-bottom">
+    <div class="container">
+      <div class="site-info" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Copyright © 2026 <a href="https://hankzhang.us/" title="Welcome To My Blog"><span>Welcome To My Blog</span></a>. All rights reserved.</span>
+        <nav style="display:flex;gap:15px">
+          <a href="/zh/">首页</a><a href="/zh/posts/">文章列表</a><a href="/zh/categories/">分类</a><a href="/zh/about/">关于</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</footer>
+<button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:#16181a;color:#fff;border:none;cursor:pointer;font-size:20px;display:none;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,.2)">↑</button>
+<script>
+window.addEventListener('scroll',function(){document.getElementById('back-to-top').style.display=window.scrollY>300?'block':'none';var s=document.getElementById('cenote-sticky-header');if(s)s.classList.toggle('visible',window.scrollY>200);});
+</script>
+</div>
+</body>
+</html>

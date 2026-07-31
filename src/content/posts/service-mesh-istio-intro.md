@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Service Mesh 入门：Istio 到底解决了什么问题？"
 date: 2025-09-30T16:00:00+08:00
 categories: ['云原生', '分布式', '技术']

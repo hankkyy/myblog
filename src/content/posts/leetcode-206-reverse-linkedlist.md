@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "LeetCode 206. 反转链表：迭代和递归两种解法，面试必会"
 date: 2025-06-20T09:00:00+08:00
 categories: ['LeetCode']

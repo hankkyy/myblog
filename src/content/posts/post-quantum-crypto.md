@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "后量子密码学入门：量子计算机会破解 HTTPS 吗？"
 date: 2025-07-30T10:00:00+08:00
 categories: ['技术']

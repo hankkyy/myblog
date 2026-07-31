@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "LeetCode 15. 三数之和：排序+双指针的经典模板"
 date: 2025-04-20T10:00:00+08:00
 categories: ['LeetCode']

@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Google DeepMind 发布 Gemini Robotics：AI 物理世界交互的里程碑"
 date: 2026-02-18T15:00:00+08:00
 categories: ['AI', '新闻']

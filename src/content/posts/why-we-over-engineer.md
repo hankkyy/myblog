@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "为什么我们总喜欢过度设计：从「Hello World」到「微服务架构」的反思"
 date: 2025-03-08T20:00:00+08:00
 categories: ['杂谈']

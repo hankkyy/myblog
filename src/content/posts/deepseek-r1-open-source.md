@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "DeepSeek R1 开源：中国 AI 模型的「DeepSeek 时刻」"
 date: 2025-02-14T16:00:00+08:00
 categories: ['AI', '新闻']

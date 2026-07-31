@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "特斯拉 Optimus 机器人开始在工厂「打工」"
 date: 2025-09-05T09:00:00+08:00
 categories: ['AI', '新闻']

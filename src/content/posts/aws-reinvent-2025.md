@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "AWS re:Invent 2025：Amazon 的 AI 全线反击"
 date: 2025-06-10T08:00:00+08:00
 categories: ['新闻']

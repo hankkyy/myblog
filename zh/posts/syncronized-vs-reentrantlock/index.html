@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>synchronized vs ReentrantLock：从面试被问到源码实现 – Welcome To My Blog</title>
+<meta name="description" content="对比 Java 内置锁和显式锁的差异，包括锁升级过程和 AQS 原理。">
+<meta property="og:title" content="synchronized vs ReentrantLock：从面试被问到源码实现 – Welcome To My Blog">
+<meta property="og:description" content="对比 Java 内置锁和显式锁的差异，包括锁升级过程和 AQS 原理。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://hankzhang.us//">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://hankzhang.us//">
+<link rel="alternate" hreflang="en" href="https://hankzhang.us//">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "synchronized vs ReentrantLock：从面试被问到源码实现 – Welcome To My Blog",
+  "description": "对比 Java 内置锁和显式锁的差异，包括锁升级过程和 AQS 原理。",
+  "url": "https://hankzhang.us//",
+  "datePublished": "2026-06-17",
+  "author": { "@type": "Person", "name": "Zihao Zhang" }
+}
+</script>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body class="layout--right-sidebar">
+<div id="page" class="site">
+<a class="skip-link screen-reader-text" href="#content">跳到内容</a>
+<header id="masthead" class="site-header tg-site-header tg-site-header--default">
+  <div class="tg-header-top">
+    <div class="container" style="display:flex;justify-content:flex-end;align-items:center;padding:8px 0">
+      <div class="lang-switch"><a href="/" class="lang-link">EN</a></div>
+    </div>
+  </div>
+  <div class="tg-header-bottom">
+    <div class="header-bottom-top">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <div class="site-branding">
+          <p class="site-title"><a href="https://hankzhang.us//zh/" rel="home">Welcome To My Blog</a></p>
+          <p class="site-description">「保持好奇心，继续探索世界」</p>
+        </div>
+      </div>
+    </div>
+    <div class="header-bottom-bottom">
+      <div class="container" style="display:flex;justify-content:center;align-items:center;gap:15px">
+        <nav id="site-navigation" class="main-navigation tg-site-menu--default" style="display:inline-flex;align-items:center;gap:10px">
+          <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu" style="justify-content:center"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/zh/">首页</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/zh/posts/">文章列表</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/zh/categories/">分类</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/zh/about/">关于</a></li></ul></div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+<nav id="cenote-sticky-header" class="cenote-header-sticky">
+  <div class="sticky-header-slide">
+    <div class="cenote-sticky-main">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <span class="sticky-title">synchronized vs ReentrantLock：从面试被问到源码实现</span>
+      </div>
+    </div>
+  </div>
+</nav>
+<div id="content" class="site-content">
+  <div class="container">
+<div class="tg-flex-container tg-flex-space-between"><div id="primary" class="content-area">
+          <main id="main" class="site-main">
+            <article class="post type-post status-publish format-standard hentry">
+              <div class="entry-meta">
+                <span class="cat-links"><a href="/zh/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/zh/posts/syncronized-vs-reentrantlock/" rel="bookmark"><time class="entry-date published" datetime="2025-05-30">2025年5月30日</time></a></span>
+              </div>
+              <header class="entry-header">
+                <h1 class="entry-title">synchronized vs ReentrantLock：从面试被问到源码实现</h1>
+              </header>
+              <div class="entry-content"><p>synchronized 和 ReentrantLock 有什么区别？十个面试九个问。</p>
+<h2>用法对比</h2>
+<pre class="codehilite"><code class="language-java">// synchronized
+synchronized (lock) {
+    // 临界区
+}
+
+// ReentrantLock
+lock.lock();
+try {
+    // 临界区
+} finally {
+    lock.unlock();  // 必须在 finally 中释放！
+}
+</code></pre>
+
+<h2>核心区别</h2>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>synchronized</th>
+<th>ReentrantLock</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>实现</td>
+<td>JVM 内置（monitorenter/exit）</td>
+<td>JDK 层面（AQS）</td>
+</tr>
+<tr>
+<td>可中断</td>
+<td>不支持</td>
+<td>lockInterruptibly()</td>
+</tr>
+<tr>
+<td>超时获取</td>
+<td>不支持</td>
+<td>tryLock(time, unit)</td>
+</tr>
+<tr>
+<td>公平锁</td>
+<td>非公平</td>
+<td>可公平可非公平</td>
+</tr>
+<tr>
+<td>多条件</td>
+<td>一个条件队列</td>
+<td>多个 Condition</td>
+</tr>
+<tr>
+<td>性能</td>
+<td>JDK 6+ 优化后旗鼓相当</td>
+<td>差不多</td>
+</tr>
+</tbody>
+</table>
+<h2>JDK 6 的锁升级</h2>
+<p>synchronized 在 JDK 6 之前是重量级锁（直接操作系统互斥量）。JDK 6 引入了锁升级：</p>
+<ol>
+<li><strong>无锁</strong>：没有线程竞争</li>
+<li><strong>偏向锁</strong>：同一个线程多次获取，直接通过（CAS 标记线程 ID）</li>
+<li><strong>轻量级锁</strong>：多个线程交替执行（CAS 自旋）</li>
+<li><strong>重量级锁</strong>：真正的阻塞（操作系统层面）</li>
+</ol>
+<h2>ReentrantLock 底层：AQS</h2>
+<p>ReentrantLock 基于 AQS（AbstractQueuedSynchronizer）。AQS 维护了一个 state（volatile int）和一个 FIFO 等待队列。</p>
+<ul>
+<li>加锁：CAS 把 state 从 0 改为 1</li>
+<li>重入：同一个线程再获取，state + 1</li>
+<li>释放：state - 1，state 为 0 时唤醒等待线程</li>
+</ul>
+<h2>什么时候用 ReentrantLock</h2>
+<ul>
+<li>需要尝试获取锁（tryLock）</li>
+<li>需要可中断的锁</li>
+<li>需要公平锁（先来先得）</li>
+</ul>
+<p>能用 synchronized 就用 synchronized。代码更简单，出错的概率更小。</p></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/zh/categories/技术/" rel="category">技术</a></span></footer>
+            </article>
+            <nav class="navigation post-navigation" aria-label="文章">
+            <h2 class="screen-reader-text">文章导航</h2>
+            <div class="nav-links"><div class="nav-previous"><a href="/zh/posts/k8s-hpa-autoscaling/" rel="prev"><span class="nav-links__label">上一篇文章</span> Kubernetes HPA 自动伸缩深入理解：从 CPU 到自定义指标</a></div><div class="nav-next"><a href="/zh/posts/aws-reinvent-2025/" rel="next"><span class="nav-links__label">下一篇文章</span> AWS re:Invent 2025：Amazon 的 AI 全线反击</a></div></div>
+          </nav>
+            <a href="/zh/about/" class="author-bio-link">
+            <div class="author-bio">
+              <div class="author-bio-content">
+                <h3>关于 Zihao Zhang</h3>
+                <p>数据平台工程师。关注分布式系统，OLAP 数据库，AI Agent 开发与应用。</p>
+              </div>
+            </div>
+            </a>
+            <div class="comments-area">
+              <h3>评论</h3>
+              <p class="no-comments">评论已关闭。</p>
+            </div>
+          </main>
+        </div><aside id="secondary" class="widget-area">
+          <section class="widget widget_recent_entries">
+            <h2 class="widget-title">近期文章</h2>
+            <ul><li><a href="/zh/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/zh/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/zh/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/zh/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/zh/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+          </section>
+          <section class="widget widget_tag_cloud">
+            <h2 class="widget-title">分类</h2>
+            <div class="tagcloud"><a href="/zh/categories/ai/">AI</a><a href="/zh/categories/leetcode/">LeetCode</a><a href="/zh/categories/ai/">ai</a><a href="/zh/categories/云原生/">云原生</a><a href="/zh/categories/分布式/">分布式</a><a href="/zh/categories/技术/">技术</a><a href="/zh/categories/数据库/">数据库</a><a href="/zh/categories/新闻/">新闻</a><a href="/zh/categories/杂谈/">杂谈</a><a href="/zh/categories/系统设计/">系统设计</a></div>
+          </section>
+        </aside></div>
+  </div>
+</div>
+<footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
+  <div class="tg-footer-bottom">
+    <div class="container">
+      <div class="site-info" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Copyright © 2026 <a href="https://hankzhang.us/" title="Welcome To My Blog"><span>Welcome To My Blog</span></a>. All rights reserved.</span>
+        <nav style="display:flex;gap:15px">
+          <a href="/zh/">首页</a><a href="/zh/posts/">文章列表</a><a href="/zh/categories/">分类</a><a href="/zh/about/">关于</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</footer>
+<button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:#16181a;color:#fff;border:none;cursor:pointer;font-size:20px;display:none;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,.2)">↑</button>
+<script>
+window.addEventListener('scroll',function(){document.getElementById('back-to-top').style.display=window.scrollY>300?'block':'none';var s=document.getElementById('cenote-sticky-header');if(s)s.classList.toggle('visible',window.scrollY>200);});
+</script>
+</div>
+</body>
+</html>

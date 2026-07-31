@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Neovim 配置指南：2025 年的终端编辑器还能打吗"
 date: 2025-06-25T18:00:00+08:00
 categories: ['技术']

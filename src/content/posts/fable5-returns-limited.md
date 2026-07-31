@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Fable 5 回来了，但已经不是原来的 Fable 5 了"
 date: 2026-07-02T10:00:00+08:00
 categories: ["AI", "新闻"]

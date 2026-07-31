@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "系统设计面试：设计一个 API 限流器（Rate Limiter）"
 date: 2026-01-25T10:00:00+08:00
 categories: ['系统设计', '技术']

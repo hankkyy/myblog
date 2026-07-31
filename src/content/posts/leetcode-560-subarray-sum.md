@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "LeetCode 560. 和为 K 的子数组：前缀和 + HashMap 的巧妙组合"
 date: 2025-09-10T14:00:00+08:00
 categories: ['LeetCode']

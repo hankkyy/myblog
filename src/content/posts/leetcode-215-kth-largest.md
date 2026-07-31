@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "LeetCode 215. 数组中的第 K 个最大元素：快选 vs 堆排"
 date: 2026-02-12T15:00:00+08:00
 categories: ['LeetCode']

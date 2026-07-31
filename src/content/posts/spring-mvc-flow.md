@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Spring MVC 请求处理流程：从 DispatcherServlet 到视图渲染"
 date: 2025-08-08T09:00:00+08:00
 categories: ['技术']

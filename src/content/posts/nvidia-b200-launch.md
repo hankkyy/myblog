@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "英伟达发布 B200 GPU：AI 算力又翻倍了"
 date: 2026-05-28T10:00:00+08:00
 categories: ['新闻', 'AI']

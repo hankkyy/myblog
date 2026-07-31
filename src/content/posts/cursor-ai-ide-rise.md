@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Cursor 估值突破 100 亿美元：AI 编程工具重新定义了「IDE」"
 date: 2026-03-08T12:00:00+08:00
 categories: ['AI', '技术']

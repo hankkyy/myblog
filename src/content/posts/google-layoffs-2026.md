@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Google 2026 大规模裁员：云计算部门裁撤 15%"
 date: 2026-04-12T14:00:00+08:00
 categories: ["新闻"]

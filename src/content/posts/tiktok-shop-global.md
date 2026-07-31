@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "TikTok Shop 全球 GMV 突破 500 亿美元：直播带货席卷全球"
 date: 2026-02-05T14:00:00+08:00
 categories: ['新闻']

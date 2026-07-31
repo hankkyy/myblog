@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "X（原 Twitter）改名一年半，马斯克亏了多少？"
 date: 2025-04-22T14:00:00+08:00
 categories: ['新闻']

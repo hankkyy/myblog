@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Meta 发布 Llama 4：开源模型正式超越 GPT-4"
 date: 2026-04-20T10:00:00+08:00
 categories: ["AI", "新闻"]

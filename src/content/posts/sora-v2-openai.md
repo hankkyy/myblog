@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "OpenAI 发布 Sora 2：AI 视频生成进入「可商用」时代"
 date: 2026-02-22T18:00:00+08:00
 categories: ['AI', '新闻']

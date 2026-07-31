@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Rust 写给 Java 程序员：所有权机制深度解析"
 date: 2026-06-16T10:00:00+08:00
 categories: ["技术"]

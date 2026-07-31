@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Redis Cluster 入门：从单机到集群的那些坑"
 date: 2025-06-20T14:00:00+08:00
 categories: ["技术", "分布式"]

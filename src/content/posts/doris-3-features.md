@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "2026 年 Apache Doris 3.0 新特性全解析"
 date: 2026-06-15T14:00:00+08:00
 categories: ["技术"]

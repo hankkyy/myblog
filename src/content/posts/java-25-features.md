@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Java 25 发布：虚拟线程稳定版、字符串模板正式 GA"
 date: 2026-03-18T10:00:00+08:00
 categories: ["技术"]

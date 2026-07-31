@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "MySQL 索引原理：B+Tree 为什么统治了数据库世界"
 date: 2026-05-22T11:00:00+08:00
 categories: ["技术"]

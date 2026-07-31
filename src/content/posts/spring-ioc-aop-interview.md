@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Spring IoC 和 AOP 面试怎么答？不只是背概念"
 date: 2025-01-25T10:00:00+08:00
 categories: ['技术']

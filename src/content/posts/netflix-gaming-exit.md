@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Netflix 退出游戏业务：流媒体巨头的多元化尝试又失败了"
 date: 2025-11-15T14:00:00+08:00
 categories: ['新闻']

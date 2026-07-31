@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "@Transactional 失效的 5 种场景：为什么你的事务没回滚？"
 date: 2025-06-30T10:00:00+08:00
 categories: ['技术']

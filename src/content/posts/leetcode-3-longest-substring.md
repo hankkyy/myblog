@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "LeetCode 3. 无重复字符的最长子串：滑动窗口模板速通"
 date: 2025-11-08T10:00:00+08:00
 categories: ['LeetCode']

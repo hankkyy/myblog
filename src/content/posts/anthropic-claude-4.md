@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Anthropic 发布 Claude 4：主打「安全性」的 AI 能跑多远？"
 date: 2025-03-05T09:00:00+08:00
 categories: ['AI', '新闻']

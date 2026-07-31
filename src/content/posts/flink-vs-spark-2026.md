@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "实时计算入门：Flink 和 Spark Structured Streaming 该怎么选？"
 date: 2026-02-10T13:00:00+08:00
 categories: ["技术", "分布式"]

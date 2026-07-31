@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Redis 为什么快？单线程、IO 多路复用与数据结构分析"
 date: 2026-06-09T10:00:00+08:00
 categories: ["技术"]

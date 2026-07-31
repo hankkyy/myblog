@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Spring Boot 3 + Virtual Threads：性能测试与踩坑记录"
 date: 2026-06-12T11:00:00+08:00
 categories: ["技术"]

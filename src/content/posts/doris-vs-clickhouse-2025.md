@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Doris vs ClickHouse：OLAP 数据库学习对比"
 date: 2025-04-10T15:00:00+08:00
 categories: ["数据库", "技术"]

@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "马斯克 xAI 发布 Grok-4：主打「反政治正确」的 AI 能走多远？"
 date: 2025-11-10T10:00:00+08:00
 categories: ['AI', '新闻']

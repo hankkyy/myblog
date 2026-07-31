@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "分布式共识算法：Raft 为什么比 Paxos 更好懂"
 date: 2026-05-28T14:00:00+08:00
 categories: ["分布式"]

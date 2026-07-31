@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "微信 9.0 内置 AI 助手：国民 App 的 AI 野心"
 date: 2026-04-08T15:00:00+08:00
 categories: ["AI", "新闻"]

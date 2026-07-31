@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "苹果发布 M4 Ultra：桌面级 AI 推理的转折点？"
 date: 2026-02-10T14:00:00+08:00
 categories: ["AI", "新闻"]

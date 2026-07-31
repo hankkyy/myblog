@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "作为 Java 开发者，我是怎么开始学 Rust 的"
 date: 2025-02-05T14:00:00+08:00
 categories: ['技术']

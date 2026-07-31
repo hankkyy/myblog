@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "LeetCode 200. 岛屿数量：DFS/BFS 遍历二维网格的模板"
 date: 2025-10-22T10:00:00+08:00
 categories: ['LeetCode']

@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "LeetCode 25. K 个一组翻转链表：递归解法的简洁与优雅"
 date: 2025-07-08T16:00:00+08:00
 categories: ['LeetCode']

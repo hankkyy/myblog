@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Kimi K2 开源了：MoE × 1T 参数，中国大模型的成人礼"
 date: 2026-07-14T09:00:00+08:00
 categories: ["AI", "新闻"]

@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "AGENTS.md：给 AI 写一份项目说明书"
 date: 2026-06-05T15:00:00+08:00
 categories: ["技术"]

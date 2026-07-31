@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "MCP 协议：让 LLM 安全调用外部工具的标准化方案"
 date: 2026-06-03T14:00:00+08:00
 categories: ["技术"]

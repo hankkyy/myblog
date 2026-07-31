@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "OpenAI 宫斗续集：Sam Altman 回归一年后 OpenAI 变成什么样了？"
 date: 2025-01-22T10:00:00+08:00
 categories: ['新闻']

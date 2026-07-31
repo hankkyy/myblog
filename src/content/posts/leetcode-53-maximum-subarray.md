@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "LeetCode 53. 最大子数组和：动态规划入门第一题"
 date: 2025-08-12T14:00:00+08:00
 categories: ['LeetCode']

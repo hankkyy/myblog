@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "计算机架构面试入门：CPU 缓存和伪共享（False Sharing）"
 date: 2025-10-10T14:00:00+08:00
 categories: ['技术']

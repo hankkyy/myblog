@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Midjourney V7 发布：AI 生图离以假乱真越来越近了"
 date: 2026-04-12T16:00:00+08:00
 categories: ['AI', '新闻']

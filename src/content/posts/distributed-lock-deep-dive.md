@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "分布式锁的三代演进：从 Redis 到 Etcd 再到无锁设计"
 date: 2025-03-15T10:00:00+08:00
 categories: ["分布式", "技术"]

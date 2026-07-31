@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redis 为什么快？单线程、IO 多路复用与数据结构分析 – Welcome To My Blog</title>
+<meta name="description" content="从线程模型、epoll、高效数据结构三个层面解释 Redis 高性能的秘密">
+<meta property="og:title" content="Redis 为什么快？单线程、IO 多路复用与数据结构分析 – Welcome To My Blog">
+<meta property="og:description" content="从线程模型、epoll、高效数据结构三个层面解释 Redis 高性能的秘密">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://hankzhang.us//">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://hankzhang.us//">
+<link rel="alternate" hreflang="en" href="https://hankzhang.us//">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Redis 为什么快？单线程、IO 多路复用与数据结构分析 – Welcome To My Blog",
+  "description": "从线程模型、epoll、高效数据结构三个层面解释 Redis 高性能的秘密",
+  "url": "https://hankzhang.us//",
+  "datePublished": "2026-06-17",
+  "author": { "@type": "Person", "name": "Zihao Zhang" }
+}
+</script>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body class="layout--right-sidebar">
+<div id="page" class="site">
+<a class="skip-link screen-reader-text" href="#content">跳到内容</a>
+<header id="masthead" class="site-header tg-site-header tg-site-header--default">
+  <div class="tg-header-top">
+    <div class="container" style="display:flex;justify-content:flex-end;align-items:center;padding:8px 0">
+      <div class="lang-switch"><a href="/" class="lang-link">EN</a></div>
+    </div>
+  </div>
+  <div class="tg-header-bottom">
+    <div class="header-bottom-top">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <div class="site-branding">
+          <p class="site-title"><a href="https://hankzhang.us//zh/" rel="home">Welcome To My Blog</a></p>
+          <p class="site-description">「保持好奇心，继续探索世界」</p>
+        </div>
+      </div>
+    </div>
+    <div class="header-bottom-bottom">
+      <div class="container" style="display:flex;justify-content:center;align-items:center;gap:15px">
+        <nav id="site-navigation" class="main-navigation tg-site-menu--default" style="display:inline-flex;align-items:center;gap:10px">
+          <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu" style="justify-content:center"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/zh/">首页</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/zh/posts/">文章列表</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/zh/categories/">分类</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/zh/about/">关于</a></li></ul></div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+<nav id="cenote-sticky-header" class="cenote-header-sticky">
+  <div class="sticky-header-slide">
+    <div class="cenote-sticky-main">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <span class="sticky-title">Redis 为什么快？单线程、IO 多路复用与数据结构分析</span>
+      </div>
+    </div>
+  </div>
+</nav>
+<div id="content" class="site-content">
+  <div class="container">
+<div class="tg-flex-container tg-flex-space-between"><div id="primary" class="content-area">
+          <main id="main" class="site-main">
+            <article class="post type-post status-publish format-standard hentry">
+              <div class="entry-meta">
+                <span class="cat-links"><a href="/zh/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/zh/posts/redis-fast/" rel="bookmark"><time class="entry-date published" datetime="2026-06-09">2026年6月9日</time></a></span>
+              </div>
+              <header class="entry-header">
+                <h1 class="entry-title">Redis 为什么快？单线程、IO 多路复用与数据结构分析</h1>
+              </header>
+              <div class="entry-content"><p>Redis 单线程却能支撑 10 万 QPS。这篇文章解释背后的设计。</p>
+<h2>1. 为什么单线程？</h2>
+<p>Redis 选择单线程不是因为不会写多线程，而是<strong>内存操作太快，多线程的上下文切换和锁竞争反而拖慢性能</strong>。</p>
+<p>一个 Redis 命令的执行路径：</p>
+<pre class="codehilite"><code>解析命令 → 查找 key → 执行操作 → 返回结果
+</code></pre>
+
+<p>全部是纯内存操作，耗时微秒级。相比之下，线程切换需要 1-10 微秒，锁竞争更贵。</p>
+<p>但 Redis 6.0 引入了<strong>IO 多线程</strong>——网络读写可以多线程，命令执行仍然是单线程。</p>
+<h2>2. IO 多路复用：epoll</h2>
+<p>单线程怎么处理几万个客户端连接？答案是 epoll。</p>
+<pre class="codehilite"><code class="language-python"># 伪代码：epoll 工作流程
+epoll_fd = epoll_create()
+for client in clients:
+    epoll_ctl(epoll_fd, ADD, client.fd, EPOLLIN)
+
+while True:
+    events = epoll_wait(epoll_fd, timeout=10)  # 阻塞等待
+    for fd, event in events:
+        handle_client(fd)  # 只处理就绪的连接
+</code></pre>
+
+<p>对比：
+- <code>select</code>：遍历所有 fd → O(n)，最多 1024 个
+- <code>poll</code>：遍历所有 fd → O(n)，无上限但不高效
+- <code>epoll</code>：只返回就绪的 fd → O(1)，基于红黑树 + 就绪链表</p>
+<h2>3. 高效数据结构</h2>
+<p>Redis 快不只是因为内存，还因为数据结构设计得巧妙。</p>
+<p><strong>SDS (Simple Dynamic String)</strong>：</p>
+<pre class="codehilite"><code class="language-c">struct sdshdr {
+    int len;     // 已用长度
+    int free;    // 剩余空间
+    char buf[];  // 实际数据
+};
+</code></pre>
+
+<ul>
+<li>O(1) 获取字符串长度（C 字符串要 O(n)）</li>
+<li>预分配空间，减少 realloc</li>
+<li>二进制安全</li>
+</ul>
+<p><strong>ziplist</strong>：连续内存存储，省指针开销。小数据量时比链表紧凑 5-10 倍。</p>
+<p><strong>skiplist</strong>：ZSet 的底层结构，平均 O(log n)，实现比平衡树简单。</p>
+<h2>4. 性能数据</h2>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>单机 QPS</th>
+<th>延迟 P99</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>120,000</td>
+<td>&lt; 1ms</td>
+</tr>
+<tr>
+<td>SET</td>
+<td>110,000</td>
+<td>&lt; 1ms</td>
+</tr>
+<tr>
+<td>INCR</td>
+<td>115,000</td>
+<td>&lt; 1ms</td>
+</tr>
+<tr>
+<td>LPUSH</td>
+<td>105,000</td>
+<td>&lt; 1ms</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Redis 的快是「正确的架构选择 × 极致的数据结构优化」的结果，不是蛮力堆机器能比的。</p>
+</blockquote></div>
+              <footer class="entry-footer"><span class="cat-links">分类： <a href="/zh/categories/技术/" rel="category">技术</a></span></footer>
+            </article>
+            <nav class="navigation post-navigation" aria-label="文章">
+            <h2 class="screen-reader-text">文章导航</h2>
+            <div class="nav-links"><div class="nav-previous"><a href="/zh/posts/internship-thoughts/" rel="prev"><span class="nav-links__label">上一篇文章</span> 后端实习两个月，我学到的东西比大学两年都多</a></div><div class="nav-next"><a href="/zh/posts/columnar-storage/" rel="next"><span class="nav-links__label">下一篇文章</span> 为什么 ClickHouse 比 MySQL 快 100 倍？列式存储原理</a></div></div>
+          </nav>
+            <a href="/zh/about/" class="author-bio-link">
+            <div class="author-bio">
+              <div class="author-bio-content">
+                <h3>关于 Zihao Zhang</h3>
+                <p>数据平台工程师。关注分布式系统，OLAP 数据库，AI Agent 开发与应用。</p>
+              </div>
+            </div>
+            </a>
+            <div class="comments-area">
+              <h3>评论</h3>
+              <p class="no-comments">评论已关闭。</p>
+            </div>
+          </main>
+        </div><aside id="secondary" class="widget-area">
+          <section class="widget widget_recent_entries">
+            <h2 class="widget-title">近期文章</h2>
+            <ul><li><a href="/zh/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/zh/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/zh/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/zh/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/zh/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+          </section>
+          <section class="widget widget_tag_cloud">
+            <h2 class="widget-title">分类</h2>
+            <div class="tagcloud"><a href="/zh/categories/ai/">AI</a><a href="/zh/categories/leetcode/">LeetCode</a><a href="/zh/categories/ai/">ai</a><a href="/zh/categories/云原生/">云原生</a><a href="/zh/categories/分布式/">分布式</a><a href="/zh/categories/技术/">技术</a><a href="/zh/categories/数据库/">数据库</a><a href="/zh/categories/新闻/">新闻</a><a href="/zh/categories/杂谈/">杂谈</a><a href="/zh/categories/系统设计/">系统设计</a></div>
+          </section>
+        </aside></div>
+  </div>
+</div>
+<footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
+  <div class="tg-footer-bottom">
+    <div class="container">
+      <div class="site-info" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Copyright © 2026 <a href="https://hankzhang.us/" title="Welcome To My Blog"><span>Welcome To My Blog</span></a>. All rights reserved.</span>
+        <nav style="display:flex;gap:15px">
+          <a href="/zh/">首页</a><a href="/zh/posts/">文章列表</a><a href="/zh/categories/">分类</a><a href="/zh/about/">关于</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</footer>
+<button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:#16181a;color:#fff;border:none;cursor:pointer;font-size:20px;display:none;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,.2)">↑</button>
+<script>
+window.addEventListener('scroll',function(){document.getElementById('back-to-top').style.display=window.scrollY>300?'block':'none';var s=document.getElementById('cenote-sticky-header');if(s)s.classList.toggle('visible',window.scrollY>200);});
+</script>
+</div>
+</body>
+</html>

@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "gRPC vs REST：什么时候该用 gRPC？"
 date: 2026-05-18T10:00:00+08:00
 categories: ["技术"]

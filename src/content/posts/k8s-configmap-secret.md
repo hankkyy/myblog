@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Kubernetes ConfigMap 和 Secret：配置管理的正确姿势"
 date: 2026-03-05T09:00:00+08:00
 categories: ['云原生', '技术']

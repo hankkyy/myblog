@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "HashMap 源码深度解析：JDK 8 的红黑树化和扩容机制"
 date: 2025-10-05T10:00:00+08:00
 categories: ['技术']

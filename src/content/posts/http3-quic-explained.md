@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "HTTP/3 和 QUIC：为什么用 UDP 替代 TCP？"
 date: 2025-01-05T09:00:00+08:00
 categories: ["技术"]

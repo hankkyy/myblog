@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Spring Bean 生命周期：从实例化到销毁经历了什么？"
 date: 2025-07-12T11:00:00+08:00
 categories: ['技术']

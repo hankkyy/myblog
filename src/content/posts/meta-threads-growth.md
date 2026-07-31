@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Threads 月活突破 5 亿：Meta 的「推特杀手」终于成功了"
 date: 2026-01-20T10:00:00+08:00
 categories: ['新闻']

@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "当美国政府叫停 Fable 5：AI 出口管制的第一枪"
 date: 2026-06-20T10:00:00+08:00
 categories: ["AI", "新闻"]

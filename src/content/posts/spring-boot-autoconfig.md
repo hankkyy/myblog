@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Spring Boot 自动配置原理：@SpringBootApplication 到底做了什么？"
 date: 2025-04-25T14:00:00+08:00
 categories: ['技术']

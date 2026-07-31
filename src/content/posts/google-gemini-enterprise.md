@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Google 把 Gemini 深度整合进 Workspace：Office 软件的 AI 时代来了"
 date: 2026-01-08T09:00:00+08:00
 categories: ['AI', '新闻']

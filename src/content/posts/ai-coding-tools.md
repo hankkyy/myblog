@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "AI 编程助手横评：Cursor、Copilot、Claude Code 怎么选"
 date: 2026-05-15T10:00:00+08:00
 categories: ["技术"]

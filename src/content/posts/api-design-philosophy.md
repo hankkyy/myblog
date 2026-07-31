@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思"
 date: 2025-08-10T16:00:00+08:00
 categories: ['技术']

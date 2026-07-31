@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "为什么 ClickHouse 比 MySQL 快 100 倍？列式存储原理"
 date: 2026-06-10T16:00:00+08:00
 categories: ["技术"]

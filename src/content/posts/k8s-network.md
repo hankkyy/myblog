@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程"
 date: 2026-06-14T09:00:00+08:00
 categories: ["技术"]

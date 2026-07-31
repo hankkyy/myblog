@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Kubernetes HPA 自动伸缩深入理解：从 CPU 到自定义指标"
 date: 2025-05-28T10:00:00+08:00
 categories: ['云原生', '技术']

@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "CDN 边缘计算入门：Cloudflare Workers 和 Vercel Edge 能做什么？"
 date: 2025-05-18T16:00:00+08:00
 categories: ['技术']

@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "Ollama 和本地大模型：为什么越来越多人选择在笔记本上跑 AI"
 date: 2026-01-10T11:00:00+08:00
 categories: ['AI', '技术']

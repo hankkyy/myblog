@@ -1,4 +1,5 @@
 ---
+lang: zh
 title: "DeepSeek V4 发布：国产大模型再突破"
 date: 2026-06-05T10:00:00+08:00
 categories: ["AI", "新闻"]
