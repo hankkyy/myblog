@@ -30,11 +30,7 @@
 <div id="page" class="site">
 <a class="skip-link screen-reader-text" href="#content">跳到内容</a>
 <header id="masthead" class="site-header tg-site-header tg-site-header--default">
-  <div class="tg-header-top">
-    <div class="container" style="display:flex;justify-content:flex-end;align-items:center;padding:8px 0">
-      <div class="lang-switch"><a href="/" class="lang-link">EN</a></div>
-    </div>
-  </div>
+  <div class="tg-header-top"></div>
   <div class="tg-header-bottom">
     <div class="header-bottom-top">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
@@ -45,10 +41,14 @@
       </div>
     </div>
     <div class="header-bottom-bottom">
-      <div class="container" style="display:flex;justify-content:center;align-items:center;gap:15px">
+      <div class="container" style="display:flex;justify-content:space-between;align-items:center;gap:15px">
+        <div style="flex:1"></div>
         <nav id="site-navigation" class="main-navigation tg-site-menu--default" style="display:inline-flex;align-items:center;gap:10px">
           <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu" style="justify-content:center"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/zh/">首页</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/zh/posts/">文章列表</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/zh/categories/">分类</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/zh/about/">关于</a></li></ul></div>
         </nav>
+        <div style="flex:1;display:flex;justify-content:flex-end">
+          <div class="lang-switch"><a href="/" class="lang-link">EN</a></div>
+        </div>
       </div>
     </div>
   </div>
@@ -190,8 +190,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 <!-- AI Chat Widget -->
 <div id="chat-widget">
   <button id="chat-toggle" onclick="toggleChat()" title="随便问问">
-    <svg id="chat-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path></svg>
-    <svg id="chat-close-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    <span id="chat-toggle-emoji">💬</span>
+    <span id="chat-toggle-close-emoji" style="display:none">✕</span>
   </button>
   <div id="chat-panel">
     <div id="chat-header">
@@ -208,9 +208,13 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:30px;right:30px;z-index:1000;font-family:"Roboto",helvetica,arial,sans-serif}
-#chat-toggle{width:50px;height:50px;border-radius:50%;background:#16181a;color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.15);transition:transform .2s,box-shadow .2s}
-#chat-toggle:hover{transform:scale(1.08);box-shadow:0 6px 24px rgba(0,0,0,.25)}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
+#chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
+@keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
+#chat-toggle:hover{transform:scale(1.1);box-shadow:0 6px 28px rgba(20,107,183,.4)}
+#chat-toggle-emoji{line-height:1}
+#chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
 #chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
@@ -230,8 +234,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-send-btn:disabled{opacity:.5;cursor:default}
 /* Language switcher */
 .lang-switch{display:flex;align-items:center}
-.lang-link{display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:30px;padding:0 10px;border:1px solid rgba(255,255,255,.35);border-radius:15px;color:#fff;font-size:13px;font-weight:600;text-decoration:none;letter-spacing:.5px;transition:all .25s;background:rgba(255,255,255,.08)}
-.lang-link:hover{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.6);transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.15);text-decoration:none;color:#fff}
+.lang-link{display:inline-flex;align-items:center;justify-content:center;min-width:42px;height:32px;padding:0 14px;border:1.5px solid #dee2e6;border-radius:16px;color:#495057;font-size:13px;font-weight:600;text-decoration:none;transition:all .25s;background:#fff}
+.lang-link:hover{border-color:#146bb7;color:#146bb7;background:#f0f7ff;transform:translateY(-1px);box-shadow:0 2px 8px rgba(20,107,183,.12);text-decoration:none}
 @media(max-width:768px){#chat-panel{width:calc(100vw - 32px);right:-8px;height:450px}#chat-widget{bottom:76px;right:16px}}
 </style>
 <script>
@@ -240,8 +244,8 @@ var panel=document.getElementById('chat-panel');
 var input=document.getElementById('chat-input');
 var messages=document.getElementById('chat-messages');
 var sendBtn=document.getElementById('chat-send-btn');
-var chatIcon=document.getElementById('chat-icon');
-var closeIcon=document.getElementById('chat-close-icon');
+var chatIcon=document.getElementById('chat-toggle-emoji');
+var closeIcon=document.getElementById('chat-toggle-close-emoji');
 var isOpen=false;
 var isStreaming=false;
 var sessionId='s'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
