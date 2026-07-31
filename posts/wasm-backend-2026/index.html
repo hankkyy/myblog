@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WebAssembly 在后端：第三年了，拐点将至 – Welcome To My Blog</title>
+<meta name="description" content="WASI 0.3 预览版发布后，Wasm 在服务端的生态正在加速。它不会取代 Docker，但它会取代那些 Docker 太重了的场景。">
+<meta property="og:title" content="WebAssembly 在后端：第三年了，拐点将至 – Welcome To My Blog">
+<meta property="og:description" content="WASI 0.3 预览版发布后，Wasm 在服务端的生态正在加速。它不会取代 Docker，但它会取代那些 Docker 太重了的场景。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://hankzhang.us/">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://hankzhang.us/">
+<link rel="alternate" hreflang="zh-Hans" href="https://hankzhang.us//zh/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "WebAssembly 在后端：第三年了，拐点将至 – Welcome To My Blog",
+  "description": "WASI 0.3 预览版发布后，Wasm 在服务端的生态正在加速。它不会取代 Docker，但它会取代那些 Docker 太重了的场景。",
+  "url": "https://hankzhang.us/",
+  "datePublished": "2026-06-17",
+  "author": { "@type": "Person", "name": "Zihao Zhang" }
+}
+</script>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body class="layout--right-sidebar">
+<div id="page" class="site">
+<a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+<header id="masthead" class="site-header tg-site-header tg-site-header--default">
+  <div class="tg-header-top">
+    <div class="container" style="display:flex;justify-content:flex-end;align-items:center;padding:8px 0">
+      <div class="lang-switch"><a href="/zh/" class="lang-link">中</a></div>
+    </div>
+  </div>
+  <div class="tg-header-bottom">
+    <div class="header-bottom-top">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <div class="site-branding">
+          <p class="site-title"><a href="https://hankzhang.us//" rel="home">Welcome To My Blog</a></p>
+          <p class="site-description">"Wonder more, wander further"</p>
+        </div>
+      </div>
+    </div>
+    <div class="header-bottom-bottom">
+      <div class="container" style="display:flex;justify-content:center;align-items:center;gap:15px">
+        <nav id="site-navigation" class="main-navigation tg-site-menu--default" style="display:inline-flex;align-items:center;gap:10px">
+          <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu" style="justify-content:center"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/" class="active">Home</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/posts/">Archives</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/categories/">Categories</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/about/">About</a></li></ul></div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+<nav id="cenote-sticky-header" class="cenote-header-sticky">
+  <div class="sticky-header-slide">
+    <div class="cenote-sticky-main">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <span class="sticky-title">WebAssembly 在后端：第三年了，拐点将至</span>
+      </div>
+    </div>
+  </div>
+</nav>
+<div id="content" class="site-content">
+  <div class="container">
+<div class="tg-flex-container tg-flex-space-between"><div id="primary" class="content-area">
+          <main id="main" class="site-main">
+            <article class="post type-post status-publish format-standard hentry">
+              <div class="entry-meta">
+                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a><span class="cat-seperator">, </span><a href="/categories/云原生/" rel="category">云原生</a></span><span class="posted-on"><a href="/posts/wasm-backend-2026/" rel="bookmark"><time class="entry-date published" datetime="2026-07-22">2026-07-22</time></a></span>
+              </div>
+              <header class="entry-header">
+                <h1 class="entry-title">WebAssembly 在后端：第三年了，拐点将至</h1>
+              </header>
+              <div class="entry-content"><p>这周 Kimi 和 Fable 5 抢了所有头条。但有一件事被低估了：WASI 0.3 预览版上个月发布了，带来了异步 I/O 支持。对于 WebAssembly 在后端的未来，这可能是一个转折点。</p>
+<h2>为什么 Wasm 值得关注</h2>
+<p>Wasm 最颠覆的特性是<strong>冷启动速度</strong>。</p>
+<p>Docker 容器的冷启动（拉镜像 → 解压 → 启动进程）至少要几百毫秒，Java 应用更是以秒为单位。Wasm 的冷启动是<strong>微秒级</strong>——因为 Wasm 模块就是一个编译好的字节码文件，不需要启动操作系统进程。</p>
+<p>这在 Serverless 场景下是革命性的：用户请求到达 → 冷启动 Wasm 模块 → 处理请求 → 销毁。整个生命周期不到 1 毫秒。这是 Serverless 的终极形态——每个请求一个独立的、安全的、瞬时的执行环境。</p>
+<h2>WASI 0.3 的关键突破</h2>
+<p>之前 WASI 只有同步 I/O，这意味着你没法在 Wasm 里高效处理网络请求。WASI 0.3 的 <code>wasi:io/poll</code> 接口终于让异步 I/O 成为可能。</p>
+<p>简单说：<strong>WASI 0.3 之前，Wasm 只能跑函数。之后，可以跑服务了。</strong></p>
+<p>另外，Wasm 的沙箱隔离是在语言 VM 层面的，不共享操作系统内核。和 Docker 相比，安全边界更强。这让它天然适合多租户平台——每个租户一个 Wasm 沙箱，比容器更安全也更便宜。</p>
+<h2>现实的差距</h2>
+<p>不吹不黑，Wasm 在后端的现实是这样的：</p>
+<ul>
+<li><strong>Rust</strong> 支持最好——wasm32-wasip2 target 已经可用，Tokio 异步运行时也能编译到 Wasm</li>
+<li><strong>Go</strong> 在追赶——Go 1.24 改进了 Wasm 支持，但 goroutine 调度还有限制</li>
+<li><strong>Java</strong> 还在早期——GraalVM 可以编译到 Wasm，但生态（数据库驱动、HTTP 客户端）远未成熟</li>
+<li><strong>可观测性</strong>是盲区——日志、Metrics、Tracing 在 Wasm 里怎么做？目前没有标准方案</li>
+</ul>
+<h2>谁在用？</h2>
+<ul>
+<li><strong>Cloudflare Workers</strong>：最成功的 Wasm 服务端应用，每天处理万亿次请求</li>
+<li><strong>Fermyon Spin</strong>：基于 Wasm 的 Serverless 框架，已经有一些企业 case</li>
+<li><strong>Docker</strong> 官方宣布支持 Wasm 作为容器运行时的替代</li>
+</ul>
+<h2>我的判断</h2>
+<p>Wasm 在后端的定位不是"替代 Docker"，而是"替代那些 Docker 太重了的场景"：</p>
+<ul>
+<li><strong>边缘计算</strong>：CDN 边缘节点、IoT 网关——需要极快启动、极小 footprint</li>
+<li><strong>事件驱动短任务</strong>：Webhook 处理、数据转换、图片缩放——生灭在毫秒之间</li>
+<li><strong>多租户平台</strong>：每个租户一个 Wasm 沙箱，比容器更安全、更便宜</li>
+</ul>
+<p>2027 年之前，应该会有一个用 Wasm 写的正经后端框架获得广泛关注。</p>
+<p>在 Kimi K3 和 Fable 5 抢走所有注意力的这一周，Wasm 的进步显得很安静。但历史的经验是：那些安静进步的技术，往往最终影响更大。</p>
+<hr />
+<p><strong>参考来源：</strong></p>
+<ul>
+<li><a href="https://github.com/WebAssembly/WASI">WASI 0.3 预览版 — WASI Preview 3</a></li>
+<li><a href="https://developers.cloudflare.com/workers/">Cloudflare Workers — WebAssembly on the edge</a></li>
+<li><a href="https://www.fermyon.com/spin">Fermyon — Spin: Serverless WebAssembly</a></li>
+</ul></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a><a href="/categories/云原生/" rel="category">云原生</a></span></footer>
+            </article>
+            <nav class="navigation post-navigation" aria-label="Posts">
+            <h2 class="screen-reader-text">Post Navigation</h2>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/ai-supply-limits-era/" rel="prev"><span class="nav-links__label">Previous</span> 一周两件大事：AI 正在进入限量供应时代</a></div><div class="nav-next"><a href="/posts/saga-pattern-decline/" rel="next"><span class="nav-links__label">Next</span> Saga 模式的黄昏？2026 年分布式事务的新思路</a></div></div>
+          </nav>
+            <a href="/about/" class="author-bio-link">
+            <div class="author-bio">
+              <div class="author-bio-content">
+                <h3>About Zihao Zhang</h3>
+                <p>Data Platform Engineer. Distributed systems, OLAP databases, AI Agent development.</p>
+              </div>
+            </div>
+            </a>
+            <div class="comments-area">
+              <h3>Comments</h3>
+              <p class="no-comments">Comments are closed.</p>
+            </div>
+          </main>
+        </div><aside id="secondary" class="widget-area">
+          <section class="widget widget_recent_entries">
+            <h2 class="widget-title">Recent Posts</h2>
+            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+          </section>
+          <section class="widget widget_tag_cloud">
+            <h2 class="widget-title">Categories</h2>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+          </section>
+        </aside></div>
+  </div>
+</div>
+<footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
+  <div class="tg-footer-bottom">
+    <div class="container">
+      <div class="site-info" style="display:flex;justify-content:space-between;align-items:center">
+        <span id="footer-copyright">Copyright © 2026 <a href="https://hankzhang.us/" title="Welcome To My Blog"><span>Welcome To My Blog</span></a>. All rights reserved.</span>
+        <nav style="display:flex;gap:15px">
+          <a href="/">Home</a><a href="/posts/">Archives</a><a href="/categories/">Categories</a><a href="/about/">About</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</footer>
+<button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:#16181a;color:#fff;border:none;cursor:pointer;font-size:20px;display:none;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,.2)">↑</button>
+<script>
+window.addEventListener('scroll',function(){document.getElementById('back-to-top').style.display=window.scrollY>300?'block':'none';var s=document.getElementById('cenote-sticky-header');if(s)s.classList.toggle('visible',window.scrollY>200);});
+</script>
+<!-- AI Chat Widget -->
+<div id="chat-widget">
+  <button id="chat-toggle" onclick="toggleChat()" title="Ask Me Anything">
+    <svg id="chat-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path></svg>
+    <svg id="chat-close-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  </button>
+  <div id="chat-panel">
+    <div id="chat-header">
+      <span>Ask Me Anything</span>
+      <button onclick="toggleChat()" style="background:none;border:none;color:#fff;cursor:pointer;font-size:18px;line-height:1">&times;</button>
+    </div>
+    <div id="chat-messages">
+      <div class="chat-msg assistant"><div class="chat-bubble">Hi! I'm Hank's AI assistant. Ask me anything about his skills, projects, or travel experiences!</div></div>
+    </div>
+    <div id="chat-input-area">
+      <input type="text" id="chat-input" placeholder="Ask about my skills, projects, or travel..." onkeydown="if(event.key==='Enter')sendMessage()">
+      <button id="chat-send-btn" onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+</div>
+<style>
+#chat-widget{position:fixed;bottom:30px;right:30px;z-index:1000;font-family:"Roboto",helvetica,arial,sans-serif}
+#chat-toggle{width:50px;height:50px;border-radius:50%;background:#16181a;color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.15);transition:transform .2s,box-shadow .2s}
+#chat-toggle:hover{transform:scale(1.08);box-shadow:0 6px 24px rgba(0,0,0,.25)}
+#chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
+#chat-panel.open{display:flex}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
+.chat-msg{display:flex;max-width:85%}
+.chat-msg.user{align-self:flex-end}
+.chat-msg.assistant{align-self:flex-start}
+.chat-bubble{padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.55;word-break:break-word}
+.chat-msg.user .chat-bubble{background:#146bb7;color:#fff;border-bottom-right-radius:4px}
+.chat-msg.assistant .chat-bubble{background:#fff;color:#363b40;border:1px solid #e9ecef;border-bottom-left-radius:4px}
+.chat-msg.typing .chat-bubble{color:#adb5bd;font-style:italic}
+#chat-input-area{display:flex;gap:8px;padding:12px 16px;border-top:1px solid #f1f3f5;flex-shrink:0;background:#fff}
+#chat-input{flex:1;border:1px solid #e9ecef;border-radius:20px;padding:10px 16px;font-size:14px;outline:none;color:#363b40;transition:border-color .2s}
+#chat-input:focus{border-color:#146bb7}
+#chat-send-btn{background:#146bb7;color:#fff;border:none;border-radius:20px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s;white-space:nowrap}
+#chat-send-btn:hover{background:#0e5a9e}
+#chat-send-btn:disabled{opacity:.5;cursor:default}
+/* Language switcher */
+.lang-switch{display:flex;align-items:center}
+.lang-link{display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:30px;padding:0 10px;border:1px solid rgba(255,255,255,.35);border-radius:15px;color:#fff;font-size:13px;font-weight:600;text-decoration:none;letter-spacing:.5px;transition:all .25s;background:rgba(255,255,255,.08)}
+.lang-link:hover{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.6);transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.15);text-decoration:none;color:#fff}
+@media(max-width:768px){#chat-panel{width:calc(100vw - 32px);right:-8px;height:450px}#chat-widget{bottom:76px;right:16px}}
+</style>
+<script>
+(function(){
+var panel=document.getElementById('chat-panel');
+var input=document.getElementById('chat-input');
+var messages=document.getElementById('chat-messages');
+var sendBtn=document.getElementById('chat-send-btn');
+var chatIcon=document.getElementById('chat-icon');
+var closeIcon=document.getElementById('chat-close-icon');
+var isOpen=false;
+var isStreaming=false;
+var sessionId='s'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
+
+window.toggleChat=function(){
+  isOpen=!isOpen;
+  panel.classList.toggle('open',isOpen);
+  chatIcon.style.display=isOpen?'none':'block';
+  closeIcon.style.display=isOpen?'block':'none';
+  if(isOpen){input.focus();messages.scrollTop=messages.scrollHeight;}
+};
+
+function addMessage(role,text){
+  var div=document.createElement('div');
+  div.className='chat-msg '+role;
+  div.innerHTML='<div class="chat-bubble">'+text+'</div>';
+  messages.appendChild(div);
+  messages.scrollTop=messages.scrollHeight;
+  return div;
+}
+
+function addTyping(){return addMessage('assistant typing','Thinking...');}
+
+window.sendMessage=async function(){
+  if(isStreaming)return;
+  var text=input.value.trim();
+  if(!text)return;
+  input.value='';
+  addMessage('user',text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'));
+  var typing=addTyping();
+  isStreaming=true;
+  sendBtn.disabled=true;
+  input.disabled=true;
+
+  // Build conversation history
+  var history=[];
+  var msgs=messages.querySelectorAll('.chat-msg:not(.typing)');
+  msgs.forEach(function(m){
+    var role=m.classList.contains('user')?'user':'assistant';
+    var content=m.querySelector('.chat-bubble').textContent;
+    history.push({role:role,content:content});
+  });
+
+  try{
+    var resp=await fetch('/api/chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:history,sessionId:sessionId})
+    });
+    if(!resp.ok)throw new Error('API error');
+    typing.remove();
+
+    var assistantDiv=addMessage('assistant','');
+    var bubble=assistantDiv.querySelector('.chat-bubble');
+    var fullText='';
+    var reader=resp.body.getReader();
+    var decoder=new TextDecoder();
+    var buffer='';
+
+    while(true){
+      var r=await reader.read();
+      if(r.done)break;
+      buffer+=decoder.decode(r.value,{stream:true});
+      var lines=buffer.split('\n');
+      buffer=lines.pop()||'';
+      for(var i=0;i<lines.length;i++){
+        var line=lines[i].trim();
+        if(!line.startsWith('data: '))continue;
+        var data=line.slice(6);
+        if(data==='[DONE]')break;
+        try{
+          var json=JSON.parse(data);
+          var delta=json.choices&&json.choices[0]&&json.choices[0].delta;
+          if(delta&&delta.content){
+            fullText+=delta.content;
+            bubble.textContent=fullText;
+            messages.scrollTop=messages.scrollHeight;
+          }
+        }catch(e){}
+      }
+    }
+    if(!fullText)bubble.textContent='Sorry, something went wrong. Please try again.';
+  }catch(e){
+    typing.remove();
+    addMessage('assistant','Sorry, the service is temporarily unavailable. Please try again later.');
+  }
+  isStreaming=false;
+  sendBtn.disabled=false;
+  input.disabled=false;
+  input.focus();
+};
+})();
+</script>
+<!-- Hidden Admin Panel (triple-click footer copyright to open) -->
+<div id="admin-overlay">
+  <div id="admin-panel">
+    <div id="admin-header">
+      <span>Chat Logs</span>
+      <div style="display:flex;gap:8px">
+        <button id="admin-logout-btn" onclick="lockAdmin()" style="display:none;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer">Lock</button>
+        <button onclick="closeAdmin()" style="background:none;border:none;color:#fff;cursor:pointer;font-size:18px;line-height:1">Close</button>
+      </div>
+    </div>
+    <div id="admin-body">
+      <div id="admin-login">
+        <input type="password" id="admin-password" placeholder="Enter password" onkeydown="if(event.key==='Enter')unlockAdmin()">
+        <button onclick="unlockAdmin()">Unlock</button>
+      </div>
+      <div id="admin-logs" style="display:none">
+        <div id="admin-logs-list"></div>
+        <div id="admin-pagination" style="display:flex;justify-content:center;gap:8px;padding:16px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+#admin-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10000;align-items:center;justify-content:center}
+#admin-overlay.open{display:flex}
+#admin-panel{background:#fff;border-radius:14px;width:700px;max-width:94vw;max-height:80vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.25)}
+#admin-header{background:#16181a;color:#fff;padding:14px 20px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#admin-body{flex:1;overflow-y:auto;padding:24px}
+#admin-login{display:flex;flex-direction:column;align-items:center;gap:14px;padding:40px 0}
+#admin-password{width:260px;padding:12px 18px;border:2px solid #e9ecef;border-radius:10px;font-size:15px;text-align:center;outline:none;transition:border-color .2s;letter-spacing:4px}
+#admin-password:focus{border-color:#16181a}
+#admin-login button{padding:10px 40px;background:#16181a;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s}
+#admin-login button:hover{background:#333}
+.log-entry{border:1px solid #e9ecef;border-radius:10px;margin-bottom:14px;overflow:hidden}
+.log-entry-header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#f8f9fa;cursor:pointer;user-select:none;font-size:13px;color:#495057}
+.log-entry-header:hover{background:#e8f4fd}
+.log-entry-header .session-id{font-family:monospace;font-size:12px;color:#868e96}
+.log-entry-header .time{color:#adb5bd;font-size:12px}
+.log-entry-body{display:none;padding:16px;border-top:1px solid #e9ecef}
+.log-entry.open .log-entry-body{display:block}
+.log-entry.open .log-entry-header{background:#e8f4fd;font-weight:600}
+.log-msg{margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #f1f3f5}
+.log-msg:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.log-msg .role{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;padding:2px 8px;border-radius:4px;margin-bottom:4px}
+.log-msg .role.user{background:#146bb7;color:#fff}
+.log-msg .role.assistant{background:#e8f4fd;color:#146bb7}
+.log-msg .content{font-size:13px;color:#363b40;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+.copyright-hint{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#16181a;color:#fff;padding:8px 20px;border-radius:20px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:10001}
+.copyright-hint.show{opacity:.9}
+.page-btn{min-width:34px;height:34px;border:1px solid #dee2e6;border-radius:6px;background:#fff;color:#495057;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0 10px;transition:all .2s}
+.page-btn:hover{background:#16181a;color:#fff;border-color:#16181a}
+.page-btn.active{background:#16181a;color:#fff;border-color:#16181a}
+.log-chevron{transition:transform .2s;font-size:12px;color:#adb5bd}
+.log-entry.open .log-chevron{transform:rotate(180deg)}
+</style>
+<script>
+(function(){
+var overlay=document.getElementById('admin-overlay');
+var pwdInput=document.getElementById('admin-password');
+var loginSection=document.getElementById('admin-login');
+var logsSection=document.getElementById('admin-logs');
+var logoutBtn=document.getElementById('admin-logout-btn');
+var logsList=document.getElementById('admin-logs-list');
+var pagination=document.getElementById('admin-pagination');
+var adminPassword='';
+var currentPage=1;
+var clickCount=0;
+var clickTimer=null;
+
+// Triple click on footer copyright
+document.getElementById('footer-copyright').addEventListener('click',function(){
+  clickCount++;
+  if(clickCount===1){
+    clickTimer=setTimeout(function(){clickCount=0;},600);
+  }
+  if(clickCount===3){
+    clearTimeout(clickTimer);
+    clickCount=0;
+    openAdmin();
+  }
+});
+
+window.openAdmin=function(){
+  overlay.classList.add('open');
+  pwdInput.value='';
+  pwdInput.focus();
+  loginSection.style.display='flex';
+  logsSection.style.display='none';
+  logoutBtn.style.display='none';
+  logsList.innerHTML='';
+  pagination.innerHTML='';
+};
+
+window.closeAdmin=function(){
+  overlay.classList.remove('open');
+};
+
+overlay.addEventListener('click',function(e){
+  if(e.target===overlay)closeAdmin();
+});
+
+window.unlockAdmin=function(){
+  adminPassword=pwdInput.value;
+  if(!adminPassword)return;
+  loadLogs(1);
+};
+
+window.lockAdmin=function(){
+  adminPassword='';
+  loginSection.style.display='flex';
+  logsSection.style.display='none';
+  logoutBtn.style.display='none';
+  logsList.innerHTML='';
+  pwdInput.value='';
+  pwdInput.focus();
+};
+
+window.loadLogs=async function(page){
+  currentPage=page;
+  logsList.innerHTML='<p style="text-align:center;color:#adb5bd;padding:40px">Loading...</p>';
+  pagination.innerHTML='';
+
+  try{
+    var resp=await fetch('/api/admin/chat-logs',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({password:adminPassword,page:page})
+    });
+    if(resp.status===401){
+      logsList.innerHTML='<p style="text-align:center;color:#dc3545;padding:40px">Wrong password</p>';
+      return;
+    }
+    if(!resp.ok)throw new Error('Failed');
+    var data=await resp.json();
+
+    if(data.logs.length===0){
+      logsList.innerHTML='<p style="text-align:center;color:#adb5bd;padding:40px">No conversations yet.</p>';
+    }else{
+      loginSection.style.display='none';
+      logsSection.style.display='block';
+      logoutBtn.style.display='block';
+      logsList.innerHTML='';
+      data.logs.forEach(function(log){
+        var entry=document.createElement('div');
+        entry.className='log-entry';
+        var date=new Date(log.timestamp);
+        var timeStr=date.toLocaleString();
+        var preview=(log.messages&&log.messages[0])?log.messages[0].content.slice(0,80):'';
+        entry.innerHTML='<div class="log-entry-header" onclick="this.parentElement.classList.toggle('open')"><div><span style="color:#16181a;font-weight:600">'+preview.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</span></div><div style="display:flex;align-items:center;gap:12px"><span class="session-id">'+log.sessionId.slice(0,12)+'</span><span class="time">'+timeStr+'</span><span class="log-chevron">▼</span></div></div>';
+        var body=document.createElement('div');
+        body.className='log-entry-body';
+        if(log.messages){
+          log.messages.forEach(function(m){
+            var msgDiv=document.createElement('div');
+            msgDiv.className='log-msg';
+            msgDiv.innerHTML='<span class="role '+m.role+'">'+m.role+'</span><div class="content">'+(m.content||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</div>';
+            body.appendChild(msgDiv);
+          });
+        }
+        entry.appendChild(body);
+        logsList.appendChild(entry);
+      });
+
+      // Pagination
+      var pg='';
+      var tp=data.totalPages;
+      if(tp>1){
+        var pages=[];
+        for(var i=Math.max(1,page-2);i<=Math.min(tp,page+2);i++)pages.push(i);
+        if(pages[0]>1){pg+='<button class="page-btn" onclick="loadLogs(1)">1</button>';if(pages[0]>2)pg+='<span style="padding:0 4px;color:#adb5bd">…</span>';}
+        pages.forEach(function(p){pg+='<button class="page-btn'+(p===page?' active':'')+'" onclick="loadLogs('+p+')">'+p+'</button>';});
+        if(pages[pages.length-1]<tp){if(pages[pages.length-1]<tp-1)pg+='<span style="padding:0 4px;color:#adb5bd">…</span>';pg+='<button class="page-btn" onclick="loadLogs('+tp+')">'+tp+'</button>';}
+      }
+      pagination.innerHTML=pg;
+    }
+  }catch(e){
+    logsList.innerHTML='<p style="text-align:center;color:#dc3545;padding:40px">Failed to load. Please try again.</p>';
+  }
+};
+
+// Keyboard shortcut: Escape to close
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'&&overlay.classList.contains('open'))closeAdmin();
+});
+
+})();
+</script>
+</div>
+</body>
+</html>

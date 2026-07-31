@@ -17,14 +17,14 @@ SITE = {"title":"Welcome To My Blog","url":"https://hankzhang.us/","desc":"「�
 AUTHOR = "Zihao Zhang"
 YEAR = str(datetime.now().year)
 MENU = [("首页","/"),("文章列表","/posts/"),("分类","/categories/"),("关于","/about/")]
-SAFE = {".git","src","vercel.json",".gitignore","README.md","pagefind","images"}
+SAFE = {".git","src","vercel.json",".gitignore","README.md","pagefind","images","api","package.json","package-lock.json","node_modules"}
 
 # i18n strings
 T = {
     "en": {
         "html_lang": "en",
         "skip_link": "Skip to content",
-        "site_desc": '"Stay curious, keep exploring"',
+        "site_desc": '"Wonder more, wander further"',
         "nav": [("Home","/"),("Archives","/posts/"),("Categories","/categories/"),("About","/about/")],
         "read_more": "Read More",
         "prev_post": "Previous",
@@ -96,6 +96,18 @@ T = {
         "lang_switch_en": "EN",
         "lang_switch_zh": "中",
         "copyright": 'Copyright © {year} <a href="{url}" title="{title}"><span>{title}</span></a>. All rights reserved.',
+        "chat_title": "Ask Me Anything",
+        "chat_placeholder": "Ask about my skills, projects, or travel...",
+        "chat_welcome": "Hi! I'm Hank's AI assistant. Ask me anything about his skills, projects, or travel experiences!",
+        "chat_send": "Send",
+        "chat_typing": "Thinking...",
+        "admin_password": "Enter password",
+        "admin_unlock": "Unlock",
+        "admin_title": "Chat Logs",
+        "admin_loading": "Loading...",
+        "admin_empty": "No conversations yet.",
+        "admin_logout": "Lock",
+        "admin_close": "Close",
     },
     "zh": {
         "html_lang": "zh-Hans",
@@ -172,6 +184,18 @@ T = {
         "lang_switch_en": "EN",
         "lang_switch_zh": "中",
         "copyright": 'Copyright © {year} <a href="{url}" title="{title}"><span>{title}</span></a>. All rights reserved.',
+        "chat_title": "随便问问",
+        "chat_placeholder": "问我技能、项目、旅行经历...",
+        "chat_welcome": "你好！我是 Hank 的 AI 助手，可以问我关于他的技能、项目或旅行经历！",
+        "chat_send": "发送",
+        "chat_typing": "思考中...",
+        "admin_password": "输入密码",
+        "admin_unlock": "解锁",
+        "admin_title": "对话记录",
+        "admin_loading": "加载中...",
+        "admin_empty": "暂无对话记录。",
+        "admin_logout": "锁定",
+        "admin_close": "关闭",
     },
 }
 
@@ -216,7 +240,8 @@ def page_html(title_tag, body, *, lang="en", base_path="", current="/", desc="",
     desc_meta = f'<meta name="description" content="{desc}">' if desc else ""
     bc = f"{body_class} {extra_body_class}".strip()
     site_url = SITE["url"]
-    page_full_url = f"{site_url}{'' if current == base_path + '/' else current}"
+    site_url_clean = site_url.rstrip('/')
+    page_full_url = f"{site_url_clean}{base_path}/" if current == f"{base_path}/" else f"{site_url_clean}{current}"
     other_lang = "zh" if lang == "en" else "en"
     other_base = "/zh/" if lang == "en" else "/"
     other_current = current.replace(base_path + "/", other_base) if base_path else other_base + current.lstrip("/")
@@ -295,7 +320,7 @@ def page_html(title_tag, body, *, lang="en", base_path="", current="/", desc="",
   <div class="tg-footer-bottom">
     <div class="container">
       <div class="site-info" style="display:flex;justify-content:space-between;align-items:center">
-        <span>{t['copyright'].format(year=YEAR, url=site_url, title=st)}</span>
+        <span id="footer-copyright">{t['copyright'].format(year=YEAR, url=site_url, title=st)}</span>
         <nav style="display:flex;gap:15px">
           {"".join(f'<a href=\"{url}\"{(" target=\"_blank\" rel=\"noopener\"" if url.startswith("http") else "")}>{label}</a>' for label, url in t["nav"])}
         </nav>
@@ -306,6 +331,341 @@ def page_html(title_tag, body, *, lang="en", base_path="", current="/", desc="",
 <button id="back-to-top" onclick="window.scrollTo({{top:0,behavior:'smooth'}})" style="position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:#16181a;color:#fff;border:none;cursor:pointer;font-size:20px;display:none;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,.2)">↑</button>
 <script>
 window.addEventListener('scroll',function(){{document.getElementById('back-to-top').style.display=window.scrollY>300?'block':'none';var s=document.getElementById('cenote-sticky-header');if(s)s.classList.toggle('visible',window.scrollY>200);}});
+</script>
+<!-- AI Chat Widget -->
+<div id="chat-widget">
+  <button id="chat-toggle" onclick="toggleChat()" title="{t['chat_title']}">
+    <svg id="chat-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path></svg>
+    <svg id="chat-close-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  </button>
+  <div id="chat-panel">
+    <div id="chat-header">
+      <span>{t['chat_title']}</span>
+      <button onclick="toggleChat()" style="background:none;border:none;color:#fff;cursor:pointer;font-size:18px;line-height:1">&times;</button>
+    </div>
+    <div id="chat-messages">
+      <div class="chat-msg assistant"><div class="chat-bubble">{t['chat_welcome']}</div></div>
+    </div>
+    <div id="chat-input-area">
+      <input type="text" id="chat-input" placeholder="{t['chat_placeholder']}" onkeydown="if(event.key==='Enter')sendMessage()">
+      <button id="chat-send-btn" onclick="sendMessage()">{t['chat_send']}</button>
+    </div>
+  </div>
+</div>
+<style>
+#chat-widget{{position:fixed;bottom:30px;right:30px;z-index:1000;font-family:"Roboto",helvetica,arial,sans-serif}}
+#chat-toggle{{width:50px;height:50px;border-radius:50%;background:#16181a;color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.15);transition:transform .2s,box-shadow .2s}}
+#chat-toggle:hover{{transform:scale(1.08);box-shadow:0 6px 24px rgba(0,0,0,.25)}}
+#chat-panel{{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}}
+#chat-panel.open{{display:flex}}
+#chat-header{{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}}
+#chat-messages{{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}}
+.chat-msg{{display:flex;max-width:85%}}
+.chat-msg.user{{align-self:flex-end}}
+.chat-msg.assistant{{align-self:flex-start}}
+.chat-bubble{{padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.55;word-break:break-word}}
+.chat-msg.user .chat-bubble{{background:#146bb7;color:#fff;border-bottom-right-radius:4px}}
+.chat-msg.assistant .chat-bubble{{background:#fff;color:#363b40;border:1px solid #e9ecef;border-bottom-left-radius:4px}}
+.chat-msg.typing .chat-bubble{{color:#adb5bd;font-style:italic}}
+#chat-input-area{{display:flex;gap:8px;padding:12px 16px;border-top:1px solid #f1f3f5;flex-shrink:0;background:#fff}}
+#chat-input{{flex:1;border:1px solid #e9ecef;border-radius:20px;padding:10px 16px;font-size:14px;outline:none;color:#363b40;transition:border-color .2s}}
+#chat-input:focus{{border-color:#146bb7}}
+#chat-send-btn{{background:#146bb7;color:#fff;border:none;border-radius:20px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s;white-space:nowrap}}
+#chat-send-btn:hover{{background:#0e5a9e}}
+#chat-send-btn:disabled{{opacity:.5;cursor:default}}
+/* Language switcher */
+.lang-switch{{display:flex;align-items:center}}
+.lang-link{{display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:30px;padding:0 10px;border:1px solid rgba(255,255,255,.35);border-radius:15px;color:#fff;font-size:13px;font-weight:600;text-decoration:none;letter-spacing:.5px;transition:all .25s;background:rgba(255,255,255,.08)}}
+.lang-link:hover{{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.6);transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.15);text-decoration:none;color:#fff}}
+@media(max-width:768px){{#chat-panel{{width:calc(100vw - 32px);right:-8px;height:450px}}#chat-widget{{bottom:76px;right:16px}}}}
+</style>
+<script>
+(function(){{
+var panel=document.getElementById('chat-panel');
+var input=document.getElementById('chat-input');
+var messages=document.getElementById('chat-messages');
+var sendBtn=document.getElementById('chat-send-btn');
+var chatIcon=document.getElementById('chat-icon');
+var closeIcon=document.getElementById('chat-close-icon');
+var isOpen=false;
+var isStreaming=false;
+var sessionId='s'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
+
+window.toggleChat=function(){{
+  isOpen=!isOpen;
+  panel.classList.toggle('open',isOpen);
+  chatIcon.style.display=isOpen?'none':'block';
+  closeIcon.style.display=isOpen?'block':'none';
+  if(isOpen){{input.focus();messages.scrollTop=messages.scrollHeight;}}
+}};
+
+function addMessage(role,text){{
+  var div=document.createElement('div');
+  div.className='chat-msg '+role;
+  div.innerHTML='<div class="chat-bubble">'+text+'</div>';
+  messages.appendChild(div);
+  messages.scrollTop=messages.scrollHeight;
+  return div;
+}}
+
+function addTyping(){{return addMessage('assistant typing','{t['chat_typing']}');}}
+
+window.sendMessage=async function(){{
+  if(isStreaming)return;
+  var text=input.value.trim();
+  if(!text)return;
+  input.value='';
+  addMessage('user',text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'));
+  var typing=addTyping();
+  isStreaming=true;
+  sendBtn.disabled=true;
+  input.disabled=true;
+
+  // Build conversation history
+  var history=[];
+  var msgs=messages.querySelectorAll('.chat-msg:not(.typing)');
+  msgs.forEach(function(m){{
+    var role=m.classList.contains('user')?'user':'assistant';
+    var content=m.querySelector('.chat-bubble').textContent;
+    history.push({{role:role,content:content}});
+  }});
+
+  try{{
+    var resp=await fetch('/api/chat',{{
+      method:'POST',
+      headers:{{'Content-Type':'application/json'}},
+      body:JSON.stringify({{messages:history,sessionId:sessionId}})
+    }});
+    if(!resp.ok)throw new Error('API error');
+    typing.remove();
+
+    var assistantDiv=addMessage('assistant','');
+    var bubble=assistantDiv.querySelector('.chat-bubble');
+    var fullText='';
+    var reader=resp.body.getReader();
+    var decoder=new TextDecoder();
+    var buffer='';
+
+    while(true){{
+      var r=await reader.read();
+      if(r.done)break;
+      buffer+=decoder.decode(r.value,{{stream:true}});
+      var lines=buffer.split('\\n');
+      buffer=lines.pop()||'';
+      for(var i=0;i<lines.length;i++){{
+        var line=lines[i].trim();
+        if(!line.startsWith('data: '))continue;
+        var data=line.slice(6);
+        if(data==='[DONE]')break;
+        try{{
+          var json=JSON.parse(data);
+          var delta=json.choices&&json.choices[0]&&json.choices[0].delta;
+          if(delta&&delta.content){{
+            fullText+=delta.content;
+            bubble.textContent=fullText;
+            messages.scrollTop=messages.scrollHeight;
+          }}
+        }}catch(e){{}}
+      }}
+    }}
+    if(!fullText)bubble.textContent='Sorry, something went wrong. Please try again.';
+  }}catch(e){{
+    typing.remove();
+    addMessage('assistant','Sorry, the service is temporarily unavailable. Please try again later.');
+  }}
+  isStreaming=false;
+  sendBtn.disabled=false;
+  input.disabled=false;
+  input.focus();
+}};
+}})();
+</script>
+<!-- Hidden Admin Panel (triple-click footer copyright to open) -->
+<div id="admin-overlay">
+  <div id="admin-panel">
+    <div id="admin-header">
+      <span>{t['admin_title']}</span>
+      <div style="display:flex;gap:8px">
+        <button id="admin-logout-btn" onclick="lockAdmin()" style="display:none;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer">{t['admin_logout']}</button>
+        <button onclick="closeAdmin()" style="background:none;border:none;color:#fff;cursor:pointer;font-size:18px;line-height:1">{t['admin_close']}</button>
+      </div>
+    </div>
+    <div id="admin-body">
+      <div id="admin-login">
+        <input type="password" id="admin-password" placeholder="{t['admin_password']}" onkeydown="if(event.key==='Enter')unlockAdmin()">
+        <button onclick="unlockAdmin()">{t['admin_unlock']}</button>
+      </div>
+      <div id="admin-logs" style="display:none">
+        <div id="admin-logs-list"></div>
+        <div id="admin-pagination" style="display:flex;justify-content:center;gap:8px;padding:16px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+#admin-overlay{{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10000;align-items:center;justify-content:center}}
+#admin-overlay.open{{display:flex}}
+#admin-panel{{background:#fff;border-radius:14px;width:700px;max-width:94vw;max-height:80vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.25)}}
+#admin-header{{background:#16181a;color:#fff;padding:14px 20px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}}
+#admin-body{{flex:1;overflow-y:auto;padding:24px}}
+#admin-login{{display:flex;flex-direction:column;align-items:center;gap:14px;padding:40px 0}}
+#admin-password{{width:260px;padding:12px 18px;border:2px solid #e9ecef;border-radius:10px;font-size:15px;text-align:center;outline:none;transition:border-color .2s;letter-spacing:4px}}
+#admin-password:focus{{border-color:#16181a}}
+#admin-login button{{padding:10px 40px;background:#16181a;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s}}
+#admin-login button:hover{{background:#333}}
+.log-entry{{border:1px solid #e9ecef;border-radius:10px;margin-bottom:14px;overflow:hidden}}
+.log-entry-header{{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#f8f9fa;cursor:pointer;user-select:none;font-size:13px;color:#495057}}
+.log-entry-header:hover{{background:#e8f4fd}}
+.log-entry-header .session-id{{font-family:monospace;font-size:12px;color:#868e96}}
+.log-entry-header .time{{color:#adb5bd;font-size:12px}}
+.log-entry-body{{display:none;padding:16px;border-top:1px solid #e9ecef}}
+.log-entry.open .log-entry-body{{display:block}}
+.log-entry.open .log-entry-header{{background:#e8f4fd;font-weight:600}}
+.log-msg{{margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #f1f3f5}}
+.log-msg:last-child{{margin-bottom:0;padding-bottom:0;border-bottom:none}}
+.log-msg .role{{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;padding:2px 8px;border-radius:4px;margin-bottom:4px}}
+.log-msg .role.user{{background:#146bb7;color:#fff}}
+.log-msg .role.assistant{{background:#e8f4fd;color:#146bb7}}
+.log-msg .content{{font-size:13px;color:#363b40;line-height:1.6;white-space:pre-wrap;word-break:break-word}}
+.copyright-hint{{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#16181a;color:#fff;padding:8px 20px;border-radius:20px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:10001}}
+.copyright-hint.show{{opacity:.9}}
+.page-btn{{min-width:34px;height:34px;border:1px solid #dee2e6;border-radius:6px;background:#fff;color:#495057;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0 10px;transition:all .2s}}
+.page-btn:hover{{background:#16181a;color:#fff;border-color:#16181a}}
+.page-btn.active{{background:#16181a;color:#fff;border-color:#16181a}}
+.log-chevron{{transition:transform .2s;font-size:12px;color:#adb5bd}}
+.log-entry.open .log-chevron{{transform:rotate(180deg)}}
+</style>
+<script>
+(function(){{
+var overlay=document.getElementById('admin-overlay');
+var pwdInput=document.getElementById('admin-password');
+var loginSection=document.getElementById('admin-login');
+var logsSection=document.getElementById('admin-logs');
+var logoutBtn=document.getElementById('admin-logout-btn');
+var logsList=document.getElementById('admin-logs-list');
+var pagination=document.getElementById('admin-pagination');
+var adminPassword='';
+var currentPage=1;
+var clickCount=0;
+var clickTimer=null;
+
+// Triple click on footer copyright
+document.getElementById('footer-copyright').addEventListener('click',function(){{
+  clickCount++;
+  if(clickCount===1){{
+    clickTimer=setTimeout(function(){{clickCount=0;}},600);
+  }}
+  if(clickCount===3){{
+    clearTimeout(clickTimer);
+    clickCount=0;
+    openAdmin();
+  }}
+}});
+
+window.openAdmin=function(){{
+  overlay.classList.add('open');
+  pwdInput.value='';
+  pwdInput.focus();
+  loginSection.style.display='flex';
+  logsSection.style.display='none';
+  logoutBtn.style.display='none';
+  logsList.innerHTML='';
+  pagination.innerHTML='';
+}};
+
+window.closeAdmin=function(){{
+  overlay.classList.remove('open');
+}};
+
+overlay.addEventListener('click',function(e){{
+  if(e.target===overlay)closeAdmin();
+}});
+
+window.unlockAdmin=function(){{
+  adminPassword=pwdInput.value;
+  if(!adminPassword)return;
+  loadLogs(1);
+}};
+
+window.lockAdmin=function(){{
+  adminPassword='';
+  loginSection.style.display='flex';
+  logsSection.style.display='none';
+  logoutBtn.style.display='none';
+  logsList.innerHTML='';
+  pwdInput.value='';
+  pwdInput.focus();
+}};
+
+window.loadLogs=async function(page){{
+  currentPage=page;
+  logsList.innerHTML='<p style="text-align:center;color:#adb5bd;padding:40px">{t['admin_loading']}</p>';
+  pagination.innerHTML='';
+
+  try{{
+    var resp=await fetch('/api/admin/chat-logs',{{
+      method:'POST',
+      headers:{{'Content-Type':'application/json'}},
+      body:JSON.stringify({{password:adminPassword,page:page}})
+    }});
+    if(resp.status===401){{
+      logsList.innerHTML='<p style="text-align:center;color:#dc3545;padding:40px">Wrong password</p>';
+      return;
+    }}
+    if(!resp.ok)throw new Error('Failed');
+    var data=await resp.json();
+
+    if(data.logs.length===0){{
+      logsList.innerHTML='<p style="text-align:center;color:#adb5bd;padding:40px">{t['admin_empty']}</p>';
+    }}else{{
+      loginSection.style.display='none';
+      logsSection.style.display='block';
+      logoutBtn.style.display='block';
+      logsList.innerHTML='';
+      data.logs.forEach(function(log){{
+        var entry=document.createElement('div');
+        entry.className='log-entry';
+        var date=new Date(log.timestamp);
+        var timeStr=date.toLocaleString();
+        var preview=(log.messages&&log.messages[0])?log.messages[0].content.slice(0,80):'';
+        entry.innerHTML='<div class="log-entry-header" onclick="this.parentElement.classList.toggle(\'open\')"><div><span style="color:#16181a;font-weight:600">'+preview.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</span></div><div style="display:flex;align-items:center;gap:12px"><span class="session-id">'+log.sessionId.slice(0,12)+'</span><span class="time">'+timeStr+'</span><span class="log-chevron">▼</span></div></div>';
+        var body=document.createElement('div');
+        body.className='log-entry-body';
+        if(log.messages){{
+          log.messages.forEach(function(m){{
+            var msgDiv=document.createElement('div');
+            msgDiv.className='log-msg';
+            msgDiv.innerHTML='<span class="role '+m.role+'">'+m.role+'</span><div class="content">'+(m.content||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</div>';
+            body.appendChild(msgDiv);
+          }});
+        }}
+        entry.appendChild(body);
+        logsList.appendChild(entry);
+      }});
+
+      // Pagination
+      var pg='';
+      var tp=data.totalPages;
+      if(tp>1){{
+        var pages=[];
+        for(var i=Math.max(1,page-2);i<=Math.min(tp,page+2);i++)pages.push(i);
+        if(pages[0]>1){{pg+='<button class="page-btn" onclick="loadLogs(1)">1</button>';if(pages[0]>2)pg+='<span style="padding:0 4px;color:#adb5bd">…</span>';}}
+        pages.forEach(function(p){{pg+='<button class="page-btn'+(p===page?' active':'')+'" onclick="loadLogs('+p+')">'+p+'</button>';}});
+        if(pages[pages.length-1]<tp){{if(pages[pages.length-1]<tp-1)pg+='<span style="padding:0 4px;color:#adb5bd">…</span>';pg+='<button class="page-btn" onclick="loadLogs('+tp+')">'+tp+'</button>';}}
+      }}
+      pagination.innerHTML=pg;
+    }}
+  }}catch(e){{
+    logsList.innerHTML='<p style="text-align:center;color:#dc3545;padding:40px">Failed to load. Please try again.</p>';
+  }}
+}};
+
+// Keyboard shortcut: Escape to close
+document.addEventListener('keydown',function(e){{
+  if(e.key==='Escape'&&overlay.classList.contains('open'))closeAdmin();
+}});
+
+}})();
 </script>
 </div>
 </body>
@@ -852,8 +1212,9 @@ def build():
             posts.append(parse_page(f))
     posts.sort(key=lambda p: p["date"], reverse=True)
 
-    en_posts = [p for p in posts if p["lang"] == "en"]
-    zh_posts = [p for p in posts if p["lang"] != "en"]
+    # All posts appear on both language versions — only UI differs
+    en_posts = posts
+    zh_posts = posts
 
     en_cats = build_site("en", en_posts)
     zh_cats = build_site("zh", zh_posts)

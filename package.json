@@ -1,0 +1,7 @@
+{
+  "name": "myblog",
+  "private": true,
+  "dependencies": {
+    "@cloudbase/node-sdk": "^3.16.0"
+  }
+}
