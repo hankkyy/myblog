@@ -55,9 +55,9 @@ blockquote p{margin-bottom:0;font-style:italic}
 .header-bottom-bottom .container{padding:20px 0;border-top:2px solid #fff0e6;display:flex;justify-content:space-between;align-items:center}
 
 .site-branding{margin:0 auto;text-align:center}
-.site-branding .site-title{font-family:"Georgia","Times New Roman",serif;font-size:1.8rem;font-weight:400;margin:0 0 10px;letter-spacing:1px}
-.site-branding .site-title a{background:linear-gradient(135deg,#2d3436 0%,#636e72 40%,#0984e3 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-shadow:none}
-.site-branding .site-title a:hover{text-decoration:none;background:linear-gradient(135deg,#0984e3 0%,#636e72 60%,#2d3436 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.site-branding .site-title{font-family:"Catamaran",helvetica,arial,sans-serif;font-size:1.313rem;font-weight:700;margin:0 0 10px}
+.site-branding .site-title a{color:#16181a}
+.site-branding .site-title a:hover{text-decoration:none}
 .site-branding .site-description{margin:0 0 30px;font-size:16px;color:#6c757d;font-style:italic;letter-spacing:2px;font-weight:300}
 
 .main-navigation{flex:none}
