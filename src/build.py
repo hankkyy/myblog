@@ -13,7 +13,7 @@ CONTENT = SRC / "content"
 THEME = SRC / "themes" / "cenote-style"
 CSS_DIR = ROOT / "css"
 
-SITE = {"title":"纵横四海","url":"https://hankzhang.us/","desc":"「保持好奇心，继续探索世界」"}
+SITE = {"title":"Welcome To My Blog","url":"https://hankzhang.us/","desc":"「保持好奇心，继续探索世界」"}
 AUTHOR = "Zihao Zhang"
 YEAR = str(datetime.now().year)
 MENU = [("首页","/"),("文章列表","/posts/"),("分类","/categories/"),("关于","/about/")]
@@ -279,7 +279,7 @@ def article_single(p, all_posts):
             <div class="author-bio">
               <div class="author-bio-content">
                 <h3>关于 {AUTHOR}</h3>
-                <p>后端开发工程师。关注 Java/Spring Boot/Redis/MySQL 技术栈，分布式系统，OLAP 数据库，AI Agent 开发与应用。</p>
+                <p>数据平台工程师。关注分布式系统，OLAP 数据库，AI Agent 开发与应用。</p>
               </div>
             </div>
             </a>
@@ -518,7 +518,7 @@ def build():
               <img src="/avatar.jpg" alt="张子豪" class="about-avatar" width="80" height="80">
               <p class="about-greeting"><span class="greeting-dot"></span>Hi, I'm</p>
               <h1 class="about-name">张子豪<span class="about-name-en"> · Hank Zhang</span></h1>
-              <p class="about-bio">后端开发工程师，专注于数据基础设施与 AI Agent 开发。</p>
+              <p class="about-bio">数据平台工程师，专注于数据基础设施与 AI Agent 开发。</p>
               <div class="about-stats">
                 <div class="about-stat"><strong>{len(posts)}</strong><span>篇文章</span></div>
                 <div class="about-stat"><strong>{len(cats)}</strong><span>个分类</span></div>
