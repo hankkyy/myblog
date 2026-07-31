@@ -101,6 +101,7 @@ T = {
         "chat_welcome": "Hi! I'm Hank's AI assistant. Ask me anything about his skills, projects, or travel experiences!",
         "chat_send": "Send",
         "chat_typing": "Thinking...",
+        "chat_disclaimer": "⚠️ AI-powered · May be inaccurate · Powered by DeepSeek",
         "admin_password": "Enter password",
         "admin_unlock": "Unlock",
         "admin_title": "Chat Logs",
@@ -189,6 +190,7 @@ T = {
         "chat_welcome": "你好！我是 Hank 的 AI 助手，可以问我关于他的技能、项目或旅行经历！",
         "chat_send": "发送",
         "chat_typing": "思考中...",
+        "chat_disclaimer": "⚠️ AI 生成内容 · 可能不准确 · 由 DeepSeek 驱动",
         "admin_password": "输入密码",
         "admin_unlock": "解锁",
         "admin_title": "对话记录",
@@ -347,6 +349,7 @@ window.addEventListener('scroll',function(){{document.getElementById('back-to-to
     <div id="chat-messages">
       <div class="chat-msg assistant"><div class="chat-bubble">{t['chat_welcome']}</div></div>
     </div>
+    <div id="chat-disclaimer">{t['chat_disclaimer']}</div>
     <div id="chat-input-area">
       <input type="text" id="chat-input" placeholder="{t['chat_placeholder']}" autocomplete="off" spellcheck="false">
       <button id="chat-send-btn" onclick="sendMessage()">{t['chat_send']}</button>
@@ -407,6 +410,7 @@ window.addEventListener('scroll',function(){{document.getElementById('back-to-to
 /* Smooth new message entrance */
 .chat-msg{{animation:msgIn .3s ease-out}}
 @keyframes msgIn{{from{{opacity:0;transform:translateY(8px)}}to{{opacity:1;transform:translateY(0)}}}}
+#chat-disclaimer{{font-size:11px;color:#94a3b8;text-align:center;padding:4px 16px 0;flex-shrink:0;background:#f7f8fa}}
 #chat-input-area{{display:flex;gap:8px;padding:12px 16px;border-top:1px solid #f1f3f5;flex-shrink:0;background:#fff}}
 #chat-input{{flex:1;border:1px solid #e9ecef;border-radius:20px;padding:10px 16px;font-size:14px;outline:none;color:#363b40;transition:border-color .2s;font-family:inherit;-webkit-appearance:none}}
 #chat-input:focus{{border-color:#146bb7}}
@@ -648,22 +652,31 @@ var logsList=document.getElementById('admin-logs-list');
 var pagination=document.getElementById('admin-pagination');
 var adminPassword='';
 var currentPage=1;
-var clickCount=0;
-var clickTimer=null;
+	var clickCount=0;
+	var clickTimer=null;
+	var footerEl=document.getElementById('colophon');
 
-// Triple click anywhere in footer to open admin panel
-document.getElementById('colophon').addEventListener('click',function(e){{
-  if(e.target.closest('a'))return;
-  clickCount++;
-  if(clickCount===1){{
-    clickTimer=setTimeout(function(){{clickCount=0;}},800);
-  }}
-  if(clickCount===3){{
-    clearTimeout(clickTimer);
-    clickCount=0;
-    openAdmin();
-  }}
-}});
+	// Triple-click anywhere in footer to open admin panel
+	footerEl.addEventListener('click',function(e){{
+	  clickCount++;
+	  clearTimeout(clickTimer);
+	  if(clickCount>=3){{
+	    clickCount=0;
+	    openAdmin();
+	    return;
+	  }}
+	  clickTimer=setTimeout(function(){{clickCount=0;}},1500);
+	}});
+
+	// Keyboard shortcut: Ctrl+Shift+A (Win/Linux) or Cmd+Shift+A (Mac)
+	document.addEventListener('keydown',function(e){{
+	  if((e.ctrlKey||e.metaKey)&&e.shiftKey&&e.code==='KeyA'&&!overlay.classList.contains('open')){{
+	    e.preventDefault();
+	    openAdmin();
+	  }}
+	}});
+
+	console.info('🔑 Admin: triple-click footer or press Ctrl+Shift+A');
 
 window.openAdmin=function(){{
   overlay.classList.add('open');
