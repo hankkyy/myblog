@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Apache Pulsar 入门：下一代消息队列有什么不一样？ – Welcome To My Blog</title>
-<meta name="description" content="了解 Pulsar 的架构设计——存算分离、分层存储、多租户，以及它和 Kafka 的核心差异。">
-<meta property="og:title" content="Apache Pulsar 入门：下一代消息队列有什么不一样？ – Welcome To My Blog">
-<meta property="og:description" content="了解 Pulsar 的架构设计——存算分离、分层存储、多租户，以及它和 Kafka 的核心差异。">
+<title>Getting Started with Apache Pulsar: What Makes the Next-Generation Message Queue Different? – Welcome To My Blog</title>
+<meta name="description" content="Learn about Pulsar's architecture design—storage and compute separation, tiered storage, multi-tenancy, and its core differences from Kafka.">
+<meta property="og:title" content="Getting Started with Apache Pulsar: What Makes the Next-Generation Message Queue Different? – Welcome To My Blog">
+<meta property="og:description" content="Learn about Pulsar's architecture design—storage and compute separation, tiered storage, multi-tenancy, and its core differences from Kafka.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Apache Pulsar 入门：下一代消息队列有什么不一样？ – Welcome To My Blog",
-  "description": "了解 Pulsar 的架构设计——存算分离、分层存储、多租户，以及它和 Kafka 的核心差异。",
+  "headline": "Getting Started with Apache Pulsar: What Makes the Next-Generation Message Queue Different? – Welcome To My Blog",
+  "description": "Learn about Pulsar's architecture design—storage and compute separation, tiered storage, multi-tenancy, and its core differences from Kafka.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">Apache Pulsar 入门：下一代消息队列有什么不一样？</span>
+        <span class="sticky-title">Getting Started with Apache Pulsar: What Makes the Next-Generation Message Queue Different?</span>
       </div>
     </div>
   </div>
@@ -68,39 +68,39 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/分布式/" rel="category">分布式</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/apache-pulsar-intro/" rel="bookmark"><time class="entry-date published" datetime="2025-02-22">2025-02-22</time></a></span>
+                <span class="cat-links"><a href="/categories/distributed-systems/" rel="category">Distributed Systems</a><span class="cat-seperator">, </span><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/apache-pulsar-intro/" rel="bookmark"><time class="entry-date published" datetime="2025-02-22">2025-02-22</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">Apache Pulsar 入门：下一代消息队列有什么不一样？</h1>
+                <h1 class="entry-title">Getting Started with Apache Pulsar: What Makes the Next-Generation Message Queue Different?</h1>
               </header>
-              <div class="entry-content"><p>Apache Pulsar 被称为「下一代消息队列」，它和 Kafka 最大的区别是架构。</p>
-<h2>存算分离</h2>
-<p>Kafka 的数据存储在 Broker 本地磁盘上，Broker 既负责计算也负责存储。扩容时要同时考虑计算和存储。</p>
-<p>Pulsar 把计算（Broker）和存储（BookKeeper）分开了：
-- Broker：无状态，只负责消息路由和服务
-- BookKeeper：负责持久化存储</p>
-<p>这意味着你可以单独扩容 Broker（增加吞吐）或 BookKeeper（增加存储），不会互相影响。</p>
-<h2>多租户</h2>
-<p>Pulsar 原生支持多租户：一个集群可以服务多个团队/业务线，租户之间完全隔离。Kafka 在这方面主要靠命名约定来区分。</p>
-<h2>分层存储</h2>
-<p>Pulsar 可以把冷数据自动迁移到廉价存储（S3、HDFS），热数据留在 BookKeeper 里。这对长期存储场景（比如审计日志、合规数据）非常有用。</p>
-<h2>什么时候选 Pulsar</h2>
+              <div class="entry-content"><p>Apache Pulsar is known as the "next-generation message queue," and its biggest difference from Kafka lies in its architecture.</p>
+<h2>Storage and Compute Separation</h2>
+<p>In Kafka, data is stored on the Broker's local disk, meaning the Broker handles both compute and storage. Scaling requires considering both compute and storage simultaneously.</p>
+<p>Pulsar separates compute (Broker) from storage (BookKeeper):
+- Broker: Stateless, responsible only for message routing and serving
+- BookKeeper: Handles persistent storage</p>
+<p>This means you can scale Brokers (to increase throughput) or BookKeepers (to increase storage) independently, without affecting each other.</p>
+<h2>Multi-Tenancy</h2>
+<p>Pulsar natively supports multi-tenancy: a single cluster can serve multiple teams/business lines with complete isolation between tenants. Kafka relies mainly on naming conventions to distinguish between them.</p>
+<h2>Tiered Storage</h2>
+<p>Pulsar can automatically migrate cold data to cheap storage (S3, HDFS), while keeping hot data in BookKeeper. This is highly useful for long-term storage scenarios (such as audit logs and compliance data).</p>
+<h2>When to Choose Pulsar</h2>
 <ul>
-<li>你需要在同一个集群里服务多个租户</li>
-<li>消息需要长期存储</li>
-<li>团队有专门的运维团队（Pulsar 的运维复杂度比 Kafka 高）</li>
+<li>You need to serve multiple tenants within the same cluster</li>
+<li>Messages need long-term storage</li>
+<li>Your team has dedicated operations staff (Pulsar's operational complexity is higher than Kafka's)</li>
 </ul>
-<p>Kafka 依然是事实标准，但 Pulsar 在特定场景下确实更合适。</p>
+<p>Kafka remains the de facto standard, but Pulsar is indeed more suitable in specific scenarios.</p>
 <hr />
-<p><strong>参考来源：</strong></p>
+<p><strong>References:</strong></p>
 <ul>
-<li><a href="https://pulsar.apache.org/">Apache Pulsar 官方文档</a></li>
+<li><a href="https://pulsar.apache.org/">Apache Pulsar Official Documentation</a></li>
 </ul></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/分布式/" rel="category">分布式</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/distributed-systems/" rel="category">Distributed Systems</a><a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/jvm-memory-model/" rel="prev"><span class="nav-links__label">Previous</span> JVM 内存模型面试精讲：堆、栈、方法区和元空间</a></div><div class="nav-next"><a href="/posts/redis-interview-questions/" rel="next"><span class="nav-links__label">Next</span> Redis 高频面试题：缓存穿透、雪崩、击穿到底有什么区别？</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/jvm-memory-model/" rel="prev"><span class="nav-links__label">Previous</span> JVM Memory Model Interview Guide: Heap, Stack, Method Area, and Metaspace</a></div><div class="nav-next"><a href="/posts/redis-interview-questions/" rel="next"><span class="nav-links__label">Next</span> Redis High-Frequency Interview Questions: What's the Difference Between Cache Penetration, Avalanche, and Breakdown?</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -118,11 +118,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -164,7 +164,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -173,7 +174,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -213,6 +214,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -220,6 +222,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -227,12 +230,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

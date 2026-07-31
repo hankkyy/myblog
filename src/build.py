@@ -353,7 +353,8 @@ window.addEventListener('scroll',function(){{document.getElementById('back-to-to
   </div>
 </div>
 <style>
-#chat-widget{{position:fixed;bottom:28px;right:28px;z-index:1000}}
+#chat-widget{{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}}
+#chat-widget>*{{pointer-events:auto}}
 #chat-toggle{{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}}
 #chat-toggle::after{{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}}
 @keyframes chatPulse{{0%,100%{{transform:scale(1);opacity:1}}50%{{transform:scale(1.3);opacity:0}}}}
@@ -362,7 +363,7 @@ window.addEventListener('scroll',function(){{document.getElementById('back-to-to
 #chat-toggle-close-emoji{{line-height:1;font-size:18px;font-weight:700}}
 #chat-panel{{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}}
 #chat-panel.open{{display:flex}}
-#chat-header{{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}}
+#chat-header{{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}}
 #chat-messages{{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}}
 .chat-msg{{display:flex;max-width:85%}}
 .chat-msg.user{{align-self:flex-end}}
@@ -402,6 +403,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){{
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -409,6 +411,7 @@ chatHeader.addEventListener('mousedown',function(e){{
 }});
 chatHeader.addEventListener('touchstart',function(e){{
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -416,12 +419,14 @@ chatHeader.addEventListener('touchstart',function(e){{
 }},{{passive:false}});
 document.addEventListener('mousemove',function(e){{
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 }});
 document.addEventListener('touchmove',function(e){{
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
@@ -753,7 +758,7 @@ def parse_page(md_path):
         "long_summary": long_summary,
         "truncated": truncated,
         "long_truncated": long_truncated,
-        "slug": md_path.stem,
+        "slug": md_path.stem[:-3] if md_path.stem.endswith('.en') else md_path.stem,
         "lang": post.get("lang", "en"),
     }
 
@@ -1251,9 +1256,9 @@ def build():
             posts.append(parse_page(f))
     posts.sort(key=lambda p: p["date"], reverse=True)
 
-    # All posts appear on both language versions — only UI differs
-    en_posts = posts
-    zh_posts = posts
+    # Filter posts by language: en (default or explicit) → /, zh → /zh/
+    en_posts = [p for p in posts if p['lang'] != 'zh']
+    zh_posts = [p for p in posts if p['lang'] == 'zh']
 
     en_cats = build_site("en", en_posts)
     zh_cats = build_site("zh", zh_posts)

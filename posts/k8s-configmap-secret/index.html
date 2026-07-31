@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kubernetes ConfigMap 和 Secret：配置管理的正确姿势 – Welcome To My Blog</title>
-<meta name="description" content="理解 ConfigMap 和 Secret 的使用场景、注入方式和安全注意事项。">
-<meta property="og:title" content="Kubernetes ConfigMap 和 Secret：配置管理的正确姿势 – Welcome To My Blog">
-<meta property="og:description" content="理解 ConfigMap 和 Secret 的使用场景、注入方式和安全注意事项。">
+<title>Kubernetes ConfigMap and Secret: The Right Way to Manage Configuration – Welcome To My Blog</title>
+<meta name="description" content="Understand the use cases, injection methods, and security considerations of ConfigMap and Secret.">
+<meta property="og:title" content="Kubernetes ConfigMap and Secret: The Right Way to Manage Configuration – Welcome To My Blog">
+<meta property="og:description" content="Understand the use cases, injection methods, and security considerations of ConfigMap and Secret.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Kubernetes ConfigMap 和 Secret：配置管理的正确姿势 – Welcome To My Blog",
-  "description": "理解 ConfigMap 和 Secret 的使用场景、注入方式和安全注意事项。",
+  "headline": "Kubernetes ConfigMap and Secret: The Right Way to Manage Configuration – Welcome To My Blog",
+  "description": "Understand the use cases, injection methods, and security considerations of ConfigMap and Secret.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">Kubernetes ConfigMap 和 Secret：配置管理的正确姿势</span>
+        <span class="sticky-title">Kubernetes ConfigMap and Secret: The Right Way to Manage Configuration</span>
       </div>
     </div>
   </div>
@@ -68,14 +68,14 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/云原生/" rel="category">云原生</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/k8s-configmap-secret/" rel="bookmark"><time class="entry-date published" datetime="2026-03-05">2026-03-05</time></a></span>
+                <span class="cat-links"><a href="/categories/cloud-native/" rel="category">Cloud Native</a><span class="cat-seperator">, </span><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/k8s-configmap-secret/" rel="bookmark"><time class="entry-date published" datetime="2026-03-05">2026-03-05</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">Kubernetes ConfigMap 和 Secret：配置管理的正确姿势</h1>
+                <h1 class="entry-title">Kubernetes ConfigMap and Secret: The Right Way to Manage Configuration</h1>
               </header>
-              <div class="entry-content"><p>ConfigMap 和 Secret 是 K8s 中管理配置的两大工具。</p>
+              <div class="entry-content"><p>ConfigMap and Secret are the two primary tools for managing configuration in K8s.</p>
 <h2>ConfigMap</h2>
-<p>存储非敏感配置——数据库地址、日志级别、环境变量等：</p>
+<p>Stores non-sensitive configuration—database addresses, log levels, environment variables, etc.:</p>
 <pre class="codehilite"><code class="language-yaml">apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -86,7 +86,7 @@ data:
 </code></pre>
 
 <h2>Secret</h2>
-<p>存储敏感信息——密码、Token、证书等。值需要 base64 编码：</p>
+<p>Stores sensitive information—passwords, tokens, certificates, etc. Values need to be base64 encoded:</p>
 <pre class="codehilite"><code class="language-yaml">apiVersion: v1
 kind: Secret
 metadata:
@@ -97,8 +97,8 @@ data:
   password: cGFzc3dvcmQ=  # base64(&quot;password&quot;)
 </code></pre>
 
-<h2>注入方式</h2>
-<h3>环境变量</h3>
+<h2>Injection Methods</h2>
+<h3>Environment Variables</h3>
 <pre class="codehilite"><code class="language-yaml">env:
 - name: DB_URL
   valueFrom:
@@ -107,34 +107,34 @@ data:
       key: database-url
 </code></pre>
 
-<h3>挂载为文件</h3>
+<h3>Mounted as Files</h3>
 <pre class="codehilite"><code class="language-yaml">volumes:
 - name: config-volume
   configMap:
     name: app-config
 </code></pre>
 
-<p>文件挂载的好处：支持热更新（ConfigMap 更新后 Kubelet 会自动同步）。</p>
-<h2>Secret 的安全问题</h2>
+<p>The benefit of file mounting: it supports hot updates (Kubelet automatically syncs when the ConfigMap is updated).</p>
+<h2>Secret Security Concerns</h2>
 <ol>
-<li>Secret 默认只做 base64 编码，不是加密——base64 可以轻松解码</li>
-<li>解决方案：启用 Etcd 加密（EncryptionConfiguration）</li>
-<li>更安全的方案：使用外部密钥管理（HashiCorp Vault、AWS Secrets Manager）</li>
-<li>限制 Secret 的 RBAC 权限</li>
+<li>Secrets are only base64 encoded by default, not encrypted—base64 can be easily decoded</li>
+<li>Solution: Enable Etcd encryption (EncryptionConfiguration)</li>
+<li>More secure option: Use external key management (HashiCorp Vault, AWS Secrets Manager)</li>
+<li>Restrict RBAC permissions for Secrets</li>
 </ol>
-<h2>最佳实践</h2>
+<h2>Best Practices</h2>
 <ul>
-<li>ConfigMap 放非敏感配置，Secret 放密码/Token</li>
-<li>生产环境密码不要直接写在 Secret yaml 里——用 CI/CD 注入</li>
-<li>ConfigMap 和 Secret 有大小限制（1MB），不要放大量数据</li>
-<li>善用 immutable 特性（<code>immutable: true</code>）提升性能</li>
+<li>Put non-sensitive configuration in ConfigMaps, and passwords/tokens in Secrets</li>
+<li>Don't write production passwords directly in Secret YAML files—inject them via CI/CD</li>
+<li>ConfigMaps and Secrets have a size limit (1MB), so don't store large amounts of data</li>
+<li>Make good use of the immutable feature (<code>immutable: true</code>) to improve performance</li>
 </ul>
-<p>配置管理看着简单，但在生产环境中做错一步就会导致安全事故。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/云原生/" rel="category">云原生</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
+<p>Configuration management may seem simple, but in a production environment, a single misstep can lead to a security incident.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/cloud-native/" rel="category">Cloud Native</a><a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/sora-v2-openai/" rel="prev"><span class="nav-links__label">Previous</span> OpenAI 发布 Sora 2：AI 视频生成进入「可商用」时代</a></div><div class="nav-next"><a href="/posts/cursor-ai-ide-rise/" rel="next"><span class="nav-links__label">Next</span> Cursor 估值突破 100 亿美元：AI 编程工具重新定义了「IDE」</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/sora-v2-openai/" rel="prev"><span class="nav-links__label">Previous</span> OpenAI Releases Sora 2: AI Video Generation Enters the 'Commercial-Ready' Era</a></div><div class="nav-next"><a href="/posts/cursor-ai-ide-rise/" rel="next"><span class="nav-links__label">Next</span> Cursor's Valuation Surpasses $10 Billion: AI Coding Tool Redefines the 'IDE'</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -152,11 +152,11 @@ data:
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -198,7 +198,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -207,7 +208,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -247,6 +248,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -254,6 +256,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -261,12 +264,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程 – Welcome To My Blog</title>
-<meta name="description" content="追踪一个请求从外部进入 K8s 集群到 Pod 的完整网络路径">
-<meta property="og:title" content="Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程 – Welcome To My Blog">
-<meta property="og:description" content="追踪一个请求从外部进入 K8s 集群到 Pod 的完整网络路径">
+<title>Kubernetes Network Model: The Complete Packet Journey from Pod to Service – Welcome To My Blog</title>
+<meta name="description" content="Tracing the full network path of a request from outside the K8s cluster to a Pod">
+<meta property="og:title" content="Kubernetes Network Model: The Complete Packet Journey from Pod to Service – Welcome To My Blog">
+<meta property="og:description" content="Tracing the full network path of a request from outside the K8s cluster to a Pod">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程 – Welcome To My Blog",
-  "description": "追踪一个请求从外部进入 K8s 集群到 Pod 的完整网络路径",
+  "headline": "Kubernetes Network Model: The Complete Packet Journey from Pod to Service – Welcome To My Blog",
+  "description": "Tracing the full network path of a request from outside the K8s cluster to a Pod",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</span>
+        <span class="sticky-title">Kubernetes Network Model: The Complete Packet Journey from Pod to Service</span>
       </div>
     </div>
   </div>
@@ -68,13 +68,13 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/k8s-network/" rel="bookmark"><time class="entry-date published" datetime="2026-06-14">2026-06-14</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/k8s-network/" rel="bookmark"><time class="entry-date published" datetime="2026-06-14">2026-06-14</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</h1>
+                <h1 class="entry-title">Kubernetes Network Model: The Complete Packet Journey from Pod to Service</h1>
               </header>
-              <div class="entry-content"><p>Kubernetes 的网络模型是面试高频题，但很多人只是背了「每个 Pod 一个 IP」，实际数据包怎么走的并不清楚。</p>
-<h2>K8s 网络的三层模型</h2>
+              <div class="entry-content"><p>Kubernetes' network model is a frequent interview question, but many people just memorize "one IP per Pod" without understanding how the actual packets travel.</p>
+<h2>The Three-Layer Network Model of K8s</h2>
 <pre class="codehilite"><code>┌─────────────────────────────────────────────┐
 │  Node                                      │
 │  ┌─────────┐  ┌─────────┐  ┌─────────┐    │
@@ -92,26 +92,26 @@
 └──────────────┴──────────┴──────────────────┘
 </code></pre>
 
-<h2>场景一：同节点 Pod 通信</h2>
-<p>Pod A (10.244.1.2) → Pod B (10.244.1.3)：</p>
+<h2>Scenario 1: Pod Communication on the Same Node</h2>
+<p>Pod A (10.244.1.2) → Pod B (10.244.1.3):</p>
 <ol>
-<li>Pod A 发出包，目标 <code>10.244.1.3</code></li>
-<li>包经过 veth pair 到达 <code>cni0</code> 网桥</li>
-<li>cni0 查 ARP 表，发现目标在同一子网</li>
-<li><strong>直接二层转发</strong>，不经过 iptables</li>
+<li>Pod A sends a packet targeting <code>10.244.1.3</code></li>
+<li>The packet traverses the veth pair and reaches the <code>cni0</code> bridge</li>
+<li>cni0 checks the ARP table and finds the target is on the same subnet</li>
+<li><strong>Direct Layer 2 forwarding</strong> — no iptables involved</li>
 </ol>
-<h2>场景二：跨节点 Pod 通信</h2>
-<p>Pod A (Node1) → Pod C (Node2)：</p>
+<h2>Scenario 2: Pod Communication Across Nodes</h2>
+<p>Pod A (Node1) → Pod C (Node2):</p>
 <ol>
-<li>Pod A 发包，目标 <code>10.244.2.2</code></li>
-<li>到 cni0，发现目标不在本子网</li>
-<li>查路由表：<code>10.244.2.0/24 via 10.0.0.6</code>（Node2 的 IP）</li>
-<li>包被封装（VXLAN / IP-in-IP），发到 Node2</li>
-<li>Node2 解封装，交给本地 cni0</li>
-<li>cni0 转发给 Pod C</li>
+<li>Pod A sends a packet targeting <code>10.244.2.2</code></li>
+<li>It reaches cni0, which finds the target is not on the local subnet</li>
+<li>The routing table is consulted: <code>10.244.2.0/24 via 10.0.0.6</code> (Node2's IP)</li>
+<li>The packet is encapsulated (VXLAN / IP-in-IP) and sent to Node2</li>
+<li>Node2 decapsulates it and hands it to the local cni0</li>
+<li>cni0 forwards it to Pod C</li>
 </ol>
-<p><strong>关键点：Overlay 网络用 VXLAN 隧道封装，每个包多了 50 字节的 VXLAN 头。</strong></p>
-<h2>场景三：ClusterIP Service</h2>
+<p><strong>Key point: The overlay network uses VXLAN tunnel encapsulation, adding 50 bytes of VXLAN header to each packet.</strong></p>
+<h2>Scenario 3: ClusterIP Service</h2>
 <pre class="codehilite"><code class="language-yaml">apiVersion: v1
 kind: Service
 spec:
@@ -120,62 +120,62 @@ spec:
     app: nginx
 </code></pre>
 
-<p>请求 <code>10.96.0.1:80</code> → Pod B：</p>
+<p>Request to <code>10.96.0.1:80</code> → Pod B:</p>
 <ol>
-<li>包到达 iptables/netfilter</li>
-<li>命中 kube-proxy 写入的 DNAT 规则</li>
-<li>目标改写为 <code>10.244.1.3:80</code></li>
-<li><strong>随机选一个后端 Pod</strong>（默认 iptables 概率模式）</li>
-<li>后续和正常 Pod 通信一样</li>
+<li>The packet reaches iptables/netfilter</li>
+<li>It matches the DNAT rule written by kube-proxy</li>
+<li>The destination is rewritten to <code>10.244.1.3:80</code></li>
+<li><strong>A backend Pod is randomly selected</strong> (default iptables probability mode)</li>
+<li>From here on, it's the same as normal Pod communication</li>
 </ol>
-<p><strong>iptables 模式的缺点</strong>：规则数量 O(n)，大量 Service 时性能下降。新版本推荐 <strong>IPVS 模式</strong>，用哈希表查找，O(1)。</p>
-<h2>场景四：外部流量 → NodePort → Pod</h2>
-<p>外部用户 → <code>NodeIP:30080</code> → Pod：</p>
+<p><strong>Drawback of iptables mode</strong>: Rule count is O(n), so performance degrades with many Services. Newer versions recommend <strong>IPVS mode</strong>, which uses hash table lookups — O(1).</p>
+<h2>Scenario 4: External Traffic → NodePort → Pod</h2>
+<p>External user → <code>NodeIP:30080</code> → Pod:</p>
 <pre class="codehilite"><code>Client → NodeIP:30080
   → iptables DNAT → ClusterIP:80
     → iptables DNAT → PodIP:80
 </code></pre>
 
 <blockquote>
-<p>注意：如果 Pod 不在收到请求的节点上，iptables 还会加一层 SNAT，导致 Pod 里看到的源 IP 是 Node IP。设置 <code>externalTrafficPolicy: Local</code> 可以保留源 IP。</p>
+<p>Note: If the Pod is not on the node that received the request, iptables adds an extra layer of SNAT, so the Pod sees the Node IP as the source IP. Setting <code>externalTrafficPolicy: Local</code> preserves the original source IP.</p>
 </blockquote>
-<h2>总结</h2>
+<h2>Summary</h2>
 <table>
 <thead>
 <tr>
-<th>场景</th>
-<th>关键技术</th>
-<th>性能</th>
+<th>Scenario</th>
+<th>Key Technology</th>
+<th>Performance</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>同节点 Pod</td>
+<td>Same-node Pod</td>
 <td>veth + bridge</td>
-<td>最高</td>
+<td>Highest</td>
 </tr>
 <tr>
-<td>跨节点 Pod</td>
+<td>Cross-node Pod</td>
 <td>VXLAN/Calico BGP</td>
-<td>中等</td>
+<td>Medium</td>
 </tr>
 <tr>
 <td>ClusterIP</td>
 <td>iptables/IPVS DNAT</td>
-<td>中等</td>
+<td>Medium</td>
 </tr>
 <tr>
 <td>NodePort</td>
 <td>iptables SNAT+DNAT</td>
-<td>较低</td>
+<td>Lower</td>
 </tr>
 </tbody>
 </table></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/spring-virtual-threads/" rel="prev"><span class="nav-links__label">Previous</span> Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></div><div class="nav-next"><a href="/posts/doris-3-features/" rel="next"><span class="nav-links__label">Next</span> 2026 年 Apache Doris 3.0 新特性全解析</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/spring-virtual-threads/" rel="prev"><span class="nav-links__label">Previous</span> Spring Boot 3 + Virtual Threads: Performance Testing and Pitfalls</a></div><div class="nav-next"><a href="/posts/doris-3-features/" rel="next"><span class="nav-links__label">Next</span> Complete Analysis of New Features in Apache Doris 3.0 (2026)</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -193,11 +193,11 @@ spec:
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -239,7 +239,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -248,7 +249,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -288,6 +289,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -295,6 +297,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -302,12 +305,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

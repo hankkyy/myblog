@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MySQL 分库分表学习笔记：从单库到分片的完整思路 – Welcome To My Blog</title>
-<meta name="description" content="学习分库分表的核心概念、分片键选择策略和常见坑点，适合入门理解。">
-<meta property="og:title" content="MySQL 分库分表学习笔记：从单库到分片的完整思路 – Welcome To My Blog">
-<meta property="og:description" content="学习分库分表的核心概念、分片键选择策略和常见坑点，适合入门理解。">
+<title>MySQL Sharding Study Notes: From Single Database to Sharding – Welcome To My Blog</title>
+<meta name="description" content="Learn the core concepts of database sharding, shard key selection strategies, and common pitfalls, suitable for beginners.">
+<meta property="og:title" content="MySQL Sharding Study Notes: From Single Database to Sharding – Welcome To My Blog">
+<meta property="og:description" content="Learn the core concepts of database sharding, shard key selection strategies, and common pitfalls, suitable for beginners.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "MySQL 分库分表学习笔记：从单库到分片的完整思路 – Welcome To My Blog",
-  "description": "学习分库分表的核心概念、分片键选择策略和常见坑点，适合入门理解。",
+  "headline": "MySQL Sharding Study Notes: From Single Database to Sharding – Welcome To My Blog",
+  "description": "Learn the core concepts of database sharding, shard key selection strategies, and common pitfalls, suitable for beginners.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">MySQL 分库分表学习笔记：从单库到分片的完整思路</span>
+        <span class="sticky-title">MySQL Sharding Study Notes: From Single Database to Sharding</span>
       </div>
     </div>
   </div>
@@ -68,33 +68,33 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/数据库/" rel="category">数据库</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/database-sharding-practice/" rel="bookmark"><time class="entry-date published" datetime="2025-08-15">2025-08-15</time></a></span>
+                <span class="cat-links"><a href="/categories/database/" rel="category">Database</a><span class="cat-seperator">, </span><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/database-sharding-practice/" rel="bookmark"><time class="entry-date published" datetime="2025-08-15">2025-08-15</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">MySQL 分库分表学习笔记：从单库到分片的完整思路</h1>
+                <h1 class="entry-title">MySQL Sharding Study Notes: From Single Database to Sharding</h1>
               </header>
-              <div class="entry-content"><p>最近在学习分库分表的方案，整理一下理解。</p>
-<h2>为什么需要分库分表</h2>
-<p>当一个表的数据量超过千万级别时，单库的性能会遇到瓶颈。虽然索引能帮助查询，但 B+Tree 层级变深，buffer pool 也装不下那么多数据。</p>
-<h2>分片键怎么选</h2>
-<p>这是最关键的一步。常见的选择：
-- 用户 ID：同一用户的数据在同一分片，用户维度查询快
-- 订单 ID：按订单号分散，但用户查自己所有订单时需要跨分片
-- 时间：按月份或年份分，适合日志类数据</p>
-<h2>常见方案</h2>
-<p>用 ShardingSphere 或者自己实现路由逻辑：</p>
+              <div class="entry-content"><p>I've been studying database sharding solutions recently, and here's my summary.</p>
+<h2>Why Sharding Is Needed</h2>
+<p>When a table's data volume exceeds tens of millions of rows, a single database hits performance bottlenecks. Although indexes help with queries, the B+Tree depth increases, and the buffer pool can no longer hold all the data.</p>
+<h2>How to Choose a Shard Key</h2>
+<p>This is the most critical step. Common choices:
+- User ID: Data for the same user resides in the same shard, making user-level queries fast
+- Order ID: Distributes by order number, but querying all orders for a user requires cross-shard access
+- Time: Partition by month or year, suitable for log-type data</p>
+<h2>Common Approaches</h2>
+<p>Use ShardingSphere or implement routing logic yourself:</p>
 <ol>
-<li>先规划好分几个库、每个库几张表</li>
-<li>确定分片算法（取模、哈希、范围）</li>
-<li>数据迁移时做双写 + 灰度切换</li>
-<li>尽量避免跨分片查询，如果需要可以用 ES 做索引</li>
+<li>First, plan how many databases and how many tables per database</li>
+<li>Determine the sharding algorithm (modulo, hash, range)</li>
+<li>During data migration, use dual-write plus gray release switching</li>
+<li>Avoid cross-shard queries whenever possible; if needed, use Elasticsearch as an index</li>
 </ol>
-<p>分库分表不是银弹，能不分就不分。但随着数据增长，迟早要面对。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/数据库/" rel="category">数据库</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
+<p>Sharding is not a silver bullet—avoid it if you can. But as data grows, you'll eventually have to face it.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/database/" rel="category">Database</a><a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/leetcode-53-maximum-subarray/" rel="prev"><span class="nav-links__label">Previous</span> LeetCode 53. 最大子数组和：动态规划入门第一题</a></div><div class="nav-next"><a href="/posts/cap-theorem-explained/" rel="next"><span class="nav-links__label">Next</span> CAP 定理面试精讲：你只能三选二，但现实没有那么简单</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/leetcode-53-maximum-subarray/" rel="prev"><span class="nav-links__label">Previous</span> LeetCode 53. Maximum Subarray: The First Dynamic Programming Problem</a></div><div class="nav-next"><a href="/posts/cap-theorem-explained/" rel="next"><span class="nav-links__label">Next</span> CAP Theorem Interview Deep Dive: You Can Only Pick Two, But Reality Is More Complex</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -112,11 +112,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -158,7 +158,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -167,7 +168,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -207,6 +208,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -214,6 +216,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -221,12 +224,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

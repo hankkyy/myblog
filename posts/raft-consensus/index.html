@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>分布式共识算法：Raft 为什么比 Paxos 更好懂 – Welcome To My Blog</title>
-<meta name="description" content="从 Leader 选举、日志复制到安全性保证，图解 Raft 共识算法">
-<meta property="og:title" content="分布式共识算法：Raft 为什么比 Paxos 更好懂 – Welcome To My Blog">
-<meta property="og:description" content="从 Leader 选举、日志复制到安全性保证，图解 Raft 共识算法">
+<title>Distributed Consensus Algorithms: Why Raft Is Easier to Understand Than Paxos – Welcome To My Blog</title>
+<meta name="description" content="From Leader election and log replication to safety guarantees, an illustrated guide to the Raft consensus algorithm">
+<meta property="og:title" content="Distributed Consensus Algorithms: Why Raft Is Easier to Understand Than Paxos – Welcome To My Blog">
+<meta property="og:description" content="From Leader election and log replication to safety guarantees, an illustrated guide to the Raft consensus algorithm">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "分布式共识算法：Raft 为什么比 Paxos 更好懂 – Welcome To My Blog",
-  "description": "从 Leader 选举、日志复制到安全性保证，图解 Raft 共识算法",
+  "headline": "Distributed Consensus Algorithms: Why Raft Is Easier to Understand Than Paxos – Welcome To My Blog",
+  "description": "From Leader election and log replication to safety guarantees, an illustrated guide to the Raft consensus algorithm",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">分布式共识算法：Raft 为什么比 Paxos 更好懂</span>
+        <span class="sticky-title">Distributed Consensus Algorithms: Why Raft Is Easier to Understand Than Paxos</span>
       </div>
     </div>
   </div>
@@ -68,86 +68,86 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/分布式/" rel="category">分布式</a></span><span class="posted-on"><a href="/posts/raft-consensus/" rel="bookmark"><time class="entry-date published" datetime="2026-05-28">2026-05-28</time></a></span>
+                <span class="cat-links"><a href="/categories/distributed-systems/" rel="category">Distributed Systems</a></span><span class="posted-on"><a href="/posts/raft-consensus/" rel="bookmark"><time class="entry-date published" datetime="2026-05-28">2026-05-28</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">分布式共识算法：Raft 为什么比 Paxos 更好懂</h1>
+                <h1 class="entry-title">Distributed Consensus Algorithms: Why Raft Is Easier to Understand Than Paxos</h1>
               </header>
-              <div class="entry-content"><p>分布式系统的核心难题：多个节点如何对一个值达成一致？Raft 是目前最流行的共识算法。</p>
-<h2>Raft 的三个角色</h2>
+              <div class="entry-content"><p>The core challenge of distributed systems: how can multiple nodes agree on a single value? Raft is currently the most popular consensus algorithm.</p>
+<h2>The Three Roles in Raft</h2>
 <pre class="codehilite"><code>┌──────────────────────────────────────┐
-│  Leader   ← 处理所有客户端请求       │
-│  Follower ← 被动响应 Leader          │
-│  Candidate ← 选举中的临时状态        │
+│  Leader   ← Handles all client requests │
+│  Follower ← Passively responds to Leader │
+│  Candidate ← Temporary state during election │
 └──────────────────────────────────────┘
 </code></pre>
 
-<h2>Leader 选举</h2>
+<h2>Leader Election</h2>
 <ol>
-<li>Follower 在 election timeout（150-300ms 随机）内没收到心跳 → 变成 Candidate</li>
-<li>Candidate 给自己投一票，向所有节点发送 RequestVote</li>
-<li>获得多数票 → 成为 Leader，开始发送心跳</li>
-<li>票数相同 → 重新选举（随机超时避免死循环）</li>
+<li>A Follower that receives no heartbeat within the election timeout (random 150-300ms) → becomes a Candidate</li>
+<li>The Candidate votes for itself and sends RequestVote to all nodes</li>
+<li>Receives a majority of votes → becomes Leader and starts sending heartbeats</li>
+<li>Tie in votes → re-election (random timeouts prevent infinite loops)</li>
 </ol>
-<h2>日志复制</h2>
+<h2>Log Replication</h2>
 <pre class="codehilite"><code>Client → Leader: SET x = 1
 Leader → Followers: AppendEntries(x=1, term=3, prevLogIndex=4)
 Followers → Leader: ACK
-Leader → Client: OK (多数确认后)
+Leader → Client: OK (after majority acknowledgment)
 </code></pre>
 
-<p><strong>关键</strong>：Leader 只提交当前 term 的日志。这保证了安全性。</p>
+<p><strong>Key point</strong>: The Leader only commits logs from the current term. This ensures safety.</p>
 <h2>Raft vs Paxos</h2>
 <table>
 <thead>
 <tr>
-<th>维度</th>
+<th>Dimension</th>
 <th>Paxos</th>
 <th>Raft</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>理解难度</td>
-<td>非常高</td>
-<td>相对低</td>
+<td>Ease of understanding</td>
+<td>Very high difficulty</td>
+<td>Relatively low</td>
 </tr>
 <tr>
-<td>工程实现</td>
-<td>复杂</td>
-<td>简单</td>
+<td>Engineering implementation</td>
+<td>Complex</td>
+<td>Simple</td>
 </tr>
 <tr>
-<td>日志连续性</td>
-<td>允许空洞</td>
-<td>严格连续</td>
+<td>Log continuity</td>
+<td>Allows gaps</td>
+<td>Strictly continuous</td>
 </tr>
 <tr>
-<td>成员变更</td>
-<td>复杂</td>
-<td>两阶段 Joint Consensus</td>
+<td>Membership changes</td>
+<td>Complex</td>
+<td>Two-phase Joint Consensus</td>
 </tr>
 </tbody>
 </table>
-<h2>实际应用</h2>
+<h2>Real-World Applications</h2>
 <ul>
-<li><strong>etcd</strong>：K8s 的后端存储，使用 Raft</li>
-<li><strong>TiKV</strong>：TiDB 的存储层</li>
-<li><strong>Consul</strong>：HashiCorp 的服务发现</li>
+<li><strong>etcd</strong>: Backend storage for K8s, uses Raft</li>
+<li><strong>TiKV</strong>: Storage layer for TiDB</li>
+<li><strong>Consul</strong>: HashiCorp's service discovery</li>
 </ul>
 <blockquote>
-<p>Raft 的成功在于：用「可理解性」换来了「可实现性」。</p>
+<p>Raft's success lies in: trading "understandability" for "implementability."</p>
 </blockquote>
 <hr />
-<p><strong>参考来源：</strong></p>
+<p><strong>References:</strong></p>
 <ul>
 <li><a href="https://raft.github.io/">Diego Ongaro — Raft Consensus Algorithm (2014)</a></li>
 </ul></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/分布式/" rel="category">分布式</a></span></footer>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/distributed-systems/" rel="category">Distributed Systems</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/raft-consensus-en/" rel="prev"><span class="nav-links__label">Previous</span> Distributed Consensus: Why Raft Is Easier to Understand Than Paxos</a></div><div class="nav-next"><a href="/posts/spring-redis-cache/" rel="next"><span class="nav-links__label">Next</span> Spring Boot + Redis 缓存实战：从注解到分布式锁</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/raft-consensus-en/" rel="prev"><span class="nav-links__label">Previous</span> Distributed Consensus: Why Raft Is Easier to Understand Than Paxos</a></div><div class="nav-next"><a href="/posts/spring-redis-cache/" rel="next"><span class="nav-links__label">Next</span> Spring Boot + Redis Cache in Practice: From Annotations to Distributed Locks</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -165,11 +165,11 @@ Leader → Client: OK (多数确认后)
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -211,7 +211,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -220,7 +221,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -260,6 +261,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -267,6 +269,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -274,12 +277,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

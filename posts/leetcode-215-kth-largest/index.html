@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LeetCode 215. 数组中的第 K 个最大元素：快选 vs 堆排 – Welcome To My Blog</title>
-<meta name="description" content="用快速选择（QuickSelect）和堆排序两种方法解 Top K 问题，理解各自的适用场景。">
-<meta property="og:title" content="LeetCode 215. 数组中的第 K 个最大元素：快选 vs 堆排 – Welcome To My Blog">
-<meta property="og:description" content="用快速选择（QuickSelect）和堆排序两种方法解 Top K 问题，理解各自的适用场景。">
+<title>LeetCode 215. Kth Largest Element in an Array: QuickSelect vs Heap Sort – Welcome To My Blog</title>
+<meta name="description" content="Solve the Top K problem with two approaches — QuickSelect and Heap Sort — and understand when to use each.">
+<meta property="og:title" content="LeetCode 215. Kth Largest Element in an Array: QuickSelect vs Heap Sort – Welcome To My Blog">
+<meta property="og:description" content="Solve the Top K problem with two approaches — QuickSelect and Heap Sort — and understand when to use each.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "LeetCode 215. 数组中的第 K 个最大元素：快选 vs 堆排 – Welcome To My Blog",
-  "description": "用快速选择（QuickSelect）和堆排序两种方法解 Top K 问题，理解各自的适用场景。",
+  "headline": "LeetCode 215. Kth Largest Element in an Array: QuickSelect vs Heap Sort – Welcome To My Blog",
+  "description": "Solve the Top K problem with two approaches — QuickSelect and Heap Sort — and understand when to use each.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">LeetCode 215. 数组中的第 K 个最大元素：快选 vs 堆排</span>
+        <span class="sticky-title">LeetCode 215. Kth Largest Element in an Array: QuickSelect vs Heap Sort</span>
       </div>
     </div>
   </div>
@@ -71,12 +71,12 @@
                 <span class="cat-links"><a href="/categories/leetcode/" rel="category">LeetCode</a></span><span class="posted-on"><a href="/posts/leetcode-215-kth-largest/" rel="bookmark"><time class="entry-date published" datetime="2026-02-12">2026-02-12</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">LeetCode 215. 数组中的第 K 个最大元素：快选 vs 堆排</h1>
+                <h1 class="entry-title">LeetCode 215. Kth Largest Element in an Array: QuickSelect vs Heap Sort</h1>
               </header>
-              <div class="entry-content"><p>第 K 大元素是高频面试题，考察 QuickSelect 算法。</p>
-<h2>题目</h2>
-<p>找数组中第 K 个最大的元素。比如 <code>[3,2,1,5,6,4]</code>，k=2，答案是 5。</p>
-<h2>解法一：堆排序 O(n log k)</h2>
+              <div class="entry-content"><p>The Kth largest element is a high-frequency interview question that tests the QuickSelect algorithm.</p>
+<h2>Problem</h2>
+<p>Find the Kth largest element in an array. For example, given <code>[3,2,1,5,6,4]</code> and k=2, the answer is 5.</p>
+<h2>Solution 1: Heap Sort O(n log k)</h2>
 <pre class="codehilite"><code class="language-java">public int findKthLargest(int[] nums, int k) {
     PriorityQueue&lt;Integer&gt; heap = new PriorityQueue&lt;&gt;();
     for (int num : nums) {
@@ -87,9 +87,9 @@
 }
 </code></pre>
 
-<p>维护一个大小为 k 的小顶堆。遍历完后堆顶就是第 k 大的元素。</p>
-<h2>解法二：快速选择 O(n) 平均</h2>
-<p>QuickSelect 是 QuickSort 的变体——不排序全部，只关注第 K 个。</p>
+<p>Maintain a min-heap of size k. After traversing the array, the top of the heap is the Kth largest element.</p>
+<h2>Solution 2: QuickSelect O(n) Average</h2>
+<p>QuickSelect is a variant of QuickSort — instead of sorting everything, it only focuses on the Kth element.</p>
 <pre class="codehilite"><code class="language-java">public int findKthLargest(int[] nums, int k) {
     return quickSelect(nums, 0, nums.length - 1, nums.length - k);
 }
@@ -111,44 +111,44 @@ private int quickSelect(int[] nums, int left, int right, int target) {
 }
 </code></pre>
 
-<h2>对比</h2>
+<h2>Comparison</h2>
 <table>
 <thead>
 <tr>
-<th>方法</th>
-<th>时间</th>
-<th>空间</th>
-<th>适用</th>
+<th>Method</th>
+<th>Time</th>
+<th>Space</th>
+<th>Best For</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>堆</td>
+<td>Heap</td>
 <td>O(n log k)</td>
 <td>O(k)</td>
-<td>k 很小</td>
+<td>Small k</td>
 </tr>
 <tr>
 <td>QuickSelect</td>
-<td>O(n) 平均</td>
+<td>O(n) average</td>
 <td>O(1)</td>
-<td>k 任意</td>
+<td>Any k</td>
 </tr>
 <tr>
-<td>全排序</td>
+<td>Full Sort</td>
 <td>O(n log n)</td>
 <td>O(1)</td>
-<td>简单但慢</td>
+<td>Simple but slow</td>
 </tr>
 </tbody>
 </table>
-<h2>面试怎么答</h2>
-<p>先说堆（最简单），再说 QuickSelect（优化），展示你的算法功底。如果面试官让你实现 QuickSelect，注意 pivot 的选择（可以用随机 pivot 避免最坏情况）。</p></div>
+<h2>How to Answer in an Interview</h2>
+<p>Start with the heap approach (simplest), then move to QuickSelect (optimized) to showcase your algorithmic skills. If the interviewer asks you to implement QuickSelect, pay attention to pivot selection (you can use a random pivot to avoid the worst case).</p></div>
               <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/leetcode/" rel="category">LeetCode</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/apple-m4-ultra/" rel="prev"><span class="nav-links__label">Previous</span> 苹果发布 M4 Ultra：桌面级 AI 推理的转折点？</a></div><div class="nav-next"><a href="/posts/gemini-robot-ai/" rel="next"><span class="nav-links__label">Next</span> Google DeepMind 发布 Gemini Robotics：AI 物理世界交互的里程碑</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/apple-m4-ultra/" rel="prev"><span class="nav-links__label">Previous</span> Apple Releases M4 Ultra: A Turning Point for Desktop AI Inference?</a></div><div class="nav-next"><a href="/posts/gemini-robot-ai/" rel="next"><span class="nav-links__label">Next</span> Google DeepMind Unveils Gemini Robotics: A Milestone in AI Physical World Interaction</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -166,11 +166,11 @@ private int quickSelect(int[] nums, int left, int right, int target) {
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -212,7 +212,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -221,7 +222,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -261,6 +262,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -268,6 +270,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -275,12 +278,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RAG 架构实战：从零搭建一个文档问答系统 – Welcome To My Blog</title>
-<meta name="description" content="用 LangChain + Chroma + OpenAI 搭建 RAG 系统的完整步骤，附带性能优化技巧">
-<meta property="og:title" content="RAG 架构实战：从零搭建一个文档问答系统 – Welcome To My Blog">
-<meta property="og:description" content="用 LangChain + Chroma + OpenAI 搭建 RAG 系统的完整步骤，附带性能优化技巧">
+<title>RAG Architecture in Practice: Building a Document Q&A System from Scratch – Welcome To My Blog</title>
+<meta name="description" content="Complete steps to build a RAG system using LangChain + Chroma + OpenAI, with performance optimization tips">
+<meta property="og:title" content="RAG Architecture in Practice: Building a Document Q&A System from Scratch – Welcome To My Blog">
+<meta property="og:description" content="Complete steps to build a RAG system using LangChain + Chroma + OpenAI, with performance optimization tips">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "RAG 架构实战：从零搭建一个文档问答系统 – Welcome To My Blog",
-  "description": "用 LangChain + Chroma + OpenAI 搭建 RAG 系统的完整步骤，附带性能优化技巧",
+  "headline": "RAG Architecture in Practice: Building a Document Q&A System from Scratch – Welcome To My Blog",
+  "description": "Complete steps to build a RAG system using LangChain + Chroma + OpenAI, with performance optimization tips",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">RAG 架构实战：从零搭建一个文档问答系统</span>
+        <span class="sticky-title">RAG Architecture in Practice: Building a Document Q&A System from Scratch</span>
       </div>
     </div>
   </div>
@@ -71,54 +71,54 @@
                 <span class="cat-links"><a href="/categories/ai/" rel="category">AI</a></span><span class="posted-on"><a href="/posts/rag-from-scratch/" rel="bookmark"><time class="entry-date published" datetime="2026-06-01">2026-06-01</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">RAG 架构实战：从零搭建一个文档问答系统</h1>
+                <h1 class="entry-title">RAG Architecture in Practice: Building a Document Q&A System from Scratch</h1>
               </header>
-              <div class="entry-content"><p>RAG（Retrieval-Augmented Generation）是让 LLM 回答私有文档的核心方案。</p>
-<h2>架构概览</h2>
+              <div class="entry-content"><p>RAG (Retrieval-Augmented Generation) is the core solution for enabling LLMs to answer questions about private documents.</p>
+<h2>Architecture Overview</h2>
 <pre class="codehilite"><code>┌──────────┐    ┌──────────┐    ┌──────────┐
-│ 文档切分  │ → │ 向量嵌入  │ → │ 向量存储  │
+│ Chunking │ → │ Embedding │ → │ Vector DB │
 └──────────┘    └──────────┘    └──────────┘
                                       │
 ┌──────────┐    ┌──────────┐          │
-│ LLM 生成  │ ← │ 检索召回  │ ←────────┘
+│ LLM Gen  │ ← │ Retrieval │ ←────────┘
 └──────────┘    └──────────┘
 </code></pre>
 
-<h2>核心代码</h2>
+<h2>Core Code</h2>
 <pre class="codehilite"><code class="language-python">from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
 
-# 1. 文档切分
+# 1. Document chunking
 splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
 chunks = splitter.split_documents(documents)
 
-# 2. 向量化 + 存储
+# 2. Embedding + storage
 embeddings = OpenAIEmbeddings()
 vectorstore = Chroma.from_documents(chunks, embeddings)
 
-# 3. 检索
+# 3. Retrieval
 retriever = vectorstore.as_retriever(search_kwargs={&quot;k&quot;: 4})
-docs = retriever.get_relevant_documents(&quot;Doris 3.0 新特性&quot;)
+docs = retriever.get_relevant_documents(&quot;Doris 3.0 new features&quot;)
 
-# 4. 生成
+# 4. Generation
 from langchain.chains import RetrievalQA
 qa = RetrievalQA.from_chain_type(llm=ChatOpenAI(), retriever=retriever)
-answer = qa.run(&quot;Doris 3.0 有哪些新特性？&quot;)
+answer = qa.run(&quot;What are the new features in Doris 3.0?&quot;)
 </code></pre>
 
-<h2>关键优化</h2>
+<h2>Key Optimizations</h2>
 <ul>
-<li><strong>Chunk size</strong>：500-1000 token 最佳。太短缺上下文，太长噪音多</li>
-<li><strong>Overlap</strong>：chunk_size 的 10%，保证信息不丢失</li>
-<li><strong>Embedding 模型</strong>：text-embedding-3-small 性价比最高</li>
-<li><strong>检索策略</strong>：MMR（最大边际相关性）避免重复文档</li>
+<li><strong>Chunk size</strong>: 500-1000 tokens is optimal. Too small loses context, too large introduces noise</li>
+<li><strong>Overlap</strong>: 10% of chunk_size to ensure no information is lost</li>
+<li><strong>Embedding model</strong>: text-embedding-3-small offers the best cost-performance ratio</li>
+<li><strong>Retrieval strategy</strong>: MMR (Maximum Marginal Relevance) avoids duplicate documents</li>
 </ul>
 <blockquote>
-<p>RAG 的本质是把「LLM 不知道的东西」提前塞进 prompt。</p>
+<p>The essence of RAG is to inject "what the LLM doesn't know" into the prompt in advance.</p>
 </blockquote>
 <hr />
-<p><strong>参考来源：</strong></p>
+<p><strong>References:</strong></p>
 <ul>
 <li><a href="https://arxiv.org/abs/2005.11401">Lewis et al. — Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks (2020)</a></li>
 </ul></div>
@@ -126,7 +126,7 @@ answer = qa.run(&quot;Doris 3.0 有哪些新特性？&quot;)
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/spring-redis-cache/" rel="prev"><span class="nav-links__label">Previous</span> Spring Boot + Redis 缓存实战：从注解到分布式锁</a></div><div class="nav-next"><a href="/posts/mcp-protocol-en/" rel="next"><span class="nav-links__label">Next</span> MCP Protocol: Standardizing How LLMs Call External Tools</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/spring-redis-cache/" rel="prev"><span class="nav-links__label">Previous</span> Spring Boot + Redis Cache in Practice: From Annotations to Distributed Locks</a></div><div class="nav-next"><a href="/posts/mcp-protocol-en/" rel="next"><span class="nav-links__label">Next</span> MCP Protocol: Standardizing How LLMs Call External Tools</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -144,11 +144,11 @@ answer = qa.run(&quot;Doris 3.0 有哪些新特性？&quot;)
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -190,7 +190,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -199,7 +200,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -239,6 +240,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -246,6 +248,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -253,12 +256,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

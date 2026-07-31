@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TCP 三次握手四次挥手：面试官到底想听什么？ – Welcome To My Blog</title>
-<meta name="description" content="不只是背过程，还要理解为什么三次而不是两次或四次，为什么挥手是四次。">
-<meta property="og:title" content="TCP 三次握手四次挥手：面试官到底想听什么？ – Welcome To My Blog">
-<meta property="og:description" content="不只是背过程，还要理解为什么三次而不是两次或四次，为什么挥手是四次。">
+<title>TCP Three-Way Handshake and Four-Way Wave: What Do Interviewers Really Want to Hear? – Welcome To My Blog</title>
+<meta name="description" content="Not just memorizing the process, but understanding why three times instead of two or four, and why the wave takes four steps.">
+<meta property="og:title" content="TCP Three-Way Handshake and Four-Way Wave: What Do Interviewers Really Want to Hear? – Welcome To My Blog">
+<meta property="og:description" content="Not just memorizing the process, but understanding why three times instead of two or four, and why the wave takes four steps.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "TCP 三次握手四次挥手：面试官到底想听什么？ – Welcome To My Blog",
-  "description": "不只是背过程，还要理解为什么三次而不是两次或四次，为什么挥手是四次。",
+  "headline": "TCP Three-Way Handshake and Four-Way Wave: What Do Interviewers Really Want to Hear? – Welcome To My Blog",
+  "description": "Not just memorizing the process, but understanding why three times instead of two or four, and why the wave takes four steps.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">TCP 三次握手四次挥手：面试官到底想听什么？</span>
+        <span class="sticky-title">TCP Three-Way Handshake and Four-Way Wave: What Do Interviewers Really Want to Hear?</span>
       </div>
     </div>
   </div>
@@ -68,54 +68,54 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/tcp-three-handshake/" rel="bookmark"><time class="entry-date published" datetime="2025-03-10">2025-03-10</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/tcp-three-handshake/" rel="bookmark"><time class="entry-date published" datetime="2025-03-10">2025-03-10</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">TCP 三次握手四次挥手：面试官到底想听什么？</h1>
+                <h1 class="entry-title">TCP Three-Way Handshake and Four-Way Wave: What Do Interviewers Really Want to Hear?</h1>
               </header>
-              <div class="entry-content"><p>TCP 的连接建立和释放是计算机网络面试的核心。</p>
-<h2>三次握手</h2>
-<pre class="codehilite"><code>客户端                          服务端
+              <div class="entry-content"><p>TCP connection establishment and teardown is a core topic in computer networking interviews.</p>
+<h2>Three-Way Handshake</h2>
+<pre class="codehilite"><code>Client                           Server
   |                               |
-  |----SYN(seq=x)----------------&gt;|  ① 客户端：我要连接
+  |----SYN(seq=x)----------------&gt;|  ① Client: I want to connect
   |                               |
-  |&lt;---SYN+ACK(seq=y,ack=x+1)----|  ② 服务端：收到，我准备好了
+  |&lt;---SYN+ACK(seq=y,ack=x+1)----|  ② Server: Got it, I'm ready
   |                               |
-  |----ACK(seq=x+1,ack=y+1)-----&gt;|  ③ 客户端：收到，开始传数据
+  |----ACK(seq=x+1,ack=y+1)-----&gt;|  ③ Client: Received, start sending data
 </code></pre>
 
-<h2>为什么三次而不是两次？</h2>
-<p>两次握手的问题：如果客户端的第一个 SYN 在网络中滞留后重新到达，服务端会错误地建立连接。</p>
-<p>三次握手的第三个 ACK 让服务端确认客户端确实收到了自己的 SYN+ACK，避免了历史连接被错误建立。</p>
-<h2>为什么不是四次？</h2>
-<p>服务端可以把 SYN 和 ACK 合并在一个包里发送（SYN+ACK），不需要分开。所以三次就够了。</p>
-<h2>四次挥手</h2>
-<pre class="codehilite"><code>客户端                          服务端
+<h2>Why Three Times Instead of Two?</h2>
+<p>The problem with two handshakes: if the client's first SYN is delayed in the network and then arrives again, the server would incorrectly establish a connection.</p>
+<p>The third ACK in the three-way handshake lets the server confirm that the client actually received its SYN+ACK, preventing stale connections from being incorrectly established.</p>
+<h2>Why Not Four Times?</h2>
+<p>The server can combine SYN and ACK into a single packet (SYN+ACK) without needing to send them separately. So three times is sufficient.</p>
+<h2>Four-Way Wave</h2>
+<pre class="codehilite"><code>Client                           Server
   |                               |
-  |----FIN(seq=u)----------------&gt;|  ① 客户端：我没数据了
+  |----FIN(seq=u)----------------&gt;|  ① Client: I have no more data
   |                               |
-  |&lt;---ACK(seq=v,ack=u+1)--------|  ② 服务端：知道了
+  |&lt;---ACK(seq=v,ack=u+1)--------|  ② Server: Understood
   |                               |
-  |&lt;---FIN(seq=w,ack=u+1)--------|  ③ 服务端：我也没数据了
+  |&lt;---FIN(seq=w,ack=u+1)--------|  ③ Server: I have no more data either
   |                               |
-  |----ACK(seq=u+1,ack=w+1)-----&gt;|  ④ 客户端：知道了
+  |----ACK(seq=u+1,ack=w+1)-----&gt;|  ④ Client: Understood
 </code></pre>
 
-<h2>为什么挥手要四次？</h2>
-<p>因为 TCP 是全双工的——双方都可以独立地发送和接收数据。一方说「我没数据了」（FIN），另一方可能还有数据要发。所以 FIN 和 ACK 不能合并。</p>
-<p>客户端的最后一个 ACK 发完后进入 TIME_WAIT（2MSL，约 60 秒），是为了：
-1. 确保最后一个 ACK 能到达服务端
-2. 让旧连接的所有报文在网络中消失</p>
-<h2>面试话术</h2>
+<h2>Why Does the Wave Take Four Steps?</h2>
+<p>Because TCP is full-duplex — both sides can independently send and receive data. When one side says "I have no more data" (FIN), the other side may still have data to send. So FIN and ACK cannot be combined.</p>
+<p>After the client sends its final ACK, it enters TIME_WAIT (2MSL, about 60 seconds), which serves two purposes:
+1. Ensuring the final ACK reaches the server
+2. Allowing all packets from the old connection to disappear from the network</p>
+<h2>Interview Talking Points</h2>
 <blockquote>
-<p>三次握手本质上是在不可靠的网络上建立可靠的连接。两次不够（历史连接问题），四次浪费。四次挥手是因为 TCP 是全双工，双方需要各自确认关闭。</p>
+<p>The three-way handshake is essentially establishing a reliable connection over an unreliable network. Two times is not enough (stale connection issues), four times is wasteful. The four-way wave exists because TCP is full-duplex, and each side needs to confirm its own closure independently.</p>
 </blockquote>
-<p>能讲清楚「为什么三次四次」的人比只会背流程的人少得多。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+<p>People who can explain "why three and why four" are far rarer than those who just recite the process.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/why-we-over-engineer/" rel="prev"><span class="nav-links__label">Previous</span> 为什么我们总喜欢过度设计：从「Hello World」到「微服务架构」的反思</a></div><div class="nav-next"><a href="/posts/distributed-lock-deep-dive/" rel="next"><span class="nav-links__label">Next</span> 分布式锁的三代演进：从 Redis 到 Etcd 再到无锁设计</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/why-we-over-engineer/" rel="prev"><span class="nav-links__label">Previous</span> Why We Always Love Over-Engineering: Reflections from 'Hello World' to 'Microservices Architecture'</a></div><div class="nav-next"><a href="/posts/distributed-lock-deep-dive/" rel="next"><span class="nav-links__label">Next</span> The Three Generations of Distributed Locks: From Redis to Etcd to Lock-Free Design</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -133,11 +133,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -179,7 +179,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -188,7 +189,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -228,6 +229,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -235,6 +237,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -242,12 +245,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Saga 模式的黄昏？2026 年分布式事务的新思路 – Welcome To My Blog</title>
-<meta name="description" content="Saga 模式曾是微服务架构中处理分布式事务的标准答案，但2026年它正在变成技术债——动态一致性边界提供了更优雅的替代方案。">
-<meta property="og:title" content="Saga 模式的黄昏？2026 年分布式事务的新思路 – Welcome To My Blog">
-<meta property="og:description" content="Saga 模式曾是微服务架构中处理分布式事务的标准答案，但2026年它正在变成技术债——动态一致性边界提供了更优雅的替代方案。">
+<title>The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026 – Welcome To My Blog</title>
+<meta name="description" content="The Saga pattern was once the standard answer for handling distributed transactions in microservices architectures, but in 2026 it's becoming technical debt—dynamic consistency boundaries offer a more elegant alternative.">
+<meta property="og:title" content="The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026 – Welcome To My Blog">
+<meta property="og:description" content="The Saga pattern was once the standard answer for handling distributed transactions in microservices architectures, but in 2026 it's becoming technical debt—dynamic consistency boundaries offer a more elegant alternative.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Saga 模式的黄昏？2026 年分布式事务的新思路 – Welcome To My Blog",
-  "description": "Saga 模式曾是微服务架构中处理分布式事务的标准答案，但2026年它正在变成技术债——动态一致性边界提供了更优雅的替代方案。",
+  "headline": "The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026 – Welcome To My Blog",
+  "description": "The Saga pattern was once the standard answer for handling distributed transactions in microservices architectures, but in 2026 it's becoming technical debt—dynamic consistency boundaries offer a more elegant alternative.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">Saga 模式的黄昏？2026 年分布式事务的新思路</span>
+        <span class="sticky-title">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</span>
       </div>
     </div>
   </div>
@@ -68,84 +68,84 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/分布式/" rel="category">分布式</a><span class="cat-seperator">, </span><a href="/categories/系统设计/" rel="category">系统设计</a></span><span class="posted-on"><a href="/posts/saga-pattern-decline/" rel="bookmark"><time class="entry-date published" datetime="2026-07-25">2026-07-25</time></a></span>
+                <span class="cat-links"><a href="/categories/distributed-systems/" rel="category">Distributed Systems</a><span class="cat-seperator">, </span><a href="/categories/system-design/" rel="category">System Design</a></span><span class="posted-on"><a href="/posts/saga-pattern-decline/" rel="bookmark"><time class="entry-date published" datetime="2026-07-25">2026-07-25</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">Saga 模式的黄昏？2026 年分布式事务的新思路</h1>
+                <h1 class="entry-title">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</h1>
               </header>
-              <div class="entry-content"><p>微服务火了十年，Saga 几乎成了分布式事务的标准答案。但 2026 年，越来越多的架构师开始重新审视这个模式。</p>
-<h2>Saga 解决什么问题</h2>
-<p>单体时代，数据库事务（ACID）天然保证一致性。拆成微服务后，一个业务操作可能跨越多个服务和数据库——没有全局事务了。</p>
-<p>Saga 的思路：把一个大事务拆成多个本地事务，每个本地事务有对应的补偿操作。失败了就逆序执行补偿。</p>
-<pre class="codehilite"><code>订单服务 (创建订单) → 库存服务 (扣库存) → 支付服务 (扣款)
+              <div class="entry-content"><p>Microservices have been hot for a decade, and Saga has almost become the standard answer for distributed transactions. But in 2026, more and more architects are re-examining this pattern.</p>
+<h2>What Problem Does Saga Solve</h2>
+<p>In the monolith era, database transactions (ACID) naturally guaranteed consistency. After splitting into microservices, a single business operation may span multiple services and databases—there's no global transaction anymore.</p>
+<p>The Saga approach: break a large transaction into multiple local transactions, each with a corresponding compensating action. If something fails, execute compensations in reverse order.</p>
+<pre class="codehilite"><code>Order Service (Create Order) → Inventory Service (Deduct Stock) → Payment Service (Charge)
        ↓                    ↓                  ↓
-   (取消订单) ←──────── (回滚库存) ←────── (退款)
+   (Cancel Order) ←──────── (Rollback Stock) ←────── (Refund)
 </code></pre>
 
-<h2>Saga 的问题</h2>
-<p>用着用着就会发现几个坑：</p>
-<p><strong>1. 补偿逻辑不总是可行。</strong> 发出去的短信能撤回吗？送出去的优惠券能收回吗？很多业务操作是不可逆的。</p>
-<p><strong>2. 复杂度爆炸。</strong> N 个服务的 Saga，失败场景的组合是指数级的。测试覆盖几乎没办法做全。</p>
-<p><strong>3. 中间状态暴露给用户。</strong> 订单创建了但库存还没扣，用户看到的是半成品——然后一刷新，订单没了。</p>
-<p><strong>4. 成为技术债放大器。</strong> Saga 把业务逻辑跟协调逻辑耦合在一起。业务一变，补偿逻辑也得跟着改，而且是连锁反应。</p>
-<h2>2026 年的新思路：动态一致性边界</h2>
-<p>AxonIQ 提出了一个概念叫 Dynamic Consistency Boundaries（DCB）。</p>
-<p>核心理念：<strong>不要在设计阶段就把数据归属定死。</strong> 传统领域驱动设计的 Aggregate 在定义的那一刻就固化了对业务的理解——而业务是会变的。</p>
-<p>DCB 的思路是：
-- 通过事件流统一管理状态变化
-- 一致性规则由「标签」动态定义，而非编译时确定
-- 需要一致性时再决定边界，而不是提前切分</p>
+<h2>The Problems with Saga</h2>
+<p>As you use it, you'll run into several pitfalls:</p>
+<p><strong>1. Compensation logic isn't always feasible.</strong> Can you retract an SMS that's already been sent? Can you take back a coupon that's already been issued? Many business operations are irreversible.</p>
+<p><strong>2. Complexity explodes.</strong> For a Saga spanning N services, the combinations of failure scenarios grow exponentially. Test coverage becomes nearly impossible to complete.</p>
+<p><strong>3. Intermediate states are exposed to users.</strong> The order is created but stock hasn't been deducted yet—users see a half-finished product, and then when they refresh, the order is gone.</p>
+<p><strong>4. It amplifies technical debt.</strong> Saga couples business logic with coordination logic. When the business changes, the compensation logic has to change too—and it's a chain reaction.</p>
+<h2>The New Approach in 2026: Dynamic Consistency Boundaries</h2>
+<p>AxonIQ has proposed a concept called Dynamic Consistency Boundaries (DCB).</p>
+<p>Core idea: <strong>Don't lock down data ownership at design time.</strong> Traditional Domain-Driven Design Aggregates freeze your understanding of the business at the moment of definition—but the business evolves.</p>
+<p>The DCB approach:
+- Manage state changes uniformly through event streams
+- Consistency rules are dynamically defined by "tags," not determined at compile time
+- Decide boundaries when consistency is needed, rather than splitting them in advance</p>
 <table>
 <thead>
 <tr>
-<th>维度</th>
+<th>Dimension</th>
 <th>Saga</th>
 <th>DCB</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>数据边界</td>
-<td>编译时固化</td>
-<td>运行时动态</td>
+<td>Data boundaries</td>
+<td>Fixed at compile time</td>
+<td>Dynamic at runtime</td>
 </tr>
 <tr>
-<td>补偿复杂度</td>
-<td>高（指数级组合）</td>
-<td>低（事件流天然可追溯）</td>
+<td>Compensation complexity</td>
+<td>High (exponential combinations)</td>
+<td>Low (event streams are naturally traceable)</td>
 </tr>
 <tr>
-<td>业务变更成本</td>
-<td>高（改协调逻辑）</td>
-<td>低（改标签规则）</td>
+<td>Cost of business changes</td>
+<td>High (modify coordination logic)</td>
+<td>Low (modify tag rules)</td>
 </tr>
 <tr>
-<td>中间状态</td>
-<td>用户可见</td>
-<td>事件流隔离</td>
+<td>Intermediate states</td>
+<td>Visible to users</td>
+<td>Isolated by event streams</td>
 </tr>
 </tbody>
 </table>
-<h2>不是说 Saga 就死了</h2>
-<p>Saga 在一些场景下仍然合适：
-- 服务数量少、流程简单（2-3 个步骤）
-- 补偿操作清晰且可靠（比如纯金融场景）
-- 团队对 Saga 框架已经很熟悉</p>
-<p>但在复杂业务流程中，如果你发现 Saga 越写越痛苦——那不是你用得不好，是这个模式本身就有天花板。</p>
+<h2>Not to Say Saga Is Dead</h2>
+<p>Saga is still appropriate in some scenarios:
+- Few services, simple flows (2-3 steps)
+- Compensation operations are clear and reliable (e.g., pure financial scenarios)
+- The team is already familiar with Saga frameworks</p>
+<p>But in complex business flows, if you find Saga getting more and more painful to maintain—it's not that you're using it wrong, it's that the pattern itself has a ceiling.</p>
 <blockquote>
-<p>2026 年，把「需要 Saga」当成一个 code smell 来看待，可能会让你少走很多弯路。</p>
+<p>In 2026, treating "we need Saga" as a code smell might save you a lot of detours.</p>
 </blockquote>
 <hr />
-<p><strong>参考来源：</strong></p>
+<p><strong>References:</strong></p>
 <ul>
 <li><a href="https://www.axoniq.io/blog/rethinking-microservices-architecture-through-dynamic-consistency-boundaries">AxonIQ — Rethinking Microservices Architecture Through Dynamic Consistency Boundaries</a></li>
 <li><a href="https://www.axoniq.io/blog/three-bold-predictions-for-distributed-systems-in-2026">AxonIQ — Three Bold Predictions for Distributed Systems in 2026</a></li>
 </ul></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/分布式/" rel="category">分布式</a><a href="/categories/系统设计/" rel="category">系统设计</a></span></footer>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/distributed-systems/" rel="category">Distributed Systems</a><a href="/categories/system-design/" rel="category">System Design</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/wasm-backend-2026/" rel="prev"><span class="nav-links__label">Previous</span> WebAssembly 在后端：第三年了，拐点将至</a></div><div class="nav-next"><a href="/posts/ai-coding-agents-2026/" rel="next"><span class="nav-links__label">Next</span> AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/wasm-backend-2026/" rel="prev"><span class="nav-links__label">Previous</span> WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></div><div class="nav-next"><a href="/posts/ai-coding-agents-2026/" rel="next"><span class="nav-links__label">Next</span> AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -163,11 +163,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -209,7 +209,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -218,7 +219,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -258,6 +259,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -265,6 +267,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -272,12 +275,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

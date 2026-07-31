@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Redis 高频面试题：缓存穿透、雪崩、击穿到底有什么区别？ – Welcome To My Blog</title>
-<meta name="description" content="把 Redis 面试中最容易混淆的三个概念讲清楚，配上解决方案和代码示例。">
-<meta property="og:title" content="Redis 高频面试题：缓存穿透、雪崩、击穿到底有什么区别？ – Welcome To My Blog">
-<meta property="og:description" content="把 Redis 面试中最容易混淆的三个概念讲清楚，配上解决方案和代码示例。">
+<title>Redis High-Frequency Interview Questions: What's the Difference Between Cache Penetration, Avalanche, and Breakdown? – Welcome To My Blog</title>
+<meta name="description" content="Clarify the three most commonly confused concepts in Redis interviews, with solutions and code examples.">
+<meta property="og:title" content="Redis High-Frequency Interview Questions: What's the Difference Between Cache Penetration, Avalanche, and Breakdown? – Welcome To My Blog">
+<meta property="og:description" content="Clarify the three most commonly confused concepts in Redis interviews, with solutions and code examples.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Redis 高频面试题：缓存穿透、雪崩、击穿到底有什么区别？ – Welcome To My Blog",
-  "description": "把 Redis 面试中最容易混淆的三个概念讲清楚，配上解决方案和代码示例。",
+  "headline": "Redis High-Frequency Interview Questions: What's the Difference Between Cache Penetration, Avalanche, and Breakdown? – Welcome To My Blog",
+  "description": "Clarify the three most commonly confused concepts in Redis interviews, with solutions and code examples.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">Redis 高频面试题：缓存穿透、雪崩、击穿到底有什么区别？</span>
+        <span class="sticky-title">Redis High-Frequency Interview Questions: What's the Difference Between Cache Penetration, Avalanche, and Breakdown?</span>
       </div>
     </div>
   </div>
@@ -68,40 +68,40 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/redis-interview-questions/" rel="bookmark"><time class="entry-date published" datetime="2025-02-28">2025-02-28</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/redis-interview-questions/" rel="bookmark"><time class="entry-date published" datetime="2025-02-28">2025-02-28</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">Redis 高频面试题：缓存穿透、雪崩、击穿到底有什么区别？</h1>
+                <h1 class="entry-title">Redis High-Frequency Interview Questions: What's the Difference Between Cache Penetration, Avalanche, and Breakdown?</h1>
               </header>
-              <div class="entry-content"><p>这三个词面试中几乎必问，而且很多人分不清。</p>
-<h2>缓存穿透</h2>
-<p><strong>现象</strong>：查询的数据在数据库也不存在，缓存自然也没有。每次请求都打到数据库。</p>
-<p><strong>解决方案</strong>：
-1. 布隆过滤器：预先把所有可能查询的 key 存到布隆过滤器中，不存在的直接过滤
-2. 缓存空对象：即使查不到也缓存一个空值，设置短过期时间</p>
-<h2>缓存击穿</h2>
-<p><strong>现象</strong>：一个热点 key 过期了，大量并发请求同时打到数据库。</p>
-<p><strong>解决方案</strong>：
-1. 互斥锁：第一个请求去查数据库并更新缓存，其他请求等待
-2. 永不过期：热点数据不设过期时间，用异步方式更新</p>
-<h2>缓存雪崩</h2>
-<p><strong>现象</strong>：大量 key 同时过期，请求全部打到数据库。</p>
-<p><strong>解决方案</strong>：
-1. 过期时间加随机值：避免大批量同时过期
-2. 多级缓存：本地缓存 + Redis + 数据库
-3. 限流降级：数据库扛不住时做服务降级</p>
-<h2>怎么记</h2>
+              <div class="entry-content"><p>These three terms are almost guaranteed to come up in interviews, and many people can't tell them apart.</p>
+<h2>Cache Penetration</h2>
+<p><strong>Phenomenon</strong>: The queried data doesn't exist in the database either, so naturally there's no cache. Every request hits the database directly.</p>
+<p><strong>Solutions</strong>:
+1. Bloom filter: Pre-store all potentially queried keys in a Bloom filter, and directly filter out non-existent ones
+2. Cache empty objects: Even if nothing is found, cache a null value with a short expiration time</p>
+<h2>Cache Breakdown</h2>
+<p><strong>Phenomenon</strong>: A hot key expires, and a large number of concurrent requests hit the database at the same time.</p>
+<p><strong>Solutions</strong>:
+1. Mutex lock: The first request queries the database and updates the cache, while other requests wait
+2. Never expire: Don't set an expiration time for hot data, update it asynchronously instead</p>
+<h2>Cache Avalanche</h2>
+<p><strong>Phenomenon</strong>: A large number of keys expire simultaneously, and all requests hit the database.</p>
+<p><strong>Solutions</strong>:
+1. Add random values to expiration times: Avoid large batches expiring at the same time
+2. Multi-level caching: Local cache + Redis + database
+3. Rate limiting and degradation: Implement service degradation when the database can't handle the load</p>
+<h2>How to Remember</h2>
 <ul>
-<li><strong>穿透</strong>：数据根本不存在 → 布隆过滤器</li>
-<li><strong>击穿</strong>：热点 key 过期 → 互斥锁</li>
-<li><strong>雪崩</strong>：大量 key 同时过期 → 随机过期时间</li>
+<li><strong>Penetration</strong>: Data doesn't exist at all → Bloom filter</li>
+<li><strong>Breakdown</strong>: Hot key expires → Mutex lock</li>
+<li><strong>Avalanche</strong>: Large number of keys expire simultaneously → Random expiration times</li>
 </ul>
-<p>记住这三个场景的差异和解决方案，Redis 面试就稳了一半。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+<p>Remember the differences between these three scenarios and their solutions, and you'll be halfway to acing the Redis part of your interview.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/apache-pulsar-intro/" rel="prev"><span class="nav-links__label">Previous</span> Apache Pulsar 入门：下一代消息队列有什么不一样？</a></div><div class="nav-next"><a href="/posts/anthropic-claude-4/" rel="next"><span class="nav-links__label">Next</span> Anthropic 发布 Claude 4：主打「安全性」的 AI 能跑多远？</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/apache-pulsar-intro/" rel="prev"><span class="nav-links__label">Previous</span> Getting Started with Apache Pulsar: What Makes the Next-Generation Message Queue Different?</a></div><div class="nav-next"><a href="/posts/anthropic-claude-4/" rel="next"><span class="nav-links__label">Next</span> Anthropic Releases Claude 4: How Far Can an AI Focused on 'Safety' Go?</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -119,11 +119,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -165,7 +165,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -174,7 +175,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -214,6 +215,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -221,6 +223,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -228,12 +231,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

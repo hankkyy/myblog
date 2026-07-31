@@ -12,8 +12,8 @@
   <url><loc>https://hankzhang.us//posts/database-index-revolution/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//posts/fable5-returns-limited/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//posts/post-fable5-ecosystem/</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://hankzhang.us//posts/graphrag-vs-rag/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//posts/graphrag-vs-rag-en/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us//posts/graphrag-vs-rag/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//posts/fable5-export-control/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//posts/hikaricp-tuning/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//posts/rust-ownership/</loc><changefreq>weekly</changefreq></url>
@@ -145,18 +145,20 @@
   <url><loc>https://hankzhang.us//posts/java-collection-framework/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//posts/http3-quic-explained/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//posts/hello-world/</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://hankzhang.us//categories/技术/</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://hankzhang.us//categories/ai/</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://hankzhang.us//categories/ai/</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://hankzhang.us//categories/分布式/</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://hankzhang.us//categories/系统设计/</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://hankzhang.us//categories/云原生/</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://hankzhang.us//categories/新闻/</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://hankzhang.us//categories/数据库/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//categories/technology/</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://hankzhang.us//categories/杂谈/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us//categories/ai/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//categories/distributed-systems/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us//categories/system-design/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us//categories/cloud-native/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us//categories/news/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us//categories/database/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us//categories/musings/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//categories/leetcode/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us//categories/tech/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us//categories/reflections/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us//categories/misc/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us//categories/random-thoughts/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us//categories/opinion/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//posts/</loc><changefreq>monthly</changefreq></url>
   <url><loc>https://hankzhang.us//about/</loc><changefreq>monthly</changefreq></url>
   <url><loc>https://hankzhang.us//</loc><changefreq>daily</changefreq></url>
@@ -172,7 +174,6 @@
   <url><loc>https://hankzhang.us//zh/posts/fable5-returns-limited/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//zh/posts/post-fable5-ecosystem/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//zh/posts/graphrag-vs-rag/</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://hankzhang.us//zh/posts/graphrag-vs-rag-en/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//zh/posts/fable5-export-control/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//zh/posts/hikaricp-tuning/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//zh/posts/rust-ownership/</loc><changefreq>weekly</changefreq></url>
@@ -185,11 +186,9 @@
   <url><loc>https://hankzhang.us//zh/posts/agents-md/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//zh/posts/deepseek-v4-release/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//zh/posts/mcp-protocol/</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://hankzhang.us//zh/posts/mcp-protocol-en/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//zh/posts/rag-from-scratch/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//zh/posts/spring-redis-cache/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//zh/posts/raft-consensus/</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://hankzhang.us//zh/posts/raft-consensus-en/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//zh/posts/nvidia-b200-launch/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//zh/posts/rust-in-linux-kernel/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//zh/posts/url-shortener/</loc><changefreq>weekly</changefreq></url>
@@ -312,9 +311,7 @@
   <url><loc>https://hankzhang.us//zh/categories/云原生/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//zh/categories/新闻/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//zh/categories/数据库/</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://hankzhang.us//zh/categories/technology/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//zh/categories/杂谈/</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://hankzhang.us//zh/categories/distributed-systems/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//zh/categories/leetcode/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//zh/posts/</loc><changefreq>monthly</changefreq></url>
   <url><loc>https://hankzhang.us//zh/about/</loc><changefreq>monthly</changefreq></url>

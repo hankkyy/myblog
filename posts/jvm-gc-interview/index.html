@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JVM 垃圾回收面试精讲：从 CMS 到 G1 到 ZGC – Welcome To My Blog</title>
-<meta name="description" content="梳理 JVM GC 的核心概念和演进历史，面试时能说清楚每种垃圾回收器的适用场景。">
-<meta property="og:title" content="JVM 垃圾回收面试精讲：从 CMS 到 G1 到 ZGC – Welcome To My Blog">
-<meta property="og:description" content="梳理 JVM GC 的核心概念和演进历史，面试时能说清楚每种垃圾回收器的适用场景。">
+<title>JVM Garbage Collection Interview Deep Dive: From CMS to G1 to ZGC – Welcome To My Blog</title>
+<meta name="description" content="A breakdown of core JVM GC concepts and evolution history, so you can clearly explain the use cases for each garbage collector in interviews.">
+<meta property="og:title" content="JVM Garbage Collection Interview Deep Dive: From CMS to G1 to ZGC – Welcome To My Blog">
+<meta property="og:description" content="A breakdown of core JVM GC concepts and evolution history, so you can clearly explain the use cases for each garbage collector in interviews.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "JVM 垃圾回收面试精讲：从 CMS 到 G1 到 ZGC – Welcome To My Blog",
-  "description": "梳理 JVM GC 的核心概念和演进历史，面试时能说清楚每种垃圾回收器的适用场景。",
+  "headline": "JVM Garbage Collection Interview Deep Dive: From CMS to G1 to ZGC – Welcome To My Blog",
+  "description": "A breakdown of core JVM GC concepts and evolution history, so you can clearly explain the use cases for each garbage collector in interviews.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">JVM 垃圾回收面试精讲：从 CMS 到 G1 到 ZGC</span>
+        <span class="sticky-title">JVM Garbage Collection Interview Deep Dive: From CMS to G1 to ZGC</span>
       </div>
     </div>
   </div>
@@ -68,47 +68,47 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/jvm-gc-interview/" rel="bookmark"><time class="entry-date published" datetime="2025-05-25">2025-05-25</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/jvm-gc-interview/" rel="bookmark"><time class="entry-date published" datetime="2025-05-25">2025-05-25</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">JVM 垃圾回收面试精讲：从 CMS 到 G1 到 ZGC</h1>
+                <h1 class="entry-title">JVM Garbage Collection Interview Deep Dive: From CMS to G1 to ZGC</h1>
               </header>
-              <div class="entry-content"><p>JVM 垃圾回收是 Java 面试的高频考点。别再只说「标记-清除」了。</p>
-<h2>GC 算法的演进</h2>
+              <div class="entry-content"><p>JVM garbage collection is a frequent topic in Java interviews. Don't just say "mark-and-sweep" anymore.</p>
+<h2>Evolution of GC Algorithms</h2>
 <ul>
-<li><strong>标记-清除</strong>：最简单，但会产生内存碎片</li>
-<li><strong>标记-整理</strong>：清除后整理内存，解决了碎片问题</li>
-<li><strong>标记-复制</strong>：把存活对象复制到新区域，效率最高（新生代用的就是这种）</li>
+<li><strong>Mark-Sweep</strong>: The simplest, but generates memory fragmentation</li>
+<li><strong>Mark-Compact</strong>: Compacts memory after sweeping, solving the fragmentation issue</li>
+<li><strong>Mark-Copy</strong>: Copies surviving objects to a new area, most efficient (used by the Young Generation)</li>
 </ul>
-<h2>分代收集</h2>
-<p>JVM 把堆分成新生代（Young）和老年代（Old）：
-- 新生代用复制算法（大部分对象朝生夕死）
-- 老年代用标记-整理算法</p>
-<p>新生代又分 Eden、Survivor0、Survivor1。对象先在 Eden 分配，经过几次 GC 还活着就晋升到老年代。</p>
-<h2>经典 GC 组合</h2>
+<h2>Generational Collection</h2>
+<p>The JVM divides the heap into the Young Generation and the Old Generation:
+- Young Generation uses the copying algorithm (most objects die young)
+- Old Generation uses the mark-compact algorithm</p>
+<p>The Young Generation is further divided into Eden, Survivor0, and Survivor1. Objects are first allocated in Eden, and after surviving several GC cycles, they are promoted to the Old Generation.</p>
+<h2>Classic GC Combinations</h2>
 <ul>
-<li><strong>Serial + Serial Old</strong>：单线程，适合客户端应用</li>
-<li><strong>Parallel Scavenge + Parallel Old</strong>：多线程，追求吞吐量</li>
-<li><strong>CMS + ParNew</strong>：低延迟，但已经废弃（JDK 14 移除了）</li>
-<li><strong>G1</strong>：JDK 9 后默认，平衡吞吐量和延迟</li>
-<li><strong>ZGC</strong>：JDK 15 正式版，亚毫秒级暂停（&lt;1ms）</li>
-<li><strong>Shenandoah</strong>：Red Hat 贡献的，跟 ZGC 类似</li>
+<li><strong>Serial + Serial Old</strong>: Single-threaded, suitable for client-side applications</li>
+<li><strong>Parallel Scavenge + Parallel Old</strong>: Multi-threaded, optimized for throughput</li>
+<li><strong>CMS + ParNew</strong>: Low latency, but deprecated (removed in JDK 14)</li>
+<li><strong>G1</strong>: Default since JDK 9, balances throughput and latency</li>
+<li><strong>ZGC</strong>: Official release in JDK 15, sub-millisecond pause times (&lt;1ms)</li>
+<li><strong>Shenandoah</strong>: Contributed by Red Hat, similar to ZGC</li>
 </ul>
-<h2>面试怎么答</h2>
+<h2>How to Answer in Interviews</h2>
 <ol>
-<li>先说 GC 的基本目的：回收不再使用的对象，释放内存</li>
-<li>再说分代收集的原理</li>
-<li>然后说常见的几种 GC 适合什么场景</li>
-<li>最后提一下为什么要从 CMS 升级到 G1（CMS 的碎片问题、浮动垃圾）</li>
+<li>Start with the basic purpose of GC: reclaiming unused objects and freeing memory</li>
+<li>Then explain the principle of generational collection</li>
+<li>Next, describe which scenarios the common GCs are suited for</li>
+<li>Finally, mention why the upgrade from CMS to G1 was necessary (CMS's fragmentation issues, floating garbage)</li>
 </ol>
-<h2>加分项</h2>
-<p>能说清楚 G1 的 Region 设计——不固定 Eden/Survivor/Old 的大小，而是用多个 Region 动态分配。这使得 G1 的停顿时间可以预测（通过设置 MaxGCPauseMillis）。</p>
-<p>GC 是 Java 性能优化的基础。理解了 GC 日志，你才能看懂线上为什么卡。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+<h2>Bonus Points</h2>
+<p>Being able to explain G1's Region design—it doesn't have fixed Eden/Survivor/Old sizes, but instead uses multiple Regions for dynamic allocation. This makes G1's pause times predictable (by setting MaxGCPauseMillis).</p>
+<p>GC is the foundation of Java performance tuning. Only by understanding GC logs can you diagnose why your production environment is lagging.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/sql-optimization-guide/" rel="prev"><span class="nav-links__label">Previous</span> SQL 优化面试指南：从 EXPLAIN 到索引设计的实战思路</a></div><div class="nav-next"><a href="/posts/k8s-hpa-autoscaling/" rel="next"><span class="nav-links__label">Next</span> Kubernetes HPA 自动伸缩深入理解：从 CPU 到自定义指标</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/sql-optimization-guide/" rel="prev"><span class="nav-links__label">Previous</span> SQL Optimization Interview Guide: Practical Insights from EXPLAIN to Index Design</a></div><div class="nav-next"><a href="/posts/k8s-hpa-autoscaling/" rel="next"><span class="nav-links__label">Next</span> Deep Dive into Kubernetes HPA Autoscaling: From CPU to Custom Metrics</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -126,11 +126,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -172,7 +172,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -181,7 +182,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -221,6 +222,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -228,6 +230,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -235,12 +238,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

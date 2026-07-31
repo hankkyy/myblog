@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kafka 不再是唯一选择：2025 消息队列选型指南 – Welcome To My Blog</title>
-<meta name="description" content="Redpanda、WarpStream、AutoMQ 等新玩家正在挑战 Kafka 的地位，消息队列的格局正在变化。">
-<meta property="og:title" content="Kafka 不再是唯一选择：2025 消息队列选型指南 – Welcome To My Blog">
-<meta property="og:description" content="Redpanda、WarpStream、AutoMQ 等新玩家正在挑战 Kafka 的地位，消息队列的格局正在变化。">
+<title>Kafka Is No Longer the Only Choice: 2025 Message Queue Selection Guide – Welcome To My Blog</title>
+<meta name="description" content="New players like Redpanda, WarpStream, and AutoMQ are challenging Kafka's dominance, and the message queue landscape is shifting.">
+<meta property="og:title" content="Kafka Is No Longer the Only Choice: 2025 Message Queue Selection Guide – Welcome To My Blog">
+<meta property="og:description" content="New players like Redpanda, WarpStream, and AutoMQ are challenging Kafka's dominance, and the message queue landscape is shifting.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Kafka 不再是唯一选择：2025 消息队列选型指南 – Welcome To My Blog",
-  "description": "Redpanda、WarpStream、AutoMQ 等新玩家正在挑战 Kafka 的地位，消息队列的格局正在变化。",
+  "headline": "Kafka Is No Longer the Only Choice: 2025 Message Queue Selection Guide – Welcome To My Blog",
+  "description": "New players like Redpanda, WarpStream, and AutoMQ are challenging Kafka's dominance, and the message queue landscape is shifting.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">Kafka 不再是唯一选择：2025 消息队列选型指南</span>
+        <span class="sticky-title">Kafka Is No Longer the Only Choice: 2025 Message Queue Selection Guide</span>
       </div>
     </div>
   </div>
@@ -68,52 +68,52 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/分布式/" rel="category">分布式</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/kafka-alternatives-2025/" rel="bookmark"><time class="entry-date published" datetime="2025-10-15">2025-10-15</time></a></span>
+                <span class="cat-links"><a href="/categories/distributed-systems/" rel="category">Distributed Systems</a><span class="cat-seperator">, </span><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/kafka-alternatives-2025/" rel="bookmark"><time class="entry-date published" datetime="2025-10-15">2025-10-15</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">Kafka 不再是唯一选择：2025 消息队列选型指南</h1>
+                <h1 class="entry-title">Kafka Is No Longer the Only Choice: 2025 Message Queue Selection Guide</h1>
               </header>
-              <div class="entry-content"><p>Kafka 统治消息队列领域十多年了，但最近出现了很多有意思的替代品。</p>
+              <div class="entry-content"><p>Kafka has dominated the message queue space for over a decade, but recently many interesting alternatives have emerged.</p>
 <h2>Redpanda</h2>
 <ul>
-<li>用 C++ 重写的 Kafka 兼容实现</li>
-<li>不需要 ZooKeeper（内置 Raft）</li>
-<li>吞吐量比 Kafka 高 2-5 倍</li>
-<li>完全兼容 Kafka API，迁移成本低</li>
+<li>A Kafka-compatible implementation rewritten in C++</li>
+<li>No ZooKeeper required (built-in Raft)</li>
+<li>2-5x higher throughput than Kafka</li>
+<li>Fully compatible with the Kafka API, with low migration costs</li>
 </ul>
 <h2>WarpStream</h2>
 <ul>
-<li>基于对象存储（S3 兼容）的消息队列</li>
-<li>无需本地磁盘，数据直接写 S3</li>
-<li>零运维：不需要管理 broker</li>
-<li>延迟稍高（P99 ~100ms），但成本极低</li>
+<li>A message queue built on object storage (S3-compatible)</li>
+<li>No local disks needed; data is written directly to S3</li>
+<li>Zero operations: no need to manage brokers</li>
+<li>Slightly higher latency (P99 ~100ms), but extremely low cost</li>
 </ul>
 <h2>AutoMQ</h2>
 <ul>
-<li>国内团队作品，基于 S3 Stream 架构</li>
-<li>兼容 Kafka 协议</li>
-<li>自动弹性伸缩</li>
-<li>存算分离，成本比自建 Kafka 低 50%</li>
+<li>Built by a domestic team, based on the S3 Stream architecture</li>
+<li>Compatible with the Kafka protocol</li>
+<li>Automatic elastic scaling</li>
+<li>Storage-compute separation, with costs 50% lower than self-hosted Kafka</li>
 </ul>
-<h2>选型建议</h2>
+<h2>Selection Recommendations</h2>
 <ul>
-<li>已有 Kafka，不想动 → 继续用</li>
-<li>新项目，自建 → 可以考虑 Redpanda</li>
-<li>云原生，不想运维 → WarpStream / AutoMQ</li>
-<li>对延迟极度敏感 → Kafka (本地磁盘版本)</li>
+<li>Already using Kafka and don't want to change → stick with it</li>
+<li>New project, self-hosted → consider Redpanda</li>
+<li>Cloud-native, don't want to handle operations → WarpStream / AutoMQ</li>
+<li>Extremely latency-sensitive → Kafka (local disk version)</li>
 </ul>
-<p>消息队列的江湖不会只有 Kafka 一家独大了。</p>
+<p>The message queue landscape will no longer be dominated by a single player like Kafka.</p>
 <hr />
-<p><strong>参考来源：</strong></p>
+<p><strong>References:</strong></p>
 <ul>
 <li><a href="https://kafka.apache.org/">Apache Kafka</a></li>
 <li><a href="https://pulsar.apache.org/">Apache Pulsar</a></li>
 </ul></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/分布式/" rel="category">分布式</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/distributed-systems/" rel="category">Distributed Systems</a><a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/computer-architecture-cache/" rel="prev"><span class="nav-links__label">Previous</span> 计算机架构面试入门：CPU 缓存和伪共享（False Sharing）</a></div><div class="nav-next"><a href="/posts/openai-stargate-project/" rel="next"><span class="nav-links__label">Next</span> OpenAI 和软银启动「星际之门」计划：5000 亿美元建 AI 超级算力</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/computer-architecture-cache/" rel="prev"><span class="nav-links__label">Previous</span> Computer Architecture Interview Primer: CPU Cache and False Sharing</a></div><div class="nav-next"><a href="/posts/openai-stargate-project/" rel="next"><span class="nav-links__label">Next</span> OpenAI and SoftBank Launch 'Stargate' Initiative: $500 Billion for AI Supercomputing</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -131,11 +131,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -177,7 +177,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -186,7 +187,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -226,6 +227,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -233,6 +235,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -240,12 +243,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

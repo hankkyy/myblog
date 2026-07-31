@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MySQL 索引面试核心：为什么最左前缀匹配是面试最爱问的？ – Welcome To My Blog</title>
-<meta name="description" content="用一个具体的查询例子，讲清楚联合索引的最左前缀原则、覆盖索引和索引下推。">
-<meta property="og:title" content="MySQL 索引面试核心：为什么最左前缀匹配是面试最爱问的？ – Welcome To My Blog">
-<meta property="og:description" content="用一个具体的查询例子，讲清楚联合索引的最左前缀原则、覆盖索引和索引下推。">
+<title>MySQL Index Interview Essentials: Why Is the Leftmost Prefix Match the Most Asked Question? – Welcome To My Blog</title>
+<meta name="description" content="Using a concrete query example to explain the leftmost prefix principle, covering index, and index condition pushdown for composite indexes.">
+<meta property="og:title" content="MySQL Index Interview Essentials: Why Is the Leftmost Prefix Match the Most Asked Question? – Welcome To My Blog">
+<meta property="og:description" content="Using a concrete query example to explain the leftmost prefix principle, covering index, and index condition pushdown for composite indexes.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "MySQL 索引面试核心：为什么最左前缀匹配是面试最爱问的？ – Welcome To My Blog",
-  "description": "用一个具体的查询例子，讲清楚联合索引的最左前缀原则、覆盖索引和索引下推。",
+  "headline": "MySQL Index Interview Essentials: Why Is the Leftmost Prefix Match the Most Asked Question? – Welcome To My Blog",
+  "description": "Using a concrete query example to explain the leftmost prefix principle, covering index, and index condition pushdown for composite indexes.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">MySQL 索引面试核心：为什么最左前缀匹配是面试最爱问的？</span>
+        <span class="sticky-title">MySQL Index Interview Essentials: Why Is the Leftmost Prefix Match the Most Asked Question?</span>
       </div>
     </div>
   </div>
@@ -68,49 +68,49 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/数据库/" rel="category">数据库</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/mysql-index-interview/" rel="bookmark"><time class="entry-date published" datetime="2025-06-15">2025-06-15</time></a></span>
+                <span class="cat-links"><a href="/categories/database/" rel="category">Database</a><span class="cat-seperator">, </span><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/mysql-index-interview/" rel="bookmark"><time class="entry-date published" datetime="2025-06-15">2025-06-15</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">MySQL 索引面试核心：为什么最左前缀匹配是面试最爱问的？</h1>
+                <h1 class="entry-title">MySQL Index Interview Essentials: Why Is the Leftmost Prefix Match the Most Asked Question?</h1>
               </header>
-              <div class="entry-content"><p>MySQL 索引的面试题绕不开「最左前缀」。</p>
-<h2>联合索引的存储结构</h2>
-<p>假设有一个联合索引 <code>(a, b, c)</code>，它在 B+Tree 中先按 a 排序，a 相同的按 b 排序，b 相同的按 c 排序。就像字典——先拼音首字母、再第二个字母、再第三个字母。</p>
-<h2>哪些查询能用到这个索引</h2>
-<pre class="codehilite"><code class="language-sql">-- ✅ 能用：从 a 开始（最左列）
+              <div class="entry-content"><p>MySQL index interview questions always revolve around the "leftmost prefix."</p>
+<h2>Storage Structure of a Composite Index</h2>
+<p>Suppose there is a composite index <code>(a, b, c)</code>. In the B+Tree, it is first sorted by <code>a</code>, then by <code>b</code> for rows with the same <code>a</code>, and then by <code>c</code> for rows with the same <code>b</code>. It's like a dictionary — first by the initial letter, then the second letter, then the third.</p>
+<h2>Which Queries Can Use This Index</h2>
+<pre class="codehilite"><code class="language-sql">-- ✅ Can use: starts with a (leftmost column)
 WHERE a = 1
 
--- ✅ 能用：a = 常量，b 可以范围查询
+-- ✅ Can use: a = constant, b can be a range query
 WHERE a = 1 AND b &gt; 2
 
--- ✅ 能用：a 和 b 都有等值条件
+-- ✅ Can use: both a and b have equality conditions
 WHERE a = 1 AND b = 2
 
--- ❌ 不能用：跳过了 a
+-- ❌ Cannot use: skipped a
 WHERE b = 2
 
--- ❌ 不能用：范围查询后的列无法用索引
-WHERE a &gt; 1 AND b = 2  -- b 用不到索引
+-- ❌ Cannot use: columns after a range query cannot use the index
+WHERE a &gt; 1 AND b = 2  -- b cannot use the index
 </code></pre>
 
-<h2>为什么叫「最左前缀」</h2>
-<p>因为索引先按最左边的列排序。就像查字典，你不知道第一个字母，就没法用拼音索引。跟 <code>LIKE 'abc%'</code> 能用索引但 <code>LIKE '%abc'</code> 不能用的道理一样。</p>
-<h2>两个加分概念</h2>
-<p><strong>覆盖索引</strong>：查询的列都在索引里，不需要回表。<code>EXPLAIN</code> 中 <code>Extra</code> 显示 <code>Using index</code>。</p>
-<p><strong>索引下推（ICP）</strong>：MySQL 5.6 的特性，把部分过滤条件下推到存储引擎层，减少回表次数。</p>
-<h2>面试时的回答框架</h2>
+<h2>Why Is It Called "Leftmost Prefix"</h2>
+<p>Because the index is sorted by the leftmost column first. It's like looking up a dictionary — if you don't know the first letter, you can't use the pinyin index. It's the same logic as why <code>LIKE 'abc%'</code> can use an index but <code>LIKE '%abc'</code> cannot.</p>
+<h2>Two Bonus Concepts</h2>
+<p><strong>Covering Index</strong>: All queried columns are in the index, so no table lookup (回表) is needed. In <code>EXPLAIN</code>, the <code>Extra</code> column shows <code>Using index</code>.</p>
+<p><strong>Index Condition Pushdown (ICP)</strong>: A MySQL 5.6 feature that pushes some filter conditions down to the storage engine layer, reducing the number of table lookups.</p>
+<h2>Answer Framework for Interviews</h2>
 <ol>
-<li>先说 B+Tree 的排序特性</li>
-<li>用联合索引的存储顺序解释最左前缀</li>
-<li>举正反面例子</li>
-<li>提覆盖索引和索引下推</li>
+<li>Start with the sorting characteristics of the B+Tree</li>
+<li>Explain the leftmost prefix using the storage order of a composite index</li>
+<li>Give positive and negative examples</li>
+<li>Mention covering index and index condition pushdown</li>
 </ol>
-<p>索引是数据库的基础，理解透了面试基本不会翻车。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/数据库/" rel="category">数据库</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
+<p>Indexes are the foundation of databases. Once you understand them thoroughly, you'll rarely stumble in interviews.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/database/" rel="category">Database</a><a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/os-process-thread/" rel="prev"><span class="nav-links__label">Previous</span> 操作系统面试核心：进程和线程到底有什么区别？</a></div><div class="nav-next"><a href="/posts/leetcode-206-reverse-linkedlist/" rel="next"><span class="nav-links__label">Next</span> LeetCode 206. 反转链表：迭代和递归两种解法，面试必会</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/os-process-thread/" rel="prev"><span class="nav-links__label">Previous</span> Operating System Interview Essentials: What's the Real Difference Between Processes and Threads?</a></div><div class="nav-next"><a href="/posts/leetcode-206-reverse-linkedlist/" rel="next"><span class="nav-links__label">Next</span> LeetCode 206. Reverse Linked List: Iterative and Recursive Solutions, a Must-Know for Interviews</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -128,11 +128,11 @@ WHERE a &gt; 1 AND b = 2  -- b 用不到索引
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -174,7 +174,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -183,7 +184,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -223,6 +224,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -230,6 +232,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -237,12 +240,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

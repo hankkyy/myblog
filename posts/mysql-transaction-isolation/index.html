@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MySQL 事务隔离级别面试精讲：脏读、幻读、不可重复读到底怎么区分？ – Welcome To My Blog</title>
-<meta name="description" content="用实际场景举例说明四种隔离级别和三种并发问题，记住就不再混了。">
-<meta property="og:title" content="MySQL 事务隔离级别面试精讲：脏读、幻读、不可重复读到底怎么区分？ – Welcome To My Blog">
-<meta property="og:description" content="用实际场景举例说明四种隔离级别和三种并发问题，记住就不再混了。">
+<title>MySQL Transaction Isolation Levels Explained for Interviews: How to Distinguish Dirty Reads, Phantom Reads, and Non-Repeatable Reads? – Welcome To My Blog</title>
+<meta name="description" content="Use real-world scenarios to explain the four isolation levels and three concurrency issues, so you'll never mix them up again.">
+<meta property="og:title" content="MySQL Transaction Isolation Levels Explained for Interviews: How to Distinguish Dirty Reads, Phantom Reads, and Non-Repeatable Reads? – Welcome To My Blog">
+<meta property="og:description" content="Use real-world scenarios to explain the four isolation levels and three concurrency issues, so you'll never mix them up again.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "MySQL 事务隔离级别面试精讲：脏读、幻读、不可重复读到底怎么区分？ – Welcome To My Blog",
-  "description": "用实际场景举例说明四种隔离级别和三种并发问题，记住就不再混了。",
+  "headline": "MySQL Transaction Isolation Levels Explained for Interviews: How to Distinguish Dirty Reads, Phantom Reads, and Non-Repeatable Reads? – Welcome To My Blog",
+  "description": "Use real-world scenarios to explain the four isolation levels and three concurrency issues, so you'll never mix them up again.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">MySQL 事务隔离级别面试精讲：脏读、幻读、不可重复读到底怎么区分？</span>
+        <span class="sticky-title">MySQL Transaction Isolation Levels Explained for Interviews: How to Distinguish Dirty Reads, Phantom Reads, and Non-Repeatable Reads?</span>
       </div>
     </div>
   </div>
@@ -68,33 +68,33 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/数据库/" rel="category">数据库</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/mysql-transaction-isolation/" rel="bookmark"><time class="entry-date published" datetime="2025-03-25">2025-03-25</time></a></span>
+                <span class="cat-links"><a href="/categories/database/" rel="category">Database</a><span class="cat-seperator">, </span><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/mysql-transaction-isolation/" rel="bookmark"><time class="entry-date published" datetime="2025-03-25">2025-03-25</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">MySQL 事务隔离级别面试精讲：脏读、幻读、不可重复读到底怎么区分？</h1>
+                <h1 class="entry-title">MySQL Transaction Isolation Levels Explained for Interviews: How to Distinguish Dirty Reads, Phantom Reads, and Non-Repeatable Reads?</h1>
               </header>
-              <div class="entry-content"><p>事务隔离级别几乎是 MySQL 面试必问题。</p>
-<h2>三种并发问题</h2>
-<p><strong>脏读</strong>：读了别人还没提交的数据。别人回滚了，你读到的就是脏数据。</p>
+              <div class="entry-content"><p>Transaction isolation levels are almost a guaranteed question in MySQL interviews.</p>
+<h2>Three Concurrency Issues</h2>
+<p><strong>Dirty Read</strong>: Reading data that hasn't been committed by someone else. If they roll back, what you read is dirty data.</p>
 <blockquote>
-<p>场景：A 转账给 B 100 元，但还没提交。B 查余额发现多了 100。A 回滚了。B 白高兴了。</p>
+<p>Scenario: A transfers 100 yuan to B, but hasn't committed yet. B checks their balance and sees an extra 100. A rolls back. B's excitement was short-lived.</p>
 </blockquote>
-<p><strong>不可重复读</strong>：同一个事务内，两次读同一行数据，结果不一样（别人 Update 了）。</p>
+<p><strong>Non-Repeatable Read</strong>: Within the same transaction, reading the same row twice yields different results (someone else did an UPDATE).</p>
 <blockquote>
-<p>场景：事务 A 读了余额是 500。事务 B 改了余额为 600 并提交。事务 A 再读，变成 600。</p>
+<p>Scenario: Transaction A reads a balance of 500. Transaction B changes the balance to 600 and commits. Transaction A reads again, and it's now 600.</p>
 </blockquote>
-<p><strong>幻读</strong>：同一个事务内，两次查询，第二次多了一些行（别人 Insert 了）。</p>
+<p><strong>Phantom Read</strong>: Within the same transaction, a second query returns more rows than the first (someone else did an INSERT).</p>
 <blockquote>
-<p>场景：事务 A 查了所有余额大于 500 的用户，有 3 个。事务 B 插入了新用户余额 800。事务 A 再查，变成 4 个。</p>
+<p>Scenario: Transaction A queries all users with a balance greater than 500 and finds 3. Transaction B inserts a new user with a balance of 800. Transaction A queries again and now finds 4.</p>
 </blockquote>
-<h2>四种隔离级别</h2>
+<h2>Four Isolation Levels</h2>
 <table>
 <thead>
 <tr>
-<th>级别</th>
-<th>脏读</th>
-<th>不可重复读</th>
-<th>幻读</th>
+<th>Level</th>
+<th>Dirty Read</th>
+<th>Non-Repeatable Read</th>
+<th>Phantom Read</th>
 </tr>
 </thead>
 <tbody>
@@ -111,10 +111,10 @@
 <td>✓</td>
 </tr>
 <tr>
-<td>Repeatable Read（默认）</td>
+<td>Repeatable Read (default)</td>
 <td>✗</td>
 <td>✗</td>
-<td>部分解决</td>
+<td>Partially solved</td>
 </tr>
 <tr>
 <td>Serializable</td>
@@ -124,21 +124,21 @@
 </tr>
 </tbody>
 </table>
-<h2>InnoDB 如何实现 Repeatable Read</h2>
+<h2>How InnoDB Implements Repeatable Read</h2>
 <ul>
-<li><strong>MVCC（多版本并发控制）</strong>：每个事务看到的是一个「快照」，而不是实时数据</li>
-<li><strong>Next-Key Lock</strong>：行锁 + 间隙锁，解决幻读问题</li>
+<li><strong>MVCC (Multi-Version Concurrency Control)</strong>: Each transaction sees a "snapshot" rather than real-time data</li>
+<li><strong>Next-Key Lock</strong>: Row lock + gap lock, solving the phantom read problem</li>
 </ul>
-<h2>面试话术</h2>
+<h2>Interview Talking Points</h2>
 <blockquote>
-<p>MySQL 默认是 Repeatable Read。它用 MVCC 实现快照读，保证同一个事务内读到的数据是一致的。对于写操作，用 Next-Key Lock 防止幻读——不仅锁住查询到的行，还锁住行之间的间隙。</p>
+<p>MySQL's default isolation level is Repeatable Read. It uses MVCC to implement snapshot reads, ensuring that data read within the same transaction is consistent. For write operations, it uses Next-Key Lock to prevent phantom reads—locking not only the queried rows but also the gaps between them.</p>
 </blockquote>
-<p>别只背表格。能说出 MVCC 和 Next-Key Lock 这两个关键词，面试官就知道你真的懂了。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/数据库/" rel="category">数据库</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
+<p>Don't just memorize the table. If you can mention the two keywords MVCC and Next-Key Lock, the interviewer will know you truly understand.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/database/" rel="category">Database</a><a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/postgres-vs-mysql-2025/" rel="prev"><span class="nav-links__label">Previous</span> PostgreSQL 还是 MySQL？2025 年数据库选型的重新思考</a></div><div class="nav-next"><a href="/posts/leetcode-146-lru-cache/" rel="next"><span class="nav-links__label">Next</span> LeetCode 146. LRU Cache：面试官最爱的设计题，手写双向链表+哈希表</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/postgres-vs-mysql-2025/" rel="prev"><span class="nav-links__label">Previous</span> PostgreSQL or MySQL? Rethinking Database Selection in 2025</a></div><div class="nav-next"><a href="/posts/leetcode-146-lru-cache/" rel="next"><span class="nav-links__label">Next</span> LeetCode 146. LRU Cache: The Interviewer's Favorite Design Problem — Hand-Writing a Doubly Linked List + Hash Map</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -156,11 +156,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -202,7 +202,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -211,7 +212,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -251,6 +252,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -258,6 +260,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -265,12 +268,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

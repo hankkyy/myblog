@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AGENTS.md：给 AI 写一份项目说明书 – Welcome To My Blog</title>
-<meta name="description" content="为什么应该在每个项目里放一个 AGENTS.md 文件，以及怎么写">
-<meta property="og:title" content="AGENTS.md：给 AI 写一份项目说明书 – Welcome To My Blog">
-<meta property="og:description" content="为什么应该在每个项目里放一个 AGENTS.md 文件，以及怎么写">
+<title>AGENTS.md: A Project Manual for AI – Welcome To My Blog</title>
+<meta name="description" content="Why you should put an AGENTS.md file in every project, and how to write one">
+<meta property="og:title" content="AGENTS.md: A Project Manual for AI – Welcome To My Blog">
+<meta property="og:description" content="Why you should put an AGENTS.md file in every project, and how to write one">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "AGENTS.md：给 AI 写一份项目说明书 – Welcome To My Blog",
-  "description": "为什么应该在每个项目里放一个 AGENTS.md 文件，以及怎么写",
+  "headline": "AGENTS.md: A Project Manual for AI – Welcome To My Blog",
+  "description": "Why you should put an AGENTS.md file in every project, and how to write one",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">AGENTS.md：给 AI 写一份项目说明书</span>
+        <span class="sticky-title">AGENTS.md: A Project Manual for AI</span>
       </div>
     </div>
   </div>
@@ -68,67 +68,67 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/agents-md/" rel="bookmark"><time class="entry-date published" datetime="2026-06-05">2026-06-05</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/agents-md/" rel="bookmark"><time class="entry-date published" datetime="2026-06-05">2026-06-05</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">AGENTS.md：给 AI 写一份项目说明书</h1>
+                <h1 class="entry-title">AGENTS.md: A Project Manual for AI</h1>
               </header>
-              <div class="entry-content"><p>如果你用 AI 辅助编程（Copilot、Cursor、Claude Code），有个简单但被低估的做法：<strong>在项目根目录放一个 <code>AGENTS.md</code></strong>。</p>
-<h2>它是什么</h2>
-<p><code>AGENTS.md</code> 是一份写给 AI 的项目说明书。放在项目根目录，AI 编程助手会自动读取它。</p>
+              <div class="entry-content"><p>If you use AI-assisted programming (Copilot, Cursor, Claude Code), there's a simple but underrated practice: <strong>put an <code>AGENTS.md</code> file in your project root</strong>.</p>
+<h2>What It Is</h2>
+<p><code>AGENTS.md</code> is a project manual written for AI. Placed in the project root, AI coding assistants will automatically read it.</p>
 <pre class="codehilite"><code class="language-markdown"># Project Name - Development Guide
 
 ## Build &amp; Run
 npm install &amp;&amp; npm run dev
 
 ## Project Structure
-src/ — 主代码
-tests/ — 测试
+src/ — main code
+tests/ — tests
 
 ## Conventions
 - TypeScript strict mode
-- 组件用 named export
+- Components use named exports
 </code></pre>
 
-<h2>为什么重要</h2>
-<p>没有 AGENTS.md，AI 会：</p>
+<h2>Why It Matters</h2>
+<p>Without AGENTS.md, AI will:</p>
 <ul>
-<li>用错包管理器（<code>pip</code> vs <code>poetry</code>）</li>
-<li>猜错你的代码风格（<code>snake_case</code> vs <code>camelCase</code>）</li>
-<li>不知道测试怎么跑</li>
-<li>搞不清项目结构</li>
+<li>Use the wrong package manager (<code>pip</code> vs <code>poetry</code>)</li>
+<li>Guess your code style incorrectly (<code>snake_case</code> vs <code>camelCase</code>)</li>
+<li>Not know how to run tests</li>
+<li>Get confused about the project structure</li>
 </ul>
-<p>有 AGENTS.md，AI 开局就知道项目规则。</p>
-<h2>常见内容</h2>
-<pre class="codehilite"><code>1. 项目简介（一句话）
-2. 环境要求（Node 20+, Python 3.11+）
-3. 本地开发命令
-4. 项目结构速览
-5. 代码风格约定
-6. Git 分支规范
-7. 注意事项/坑
+<p>With AGENTS.md, AI knows the project rules from the start.</p>
+<h2>Common Contents</h2>
+<pre class="codehilite"><code>1. Project overview (one sentence)
+2. Environment requirements (Node 20+, Python 3.11+)
+3. Local development commands
+4. Quick project structure overview
+5. Code style conventions
+6. Git branch guidelines
+7. Gotchas / pitfalls
 </code></pre>
 
-<h2>最佳实践</h2>
+<h2>Best Practices</h2>
 <ul>
-<li><strong>简短优先</strong>：200-500 行最合适，太长 AI 可能不读完</li>
-<li><strong>具体不抽象</strong>：写「组件放 <code>components/</code>，页面放 <code>pages/</code>」而不是「遵循关注点分离」</li>
-<li><strong>和 README 分开</strong>：README 给人看，AGENTS.md 给 AI 看</li>
-<li><strong>放根目录</strong>：AI 工具默认读取根目录的 <code>AGENTS.md</code> 或 <code>.cursorrules</code></li>
+<li><strong>Keep it short</strong>: 200-500 lines is ideal; if it's too long, AI might not read it all</li>
+<li><strong>Be specific, not abstract</strong>: Write "components go in <code>components/</code>, pages go in <code>pages/</code>" instead of "follow separation of concerns"</li>
+<li><strong>Keep it separate from README</strong>: README is for humans, AGENTS.md is for AI</li>
+<li><strong>Put it in the root</strong>: AI tools read <code>AGENTS.md</code> or <code>.cursorrules</code> from the root by default</li>
 </ul>
 <blockquote>
-<p>花 20 分钟写 AGENTS.md，等于给每个 AI 协作者做一次 onboarding。</p>
+<p>Spending 20 minutes writing AGENTS.md is like onboarding every AI collaborator at once.</p>
 </blockquote>
 <hr />
-<p><strong>参考来源：</strong></p>
+<p><strong>References:</strong></p>
 <ul>
-<li><a href="https://modelcontextprotocol.io/">Model Context Protocol 官方文档</a></li>
+<li><a href="https://modelcontextprotocol.io/">Model Context Protocol Official Documentation</a></li>
 </ul></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/deepseek-v4-release/" rel="prev"><span class="nav-links__label">Previous</span> DeepSeek V4 发布：国产大模型再突破</a></div><div class="nav-next"><a href="/posts/internship-thoughts/" rel="next"><span class="nav-links__label">Next</span> 后端实习两个月，我学到的东西比大学两年都多</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/deepseek-v4-release/" rel="prev"><span class="nav-links__label">Previous</span> DeepSeek V4 Released: Another Breakthrough for Chinese AI Models</a></div><div class="nav-next"><a href="/posts/internship-thoughts/" rel="next"><span class="nav-links__label">Next</span> Two Months of Backend Internship Taught Me More Than Two Years of University</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -146,11 +146,11 @@ tests/ — 测试
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -192,7 +192,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -201,7 +202,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -241,6 +242,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -248,6 +250,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -255,12 +258,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

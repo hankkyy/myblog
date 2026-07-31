@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>实时计算入门：Flink 和 Spark Structured Streaming 该怎么选？ – Welcome To My Blog</title>
-<meta name="description" content="学习 Flink 和 Spark Structured Streaming 的区别，了解各自的适用场景。">
-<meta property="og:title" content="实时计算入门：Flink 和 Spark Structured Streaming 该怎么选？ – Welcome To My Blog">
-<meta property="og:description" content="学习 Flink 和 Spark Structured Streaming 的区别，了解各自的适用场景。">
+<title>Getting Started with Real-Time Computing: How to Choose Between Flink and Spark Structured Streaming? – Welcome To My Blog</title>
+<meta name="description" content="Learn the differences between Flink and Spark Structured Streaming, and understand their respective use cases.">
+<meta property="og:title" content="Getting Started with Real-Time Computing: How to Choose Between Flink and Spark Structured Streaming? – Welcome To My Blog">
+<meta property="og:description" content="Learn the differences between Flink and Spark Structured Streaming, and understand their respective use cases.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "实时计算入门：Flink 和 Spark Structured Streaming 该怎么选？ – Welcome To My Blog",
-  "description": "学习 Flink 和 Spark Structured Streaming 的区别，了解各自的适用场景。",
+  "headline": "Getting Started with Real-Time Computing: How to Choose Between Flink and Spark Structured Streaming? – Welcome To My Blog",
+  "description": "Learn the differences between Flink and Spark Structured Streaming, and understand their respective use cases.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">实时计算入门：Flink 和 Spark Structured Streaming 该怎么选？</span>
+        <span class="sticky-title">Getting Started with Real-Time Computing: How to Choose Between Flink and Spark Structured Streaming?</span>
       </div>
     </div>
   </div>
@@ -68,45 +68,45 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a><span class="cat-seperator">, </span><a href="/categories/分布式/" rel="category">分布式</a></span><span class="posted-on"><a href="/posts/flink-vs-spark-2026/" rel="bookmark"><time class="entry-date published" datetime="2026-02-10">2026-02-10</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a><span class="cat-seperator">, </span><a href="/categories/distributed-systems/" rel="category">Distributed Systems</a></span><span class="posted-on"><a href="/posts/flink-vs-spark-2026/" rel="bookmark"><time class="entry-date published" datetime="2026-02-10">2026-02-10</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">实时计算入门：Flink 和 Spark Structured Streaming 该怎么选？</h1>
+                <h1 class="entry-title">Getting Started with Real-Time Computing: How to Choose Between Flink and Spark Structured Streaming?</h1>
               </header>
-              <div class="entry-content"><p>最近在看实时计算相关的资料，对比了 Flink 和 Spark Structured Streaming。</p>
+              <div class="entry-content"><p>I've been looking into real-time computing resources lately, comparing Flink and Spark Structured Streaming.</p>
 <h2>Flink</h2>
 <ul>
-<li>真正的流处理，每条数据独立处理</li>
-<li>状态管理很强大</li>
-<li>阿里双十一验证过的技术</li>
-<li>学习曲线比较陡（Watermark、Window 概念多）</li>
+<li>True stream processing, with each piece of data processed independently</li>
+<li>Very powerful state management</li>
+<li>A technology validated by Alibaba's Double 11 (Singles' Day)</li>
+<li>Steeper learning curve (many concepts like Watermark, Window)</li>
 </ul>
 <h2>Spark Structured Streaming</h2>
 <ul>
-<li>底层是微批次处理，延迟稍高</li>
-<li>SQL 表达能力很强</li>
-<li>和 Spark 生态（MLlib、GraphX）集成好</li>
-<li>批流一体，同一套代码</li>
+<li>Underlying micro-batch processing, with slightly higher latency</li>
+<li>Strong SQL expression capabilities</li>
+<li>Good integration with the Spark ecosystem (MLlib, GraphX)</li>
+<li>Unified batch and stream processing with the same codebase</li>
 </ul>
-<h2>选型思路</h2>
+<h2>Selection Considerations</h2>
 <ul>
-<li>纯实时场景、毫秒级延迟要求 → Flink</li>
-<li>批流混合、团队有 Spark 经验 → Spark</li>
-<li>想深入学习流处理原理 → 先学 Flink</li>
-<li>公司有 Hadoop/Hive 生态 → Spark 更自然</li>
+<li>Pure real-time scenarios with millisecond-level latency requirements → Flink</li>
+<li>Mixed batch and stream processing, with a team experienced in Spark → Spark</li>
+<li>Want to deeply learn stream processing principles → Start with Flink</li>
+<li>Company has a Hadoop/Hive ecosystem → Spark is more natural</li>
 </ul>
-<p>对于学习来说，建议两个都了解一下，理解它们的设计哲学区别更重要。</p>
+<p>For learning purposes, it's recommended to understand both, as grasping the differences in their design philosophies is more important.</p>
 <hr />
-<p><strong>参考来源：</strong></p>
+<p><strong>References:</strong></p>
 <ul>
 <li><a href="https://flink.apache.org/">Apache Flink</a></li>
 <li><a href="https://spark.apache.org/">Apache Spark</a></li>
 </ul></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a><a href="/categories/分布式/" rel="category">分布式</a></span></footer>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a><a href="/categories/distributed-systems/" rel="category">Distributed Systems</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/tiktok-shop-global/" rel="prev"><span class="nav-links__label">Previous</span> TikTok Shop 全球 GMV 突破 500 亿美元：直播带货席卷全球</a></div><div class="nav-next"><a href="/posts/apple-m4-ultra/" rel="next"><span class="nav-links__label">Next</span> 苹果发布 M4 Ultra：桌面级 AI 推理的转折点？</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/tiktok-shop-global/" rel="prev"><span class="nav-links__label">Previous</span> TikTok Shop Global GMV Surpasses $50 Billion: Livestream Commerce Sweeps the World</a></div><div class="nav-next"><a href="/posts/apple-m4-ultra/" rel="next"><span class="nav-links__label">Next</span> Apple Releases M4 Ultra: A Turning Point for Desktop AI Inference?</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -124,11 +124,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -170,7 +170,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -179,7 +180,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -219,6 +220,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -226,6 +228,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -233,12 +236,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

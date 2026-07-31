@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>@Transactional 失效的 5 种场景：为什么你的事务没回滚？ – Welcome To My Blog</title>
-<meta name="description" content="总结 Spring 事务注解最常见的失效场景和原因，面试和实际开发都会用到的知识。">
-<meta property="og:title" content="@Transactional 失效的 5 种场景：为什么你的事务没回滚？ – Welcome To My Blog">
-<meta property="og:description" content="总结 Spring 事务注解最常见的失效场景和原因，面试和实际开发都会用到的知识。">
+<title>5 Scenarios Where @Transactional Fails: Why Your Transaction Didn't Roll Back? – Welcome To My Blog</title>
+<meta name="description" content="A summary of the most common scenarios and reasons why Spring transaction annotations silently fail — knowledge useful for both interviews and real-world development.">
+<meta property="og:title" content="5 Scenarios Where @Transactional Fails: Why Your Transaction Didn't Roll Back? – Welcome To My Blog">
+<meta property="og:description" content="A summary of the most common scenarios and reasons why Spring transaction annotations silently fail — knowledge useful for both interviews and real-world development.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "@Transactional 失效的 5 种场景：为什么你的事务没回滚？ – Welcome To My Blog",
-  "description": "总结 Spring 事务注解最常见的失效场景和原因，面试和实际开发都会用到的知识。",
+  "headline": "5 Scenarios Where @Transactional Fails: Why Your Transaction Didn't Roll Back? – Welcome To My Blog",
+  "description": "A summary of the most common scenarios and reasons why Spring transaction annotations silently fail — knowledge useful for both interviews and real-world development.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">@Transactional 失效的 5 种场景：为什么你的事务没回滚？</span>
+        <span class="sticky-title">5 Scenarios Where @Transactional Fails: Why Your Transaction Didn't Roll Back?</span>
       </div>
     </div>
   </div>
@@ -68,18 +68,18 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/spring-transactional/" rel="bookmark"><time class="entry-date published" datetime="2025-06-30">2025-06-30</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/spring-transactional/" rel="bookmark"><time class="entry-date published" datetime="2025-06-30">2025-06-30</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">@Transactional 失效的 5 种场景：为什么你的事务没回滚？</h1>
+                <h1 class="entry-title">5 Scenarios Where @Transactional Fails: Why Your Transaction Didn't Roll Back?</h1>
               </header>
-              <div class="entry-content"><p>@Transactional 看起来很美好，但它有好几种情况会静默失效。</p>
-<h2>1. 同类方法调用</h2>
+              <div class="entry-content"><p>@Transactional looks great, but there are several situations where it silently fails.</p>
+<h2>1. Self-Invocation Within the Same Class</h2>
 <pre class="codehilite"><code class="language-java">@Service
 public class UserService {
     @Transactional
     public void createUser(User user) {
-        // 这里的事务不会生效！
+        // The transaction here will NOT take effect!
         this.saveUser(user);
     }
 
@@ -90,48 +90,48 @@ public class UserService {
 }
 </code></pre>
 
-<p>原因：Spring 事务是通过 AOP 代理实现的。同类方法调用绕过了代理。</p>
-<p>解决：把方法拆到不同的 Service 里，或者用 <code>AopContext.currentProxy()</code>。</p>
-<h2>2. 非 public 方法</h2>
+<p>Reason: Spring transactions are implemented through AOP proxies. Self-invocation within the same class bypasses the proxy.</p>
+<p>Solution: Extract the method into a different Service, or use <code>AopContext.currentProxy()</code>.</p>
+<h2>2. Non-Public Methods</h2>
 <pre class="codehilite"><code class="language-java">@Transactional
-private void saveUser() { }  // 事务不生效！
+private void saveUser() { }  // Transaction does NOT take effect!
 </code></pre>
 
-<p>AOP 代理只能拦截 public 方法。</p>
-<h2>3. 异常被吞了</h2>
+<p>AOP proxies can only intercept public methods.</p>
+<h2>3. Swallowed Exceptions</h2>
 <pre class="codehilite"><code class="language-java">@Transactional
 public void createUser() {
     try {
-        // 抛异常的代码
+        // Code that throws an exception
     } catch (Exception e) {
-        log.error(&quot;出错了&quot;, e);  // 事务不会回滚！
+        log.error(&quot;Something went wrong&quot;, e);  // Transaction will NOT roll back!
     }
 }
 </code></pre>
 
-<p>事务只在抛出未被捕获的 RuntimeException 时才回滚。你 catch 了又没抛出去，等于白搭。要在 catch 里手动回滚：</p>
+<p>Transactions only roll back when an uncaught RuntimeException is thrown. If you catch the exception and don't rethrow it, it's pointless. You need to manually roll back inside the catch block:</p>
 <pre class="codehilite"><code class="language-java">TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 </code></pre>
 
-<h2>4. 数据库引擎不支持</h2>
-<p>MyISAM 不支持事务。你加了 @Transactional 也没用。</p>
-<h2>5. 多线程</h2>
+<h2>4. Unsupported Database Engine</h2>
+<p>MyISAM does not support transactions. Adding @Transactional won't help.</p>
+<h2>5. Multithreading</h2>
 <pre class="codehilite"><code class="language-java">@Transactional
 public void batchProcess() {
     new Thread(() -&gt; {
-        userMapper.insert(user);  // 不在当前事务中！
+        userMapper.insert(user);  // Not in the current transaction!
     }).start();
 }
 </code></pre>
 
-<p>事务绑定在 ThreadLocal 上，新线程拿不到当前事务。</p>
-<h2>总结</h2>
-<p>记住两个根本原因：AOP 代理的局限 + 事务绑定在 ThreadLocal 上。所有失效场景都可以归到这两类。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+<p>Transactions are bound to ThreadLocal, so a new thread cannot access the current transaction.</p>
+<h2>Summary</h2>
+<p>Remember the two root causes: the limitations of AOP proxies + transactions being bound to ThreadLocal. All failure scenarios can be attributed to these two categories.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/system-design-chat-app/" rel="prev"><span class="nav-links__label">Previous</span> 系统设计面试：设计一个即时通讯系统（WhatsApp/微信）</a></div><div class="nav-next"><a href="/posts/thread-pool-interview/" rel="next"><span class="nav-links__label">Next</span> 线程池面试八连问：核心参数、拒绝策略和调优思路</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/system-design-chat-app/" rel="prev"><span class="nav-links__label">Previous</span> System Design Interview: Designing an Instant Messaging System (WhatsApp/WeChat)</a></div><div class="nav-next"><a href="/posts/thread-pool-interview/" rel="next"><span class="nav-links__label">Next</span> Eight Key Thread Pool Interview Questions: Core Parameters, Rejection Policies, and Tuning Strategies</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -149,11 +149,11 @@ public void batchProcess() {
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -195,7 +195,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -204,7 +205,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -244,6 +245,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -251,6 +253,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -258,12 +261,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>2026 年 Apache Doris 3.0 新特性全解析 – Welcome To My Blog</title>
-<meta name="description" content="Doris 3.0 的存算分离、Arrow Flight SQL 加速、半结构化数据支持">
-<meta property="og:title" content="2026 年 Apache Doris 3.0 新特性全解析 – Welcome To My Blog">
-<meta property="og:description" content="Doris 3.0 的存算分离、Arrow Flight SQL 加速、半结构化数据支持">
+<title>Complete Analysis of New Features in Apache Doris 3.0 (2026) – Welcome To My Blog</title>
+<meta name="description" content="Doris 3.0's storage-compute separation, Arrow Flight SQL acceleration, and semi-structured data support">
+<meta property="og:title" content="Complete Analysis of New Features in Apache Doris 3.0 (2026) – Welcome To My Blog">
+<meta property="og:description" content="Doris 3.0's storage-compute separation, Arrow Flight SQL acceleration, and semi-structured data support">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "2026 年 Apache Doris 3.0 新特性全解析 – Welcome To My Blog",
-  "description": "Doris 3.0 的存算分离、Arrow Flight SQL 加速、半结构化数据支持",
+  "headline": "Complete Analysis of New Features in Apache Doris 3.0 (2026) – Welcome To My Blog",
+  "description": "Doris 3.0's storage-compute separation, Arrow Flight SQL acceleration, and semi-structured data support",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">2026 年 Apache Doris 3.0 新特性全解析</span>
+        <span class="sticky-title">Complete Analysis of New Features in Apache Doris 3.0 (2026)</span>
       </div>
     </div>
   </div>
@@ -68,49 +68,49 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/doris-3-features/" rel="bookmark"><time class="entry-date published" datetime="2026-06-15">2026-06-15</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/doris-3-features/" rel="bookmark"><time class="entry-date published" datetime="2026-06-15">2026-06-15</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">2026 年 Apache Doris 3.0 新特性全解析</h1>
+                <h1 class="entry-title">Complete Analysis of New Features in Apache Doris 3.0 (2026)</h1>
               </header>
-              <div class="entry-content"><p>Apache Doris 3.0 在 2026 年 4 月正式 GA。作为 OLAP 领域增长最快的项目，这次大版本带来了几个关键变革。</p>
-<h2>1. 存算分离正式 GA</h2>
-<p>Doris 传统架构是存算一体的 Shared-Nothing：</p>
+              <div class="entry-content"><p>Apache Doris 3.0 officially went GA in April 2026. As the fastest-growing project in the OLAP space, this major release brings several key changes.</p>
+<h2>1. Storage-Compute Separation Officially GA</h2>
+<p>Doris's traditional architecture is a shared-nothing, storage-compute integrated design:</p>
 <pre class="codehilite"><code>┌──────────────────────────────────────┐
-│  FE (Frontend)  ← 元数据 + 查询计划   │
-│  BE (Backend)   ← 计算 + 存储在一起   │
+│  FE (Frontend)  ← Metadata + Query Plan │
+│  BE (Backend)   ← Compute + Storage Together │
 └──────────────────────────────────────┘
 </code></pre>
 
-<p>3.0 支持<strong>计算和存储分离部署</strong>：</p>
+<p>3.0 supports <strong>decoupled storage and compute deployment</strong>:</p>
 <pre class="codehilite"><code>┌────────────┐    ┌──────────────────┐
-│  BE (计算) │───▶│ 共享存储 (S3/HDFS) │
+│  BE (Compute) │───▶│ Shared Storage (S3/HDFS) │
 └────────────┘    └──────────────────┘
 </code></pre>
 
-<p>好处：
-- <strong>弹性扩缩</strong>：计算节点可以独立扩缩，不影响数据
-- <strong>成本优化</strong>：冷数据放对象存储，热数据本地 SSD
-- <strong>多集群共享</strong>：多个计算集群共享同一份数据</p>
-<h2>2. Arrow Flight SQL：查询速度飞跃</h2>
-<p>之前 Doris 通过 MySQL 协议返回结果，序列化开销大。3.0 原生支持 <strong>Arrow Flight SQL</strong>：</p>
-<pre class="codehilite"><code class="language-bash"># 直接用 Arrow Flight SQL 连接
-mysql -h fe_host -P 9040 -u root  # MySQL 协议
-# Arrow Flight: 端口 8060，列式传输
+<p>Benefits:
+- <strong>Elastic Scaling</strong>: Compute nodes can scale independently without affecting data
+- <strong>Cost Optimization</strong>: Cold data on object storage, hot data on local SSD
+- <strong>Multi-Cluster Sharing</strong>: Multiple compute clusters share the same data</p>
+<h2>2. Arrow Flight SQL: A Leap in Query Performance</h2>
+<p>Previously, Doris returned results via the MySQL protocol, incurring significant serialization overhead. 3.0 natively supports <strong>Arrow Flight SQL</strong>:</p>
+<pre class="codehilite"><code class="language-bash"># Connect directly using Arrow Flight SQL
+mysql -h fe_host -P 9040 -u root  # MySQL protocol
+# Arrow Flight: port 8060, columnar transfer
 </code></pre>
 
-<p>实测对比（1000 万行查询）：</p>
+<p>Benchmark comparison (10 million row query):</p>
 <table>
 <thead>
 <tr>
-<th>协议</th>
-<th>耗时</th>
-<th>数据量</th>
+<th>Protocol</th>
+<th>Time</th>
+<th>Data Volume</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>MySQL 协议</td>
+<td>MySQL Protocol</td>
 <td>8.2s</td>
 <td>850MB</td>
 </tr>
@@ -121,33 +121,33 @@ mysql -h fe_host -P 9040 -u root  # MySQL 协议
 </tr>
 </tbody>
 </table>
-<p><strong>6 倍加速 + 60% 带宽节省</strong>，因为列式数据不需要反序列化为行式。</p>
-<h2>3. 半结构化数据支持</h2>
-<p><code>VARIANT</code> 类型正式 GA，可以在 Doris 里存 JSON 并高效查询：</p>
+<p><strong>6x speedup + 60% bandwidth savings</strong>, because columnar data doesn't need to be deserialized into row format.</p>
+<h2>3. Semi-Structured Data Support</h2>
+<p>The <code>VARIANT</code> type is now GA, allowing you to store JSON in Doris and query it efficiently:</p>
 <pre class="codehilite"><code class="language-sql">CREATE TABLE events (id BIGINT, payload VARIANT);
 SELECT payload:user.name FROM events WHERE payload:event_type = 'click';
 </code></pre>
 
-<p>底层用列式存储 JSON，查询时只读取需要的字段。</p>
-<h2>4. 倒排索引增强</h2>
-<p>全文检索能力大幅提升。现在可以在 Doris 里做类似 Elasticsearch 的文本搜索：</p>
+<p>Under the hood, JSON is stored in a columnar format, and queries only read the required fields.</p>
+<h2>4. Inverted Index Enhancements</h2>
+<p>Full-text search capabilities have been significantly improved. You can now perform Elasticsearch-like text searches directly in Doris:</p>
 <pre class="codehilite"><code class="language-sql">CREATE INDEX idx_content ON articles(content) USING INVERTED;
 SELECT * FROM articles WHERE content MATCH 'Doris|OLAP';
 </code></pre>
 
-<h2>总结</h2>
-<p>Doris 3.0 最大的意义：<strong>从 OLAP 引擎变成了统一的实时数据平台</strong>。存算分离 + Arrow Flight + 半结构化数据，让它能覆盖更多场景。</p>
-<p>如果你是数据后端方向，建议关注这三个方向：<strong>存算分离架构</strong>、<strong>列式传输协议</strong>、<strong>倒排索引与 OLAP 融合</strong>。</p>
+<h2>Summary</h2>
+<p>The biggest significance of Doris 3.0: <strong>it has evolved from an OLAP engine into a unified real-time data platform</strong>. Storage-compute separation + Arrow Flight + semi-structured data enable it to cover a wider range of scenarios.</p>
+<p>If you work in data backend engineering, I recommend paying attention to these three areas: <strong>storage-compute separation architecture</strong>, <strong>columnar transfer protocols</strong>, and <strong>the convergence of inverted indexes with OLAP</strong>.</p>
 <hr />
-<p><strong>参考来源：</strong></p>
+<p><strong>References:</strong></p>
 <ul>
-<li><a href="https://doris.apache.org/">Apache Doris 官方文档</a></li>
+<li><a href="https://doris.apache.org/">Apache Doris Official Documentation</a></li>
 </ul></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/k8s-network/" rel="prev"><span class="nav-links__label">Previous</span> Kubernetes 网络模型：从 Pod 到 Service 的完整数据包旅程</a></div><div class="nav-next"><a href="/posts/rust-ownership/" rel="next"><span class="nav-links__label">Next</span> Rust 写给 Java 程序员：所有权机制深度解析</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/k8s-network/" rel="prev"><span class="nav-links__label">Previous</span> Kubernetes Network Model: The Complete Packet Journey from Pod to Service</a></div><div class="nav-next"><a href="/posts/rust-ownership/" rel="next"><span class="nav-links__label">Next</span> Rust for Java Programmers: A Deep Dive into Ownership</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -165,11 +165,11 @@ SELECT * FROM articles WHERE content MATCH 'Doris|OLAP';
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -211,7 +211,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -220,7 +221,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -260,6 +261,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -267,6 +269,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -274,12 +277,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

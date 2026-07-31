@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>线程池面试八连问：核心参数、拒绝策略和调优思路 – Welcome To My Blog</title>
-<meta name="description" content="把 Java 线程池的核心参数和执行流程讲透，面试时对答如流。">
-<meta property="og:title" content="线程池面试八连问：核心参数、拒绝策略和调优思路 – Welcome To My Blog">
-<meta property="og:description" content="把 Java 线程池的核心参数和执行流程讲透，面试时对答如流。">
+<title>Eight Key Thread Pool Interview Questions: Core Parameters, Rejection Policies, and Tuning Strategies – Welcome To My Blog</title>
+<meta name="description" content="Explain the core parameters and execution flow of Java thread pools clearly, so you can answer interview questions with confidence.">
+<meta property="og:title" content="Eight Key Thread Pool Interview Questions: Core Parameters, Rejection Policies, and Tuning Strategies – Welcome To My Blog">
+<meta property="og:description" content="Explain the core parameters and execution flow of Java thread pools clearly, so you can answer interview questions with confidence.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "线程池面试八连问：核心参数、拒绝策略和调优思路 – Welcome To My Blog",
-  "description": "把 Java 线程池的核心参数和执行流程讲透，面试时对答如流。",
+  "headline": "Eight Key Thread Pool Interview Questions: Core Parameters, Rejection Policies, and Tuning Strategies – Welcome To My Blog",
+  "description": "Explain the core parameters and execution flow of Java thread pools clearly, so you can answer interview questions with confidence.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">线程池面试八连问：核心参数、拒绝策略和调优思路</span>
+        <span class="sticky-title">Eight Key Thread Pool Interview Questions: Core Parameters, Rejection Policies, and Tuning Strategies</span>
       </div>
     </div>
   </div>
@@ -68,59 +68,59 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/thread-pool-interview/" rel="bookmark"><time class="entry-date published" datetime="2025-07-05">2025-07-05</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/thread-pool-interview/" rel="bookmark"><time class="entry-date published" datetime="2025-07-05">2025-07-05</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">线程池面试八连问：核心参数、拒绝策略和调优思路</h1>
+                <h1 class="entry-title">Eight Key Thread Pool Interview Questions: Core Parameters, Rejection Policies, and Tuning Strategies</h1>
               </header>
-              <div class="entry-content"><p>线程池是 Java 并发编程面试的高频题。</p>
-<h2>七个核心参数</h2>
+              <div class="entry-content"><p>Thread pools are a high-frequency topic in Java concurrency programming interviews.</p>
+<h2>Seven Core Parameters</h2>
 <pre class="codehilite"><code class="language-java">new ThreadPoolExecutor(
-    corePoolSize,   // 核心线程数
-    maximumPoolSize,// 最大线程数
-    keepAliveTime,  // 空闲线程存活时间
-    unit,           // 时间单位
-    workQueue,      // 阻塞队列
-    threadFactory,  // 线程工厂
-    handler         // 拒绝策略
+    corePoolSize,   // Core thread count
+    maximumPoolSize,// Maximum thread count
+    keepAliveTime,  // Idle thread survival time
+    unit,           // Time unit
+    workQueue,      // Blocking queue
+    threadFactory,  // Thread factory
+    handler         // Rejection policy
 )
 </code></pre>
 
-<h2>执行流程</h2>
+<h2>Execution Flow</h2>
 <ol>
-<li>任务来了，如果线程数 &lt; corePoolSize，创建新线程执行</li>
-<li>如果达到了 corePoolSize，任务放入 workQueue</li>
-<li>如果 workQueue 满了，创建新线程（不超过 maximumPoolSize）</li>
-<li>如果达到了 maximumPoolSize，执行拒绝策略</li>
+<li>When a task arrives, if the thread count is &lt; corePoolSize, create a new thread to execute it</li>
+<li>If corePoolSize is reached, place the task into the workQueue</li>
+<li>If the workQueue is full, create new threads (up to maximumPoolSize)</li>
+<li>If maximumPoolSize is reached, execute the rejection policy</li>
 </ol>
-<h2>常见阻塞队列</h2>
+<h2>Common Blocking Queues</h2>
 <ul>
-<li><strong>LinkedBlockingQueue</strong>（默认）：无界队列（理论上），可能导致 OOM</li>
-<li><strong>ArrayBlockingQueue</strong>：有界队列，必须指定容量</li>
-<li><strong>SynchronousQueue</strong>：不存储任务，提交后必须立刻被线程处理</li>
+<li><strong>LinkedBlockingQueue</strong> (default): Unbounded queue (theoretically), may cause OOM</li>
+<li><strong>ArrayBlockingQueue</strong>: Bounded queue, capacity must be specified</li>
+<li><strong>SynchronousQueue</strong>: Does not store tasks; they must be processed by a thread immediately upon submission</li>
 </ul>
-<h2>四种拒绝策略</h2>
+<h2>Four Rejection Policies</h2>
 <ul>
-<li><strong>AbortPolicy</strong>（默认）：抛异常</li>
-<li><strong>CallerRunsPolicy</strong>：由提交任务的线程自己执行</li>
-<li><strong>DiscardPolicy</strong>：直接丢弃</li>
-<li><strong>DiscardOldestPolicy</strong>：丢弃队列最老的任务</li>
+<li><strong>AbortPolicy</strong> (default): Throws an exception</li>
+<li><strong>CallerRunsPolicy</strong>: The thread submitting the task executes it itself</li>
+<li><strong>DiscardPolicy</strong>: Silently discards the task</li>
+<li><strong>DiscardOldestPolicy</strong>: Discards the oldest task in the queue</li>
 </ul>
-<h2>ThreadPoolExecutor 的坑</h2>
-<p><code>Executors.newCachedThreadPool()</code> 的最大线程数是 <code>Integer.MAX_VALUE</code>——相当于没有上限，极端情况下会创建大量线程导致 OOM。</p>
-<p>阿里规约明确禁止用 Executors 创建线程池，必须用 <code>new ThreadPoolExecutor</code> 显式传参。</p>
-<h2>线程数怎么定</h2>
+<h2>Pitfalls of ThreadPoolExecutor</h2>
+<p>The maximum thread count of <code>Executors.newCachedThreadPool()</code> is <code>Integer.MAX_VALUE</code>—effectively unlimited, which can create a massive number of threads and cause OOM in extreme cases.</p>
+<p>Alibaba's coding guidelines explicitly prohibit creating thread pools with Executors; you must use <code>new ThreadPoolExecutor</code> with explicit parameters.</p>
+<h2>How to Determine Thread Count</h2>
 <ul>
-<li>CPU 密集型：N(CPU) + 1</li>
-<li>IO 密集型：N(CPU) * 2</li>
+<li>CPU-intensive: N(CPU) + 1</li>
+<li>IO-intensive: N(CPU) * 2</li>
 </ul>
-<p>但这只是经验值。最好的方式是压测。</p>
-<p>线程池是每个后端开发必须掌握的。面试把这几个点答全，基本就过关了。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+<p>But these are only empirical values. The best approach is load testing.</p>
+<p>Thread pools are a must-know for every backend developer. If you cover these points thoroughly in an interview, you'll basically pass.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/spring-transactional/" rel="prev"><span class="nav-links__label">Previous</span> @Transactional 失效的 5 种场景：为什么你的事务没回滚？</a></div><div class="nav-next"><a href="/posts/leetcode-25-reverse-k-group/" rel="next"><span class="nav-links__label">Next</span> LeetCode 25. K 个一组翻转链表：递归解法的简洁与优雅</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/spring-transactional/" rel="prev"><span class="nav-links__label">Previous</span> 5 Scenarios Where @Transactional Fails: Why Your Transaction Didn't Roll Back?</a></div><div class="nav-next"><a href="/posts/leetcode-25-reverse-k-group/" rel="next"><span class="nav-links__label">Next</span> LeetCode 25. Reverse Nodes in k-Group: The Elegance of a Recursive Solution</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -138,11 +138,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -184,7 +184,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -193,7 +194,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -233,6 +234,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -240,6 +242,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -247,12 +250,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

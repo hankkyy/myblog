@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>分布式锁的三代演进：从 Redis 到 Etcd 再到无锁设计 – Welcome To My Blog</title>
-<meta name="description" content="深入分析分布式锁的三种实现方案及其优缺点，包括 Redlock 争议和 Etcd 租约机制。">
-<meta property="og:title" content="分布式锁的三代演进：从 Redis 到 Etcd 再到无锁设计 – Welcome To My Blog">
-<meta property="og:description" content="深入分析分布式锁的三种实现方案及其优缺点，包括 Redlock 争议和 Etcd 租约机制。">
+<title>The Three Generations of Distributed Locks: From Redis to Etcd to Lock-Free Design – Welcome To My Blog</title>
+<meta name="description" content="An in-depth analysis of three distributed lock implementations and their pros and cons, including the Redlock controversy and Etcd's lease mechanism.">
+<meta property="og:title" content="The Three Generations of Distributed Locks: From Redis to Etcd to Lock-Free Design – Welcome To My Blog">
+<meta property="og:description" content="An in-depth analysis of three distributed lock implementations and their pros and cons, including the Redlock controversy and Etcd's lease mechanism.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "分布式锁的三代演进：从 Redis 到 Etcd 再到无锁设计 – Welcome To My Blog",
-  "description": "深入分析分布式锁的三种实现方案及其优缺点，包括 Redlock 争议和 Etcd 租约机制。",
+  "headline": "The Three Generations of Distributed Locks: From Redis to Etcd to Lock-Free Design – Welcome To My Blog",
+  "description": "An in-depth analysis of three distributed lock implementations and their pros and cons, including the Redlock controversy and Etcd's lease mechanism.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">分布式锁的三代演进：从 Redis 到 Etcd 再到无锁设计</span>
+        <span class="sticky-title">The Three Generations of Distributed Locks: From Redis to Etcd to Lock-Free Design</span>
       </div>
     </div>
   </div>
@@ -68,42 +68,42 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/分布式/" rel="category">分布式</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/distributed-lock-deep-dive/" rel="bookmark"><time class="entry-date published" datetime="2025-03-15">2025-03-15</time></a></span>
+                <span class="cat-links"><a href="/categories/distributed-systems/" rel="category">Distributed Systems</a><span class="cat-seperator">, </span><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/distributed-lock-deep-dive/" rel="bookmark"><time class="entry-date published" datetime="2025-03-15">2025-03-15</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">分布式锁的三代演进：从 Redis 到 Etcd 再到无锁设计</h1>
+                <h1 class="entry-title">The Three Generations of Distributed Locks: From Redis to Etcd to Lock-Free Design</h1>
               </header>
-              <div class="entry-content"><p>分布式锁看着简单，实际上坑很多。</p>
-<h2>第一代：Redis 分布式锁</h2>
-<pre class="codehilite"><code class="language-java">// 最常见的写法
+              <div class="entry-content"><p>Distributed locks may seem simple, but they are full of pitfalls.</p>
+<h2>First Generation: Redis Distributed Lock</h2>
+<pre class="codehilite"><code class="language-java">// The most common implementation
 String lockKey = &quot;order:&quot; + orderId;
 boolean locked = redis.set(lockKey, uuid, &quot;NX&quot;, &quot;PX&quot;, 30000);
 </code></pre>
 
-<p>问题：
-1. 锁过期时间不好设定——设短了业务还没执行完，锁就自动释放了；设长了，万一挂了要等很久
-2. 主从切换时锁可能丢失</p>
-<p>Martin Kleppmann 那篇著名的"Redlock 不安全"文章，导致很多人至今不敢在 Redis 上做分布式锁。</p>
-<h2>第二代：Etcd/Consul 分布式锁</h2>
-<p>利用 Etcd 的租约（Lease）机制：
-- 客户端定期续约
-- 客户端挂了租约自动过期
-- Raft 保证一致性</p>
-<p>缺点是性能不如 Redis，而且 Etcd 的瓶颈在写吞吐。</p>
-<h2>第三代：无锁设计</h2>
-<p>最好的分布式锁是不需要分布式锁。</p>
-<p>一些思路：
-- 幂等性设计（比如数据库唯一键 + 状态机）
-- 乐观锁（版本号/CAS）
-- 消息队列做串行化处理
-- 数据库行级锁（比如 <code>SELECT ... FOR UPDATE</code>）</p>
-<h2>我的建议</h2>
-<p>能用数据库行级锁就别用分布式锁，能用无锁设计就别锁。实在需要分布式锁，选 Redis（接受可能偶尔失效）还是 Etcd（接受性能较低），看业务容忍度。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/分布式/" rel="category">分布式</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
+<p>Problems:
+1. The lock expiration time is hard to set — if it's too short, the lock auto-releases before the business logic finishes; if it's too long, you have to wait a long time if the process crashes
+2. The lock can be lost during master-slave failover</p>
+<p>Martin Kleppmann's famous "Redlock is unsafe" article has led many people to avoid using Redis for distributed locks to this day.</p>
+<h2>Second Generation: Etcd/Consul Distributed Lock</h2>
+<p>Leveraging Etcd's Lease mechanism:
+- The client renews the lease periodically
+- The lease automatically expires if the client crashes
+- Raft ensures consistency</p>
+<p>The downside is that performance is not as good as Redis, and Etcd's bottleneck lies in write throughput.</p>
+<h2>Third Generation: Lock-Free Design</h2>
+<p>The best distributed lock is one that doesn't require a distributed lock at all.</p>
+<p>Some approaches:
+- Idempotency design (e.g., database unique keys + state machines)
+- Optimistic locking (version numbers/CAS)
+- Message queues for serialized processing
+- Database row-level locks (e.g., <code>SELECT ... FOR UPDATE</code>)</p>
+<h2>My Recommendation</h2>
+<p>If you can use database row-level locks, don't use distributed locks; if you can use a lock-free design, don't lock at all. When distributed locks are truly necessary, choose between Redis (accepting occasional failures) or Etcd (accepting lower performance) based on your business's tolerance.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/distributed-systems/" rel="category">Distributed Systems</a><a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/tcp-three-handshake/" rel="prev"><span class="nav-links__label">Previous</span> TCP 三次握手四次挥手：面试官到底想听什么？</a></div><div class="nav-next"><a href="/posts/postgres-vs-mysql-2025/" rel="next"><span class="nav-links__label">Next</span> PostgreSQL 还是 MySQL？2025 年数据库选型的重新思考</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/tcp-three-handshake/" rel="prev"><span class="nav-links__label">Previous</span> TCP Three-Way Handshake and Four-Way Wave: What Do Interviewers Really Want to Hear?</a></div><div class="nav-next"><a href="/posts/postgres-vs-mysql-2025/" rel="next"><span class="nav-links__label">Next</span> PostgreSQL or MySQL? Rethinking Database Selection in 2025</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -121,11 +121,11 @@ boolean locked = redis.set(lockKey, uuid, &quot;NX&quot;, &quot;PX&quot;, 30000)
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -167,7 +167,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -176,7 +177,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -216,6 +217,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -223,6 +225,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -230,12 +233,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>操作系统面试核心：进程和线程到底有什么区别？ – Welcome To My Blog</title>
-<meta name="description" content="从进程间通信到线程同步，面试中最常见的操作系统考点一次讲清楚。">
-<meta property="og:title" content="操作系统面试核心：进程和线程到底有什么区别？ – Welcome To My Blog">
-<meta property="og:description" content="从进程间通信到线程同步，面试中最常见的操作系统考点一次讲清楚。">
+<title>Operating System Interview Essentials: What's the Real Difference Between Processes and Threads? – Welcome To My Blog</title>
+<meta name="description" content="From inter-process communication to thread synchronization, here are the most common operating system interview topics explained clearly in one go.">
+<meta property="og:title" content="Operating System Interview Essentials: What's the Real Difference Between Processes and Threads? – Welcome To My Blog">
+<meta property="og:description" content="From inter-process communication to thread synchronization, here are the most common operating system interview topics explained clearly in one go.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "操作系统面试核心：进程和线程到底有什么区别？ – Welcome To My Blog",
-  "description": "从进程间通信到线程同步，面试中最常见的操作系统考点一次讲清楚。",
+  "headline": "Operating System Interview Essentials: What's the Real Difference Between Processes and Threads? – Welcome To My Blog",
+  "description": "From inter-process communication to thread synchronization, here are the most common operating system interview topics explained clearly in one go.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">操作系统面试核心：进程和线程到底有什么区别？</span>
+        <span class="sticky-title">Operating System Interview Essentials: What's the Real Difference Between Processes and Threads?</span>
       </div>
     </div>
   </div>
@@ -68,86 +68,86 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/os-process-thread/" rel="bookmark"><time class="entry-date published" datetime="2025-06-10">2025-06-10</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/os-process-thread/" rel="bookmark"><time class="entry-date published" datetime="2025-06-10">2025-06-10</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">操作系统面试核心：进程和线程到底有什么区别？</h1>
+                <h1 class="entry-title">Operating System Interview Essentials: What's the Real Difference Between Processes and Threads?</h1>
               </header>
-              <div class="entry-content"><p>进程和线程是操作系统面试的基础。</p>
-<h2>核心区别</h2>
+              <div class="entry-content"><p>Processes and threads are the foundation of operating system interviews.</p>
+<h2>Core Differences</h2>
 <table>
 <thead>
 <tr>
-<th>特性</th>
-<th>进程</th>
-<th>线程</th>
+<th>Feature</th>
+<th>Process</th>
+<th>Thread</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>资源</td>
-<td>独立的内存空间</td>
-<td>共享进程的内存</td>
+<td>Resources</td>
+<td>Independent memory space</td>
+<td>Shares the process's memory</td>
 </tr>
 <tr>
-<td>创建开销</td>
-<td>大（分配内存、复制页表）</td>
-<td>小</td>
+<td>Creation Overhead</td>
+<td>High (allocates memory, copies page tables)</td>
+<td>Low</td>
 </tr>
 <tr>
-<td>通信</td>
-<td>IPC（管道、共享内存等）</td>
-<td>直接读写共享变量</td>
+<td>Communication</td>
+<td>IPC (pipes, shared memory, etc.)</td>
+<td>Directly reads/writes shared variables</td>
 </tr>
 <tr>
-<td>切换开销</td>
-<td>大（切换页表、刷新 TLB）</td>
-<td>小</td>
+<td>Context Switch Overhead</td>
+<td>High (switches page tables, flushes TLB)</td>
+<td>Low</td>
 </tr>
 <tr>
-<td>独立性</td>
-<td>一个挂了不影响其他</td>
-<td>一个线程 OOM，整个进程挂</td>
+<td>Independence</td>
+<td>One crashing doesn't affect others</td>
+<td>One thread OOMs, the entire process crashes</td>
 </tr>
 <tr>
-<td>调度</td>
-<td>操作系统调度</td>
-<td>操作系统调度（内核线程）</td>
+<td>Scheduling</td>
+<td>Scheduled by the OS</td>
+<td>Scheduled by the OS (kernel threads)</td>
 </tr>
 </tbody>
 </table>
-<h2>进程间通信（IPC）</h2>
+<h2>Inter-Process Communication (IPC)</h2>
 <ol>
-<li><strong>管道</strong>：父子进程间单向通信，<code>ps aux | grep java</code></li>
-<li><strong>消息队列</strong>：独立于进程，异步通信</li>
-<li><strong>共享内存</strong>：最快但需要同步机制</li>
-<li><strong>Socket</strong>：跨网络通信</li>
+<li><strong>Pipes</strong>: One-way communication between parent and child processes, e.g., <code>ps aux | grep java</code></li>
+<li><strong>Message Queues</strong>: Independent of processes, asynchronous communication</li>
+<li><strong>Shared Memory</strong>: Fastest but requires synchronization mechanisms</li>
+<li><strong>Sockets</strong>: Communication across networks</li>
 </ol>
-<h2>线程同步</h2>
-<h3>synchronized（Java）</h3>
-<p>synchronized 保证原子性 + 可见性 + 有序性。JMM 的 happens-before 原则：解锁 happens-before 后续的加锁。</p>
+<h2>Thread Synchronization</h2>
+<h3>synchronized (Java)</h3>
+<p>synchronized guarantees atomicity + visibility + ordering. The JMM happens-before principle: an unlock happens-before a subsequent lock on the same monitor.</p>
 <h3>volatile</h3>
-<p>保证可见性 + 有序性（禁止指令重排），但不保证原子性。经典使用：DCL 单例中的 instance 变量必须用 volatile。</p>
-<h3>CAS（Compare And Swap）</h3>
-<p>无锁同步。AtomicInteger 底层就是 CAS + 自旋。ABA 问题：值从 A 变成 B 又变成 A，CAS 检测不到变化。解决：加版本号（AtomicStampedReference）。</p>
-<h2>死锁的条件</h2>
+<p>Guarantees visibility + ordering (prevents instruction reordering), but does not guarantee atomicity. Classic use case: the <code>instance</code> variable in a DCL singleton must be volatile.</p>
+<h3>CAS (Compare And Swap)</h3>
+<p>Lock-free synchronization. <code>AtomicInteger</code> is built on CAS + spin loops. The ABA problem: a value changes from A to B and back to A, and CAS cannot detect the change. Solution: add a version number (<code>AtomicStampedReference</code>).</p>
+<h2>Conditions for Deadlock</h2>
 <ol>
-<li>互斥：资源不能共享</li>
-<li>持有并等待：持有资源的同时等待新资源</li>
-<li>不可剥夺：别人不能抢你的资源</li>
-<li>循环等待：A 等 B，B 等 C，C 等 A</li>
+<li>Mutual exclusion: resources cannot be shared</li>
+<li>Hold and wait: holding resources while waiting for new ones</li>
+<li>No preemption: others cannot forcibly take your resources</li>
+<li>Circular wait: A waits for B, B waits for C, C waits for A</li>
 </ol>
-<p>破坏任意一个即可避免死锁。</p>
-<h2>面试话术</h2>
+<p>Breaking any one of these conditions is enough to avoid deadlock.</p>
+<h2>Interview Talking Points</h2>
 <blockquote>
-<p>进程是资源分配的最小单位，线程是 CPU 调度的最小单位。进程间通信需要 IPC，线程间直接共享内存但需要同步。线程同步的核心是保证原子性、可见性和有序性。</p>
+<p>A process is the smallest unit of resource allocation, while a thread is the smallest unit of CPU scheduling. Inter-process communication requires IPC, while threads directly share memory but need synchronization. The core of thread synchronization is ensuring atomicity, visibility, and ordering.</p>
 </blockquote>
-<p>OS 基础决定了你能走多远——优化到最后都是在跟操作系统打交道。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+<p>OS fundamentals determine how far you can go — when you optimize to the very end, you're always dealing with the operating system.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/aws-reinvent-2025/" rel="prev"><span class="nav-links__label">Previous</span> AWS re:Invent 2025：Amazon 的 AI 全线反击</a></div><div class="nav-next"><a href="/posts/mysql-index-interview/" rel="next"><span class="nav-links__label">Next</span> MySQL 索引面试核心：为什么最左前缀匹配是面试最爱问的？</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/aws-reinvent-2025/" rel="prev"><span class="nav-links__label">Previous</span> AWS re:Invent 2025: Amazon's Full-Scale AI Counterattack</a></div><div class="nav-next"><a href="/posts/mysql-index-interview/" rel="next"><span class="nav-links__label">Next</span> MySQL Index Interview Essentials: Why Is the Leftmost Prefix Match the Most Asked Question?</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -165,11 +165,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -211,7 +211,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -220,7 +221,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -260,6 +261,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -267,6 +269,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -274,12 +277,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

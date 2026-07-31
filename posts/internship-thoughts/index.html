@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>后端实习两个月，我学到的东西比大学两年都多 – Welcome To My Blog</title>
-<meta name="description" content="从学校到企业的落差、代码 Review 的残酷、以及为什么 CRUD 没那么简单">
-<meta property="og:title" content="后端实习两个月，我学到的东西比大学两年都多 – Welcome To My Blog">
-<meta property="og:description" content="从学校到企业的落差、代码 Review 的残酷、以及为什么 CRUD 没那么简单">
+<title>Two Months of Backend Internship Taught Me More Than Two Years of University – Welcome To My Blog</title>
+<meta name="description" content="The gap between school and the workplace, the brutality of code review, and why CRUD isn't as simple as it seems">
+<meta property="og:title" content="Two Months of Backend Internship Taught Me More Than Two Years of University – Welcome To My Blog">
+<meta property="og:description" content="The gap between school and the workplace, the brutality of code review, and why CRUD isn't as simple as it seems">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "后端实习两个月，我学到的东西比大学两年都多 – Welcome To My Blog",
-  "description": "从学校到企业的落差、代码 Review 的残酷、以及为什么 CRUD 没那么简单",
+  "headline": "Two Months of Backend Internship Taught Me More Than Two Years of University – Welcome To My Blog",
+  "description": "The gap between school and the workplace, the brutality of code review, and why CRUD isn't as simple as it seems",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">后端实习两个月，我学到的东西比大学两年都多</span>
+        <span class="sticky-title">Two Months of Backend Internship Taught Me More Than Two Years of University</span>
       </div>
     </div>
   </div>
@@ -68,35 +68,35 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/杂谈/" rel="category">杂谈</a></span><span class="posted-on"><a href="/posts/internship-thoughts/" rel="bookmark"><time class="entry-date published" datetime="2026-06-08">2026-06-08</time></a></span>
+                <span class="cat-links"><a href="/categories/musings/" rel="category">Musings</a></span><span class="posted-on"><a href="/posts/internship-thoughts/" rel="bookmark"><time class="entry-date published" datetime="2026-06-08">2026-06-08</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">后端实习两个月，我学到的东西比大学两年都多</h1>
+                <h1 class="entry-title">Two Months of Backend Internship Taught Me More Than Two Years of University</h1>
               </header>
-              <div class="entry-content"><p>在学校的时候，我以为后端开发就是 Spring Boot 连 MySQL，写几个 CRUD 接口。</p>
-<p>实习两个月后，我发现 <strong>CRUD 是工作中最简单的部分</strong>。</p>
-<h2>学校不会教的事</h2>
-<h3>1. 代码 Review 是真正的学习</h3>
-<p>学校作业交了就是交了，没人告诉你哪里写得烂。</p>
-<p>公司的代码 Review：</p>
-<pre class="codehilite"><code>「这个循环里查了 N 次数据库，改成批量查询」
-「异常吞掉了，出问题没法排查」
-「变量名 data 是什么意思？要写清楚是 orderData」
+              <div class="entry-content"><p>Back in school, I thought backend development meant connecting Spring Boot to MySQL and writing a few CRUD endpoints.</p>
+<p>After two months of internship, I realized that <strong>CRUD is the easiest part of the job</strong>.</p>
+<h2>What School Doesn't Teach You</h2>
+<h3>1. Code Review Is Where the Real Learning Happens</h3>
+<p>School assignments are submitted and forgotten—nobody tells you where your code is bad.</p>
+<p>Code review at a company:</p>
+<pre class="codehilite"><code>&quot;This loop hits the database N times—change it to a batch query.&quot;
+&quot;The exception is swallowed; you can't debug issues when something goes wrong.&quot;
+&quot;What does the variable name 'data' mean? Be specific—call it 'orderData'.&quot;
 </code></pre>
 
-<p>第一次被 Review 的时候，我的 PR 被打了 47 条 comment。脸很疼，但学的东西比之前两个月加起来都多。</p>
-<h3>2. 环境比代码难搞</h3>
-<p>写功能花 2 小时。配 Docker、配 Nginx、配 CI/CD、配监控告警、配日志采集……</p>
-<p>花了两天。然后发现是配置文件里少了一个空格。</p>
-<h3>3. 沟通成本 &gt; 编码成本</h3>
+<p>The first time I got reviewed, my PR received 47 comments. It stung, but I learned more from that than from the previous two months combined.</p>
+<h3>2. The Environment Is Harder Than the Code</h3>
+<p>Writing a feature took 2 hours. Setting up Docker, Nginx, CI/CD, monitoring alerts, and log collection...</p>
+<p>Took two days. Then I found out there was a missing space in a config file.</p>
+<h3>3. Communication Costs &gt; Coding Costs</h3>
 <ul>
-<li>需求文档写得不清楚 → 来回确认 → 半天没了</li>
-<li>接口格式没对齐 → 联调失败 → 又半天没了</li>
-<li>数据库表结构改了没通知 → 线上炸了 → 一天没了</li>
+<li>Unclear requirements doc → back-and-forth clarification → half a day gone</li>
+<li>Misaligned API formats → integration testing fails → another half day gone</li>
+<li>Database schema changed without notice → production breaks → a full day gone</li>
 </ul>
-<p><strong>「把话说清楚」是后端最被低估的能力。</strong></p>
-<h2>写 CRUD 也有讲究</h2>
-<p>你以为的 CRUD：</p>
+<p><strong>"Communicating clearly" is the most underrated skill in backend development.</strong></p>
+<h2>There's More to CRUD Than Meets the Eye</h2>
+<p>What you think CRUD is:</p>
 <pre class="codehilite"><code class="language-java">@PostMapping(&quot;/order&quot;)
 public Result createOrder(@RequestBody OrderDTO dto) {
     orderMapper.insert(dto);
@@ -104,43 +104,43 @@ public Result createOrder(@RequestBody OrderDTO dto) {
 }
 </code></pre>
 
-<p>实际生产环境的 CRUD：</p>
+<p>What CRUD actually looks like in production:</p>
 <pre class="codehilite"><code class="language-java">@PostMapping(&quot;/order&quot;)
 @Transactional(rollbackFor = Exception.class)
 public Result createOrder(@Valid @RequestBody OrderDTO dto) {
-    // 1. 参数校验 + 业务校验
-    // 2. 幂等性检查（防止重复提交）
-    // 3. 库存扣减（注意并发，用乐观锁）
-    // 4. 创建订单
-    // 5. 发送消息队列（异步通知）
-    // 6. 记录操作日志
-    // 7. 异常回滚 + 补偿逻辑
+    // 1. Parameter validation + business validation
+    // 2. Idempotency check (prevent duplicate submissions)
+    // 3. Inventory deduction (watch for concurrency, use optimistic locking)
+    // 4. Create the order
+    // 5. Send to message queue (async notification)
+    // 6. Log the operation
+    // 7. Rollback on exception + compensation logic
     return Result.ok(orderId);
 }
 </code></pre>
 
-<p>一个「简单」的创建订单，实际要考虑：</p>
+<p>A "simple" create-order endpoint actually requires considering:</p>
 <ul>
-<li><strong>事务边界</strong>：哪些操作要原子？</li>
-<li><strong>幂等性</strong>：用户点了两次怎么办？</li>
-<li><strong>并发安全</strong>：库存超卖怎么处理？</li>
-<li><strong>失败补偿</strong>：消息发失败了怎么恢复？</li>
+<li><strong>Transaction boundaries</strong>: Which operations need to be atomic?</li>
+<li><strong>Idempotency</strong>: What if the user clicks twice?</li>
+<li><strong>Concurrency safety</strong>: How do you handle overselling inventory?</li>
+<li><strong>Failure compensation</strong>: How do you recover if the message fails to send?</li>
 </ul>
-<h2>给也在实习的同学</h2>
+<h2>For Fellow Interns</h2>
 <ol>
-<li><strong>主动要 Code Review</strong>——这是成长最快的方式</li>
-<li><strong>问为什么</strong>——不只问「怎么做」，更要问「为什么这样做」</li>
-<li><strong>看老代码</strong>——了解系统演进历史，比文档有用</li>
-<li><strong>别怕犯错</strong>——实习就是来犯错的，只要同一个错不犯两遍</li>
+<li><strong>Ask for code reviews proactively</strong>—it's the fastest way to grow</li>
+<li><strong>Ask why</strong>—don't just ask "how," ask "why this approach"</li>
+<li><strong>Read the legacy code</strong>—understanding the system's evolution is more useful than documentation</li>
+<li><strong>Don't be afraid to make mistakes</strong>—internships exist for that, as long as you don't make the same mistake twice</li>
 </ol>
 <blockquote>
-<p>企业代码和 LeetCode 的区别，就是生活和大富翁的区别。</p>
+<p>The difference between enterprise code and LeetCode is the difference between real life and Monopoly.</p>
 </blockquote></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/杂谈/" rel="category">杂谈</a></span></footer>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/musings/" rel="category">Musings</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/agents-md/" rel="prev"><span class="nav-links__label">Previous</span> AGENTS.md：给 AI 写一份项目说明书</a></div><div class="nav-next"><a href="/posts/redis-fast/" rel="next"><span class="nav-links__label">Next</span> Redis 为什么快？单线程、IO 多路复用与数据结构分析</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/agents-md/" rel="prev"><span class="nav-links__label">Previous</span> AGENTS.md: A Project Manual for AI</a></div><div class="nav-next"><a href="/posts/redis-fast/" rel="next"><span class="nav-links__label">Next</span> Why Is Redis Fast? Analysis of Single-Threading, IO Multiplexing, and Data Structures</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -158,11 +158,11 @@ public Result createOrder(@Valid @RequestBody OrderDTO dto) {
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -204,7 +204,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -213,7 +214,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -253,6 +254,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -260,6 +262,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -267,12 +270,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>为什么 ClickHouse 比 MySQL 快 100 倍？列式存储原理 – Welcome To My Blog</title>
-<meta name="description" content="从磁盘 I/O、压缩、向量化执行三个层面理解列式存储的性能优势">
-<meta property="og:title" content="为什么 ClickHouse 比 MySQL 快 100 倍？列式存储原理 – Welcome To My Blog">
-<meta property="og:description" content="从磁盘 I/O、压缩、向量化执行三个层面理解列式存储的性能优势">
+<title>Why Is ClickHouse 100x Faster Than MySQL? The Principle of Columnar Storage – Welcome To My Blog</title>
+<meta name="description" content="Understanding the performance advantages of columnar storage from three perspectives: disk I/O, compression, and vectorized execution">
+<meta property="og:title" content="Why Is ClickHouse 100x Faster Than MySQL? The Principle of Columnar Storage – Welcome To My Blog">
+<meta property="og:description" content="Understanding the performance advantages of columnar storage from three perspectives: disk I/O, compression, and vectorized execution">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "为什么 ClickHouse 比 MySQL 快 100 倍？列式存储原理 – Welcome To My Blog",
-  "description": "从磁盘 I/O、压缩、向量化执行三个层面理解列式存储的性能优势",
+  "headline": "Why Is ClickHouse 100x Faster Than MySQL? The Principle of Columnar Storage – Welcome To My Blog",
+  "description": "Understanding the performance advantages of columnar storage from three perspectives: disk I/O, compression, and vectorized execution",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">为什么 ClickHouse 比 MySQL 快 100 倍？列式存储原理</span>
+        <span class="sticky-title">Why Is ClickHouse 100x Faster Than MySQL? The Principle of Columnar Storage</span>
       </div>
     </div>
   </div>
@@ -68,54 +68,54 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/columnar-storage/" rel="bookmark"><time class="entry-date published" datetime="2026-06-10">2026-06-10</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/columnar-storage/" rel="bookmark"><time class="entry-date published" datetime="2026-06-10">2026-06-10</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">为什么 ClickHouse 比 MySQL 快 100 倍？列式存储原理</h1>
+                <h1 class="entry-title">Why Is ClickHouse 100x Faster Than MySQL? The Principle of Columnar Storage</h1>
               </header>
-              <div class="entry-content"><p>面试经常被问：「为什么 OLAP 数据库用列存，而不是行存？」</p>
-<p>直接用数据说话。假设有一张表：</p>
+              <div class="entry-content"><p>A common interview question: "Why do OLAP databases use columnar storage instead of row-based storage?"</p>
+<p>Let's let the data speak for itself. Suppose we have a table:</p>
 <pre class="codehilite"><code class="language-sql">CREATE TABLE orders (
   id INT, user_id INT, amount DECIMAL,
   status VARCHAR, created_at DATETIME
 );
--- 1 亿行数据
+-- 100 million rows
 </code></pre>
 
-<p>查询：<code>SELECT SUM(amount) FROM orders WHERE status = 'paid'</code></p>
-<h2>行式存储（MySQL/InnoDB）</h2>
-<p>磁盘上数据按行排列：</p>
+<p>Query: <code>SELECT SUM(amount) FROM orders WHERE status = 'paid'</code></p>
+<h2>Row-Based Storage (MySQL/InnoDB)</h2>
+<p>Data is arranged row by row on disk:</p>
 <pre class="codehilite"><code>[1|101|99.9|paid|2026-01-01][2|102|50.0|pending|2026-01-02]...
 </code></pre>
 
-<p>执行 <code>SUM(amount) WHERE status = 'paid'</code>：</p>
+<p>Executing <code>SUM(amount) WHERE status = 'paid'</code>:</p>
 <ol>
-<li>读取整行（所有 5 列）→ <strong>大量不必要的 I/O</strong></li>
-<li>解析每行，提取 status 和 amount</li>
-<li>过滤 + 聚合</li>
+<li>Reads the entire row (all 5 columns) → <strong>significant unnecessary I/O</strong></li>
+<li>Parses each row, extracting status and amount</li>
+<li>Filters + aggregates</li>
 </ol>
-<p><strong>实际读取数据量：5 列 × 1 亿行 ≈ 2GB+</strong></p>
-<h2>列式存储（ClickHouse/Doris）</h2>
-<p>磁盘上数据按列排列：</p>
-<pre class="codehilite"><code>amount:  [99.9 | 50.0 | 30.0 | ...]   ← 只读这列
-status:  [paid | pending | paid | ...] ← 和这列
+<p><strong>Actual data read: 5 columns × 100 million rows ≈ 2GB+</strong></p>
+<h2>Columnar Storage (ClickHouse/Doris)</h2>
+<p>Data is arranged column by column on disk:</p>
+<pre class="codehilite"><code>amount:  [99.9 | 50.0 | 30.0 | ...]   ← only read this column
+status:  [paid | pending | paid | ...] ← and this column
 </code></pre>
 
-<p>执行同样的查询：</p>
+<p>Executing the same query:</p>
 <ol>
-<li><strong>只读取 amount 和 status 两列</strong></li>
-<li>列数据是连续存储的，一次扫描</li>
-<li>用 SIMD 向量化比较：一次比较 256 个值</li>
+<li><strong>Only reads the amount and status columns</strong></li>
+<li>Column data is stored contiguously, enabling a single scan</li>
+<li>Uses SIMD vectorized comparison: compares 256 values at once</li>
 </ol>
-<p><strong>实际读取数据量：2 列 × 1 亿行 ≈ 800MB，不到行存的 40%。</strong></p>
-<h2>压缩优势</h2>
-<p>列式存储的同列数据类型相同，压缩比极高：</p>
+<p><strong>Actual data read: 2 columns × 100 million rows ≈ 800MB, less than 40% of row-based storage.</strong></p>
+<h2>Compression Advantage</h2>
+<p>In columnar storage, values in the same column share the same data type, resulting in extremely high compression ratios:</p>
 <table>
 <thead>
 <tr>
-<th>压缩算法</th>
-<th>行存压缩比</th>
-<th>列存压缩比</th>
+<th>Compression Algorithm</th>
+<th>Row-Based Compression Ratio</th>
+<th>Columnar Compression Ratio</th>
 </tr>
 </thead>
 <tbody>
@@ -131,62 +131,62 @@ status:  [paid | pending | paid | ...] ← 和这列
 </tr>
 </tbody>
 </table>
-<p>因为一列里的 <code>status</code> 只有几个值（paid/pending/cancelled），字典编码后几乎可以压缩到原来的 1%。</p>
-<h2>向量化执行</h2>
-<p>这是列存最大的性能来源：</p>
-<pre class="codehilite"><code class="language-cpp">// 传统逐行处理
+<p>Because the <code>status</code> column only contains a few distinct values (paid/pending/cancelled), dictionary encoding can compress it to nearly 1% of its original size.</p>
+<h2>Vectorized Execution</h2>
+<p>This is the biggest source of performance gains in columnar storage:</p>
+<pre class="codehilite"><code class="language-cpp">// Traditional row-by-row processing
 for (int i = 0; i &lt; n; i++) {
     if (status[i] == PAID)
         sum += amount[i];
 }
 
-// 向量化：一次处理 256 行
+// Vectorized: processes 256 rows at once
 __m256i status_vec = _mm256_load_si256(&amp;status[i]);
 __m256i mask = _mm256_cmpeq_epi32(status_vec, paid_vec);
 sum += _mm256_mask_add(mask, amount_vec);
 </code></pre>
 
-<p>CPU 的 SIMD 指令一次处理 8 个 32 位整数（AVX2）或 16 个（AVX-512）。列式存储在内存里是连续的，天然适合向量化。</p>
-<h2>什么时候该用列存？</h2>
+<p>CPU SIMD instructions process 8 32-bit integers at a time (AVX2) or 16 (AVX-512). Columnar storage keeps data contiguous in memory, making it naturally suited for vectorization.</p>
+<h2>When Should You Use Columnar Storage?</h2>
 <table>
 <thead>
 <tr>
-<th>场景</th>
-<th>推荐</th>
+<th>Scenario</th>
+<th>Recommendation</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>SELECT *</code> 返回全行</td>
-<td>行存</td>
+<td><code>SELECT *</code> returning full rows</td>
+<td>Row-based</td>
 </tr>
 <tr>
-<td>聚合查询 (SUM/COUNT/AVG)</td>
-<td><strong>列存</strong></td>
+<td>Aggregation queries (SUM/COUNT/AVG)</td>
+<td><strong>Columnar</strong></td>
 </tr>
 <tr>
-<td>全表扫描 + 过滤</td>
-<td><strong>列存</strong></td>
+<td>Full table scans + filtering</td>
+<td><strong>Columnar</strong></td>
 </tr>
 <tr>
-<td>点查询 (WHERE id = 1)</td>
-<td>行存</td>
+<td>Point queries (WHERE id = 1)</td>
+<td>Row-based</td>
 </tr>
 <tr>
-<td>频繁更新</td>
-<td>行存</td>
+<td>Frequent updates</td>
+<td>Row-based</td>
 </tr>
 </tbody>
 </table>
-<h2>实际性能对比</h2>
-<p>在 16 核、64GB 的机器上测试 1 亿行 TPC-H lineitem 表：</p>
+<h2>Real-World Performance Comparison</h2>
+<p>Tested on a 16-core, 64GB machine with a 100-million-row TPC-H lineitem table:</p>
 <table>
 <thead>
 <tr>
-<th>查询</th>
+<th>Query</th>
 <th>MySQL 8.0</th>
 <th>ClickHouse</th>
-<th>倍数</th>
+<th>Speedup</th>
 </tr>
 </thead>
 <tbody>
@@ -211,13 +211,13 @@ sum += _mm256_mask_add(mask, amount_vec);
 </tbody>
 </table>
 <blockquote>
-<p>列式存储的快，不是靠更快的硬件，而是<strong>更少的数据读取</strong> + <strong>更好的压缩</strong> + <strong>向量化执行</strong>。三个因素叠加，才有了 100 倍的差距。</p>
+<p>Columnar storage isn't fast because of faster hardware — it's <strong>less data read</strong> + <strong>better compression</strong> + <strong>vectorized execution</strong>. These three factors combined create the 100x performance gap.</p>
 </blockquote></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/redis-fast/" rel="prev"><span class="nav-links__label">Previous</span> Redis 为什么快？单线程、IO 多路复用与数据结构分析</a></div><div class="nav-next"><a href="/posts/spring-virtual-threads/" rel="next"><span class="nav-links__label">Next</span> Spring Boot 3 + Virtual Threads：性能测试与踩坑记录</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/redis-fast/" rel="prev"><span class="nav-links__label">Previous</span> Why Is Redis Fast? Analysis of Single-Threading, IO Multiplexing, and Data Structures</a></div><div class="nav-next"><a href="/posts/spring-virtual-threads/" rel="next"><span class="nav-links__label">Next</span> Spring Boot 3 + Virtual Threads: Performance Testing and Pitfalls</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -235,11 +235,11 @@ sum += _mm256_mask_add(mask, amount_vec);
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -281,7 +281,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -290,7 +291,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -330,6 +331,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -337,6 +339,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -344,12 +347,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Spring Boot 自动配置原理：@SpringBootApplication 到底做了什么？ – Welcome To My Blog</title>
-<meta name="description" content="从 @SpringBootApplication 注解一路追踪到 AutoConfiguration 的加载机制，面试必考。">
-<meta property="og:title" content="Spring Boot 自动配置原理：@SpringBootApplication 到底做了什么？ – Welcome To My Blog">
-<meta property="og:description" content="从 @SpringBootApplication 注解一路追踪到 AutoConfiguration 的加载机制，面试必考。">
+<title>Spring Boot Auto-Configuration: What Does @SpringBootApplication Really Do? – Welcome To My Blog</title>
+<meta name="description" content="Trace from the @SpringBootApplication annotation to the AutoConfiguration loading mechanism — a must-know for interviews.">
+<meta property="og:title" content="Spring Boot Auto-Configuration: What Does @SpringBootApplication Really Do? – Welcome To My Blog">
+<meta property="og:description" content="Trace from the @SpringBootApplication annotation to the AutoConfiguration loading mechanism — a must-know for interviews.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Spring Boot 自动配置原理：@SpringBootApplication 到底做了什么？ – Welcome To My Blog",
-  "description": "从 @SpringBootApplication 注解一路追踪到 AutoConfiguration 的加载机制，面试必考。",
+  "headline": "Spring Boot Auto-Configuration: What Does @SpringBootApplication Really Do? – Welcome To My Blog",
+  "description": "Trace from the @SpringBootApplication annotation to the AutoConfiguration loading mechanism — a must-know for interviews.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">Spring Boot 自动配置原理：@SpringBootApplication 到底做了什么？</span>
+        <span class="sticky-title">Spring Boot Auto-Configuration: What Does @SpringBootApplication Really Do?</span>
       </div>
     </div>
   </div>
@@ -68,45 +68,45 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/spring-boot-autoconfig/" rel="bookmark"><time class="entry-date published" datetime="2025-04-25">2025-04-25</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/spring-boot-autoconfig/" rel="bookmark"><time class="entry-date published" datetime="2025-04-25">2025-04-25</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">Spring Boot 自动配置原理：@SpringBootApplication 到底做了什么？</h1>
+                <h1 class="entry-title">Spring Boot Auto-Configuration: What Does @SpringBootApplication Really Do?</h1>
               </header>
-              <div class="entry-content"><p>Spring Boot 的自动配置是面试高频题。很多人只会说「约定大于配置」，但被追问原理就卡壳了。</p>
-<h2>@SpringBootApplication 的三合一</h2>
-<pre class="codehilite"><code class="language-java">@SpringBootConfiguration  // 等价于 @Configuration
-@EnableAutoConfiguration  // 自动配置的入口
-@ComponentScan            // 扫描组件
+              <div class="entry-content"><p>Spring Boot's auto-configuration is a frequent interview topic. Many people can only say "convention over configuration," but freeze when asked about the underlying principles.</p>
+<h2>The Three-in-One @SpringBootApplication</h2>
+<pre class="codehilite"><code class="language-java">@SpringBootConfiguration  // Equivalent to @Configuration
+@EnableAutoConfiguration  // Entry point for auto-configuration
+@ComponentScan            // Scans components
 </code></pre>
 
-<p>关键是 <code>@EnableAutoConfiguration</code>。</p>
-<h2>自动配置的流程</h2>
+<p>The key is <code>@EnableAutoConfiguration</code>.</p>
+<h2>The Auto-Configuration Flow</h2>
 <ol>
-<li><code>@EnableAutoConfiguration</code> 引入了 <code>AutoConfigurationImportSelector</code></li>
-<li>它会读取 <code>META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports</code>（Spring Boot 3 的写法）</li>
-<li>这个文件列出了所有候选的自动配置类（约 200 个）</li>
-<li>通过 <code>@Conditional</code> 注解过滤——满足条件才加载</li>
+<li><code>@EnableAutoConfiguration</code> imports <code>AutoConfigurationImportSelector</code></li>
+<li>It reads <code>META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports</code> (the Spring Boot 3 approach)</li>
+<li>This file lists all candidate auto-configuration classes (about 200 of them)</li>
+<li>They are filtered through <code>@Conditional</code> annotations — loaded only if conditions are met</li>
 </ol>
-<h2>@Conditional 的魔法</h2>
-<p>Spring Boot 提供了很多条件注解：</p>
+<h2>The Magic of @Conditional</h2>
+<p>Spring Boot provides many conditional annotations:</p>
 <ul>
-<li><code>@ConditionalOnClass</code>：类路径存在某个类才加载。比如 <code>DataSourceAutoConfiguration</code> 需要 DataSource 类存在</li>
-<li><code>@ConditionalOnMissingBean</code>：用户没自己定义这个 Bean 才自动创建</li>
-<li><code>@ConditionalOnProperty</code>：配置文件有某个属性才加载</li>
+<li><code>@ConditionalOnClass</code>: Loads only if a certain class exists on the classpath. For example, <code>DataSourceAutoConfiguration</code> requires the DataSource class to be present</li>
+<li><code>@ConditionalOnMissingBean</code>: Auto-creates a bean only if the user hasn't defined it themselves</li>
+<li><code>@ConditionalOnProperty</code>: Loads only if a certain property exists in the configuration file</li>
 </ul>
-<h2>面试怎么答</h2>
+<h2>How to Answer in an Interview</h2>
 <blockquote>
-<p>Spring Boot 通过 <code>@EnableAutoConfiguration</code> 触发自动配置。启动时扫描 <code>AutoConfiguration.imports</code> 文件，根据 <code>@Conditional</code> 条件注解决定是否加载某个自动配置类。最终达到的效果是：你引入了 <code>spring-boot-starter-web</code>，它自动给你配好了 DispatcherServlet、Tomcat、Jackson。</p>
+<p>Spring Boot triggers auto-configuration through <code>@EnableAutoConfiguration</code>. At startup, it scans the <code>AutoConfiguration.imports</code> file and decides whether to load a given auto-configuration class based on <code>@Conditional</code> condition annotations. The end result: you add <code>spring-boot-starter-web</code>, and it automatically configures DispatcherServlet, Tomcat, and Jackson for you.</p>
 </blockquote>
-<h2>怎么验证你的理解</h2>
-<p>创建一个空的 Spring Boot 项目，打开 <code>spring-boot-autoconfigure</code> jar 包，看看 <code>AutoConfiguration.imports</code> 文件长什么样。遇到一个自动配置类，点进去看看它上面的 @Conditional 注解。</p>
-<p>动手远比背书有效。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+<h2>How to Verify Your Understanding</h2>
+<p>Create an empty Spring Boot project, open the <code>spring-boot-autoconfigure</code> jar, and take a look at what the <code>AutoConfiguration.imports</code> file looks like. Pick an auto-configuration class, click into it, and examine the @Conditional annotations on it.</p>
+<p>Hands-on practice beats rote memorization every time.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/twitter-x-rebrand-one-year/" rel="prev"><span class="nav-links__label">Previous</span> X（原 Twitter）改名一年半，马斯克亏了多少？</a></div><div class="nav-next"><a href="/posts/git-workflow-best-practices/" rel="next"><span class="nav-links__label">Next</span> Git 工作流最佳实践：从单人项目到团队协作</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/twitter-x-rebrand-one-year/" rel="prev"><span class="nav-links__label">Previous</span> One and a Half Years After Rebranding to X (formerly Twitter), How Much Has Musk Lost?</a></div><div class="nav-next"><a href="/posts/git-workflow-best-practices/" rel="next"><span class="nav-links__label">Next</span> Git Workflow Best Practices: From Solo Projects to Team Collaboration</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -124,11 +124,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -170,7 +170,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -179,7 +180,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -219,6 +220,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -226,6 +228,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -233,12 +236,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

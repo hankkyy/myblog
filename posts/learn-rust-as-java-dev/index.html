@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>作为 Java 开发者，我是怎么开始学 Rust 的 – Welcome To My Blog</title>
-<meta name="description" content="从 Java 程序员的视角出发，理解 Rust 的所有权、借用的核心概念，对比两种语言的思维方式差异。">
-<meta property="og:title" content="作为 Java 开发者，我是怎么开始学 Rust 的 – Welcome To My Blog">
-<meta property="og:description" content="从 Java 程序员的视角出发，理解 Rust 的所有权、借用的核心概念，对比两种语言的思维方式差异。">
+<title>How I Started Learning Rust as a Java Developer – Welcome To My Blog</title>
+<meta name="description" content="Understanding Rust's core concepts of ownership and borrowing from a Java programmer's perspective, comparing the differences in thinking between the two languages.">
+<meta property="og:title" content="How I Started Learning Rust as a Java Developer – Welcome To My Blog">
+<meta property="og:description" content="Understanding Rust's core concepts of ownership and borrowing from a Java programmer's perspective, comparing the differences in thinking between the two languages.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "作为 Java 开发者，我是怎么开始学 Rust 的 – Welcome To My Blog",
-  "description": "从 Java 程序员的视角出发，理解 Rust 的所有权、借用的核心概念，对比两种语言的思维方式差异。",
+  "headline": "How I Started Learning Rust as a Java Developer – Welcome To My Blog",
+  "description": "Understanding Rust's core concepts of ownership and borrowing from a Java programmer's perspective, comparing the differences in thinking between the two languages.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">作为 Java 开发者，我是怎么开始学 Rust 的</span>
+        <span class="sticky-title">How I Started Learning Rust as a Java Developer</span>
       </div>
     </div>
   </div>
@@ -68,40 +68,40 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/learn-rust-as-java-dev/" rel="bookmark"><time class="entry-date published" datetime="2025-02-05">2025-02-05</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/learn-rust-as-java-dev/" rel="bookmark"><time class="entry-date published" datetime="2025-02-05">2025-02-05</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">作为 Java 开发者，我是怎么开始学 Rust 的</h1>
+                <h1 class="entry-title">How I Started Learning Rust as a Java Developer</h1>
               </header>
-              <div class="entry-content"><p>最近开始学 Rust，作为写了几年 Java 的人，思维方式确实需要转换。</p>
-<h2>最大的不同：所有权</h2>
-<p>Java 的垃圾回收让我们习惯了「随便创建对象，GC 会处理」。Rust 让你自己管理内存，但编译器会帮你检查是否正确。</p>
+              <div class="entry-content"><p>I recently started learning Rust, and as someone who has written Java for years, the shift in mindset is definitely necessary.</p>
+<h2>The Biggest Difference: Ownership</h2>
+<p>Java's garbage collection makes us accustomed to "creating objects freely, GC will handle it." Rust requires you to manage memory yourself, but the compiler helps you check if it's correct.</p>
 <pre class="codehilite"><code class="language-rust">let s1 = String::from(&quot;hello&quot;);
-let s2 = s1;  // s1 的所有权转移给了 s2
-println!(&quot;{}&quot;, s1);  // 编译错误！s1 已经无效了
+let s2 = s1;  // ownership of s1 is moved to s2
+println!(&quot;{}&quot;, s1);  // compile error! s1 is no longer valid
 </code></pre>
 
-<p>这跟 Java 完全不同——Java 里 <code>s1</code> 和 <code>s2</code> 可以指向同一个对象。</p>
-<h2>借用（Borrowing）</h2>
-<p>如果不想转移所有权，可以用引用（借用）：</p>
+<p>This is completely different from Java—in Java, <code>s1</code> and <code>s2</code> can point to the same object.</p>
+<h2>Borrowing</h2>
+<p>If you don't want to transfer ownership, you can use references (borrowing):</p>
 <pre class="codehilite"><code class="language-rust">let s1 = String::from(&quot;hello&quot;);
-let s2 = &amp;s1;  // s2 借用 s1，s1 依然有效
-println!(&quot;{}&quot;, s1);  // 没问题
+let s2 = &amp;s1;  // s2 borrows s1, s1 is still valid
+println!(&quot;{}&quot;, s1);  // no problem
 </code></pre>
 
-<h2>Rust 对 Java 开发者的启发</h2>
-<p>即使不写 Rust，理解所有权和借用的概念能让你写出更好的 Java 代码：
-- 更清楚对象的生命周期
-- 更谨慎地处理可变状态
-- 减少不必要的对象拷贝</p>
-<h2>学习建议</h2>
-<p>不要一上来就看《The Rust Book》，先看 Rustlings（互动式练习），跟着敲一遍。然后写一个小项目（命令行工具、简单的 HTTP 服务）。</p>
-<p>Rust 的学习曲线比 Java 陡，但收获也比想象中大。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+<h2>What Rust Teaches Java Developers</h2>
+<p>Even if you don't write Rust, understanding the concepts of ownership and borrowing can help you write better Java code:
+- Be clearer about object lifecycles
+- Handle mutable state more carefully
+- Reduce unnecessary object copying</p>
+<h2>Learning Advice</h2>
+<p>Don't jump straight into <em>The Rust Book</em>. Start with Rustlings (interactive exercises) and work through them. Then write a small project (a command-line tool, a simple HTTP service).</p>
+<p>Rust's learning curve is steeper than Java's, but the payoff is bigger than you'd expect.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/spring-ioc-aop-interview/" rel="prev"><span class="nav-links__label">Previous</span> Spring IoC 和 AOP 面试怎么答？不只是背概念</a></div><div class="nav-next"><a href="/posts/tech-winter-2025/" rel="next"><span class="nav-links__label">Next</span> 2025 科技寒冬：硅谷裁员潮背后的结构性变化</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/spring-ioc-aop-interview/" rel="prev"><span class="nav-links__label">Previous</span> How to Answer Spring IoC and AOP Interview Questions? It's Not Just About Memorizing Concepts</a></div><div class="nav-next"><a href="/posts/tech-winter-2025/" rel="next"><span class="nav-links__label">Next</span> 2025 Tech Winter: Structural Changes Behind the Silicon Valley Layoff Wave</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -119,11 +119,11 @@ println!(&quot;{}&quot;, s1);  // 没问题
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -165,7 +165,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -174,7 +175,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -214,6 +215,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -221,6 +223,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -228,12 +231,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

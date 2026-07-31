@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Spring MVC 请求处理流程：从 DispatcherServlet 到视图渲染 – Welcome To My Blog</title>
-<meta name="description" content="跟踪一个 HTTP 请求在 Spring MVC 中的完整处理路径，面试时可以画图解释。">
-<meta property="og:title" content="Spring MVC 请求处理流程：从 DispatcherServlet 到视图渲染 – Welcome To My Blog">
-<meta property="og:description" content="跟踪一个 HTTP 请求在 Spring MVC 中的完整处理路径，面试时可以画图解释。">
+<title>Spring MVC Request Handling Flow: From DispatcherServlet to View Rendering – Welcome To My Blog</title>
+<meta name="description" content="Trace the complete processing path of an HTTP request in Spring MVC, and you can explain it with a diagram in interviews.">
+<meta property="og:title" content="Spring MVC Request Handling Flow: From DispatcherServlet to View Rendering – Welcome To My Blog">
+<meta property="og:description" content="Trace the complete processing path of an HTTP request in Spring MVC, and you can explain it with a diagram in interviews.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Spring MVC 请求处理流程：从 DispatcherServlet 到视图渲染 – Welcome To My Blog",
-  "description": "跟踪一个 HTTP 请求在 Spring MVC 中的完整处理路径，面试时可以画图解释。",
+  "headline": "Spring MVC Request Handling Flow: From DispatcherServlet to View Rendering – Welcome To My Blog",
+  "description": "Trace the complete processing path of an HTTP request in Spring MVC, and you can explain it with a diagram in interviews.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">Spring MVC 请求处理流程：从 DispatcherServlet 到视图渲染</span>
+        <span class="sticky-title">Spring MVC Request Handling Flow: From DispatcherServlet to View Rendering</span>
       </div>
     </div>
   </div>
@@ -68,52 +68,52 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/spring-mvc-flow/" rel="bookmark"><time class="entry-date published" datetime="2025-08-08">2025-08-08</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/spring-mvc-flow/" rel="bookmark"><time class="entry-date published" datetime="2025-08-08">2025-08-08</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">Spring MVC 请求处理流程：从 DispatcherServlet 到视图渲染</h1>
+                <h1 class="entry-title">Spring MVC Request Handling Flow: From DispatcherServlet to View Rendering</h1>
               </header>
-              <div class="entry-content"><p>Spring MVC 的请求处理流程是经典面试题。</p>
-<h2>完整流程</h2>
-<pre class="codehilite"><code>HTTP 请求
+              <div class="entry-content"><p>The request handling flow of Spring MVC is a classic interview question.</p>
+<h2>Complete Flow</h2>
+<pre class="codehilite"><code>HTTP Request
     ↓
-DispatcherServlet（前端控制器）
+DispatcherServlet (Front Controller)
     ↓
-HandlerMapping（找到处理器）
+HandlerMapping (Find the handler)
     ↓
-HandlerAdapter（调用处理器）
+HandlerAdapter (Invoke the handler)
     ↓
-Handler（Controller 方法）
+Handler (Controller method)
     ↓
-ModelAndView（返回结果）
+ModelAndView (Return result)
     ↓
-ViewResolver（解析视图）
+ViewResolver (Resolve the view)
     ↓
-View（渲染视图）
+View (Render the view)
     ↓
-HTTP 响应
+HTTP Response
 </code></pre>
 
-<h2>每一步详解</h2>
-<p><strong>1. DispatcherServlet</strong>：Spring MVC 的核心，所有请求的入口。它在 <code>web.xml</code> 或通过 <code>AbstractAnnotationConfigDispatcherServletInitializer</code> 配置。</p>
-<p><strong>2. HandlerMapping</strong>：根据请求 URL 找到对应的 Controller 方法。<code>@RequestMapping</code> 注解的信息就存在这里。常见的实现：<code>RequestMappingHandlerMapping</code>。</p>
-<p><strong>3. HandlerAdapter</strong>：调用 Handler 方法的适配器。因为 Handler 可能返回不同类型的值（ModelAndView、String、ResponseEntity 等），需要适配器做统一处理。</p>
-<p><strong>4. ViewResolver</strong>：把逻辑视图名（"userList"）解析为物理视图（"/WEB-INF/views/userList.jsp"）。</p>
-<h2>拦截器 vs 过滤器</h2>
+<h2>Detailed Explanation of Each Step</h2>
+<p><strong>1. DispatcherServlet</strong>: The core of Spring MVC and the entry point for all requests. It is configured in <code>web.xml</code> or via <code>AbstractAnnotationConfigDispatcherServletInitializer</code>.</p>
+<p><strong>2. HandlerMapping</strong>: Finds the corresponding Controller method based on the request URL. The information from the <code>@RequestMapping</code> annotation is stored here. A common implementation is <code>RequestMappingHandlerMapping</code>.</p>
+<p><strong>3. HandlerAdapter</strong>: An adapter that invokes the Handler method. Since a Handler may return different types of values (ModelAndView, String, ResponseEntity, etc.), the adapter handles them uniformly.</p>
+<p><strong>4. ViewResolver</strong>: Resolves a logical view name ("userList") into a physical view ("/WEB-INF/views/userList.jsp").</p>
+<h2>Interceptor vs Filter</h2>
 <ul>
-<li><strong>过滤器（Filter）</strong>：Servlet 层面的，在请求进入 DispatcherServlet 之前执行</li>
-<li><strong>拦截器（Interceptor）</strong>：Spring 层面的，在 HandlerMapping 之后、HandlerAdapter 之前执行</li>
+<li><strong>Filter</strong>: Operates at the Servlet level and executes before the request enters DispatcherServlet</li>
+<li><strong>Interceptor</strong>: Operates at the Spring level and executes after HandlerMapping but before HandlerAdapter</li>
 </ul>
-<h2>面试话术</h2>
+<h2>Interview Talking Points</h2>
 <blockquote>
-<p>一个 HTTP 请求先到达 DispatcherServlet，它通过 HandlerMapping 找到对应的 Controller 方法，通过 HandlerAdapter 调用方法并处理返回值，最后通过 ViewResolver 解析视图或直接返回数据。</p>
+<p>An HTTP request first arrives at DispatcherServlet, which uses HandlerMapping to find the corresponding Controller method, invokes the method via HandlerAdapter and processes the return value, and finally resolves the view through ViewResolver or directly returns data.</p>
 </blockquote>
-<p>掌握这个流程是你理解「Spring Boot 背后发生了什么」的第一步。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+<p>Mastering this flow is your first step toward understanding "what happens behind the scenes in Spring Boot."</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/huawei-ascend-910c/" rel="prev"><span class="nav-links__label">Previous</span> 华为昇腾 910C 量产：国产 AI 芯片能替代英伟达吗？</a></div><div class="nav-next"><a href="/posts/api-design-philosophy/" rel="next"><span class="nav-links__label">Next</span> API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/huawei-ascend-910c/" rel="prev"><span class="nav-links__label">Previous</span> Huawei Ascend 910C Enters Mass Production: Can Domestic AI Chips Replace NVIDIA?</a></div><div class="nav-next"><a href="/posts/api-design-philosophy/" rel="next"><span class="nav-links__label">Next</span> The Philosophy of API Design: Reflections from REST to gRPC to GraphQL</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -131,11 +131,11 @@ HTTP 响应
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -177,7 +177,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -186,7 +187,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -226,6 +227,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -233,6 +235,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -240,12 +243,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

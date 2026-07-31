@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HTTP 和 HTTPS 面试全攻略：状态码、缓存、TLS 握手 – Welcome To My Blog</title>
-<meta name="description" content="从 HTTP 1.0 到 3.0 的演进，常见状态码的含义，HTTPS 的加密原理。">
-<meta property="og:title" content="HTTP 和 HTTPS 面试全攻略：状态码、缓存、TLS 握手 – Welcome To My Blog">
-<meta property="og:description" content="从 HTTP 1.0 到 3.0 的演进，常见状态码的含义，HTTPS 的加密原理。">
+<title>HTTP and HTTPS Interview Guide: Status Codes, Caching, TLS Handshake – Welcome To My Blog</title>
+<meta name="description" content="Evolution from HTTP 1.0 to 3.0, meanings of common status codes, and the encryption principles of HTTPS.">
+<meta property="og:title" content="HTTP and HTTPS Interview Guide: Status Codes, Caching, TLS Handshake – Welcome To My Blog">
+<meta property="og:description" content="Evolution from HTTP 1.0 to 3.0, meanings of common status codes, and the encryption principles of HTTPS.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "HTTP 和 HTTPS 面试全攻略：状态码、缓存、TLS 握手 – Welcome To My Blog",
-  "description": "从 HTTP 1.0 到 3.0 的演进，常见状态码的含义，HTTPS 的加密原理。",
+  "headline": "HTTP and HTTPS Interview Guide: Status Codes, Caching, TLS Handshake – Welcome To My Blog",
+  "description": "Evolution from HTTP 1.0 to 3.0, meanings of common status codes, and the encryption principles of HTTPS.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">HTTP 和 HTTPS 面试全攻略：状态码、缓存、TLS 握手</span>
+        <span class="sticky-title">HTTP and HTTPS Interview Guide: Status Codes, Caching, TLS Handshake</span>
       </div>
     </div>
   </div>
@@ -68,55 +68,55 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/http-https-explained/" rel="bookmark"><time class="entry-date published" datetime="2025-04-15">2025-04-15</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/http-https-explained/" rel="bookmark"><time class="entry-date published" datetime="2025-04-15">2025-04-15</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">HTTP 和 HTTPS 面试全攻略：状态码、缓存、TLS 握手</h1>
+                <h1 class="entry-title">HTTP and HTTPS Interview Guide: Status Codes, Caching, TLS Handshake</h1>
               </header>
-              <div class="entry-content"><p>HTTP 协议是后端面试的基础题。</p>
-<h2>HTTP 的演进</h2>
-<p><strong>HTTP 1.0</strong>：每个请求一个 TCP 连接，用完就关。效率低。</p>
-<p><strong>HTTP 1.1</strong>：长连接（Connection: keep-alive）+ 管道化（Pipelining）。但还是有队头阻塞的问题。</p>
-<p><strong>HTTP 2.0</strong>：多路复用（一个 TCP 连接并发多个请求）、头部压缩、服务器推送。但 TCP 的队头阻塞还在。</p>
-<p><strong>HTTP 3.0</strong>：基于 QUIC（UDP），彻底解决队头阻塞。</p>
-<h2>常见状态码</h2>
+              <div class="entry-content"><p>The HTTP protocol is a fundamental topic in backend interviews.</p>
+<h2>Evolution of HTTP</h2>
+<p><strong>HTTP 1.0</strong>: One TCP connection per request, closed after use. Inefficient.</p>
+<p><strong>HTTP 1.1</strong>: Persistent connections (Connection: keep-alive) + Pipelining. But head-of-line blocking remains an issue.</p>
+<p><strong>HTTP 2.0</strong>: Multiplexing (multiple concurrent requests over a single TCP connection), header compression, server push. However, TCP head-of-line blocking still persists.</p>
+<p><strong>HTTP 3.0</strong>: Based on QUIC (UDP), completely solves head-of-line blocking.</p>
+<h2>Common Status Codes</h2>
 <ul>
-<li><strong>200</strong>：OK</li>
-<li><strong>301</strong>：永久重定向（搜索引擎会更新 URL）</li>
-<li><strong>302</strong>：临时重定向</li>
-<li><strong>304</strong>：Not Modified（缓存有效，不用重传）</li>
-<li><strong>400</strong>：请求参数错误</li>
-<li><strong>401</strong>：未认证（需要登录）</li>
-<li><strong>403</strong>：没有权限</li>
-<li><strong>404</strong>：资源不存在</li>
-<li><strong>500</strong>：服务器内部错误</li>
-<li><strong>502</strong>：网关错误（上游服务器挂了）</li>
-<li><strong>503</strong>：服务不可用（过载或维护）</li>
+<li><strong>200</strong>: OK</li>
+<li><strong>301</strong>: Permanent redirect (search engines will update the URL)</li>
+<li><strong>302</strong>: Temporary redirect</li>
+<li><strong>304</strong>: Not Modified (cache is valid, no need to retransmit)</li>
+<li><strong>400</strong>: Bad request parameters</li>
+<li><strong>401</strong>: Unauthenticated (login required)</li>
+<li><strong>403</strong>: Forbidden (no permission)</li>
+<li><strong>404</strong>: Resource not found</li>
+<li><strong>500</strong>: Internal server error</li>
+<li><strong>502</strong>: Bad gateway (upstream server is down)</li>
+<li><strong>503</strong>: Service unavailable (overloaded or under maintenance)</li>
 </ul>
 <h2>HTTPS = HTTP + TLS</h2>
-<p>TLS 握手过程（简化版）：</p>
+<p>TLS handshake process (simplified):</p>
 <ol>
-<li>客户端发送支持的加密套件</li>
-<li>服务端选择加密套件 + 发证书</li>
-<li>客户端验证证书 + 生成对称密钥（用服务端公钥加密发送）</li>
-<li>双方用对称密钥加密通信</li>
+<li>Client sends supported cipher suites</li>
+<li>Server selects a cipher suite + sends its certificate</li>
+<li>Client verifies the certificate + generates a symmetric key (encrypted with the server's public key and sent)</li>
+<li>Both parties communicate using the symmetric key for encryption</li>
 </ol>
-<h2>缓存头</h2>
+<h2>Cache Headers</h2>
 <ul>
-<li><strong>Cache-Control: max-age=3600</strong>：缓存 1 小时</li>
-<li><strong>ETag</strong>：资源版本标识，配合 If-None-Match 做条件请求</li>
-<li><strong>Last-Modified</strong>：最后修改时间，配合 If-Modified-Since</li>
+<li><strong>Cache-Control: max-age=3600</strong>: Cache for 1 hour</li>
+<li><strong>ETag</strong>: Resource version identifier, used with If-None-Match for conditional requests</li>
+<li><strong>Last-Modified</strong>: Last modification time, used with If-Modified-Since</li>
 </ul>
-<h2>面试话术</h2>
+<h2>Interview Talking Points</h2>
 <blockquote>
-<p>HTTP 1.1 到 2.0 的核心改进是多路复用——一个 TCP 连接承载多个请求。2.0 到 3.0 的核心改进是 QUIC 协议——基于 UDP 彻底解决了 TCP 的队头阻塞。HTTPS 通过 TLS 握手交换对称密钥，之后用对称加密保护通信内容。</p>
+<p>The core improvement from HTTP 1.1 to 2.0 is multiplexing — a single TCP connection carries multiple requests. The core improvement from 2.0 to 3.0 is the QUIC protocol — based on UDP, it completely solves TCP's head-of-line blocking. HTTPS exchanges a symmetric key through the TLS handshake, after which symmetric encryption protects the communication content.</p>
 </blockquote>
-<p>记状态码和缓存策略，实际开发中每天都会遇到。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+<p>Remember the status codes and caching strategies — you'll encounter them every day in real development.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/doris-vs-clickhouse-2025/" rel="prev"><span class="nav-links__label">Previous</span> Doris vs ClickHouse：OLAP 数据库学习对比</a></div><div class="nav-next"><a href="/posts/system-design-tinyurl/" rel="next"><span class="nav-links__label">Next</span> 系统设计面试攻略：设计一个短链接服务（TinyURL）</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/doris-vs-clickhouse-2025/" rel="prev"><span class="nav-links__label">Previous</span> Doris vs ClickHouse: A Comparative Study of OLAP Databases</a></div><div class="nav-next"><a href="/posts/system-design-tinyurl/" rel="next"><span class="nav-links__label">Next</span> System Design Interview Guide: Designing a Short URL Service (TinyURL)</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -134,11 +134,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -180,7 +180,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -189,7 +190,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -229,6 +230,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -236,6 +238,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -243,12 +246,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

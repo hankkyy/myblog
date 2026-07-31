@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>系统设计面试攻略：设计一个短链接服务（TinyURL） – Welcome To My Blog</title>
-<meta name="description" content="分解系统设计面试的结构化思路——需求分析、估算、数据模型、接口设计、扩展方案。">
-<meta property="og:title" content="系统设计面试攻略：设计一个短链接服务（TinyURL） – Welcome To My Blog">
-<meta property="og:description" content="分解系统设计面试的结构化思路——需求分析、估算、数据模型、接口设计、扩展方案。">
+<title>System Design Interview Guide: Designing a Short URL Service (TinyURL) – Welcome To My Blog</title>
+<meta name="description" content="Breaking down a structured approach to system design interviews — requirements analysis, estimation, data modeling, API design, and scaling strategies.">
+<meta property="og:title" content="System Design Interview Guide: Designing a Short URL Service (TinyURL) – Welcome To My Blog">
+<meta property="og:description" content="Breaking down a structured approach to system design interviews — requirements analysis, estimation, data modeling, API design, and scaling strategies.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "系统设计面试攻略：设计一个短链接服务（TinyURL） – Welcome To My Blog",
-  "description": "分解系统设计面试的结构化思路——需求分析、估算、数据模型、接口设计、扩展方案。",
+  "headline": "System Design Interview Guide: Designing a Short URL Service (TinyURL) – Welcome To My Blog",
+  "description": "Breaking down a structured approach to system design interviews — requirements analysis, estimation, data modeling, API design, and scaling strategies.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">系统设计面试攻略：设计一个短链接服务（TinyURL）</span>
+        <span class="sticky-title">System Design Interview Guide: Designing a Short URL Service (TinyURL)</span>
       </div>
     </div>
   </div>
@@ -68,56 +68,56 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/分布式/" rel="category">分布式</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/system-design-tinyurl/" rel="bookmark"><time class="entry-date published" datetime="2025-04-18">2025-04-18</time></a></span>
+                <span class="cat-links"><a href="/categories/distributed-systems/" rel="category">Distributed Systems</a><span class="cat-seperator">, </span><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/system-design-tinyurl/" rel="bookmark"><time class="entry-date published" datetime="2025-04-18">2025-04-18</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">系统设计面试攻略：设计一个短链接服务（TinyURL）</h1>
+                <h1 class="entry-title">System Design Interview Guide: Designing a Short URL Service (TinyURL)</h1>
               </header>
-              <div class="entry-content"><p>设计短链接服务是系统设计面试的经典题。用一个结构化框架来分析。</p>
-<h2>1. 需求澄清</h2>
-<p>不要急着画图，先问清楚：
-- 只做短链接生成和跳转吗？
-- 需要统计点击量吗？
-- 每天生成多少短链接？
-- 短链接多长？
-- 需要自定义短链接吗？</p>
-<h2>2. 粗略估算</h2>
+              <div class="entry-content"><p>Designing a short URL service is a classic system design interview question. Let's analyze it using a structured framework.</p>
+<h2>1. Requirements Clarification</h2>
+<p>Don't rush to draw diagrams — ask questions first:
+- Is it only for short URL generation and redirects?
+- Do we need click tracking?
+- How many short URLs are generated per day?
+- How long should the short URLs be?
+- Do we need custom short URLs?</p>
+<h2>2. Rough Estimation</h2>
 <ul>
-<li>每天 1 亿条新短链接</li>
-<li>读写比：100:1（读远多于写）</li>
-<li>存储 5 年：约 1800 亿条</li>
-<li>短链接长度：7 位字符（62 进制，7 位 = 3.5 万亿种组合）</li>
+<li>100 million new short URLs per day</li>
+<li>Read-to-write ratio: 100:1 (reads far exceed writes)</li>
+<li>5-year storage: approximately 180 billion records</li>
+<li>Short URL length: 7 characters (base-62, 7 characters = 3.5 trillion combinations)</li>
 </ul>
-<h2>3. 短链接生成算法</h2>
+<h2>3. Short URL Generation Algorithms</h2>
 <ul>
-<li><strong>Hash 函数（MD5/SHA256）取前 N 位</strong>：简单但有碰撞风险</li>
-<li><strong>自增 ID + Base62 编码</strong>：无碰撞但依赖计数器</li>
-<li><strong>预生成方案</strong>：提前批量生成短码存入池中</li>
+<li><strong>Hash function (MD5/SHA256) taking the first N bits</strong>: Simple but has collision risk</li>
+<li><strong>Auto-increment ID + Base62 encoding</strong>: No collisions but depends on a counter</li>
+<li><strong>Pre-generation approach</strong>: Batch-generate short codes in advance and store them in a pool</li>
 </ul>
-<p>最常用的是自增 ID 方案。</p>
-<h2>4. 数据模型</h2>
+<p>The most commonly used approach is the auto-increment ID scheme.</p>
+<h2>4. Data Model</h2>
 <ul>
-<li>短链接表：short_code（主键）、original_url、user_id、created_at、expires_at</li>
-<li>访问日志表（可选）：short_code、timestamp、ip、user_agent</li>
+<li>Short URL table: short_code (primary key), original_url, user_id, created_at, expires_at</li>
+<li>Access log table (optional): short_code, timestamp, ip, user_agent</li>
 </ul>
-<h2>5. 架构设计</h2>
-<pre class="codehilite"><code>用户 → CDN → API Gateway → 短链接服务 → 缓存(Redis) → 数据库(MySQL)
+<h2>5. Architecture Design</h2>
+<pre class="codehilite"><code>User → CDN → API Gateway → Short URL Service → Cache (Redis) → Database (MySQL)
                                     ↓
                               302 Redirect
 </code></pre>
 
-<h2>6. 扩展考虑</h2>
+<h2>6. Scaling Considerations</h2>
 <ul>
-<li>缓存：热门短链接缓存在 Redis 里</li>
-<li>分库分表：按 short_code 前缀分片</li>
-<li>限流：防止单用户滥用</li>
+<li>Caching: Hot short URLs are cached in Redis</li>
+<li>Database sharding: Shard by short_code prefix</li>
+<li>Rate limiting: Prevent abuse by individual users</li>
 </ul>
-<p>系统设计面试没有标准答案。你展现的是分析问题的思路，而不是结果。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/分布式/" rel="category">分布式</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
+<p>There is no single correct answer in a system design interview. What you demonstrate is your approach to analyzing the problem, not the final result.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/distributed-systems/" rel="category">Distributed Systems</a><a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/http-https-explained/" rel="prev"><span class="nav-links__label">Previous</span> HTTP 和 HTTPS 面试全攻略：状态码、缓存、TLS 握手</a></div><div class="nav-next"><a href="/posts/leetcode-15-3sum/" rel="next"><span class="nav-links__label">Next</span> LeetCode 15. 三数之和：排序+双指针的经典模板</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/http-https-explained/" rel="prev"><span class="nav-links__label">Previous</span> HTTP and HTTPS Interview Guide: Status Codes, Caching, TLS Handshake</a></div><div class="nav-next"><a href="/posts/leetcode-15-3sum/" rel="next"><span class="nav-links__label">Next</span> LeetCode 15. 3Sum: The Classic Two-Pointer Template</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -135,11 +135,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -181,7 +181,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -190,7 +191,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -230,6 +231,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -237,6 +239,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -244,12 +247,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

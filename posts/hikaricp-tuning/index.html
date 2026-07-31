@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>后端性能优化：数据库连接池调优实战 – Welcome To My Blog</title>
-<meta name="description" content="HikariCP 连接池参数详解与性能测试，从默认配置到生产最优配置的调优过程。">
-<meta property="og:title" content="后端性能优化：数据库连接池调优实战 – Welcome To My Blog">
-<meta property="og:description" content="HikariCP 连接池参数详解与性能测试，从默认配置到生产最优配置的调优过程。">
+<title>Backend Performance Optimization: A Practical Guide to Database Connection Pool Tuning – Welcome To My Blog</title>
+<meta name="description" content="A detailed guide to HikariCP connection pool parameters and performance testing, from default settings to production-optimal configuration.">
+<meta property="og:title" content="Backend Performance Optimization: A Practical Guide to Database Connection Pool Tuning – Welcome To My Blog">
+<meta property="og:description" content="A detailed guide to HikariCP connection pool parameters and performance testing, from default settings to production-optimal configuration.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "后端性能优化：数据库连接池调优实战 – Welcome To My Blog",
-  "description": "HikariCP 连接池参数详解与性能测试，从默认配置到生产最优配置的调优过程。",
+  "headline": "Backend Performance Optimization: A Practical Guide to Database Connection Pool Tuning – Welcome To My Blog",
+  "description": "A detailed guide to HikariCP connection pool parameters and performance testing, from default settings to production-optimal configuration.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">后端性能优化：数据库连接池调优实战</span>
+        <span class="sticky-title">Backend Performance Optimization: A Practical Guide to Database Connection Pool Tuning</span>
       </div>
     </div>
   </div>
@@ -68,33 +68,33 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a><span class="cat-seperator">, </span><a href="/categories/数据库/" rel="category">数据库</a></span><span class="posted-on"><a href="/posts/hikaricp-tuning/" rel="bookmark"><time class="entry-date published" datetime="2026-06-17">2026-06-17</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a><span class="cat-seperator">, </span><a href="/categories/database/" rel="category">Database</a></span><span class="posted-on"><a href="/posts/hikaricp-tuning/" rel="bookmark"><time class="entry-date published" datetime="2026-06-17">2026-06-17</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">后端性能优化：数据库连接池调优实战</h1>
+                <h1 class="entry-title">Backend Performance Optimization: A Practical Guide to Database Connection Pool Tuning</h1>
               </header>
-              <div class="entry-content"><p>连接池是后端系统中最容易被忽视的性能瓶颈之一。很多团队直接用 Spring Boot 默认参数上线，结果在流量高峰期出现连接超时、线程阻塞等问题。</p>
-<p>这篇文章记录我最近一次连接池调优的过程，从发现问题到最终配置，附带实际压测数据。</p>
-<h2>为什么要调连接池</h2>
-<p>Spring Boot 2.x 开始默认使用 HikariCP，它的默认配置在低并发场景下完全够用。但当 QPS 上来后，默认的 <code>maximumPoolSize=10</code> 很快就会成为瓶颈。</p>
-<p>一个典型的症状是：请求量增长后，接口响应时间突然从几十毫秒变成几百毫秒甚至几秒——不是因为 SQL 变慢了，而是线程在等连接。</p>
-<h2>核心参数</h2>
-<p>HikariCP 有几个关键参数需要理解：</p>
-<p><strong>maximumPoolSize</strong> — 连接池最大连接数。默认 10，生产环境建议从 CPU 核数 * 2 + 1 起步，根据实际负载调整。</p>
-<p><strong>minimumIdle</strong> — 连接池最小空闲连接数。默认等于 maximumPoolSize，意味着启动时就创建满连接。如果不需要预热，可以设小一些。</p>
-<p><strong>connectionTimeout</strong> — 等待连接的最大时间（毫秒）。默认 30 秒太长，建议设 3-5 秒，让请求快速失败而不是长时间阻塞。</p>
-<p><strong>idleTimeout</strong> — 空闲连接最大存活时间。默认 10 分钟，建议保持或适当缩短。</p>
-<p><strong>maxLifetime</strong> — 连接最大存活时间。默认 30 分钟，应该比数据库的连接超时时间短一些。</p>
-<p><strong>leakDetectionThreshold</strong> — 连接泄漏检测阈值。开发环境建议设 10 秒，生产环境建议设为 0（关闭），避免额外开销。</p>
-<h2>一个真实案例</h2>
-<p>我们有个服务使用默认配置上线，<code>maximumPoolSize=10</code>。起初每天几十万请求没什么问题。后来业务量增长到近百万 QPS，监控显示：</p>
+              <div class="entry-content"><p>The connection pool is one of the most overlooked performance bottlenecks in backend systems. Many teams go live with Spring Boot's default parameters, only to encounter connection timeouts and thread blocking during traffic spikes.</p>
+<p>This article documents my recent connection pool tuning process, from identifying the problem to the final configuration, complete with actual load test data.</p>
+<h2>Why Tune the Connection Pool</h2>
+<p>Spring Boot 2.x uses HikariCP by default, and its default configuration is perfectly adequate for low-concurrency scenarios. However, as QPS climbs, the default <code>maximumPoolSize=10</code> quickly becomes a bottleneck.</p>
+<p>A typical symptom: after request volume increases, API response times suddenly jump from tens of milliseconds to hundreds of milliseconds or even seconds—not because SQL queries have slowed down, but because threads are waiting for connections.</p>
+<h2>Key Parameters</h2>
+<p>HikariCP has several critical parameters you need to understand:</p>
+<p><strong>maximumPoolSize</strong> — The maximum number of connections in the pool. Default is 10. For production, a good starting point is <code>CPU cores * 2 + 1</code>, adjusted based on actual load.</p>
+<p><strong>minimumIdle</strong> — The minimum number of idle connections maintained in the pool. By default, it equals <code>maximumPoolSize</code>, meaning all connections are created at startup. If you don't need pre-warming, you can set it lower.</p>
+<p><strong>connectionTimeout</strong> — The maximum time (in milliseconds) to wait for a connection. The default of 30 seconds is too long; I recommend 3-5 seconds so requests fail fast instead of blocking indefinitely.</p>
+<p><strong>idleTimeout</strong> — The maximum time an idle connection can remain in the pool. Default is 10 minutes; keeping it or slightly reducing it is recommended.</p>
+<p><strong>maxLifetime</strong> — The maximum lifetime of a connection. Default is 30 minutes, and it should be shorter than the database's connection timeout.</p>
+<p><strong>leakDetectionThreshold</strong> — The threshold for connection leak detection. For development, 10 seconds is recommended; for production, set it to 0 (disabled) to avoid additional overhead.</p>
+<h2>A Real-World Case Study</h2>
+<p>We had a service running with default settings and <code>maximumPoolSize=10</code>. Initially, with a few hundred thousand requests per day, everything was fine. But when business volume grew to nearly one million QPS, monitoring showed:</p>
 <ul>
-<li>数据库连接数恒定在 10 个</li>
-<li>接口 P99 延迟从 50ms 飙升到 2s+</li>
-<li>HikariCP 日志中大量 <code>Connection is not available</code> 告警</li>
+<li>Database connections were consistently capped at 10</li>
+<li>API P99 latency skyrocketed from 50ms to over 2 seconds</li>
+<li>HikariCP logs were flooded with <code>Connection is not available</code> warnings</li>
 </ul>
-<p>分析后发现，每个请求平均需要 15ms 的数据库操作时间。10 个连接理论上每秒能处理 <code>1000ms / 15ms * 10 ≈ 666</code> 个请求。但实际中还有网络延迟、事务等待等因素。</p>
-<p>调整后的配置：</p>
+<p>Analysis revealed that each request required an average of 15ms of database operation time. With 10 connections, the theoretical throughput was <code>1000ms / 15ms * 10 ≈ 666</code> requests per second. But in practice, network latency and transaction waits added to the overhead.</p>
+<p>The adjusted configuration:</p>
 <pre class="codehilite"><code class="language-yaml">spring:
   datasource:
     hikari:
@@ -106,45 +106,45 @@
       leak-detection-threshold: 0
 </code></pre>
 
-<p>调整后 P99 延迟降到 200ms 以内，接口成功率恢复到 99.99%。</p>
-<h2>如何确定合适的连接数</h2>
-<p>一个简单的公式：</p>
-<pre class="codehilite"><code>连接数 ≈ (QPS × 平均查询时间) + 缓冲
+<p>After the adjustment, P99 latency dropped to under 200ms, and API success rates recovered to 99.99%.</p>
+<h2>How to Determine the Right Connection Count</h2>
+<p>A simple formula:</p>
+<pre class="codehilite"><code>Connections ≈ (QPS × Average Query Time) + Buffer
 </code></pre>
 
-<p>比如 QPS 1000，平均查询 20ms：</p>
-<pre class="codehilite"><code>连接数 = (1000 × 0.02) + 缓冲 = 20 + 5~10 = 25~30
+<p>For example, with QPS of 1000 and an average query time of 20ms:</p>
+<pre class="codehilite"><code>Connections = (1000 × 0.02) + Buffer = 20 + 5~10 = 25~30
 </code></pre>
 
-<p>但这只是理论值。实际中还要考虑：</p>
+<p>But this is just a theoretical value. In practice, you also need to consider:</p>
 <ul>
-<li>数据库服务器的 <code>max_connections</code> 限制</li>
-<li>如果有多个服务实例共享同一个数据库，需要分摊连接数</li>
-<li>事务中持有连接的时间</li>
+<li>The database server's <code>max_connections</code> limit</li>
+<li>If multiple service instances share the same database, the connection count needs to be divided among them</li>
+<li>How long connections are held during transactions</li>
 </ul>
-<h2>不要过度调大</h2>
-<p>连接数不是越大越好。每个连接都占用数据库内存和 CPU 资源。MySQL 默认 <code>max_connections=151</code>，如果 5 个实例各开 50 个连接，已经超出限制。</p>
-<p>一般来说：</p>
+<h2>Don't Over-Tune</h2>
+<p>More connections isn't always better. Each connection consumes database memory and CPU resources. MySQL's default <code>max_connections=151</code> means that if 5 instances each open 50 connections, you've already exceeded the limit.</p>
+<p>Generally speaking:</p>
 <ul>
-<li>连接数 &lt; 50 适合大多数场景</li>
-<li>50~100 需要确认数据库能承受</li>
-<li>100+ 通常说明架构有问题，考虑引入缓存或读写分离</li>
+<li>Fewer than 50 connections suits most scenarios</li>
+<li>50–100 requires confirming the database can handle it</li>
+<li>100+ usually indicates an architectural issue—consider introducing caching or read-write splitting</li>
 </ul>
-<h2>总结</h2>
-<p>连接池调优的要点：</p>
+<h2>Summary</h2>
+<p>Key takeaways for connection pool tuning:</p>
 <ol>
-<li>先理解默认参数的含义再动手</li>
-<li>要有监控数据做依据，别凭感觉调</li>
-<li><code>connectionTimeout</code> 设短一点，让系统快速失败</li>
-<li>连接数和数据库容量匹配</li>
-<li>调完后一定要压测验证</li>
+<li>Understand what the default parameters mean before making changes</li>
+<li>Base decisions on monitoring data, not intuition</li>
+<li>Set <code>connectionTimeout</code> shorter to allow the system to fail fast</li>
+<li>Match connection count with database capacity</li>
+<li>Always validate with load testing after tuning</li>
 </ol>
-<p>调连接池是最简单、回报最高的性能优化之一。花半小时调参，可能省下几天排查问题的功夫。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a><a href="/categories/数据库/" rel="category">数据库</a></span></footer>
+<p>Connection pool tuning is one of the simplest and highest-ROI performance optimizations. Spending half an hour adjusting parameters can save days of troubleshooting later.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a><a href="/categories/database/" rel="category">Database</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/rust-ownership/" rel="prev"><span class="nav-links__label">Previous</span> Rust 写给 Java 程序员：所有权机制深度解析</a></div><div class="nav-next"><a href="/posts/fable5-export-control/" rel="next"><span class="nav-links__label">Next</span> 当美国政府叫停 Fable 5：AI 出口管制的第一枪</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/rust-ownership/" rel="prev"><span class="nav-links__label">Previous</span> Rust for Java Programmers: A Deep Dive into Ownership</a></div><div class="nav-next"><a href="/posts/fable5-export-control/" rel="next"><span class="nav-links__label">Next</span> When the US Government Halts Fable 5: The First Shot in AI Export Controls</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -162,11 +162,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -208,7 +208,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -217,7 +218,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -257,6 +258,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -264,6 +266,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -271,12 +274,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

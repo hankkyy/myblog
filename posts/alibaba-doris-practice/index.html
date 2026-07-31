@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>阿里基于 Doris 的实时数仓实践：每天 500 亿条数据 – Welcome To My Blog</title>
-<meta name="description" content="阿里云分享基于 Apache Doris 构建实时数仓的经验，日增 500 亿条数据，查询延迟 P99 < 1s。">
-<meta property="og:title" content="阿里基于 Doris 的实时数仓实践：每天 500 亿条数据 – Welcome To My Blog">
-<meta property="og:description" content="阿里云分享基于 Apache Doris 构建实时数仓的经验，日增 500 亿条数据，查询延迟 P99 < 1s。">
+<title>Alibaba's Real-Time Data Warehouse Practice with Doris: 50 Billion Records Daily – Welcome To My Blog</title>
+<meta name="description" content="Alibaba Cloud shares its experience building a real-time data warehouse with Apache Doris, processing 50 billion records daily with P99 query latency under 1 second.">
+<meta property="og:title" content="Alibaba's Real-Time Data Warehouse Practice with Doris: 50 Billion Records Daily – Welcome To My Blog">
+<meta property="og:description" content="Alibaba Cloud shares its experience building a real-time data warehouse with Apache Doris, processing 50 billion records daily with P99 query latency under 1 second.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "阿里基于 Doris 的实时数仓实践：每天 500 亿条数据 – Welcome To My Blog",
-  "description": "阿里云分享基于 Apache Doris 构建实时数仓的经验，日增 500 亿条数据，查询延迟 P99 < 1s。",
+  "headline": "Alibaba's Real-Time Data Warehouse Practice with Doris: 50 Billion Records Daily – Welcome To My Blog",
+  "description": "Alibaba Cloud shares its experience building a real-time data warehouse with Apache Doris, processing 50 billion records daily with P99 query latency under 1 second.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">阿里基于 Doris 的实时数仓实践：每天 500 亿条数据</span>
+        <span class="sticky-title">Alibaba's Real-Time Data Warehouse Practice with Doris: 50 Billion Records Daily</span>
       </div>
     </div>
   </div>
@@ -68,45 +68,45 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/数据库/" rel="category">数据库</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/alibaba-doris-practice/" rel="bookmark"><time class="entry-date published" datetime="2026-03-28">2026-03-28</time></a></span>
+                <span class="cat-links"><a href="/categories/database/" rel="category">Database</a><span class="cat-seperator">, </span><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/alibaba-doris-practice/" rel="bookmark"><time class="entry-date published" datetime="2026-03-28">2026-03-28</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">阿里基于 Doris 的实时数仓实践：每天 500 亿条数据</h1>
+                <h1 class="entry-title">Alibaba's Real-Time Data Warehouse Practice with Doris: 50 Billion Records Daily</h1>
               </header>
-              <div class="entry-content"><p>最近看了阿里云数据库团队分享的基于 Doris 的实时数仓实践，干货很多。</p>
-<h2>业务场景</h2>
+              <div class="entry-content"><p>I recently came across the real-time data warehouse practice based on Doris shared by Alibaba Cloud's database team, and it's packed with valuable insights.</p>
+<h2>Business Scenarios</h2>
 <ul>
-<li>淘宝/天猫的实时大屏</li>
-<li>广告投放的实时 ROI 分析</li>
-<li>物流路径的实时优化</li>
+<li>Real-time dashboards for Taobao/Tmall</li>
+<li>Real-time ROI analysis for ad campaigns</li>
+<li>Real-time optimization of logistics routes</li>
 </ul>
-<p>日增数据量：500 亿条。单个表的存储量：PB 级别。</p>
-<h2>关键技术点</h2>
-<h3>1. 数据分层</h3>
-<pre class="codehilite"><code>ODS（原始数据）→ DWD（明细数据）→ DWS（汇总数据）→ ADS（应用数据）
+<p>Daily data volume: 50 billion records. Storage per single table: PB-level.</p>
+<h2>Key Technical Points</h2>
+<h3>1. Data Layering</h3>
+<pre class="codehilite"><code>ODS (Raw Data) → DWD (Detail Data) → DWS (Summary Data) → ADS (Application Data)
 </code></pre>
 
-<p>Doris 主要承担 DWS 和 ADS 层的查询，ODS/DWD 层使用 Flink 做实时 ETL。</p>
-<h3>2. 分区和分桶策略</h3>
+<p>Doris primarily handles query workloads at the DWS and ADS layers, while the ODS/DWD layers use Flink for real-time ETL.</p>
+<h3>2. Partitioning and Bucketing Strategy</h3>
 <ul>
-<li>按天分区，保留 30 天热数据</li>
-<li>分桶键选择高基数字段（比如 user_id）</li>
-<li>每个分桶 1-3GB，保证查询并行度</li>
+<li>Partition by day, retaining 30 days of hot data</li>
+<li>Choose high-cardinality fields (e.g., user_id) as the bucketing key</li>
+<li>Keep each bucket at 1-3GB to ensure query parallelism</li>
 </ul>
-<h3>3. 物化视图加速</h3>
-<p>对高频聚合查询（比如"过去 1 小时 GMV"）创建物化视图，查询延迟从 3s 降到 50ms。</p>
-<h2>对学习者的启示</h2>
-<p>Doris 现在在国内越来越火。相比 ClickHouse，Doris 在标准 SQL 兼容性和运维友好度上更好。如果想进入数据基础设施方向，Doris 值得学习。</p>
+<h3>3. Materialized Views for Acceleration</h3>
+<p>Create materialized views for high-frequency aggregation queries (e.g., "GMV in the past hour"), reducing query latency from 3s to 50ms.</p>
+<h2>Takeaways for Learners</h2>
+<p>Doris is gaining significant traction in China. Compared to ClickHouse, Doris offers better standard SQL compatibility and operational friendliness. If you're looking to pursue a career in data infrastructure, Doris is definitely worth learning.</p>
 <hr />
-<p><strong>参考来源：</strong></p>
+<p><strong>References:</strong></p>
 <ul>
-<li><a href="https://doris.apache.org/">Apache Doris 官方文档</a></li>
+<li><a href="https://doris.apache.org/">Apache Doris Official Documentation</a></li>
 </ul></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/数据库/" rel="category">数据库</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/database/" rel="category">Database</a><a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/arm-ipo-2026/" rel="prev"><span class="nav-links__label">Previous</span> ARM 股价翻倍：从 2023 年 IPO 到现在发生了什么？</a></div><div class="nav-next"><a href="/posts/apple-vision-pro-2/" rel="next"><span class="nav-links__label">Next</span> Vision Pro 2 发布：更轻更便宜，但依然卖不动？</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/arm-ipo-2026/" rel="prev"><span class="nav-links__label">Previous</span> ARM's Stock Doubled: What Happened Since the 2023 IPO?</a></div><div class="nav-next"><a href="/posts/apple-vision-pro-2/" rel="next"><span class="nav-links__label">Next</span> Vision Pro 2 Launches: Lighter and Cheaper, But Still Not Selling Well?</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -124,11 +124,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -170,7 +170,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -179,7 +180,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -219,6 +220,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -226,6 +228,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -233,12 +236,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

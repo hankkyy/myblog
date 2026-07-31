@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ConcurrentHashMap 为什么比 Hashtable 快？锁分段到 CAS 的优化之路 – Welcome To My Blog</title>
-<meta name="description" content="从 JDK 7 的 Segment 锁到 JDK 8 的 CAS + synchronized，理解并发容器的演进。">
-<meta property="og:title" content="ConcurrentHashMap 为什么比 Hashtable 快？锁分段到 CAS 的优化之路 – Welcome To My Blog">
-<meta property="og:description" content="从 JDK 7 的 Segment 锁到 JDK 8 的 CAS + synchronized，理解并发容器的演进。">
+<title>Why Is ConcurrentHashMap Faster Than Hashtable? The Optimization Path from Lock Striping to CAS – Welcome To My Blog</title>
+<meta name="description" content="From JDK 7's Segment locks to JDK 8's CAS + synchronized, understand the evolution of concurrent containers.">
+<meta property="og:title" content="Why Is ConcurrentHashMap Faster Than Hashtable? The Optimization Path from Lock Striping to CAS – Welcome To My Blog">
+<meta property="og:description" content="From JDK 7's Segment locks to JDK 8's CAS + synchronized, understand the evolution of concurrent containers.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "ConcurrentHashMap 为什么比 Hashtable 快？锁分段到 CAS 的优化之路 – Welcome To My Blog",
-  "description": "从 JDK 7 的 Segment 锁到 JDK 8 的 CAS + synchronized，理解并发容器的演进。",
+  "headline": "Why Is ConcurrentHashMap Faster Than Hashtable? The Optimization Path from Lock Striping to CAS – Welcome To My Blog",
+  "description": "From JDK 7's Segment locks to JDK 8's CAS + synchronized, understand the evolution of concurrent containers.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">ConcurrentHashMap 为什么比 Hashtable 快？锁分段到 CAS 的优化之路</span>
+        <span class="sticky-title">Why Is ConcurrentHashMap Faster Than Hashtable? The Optimization Path from Lock Striping to CAS</span>
       </div>
     </div>
   </div>
@@ -68,49 +68,49 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/concurrenthashmap-vs-hashtable/" rel="bookmark"><time class="entry-date published" datetime="2025-11-05">2025-11-05</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/concurrenthashmap-vs-hashtable/" rel="bookmark"><time class="entry-date published" datetime="2025-11-05">2025-11-05</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">ConcurrentHashMap 为什么比 Hashtable 快？锁分段到 CAS 的优化之路</h1>
+                <h1 class="entry-title">Why Is ConcurrentHashMap Faster Than Hashtable? The Optimization Path from Lock Striping to CAS</h1>
               </header>
-              <div class="entry-content"><p>Hashtable 和 ConcurrentHashMap 都是线程安全的 Map，但性能天差地别。</p>
-<h2>Hashtable 的问题</h2>
-<p>Hashtable 用 <code>synchronized</code> 修饰所有方法。这意味着任何时候只有一个线程能操作整个 Map——读也锁，写也锁。并发度 = 1。</p>
-<h2>JDK 7：分段锁（Segment）</h2>
-<p>JDK 7 的 ConcurrentHashMap 把整个 Map 分成 16 个 Segment（默认），每个 Segment 自带一把锁。</p>
+              <div class="entry-content"><p>Hashtable and ConcurrentHashMap are both thread-safe Maps, but their performance differs vastly.</p>
+<h2>The Problem with Hashtable</h2>
+<p>Hashtable uses <code>synchronized</code> to guard all its methods. This means only one thread can operate on the entire Map at any given time—reads are locked, and writes are locked. Concurrency level = 1.</p>
+<h2>JDK 7: Segment Locks</h2>
+<p>JDK 7's ConcurrentHashMap divides the entire Map into 16 Segments (by default), each with its own lock.</p>
 <ul>
-<li>写操作：只锁对应的 Segment，其他 Segment 不受影响</li>
-<li>读操作：不加锁（volatile 保证可见性）</li>
-<li>并发度 = 16</li>
+<li>Write operations: only lock the corresponding Segment; other Segments remain unaffected</li>
+<li>Read operations: no locking (volatile ensures visibility)</li>
+<li>Concurrency level = 16</li>
 </ul>
-<p>分段锁的思想：不要把一整条路封了，只封正在施工的那一段。</p>
-<h2>JDK 8：CAS + synchronized</h2>
-<p>JDK 8 放弃了 Segment 设计，改为更细粒度的锁：</p>
+<p>The idea behind lock striping: don't block the entire road—only seal off the section under construction.</p>
+<h2>JDK 8: CAS + synchronized</h2>
+<p>JDK 8 abandoned the Segment design in favor of finer-grained locking:</p>
 <ul>
-<li>桶为空 → CAS 操作直接插入（无锁）</li>
-<li>桶不为空 → synchronized 锁住桶的头节点</li>
-<li>链表转红黑树 → 提升查找效率</li>
+<li>Bucket is empty → CAS operation for direct insertion (lock-free)</li>
+<li>Bucket is not empty → synchronized locks the head node of the bucket</li>
+<li>Linked list converts to red-black tree → improves lookup efficiency</li>
 </ul>
-<p>读操作依然不需要锁。</p>
-<h2>为什么放弃分段锁</h2>
+<p>Read operations still require no locks.</p>
+<h2>Why Lock Striping Was Abandoned</h2>
 <ol>
-<li>Segment 的数量一开始就固定了（16），无法动态调整</li>
-<li>粒度还是不够细——一个 Segment 里有多个桶</li>
-<li>JDK 8 的 synchronized 优化后性能不输 ReentrantLock</li>
+<li>The number of Segments was fixed at initialization (16) and could not be adjusted dynamically</li>
+<li>The granularity was still not fine enough—a Segment contained multiple buckets</li>
+<li>After JDK 8's synchronized optimizations, its performance is on par with ReentrantLock</li>
 </ol>
-<h2>面试怎么答</h2>
+<h2>How to Answer in an Interview</h2>
 <ol>
-<li>Hashtable 全表锁，性能差</li>
-<li>JDK 7 ConcurrentHashMap 用分段锁，并发度 16</li>
-<li>JDK 8 用 CAS + synchronized 锁桶头节点，粒度更细</li>
-<li>结合红黑树的查找优化</li>
+<li>Hashtable uses a table-wide lock, resulting in poor performance</li>
+<li>JDK 7's ConcurrentHashMap uses Segment locks, providing a concurrency level of 16</li>
+<li>JDK 8 uses CAS + synchronized to lock the bucket head node, achieving finer granularity</li>
+<li>Combined with red-black tree lookup optimizations</li>
 </ol>
-<p>能讲清楚 JDK 7 到 JDK 8 的演进，面试官会对你印象深刻。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+<p>If you can clearly explain the evolution from JDK 7 to JDK 8, the interviewer will be impressed.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/design-patterns-singleton-factory/" rel="prev"><span class="nav-links__label">Previous</span> 设计模式面试：单例的 5 种写法和工厂模式在 Spring 中的应用</a></div><div class="nav-next"><a href="/posts/leetcode-3-longest-substring/" rel="next"><span class="nav-links__label">Next</span> LeetCode 3. 无重复字符的最长子串：滑动窗口模板速通</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/design-patterns-singleton-factory/" rel="prev"><span class="nav-links__label">Previous</span> Design Patterns Interview: 5 Ways to Write Singleton and Factory Pattern in Spring</a></div><div class="nav-next"><a href="/posts/leetcode-3-longest-substring/" rel="next"><span class="nav-links__label">Next</span> LeetCode 3. Longest Substring Without Repeating Characters: Sliding Window Template</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -128,11 +128,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -174,7 +174,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -183,7 +184,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -223,6 +224,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -230,6 +232,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -237,12 +240,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

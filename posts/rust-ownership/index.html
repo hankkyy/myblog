@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rust 写给 Java 程序员：所有权机制深度解析 – Welcome To My Blog</title>
-<meta name="description" content="从 Java GC 视角理解 Rust 的所有权、借用和生命周期">
-<meta property="og:title" content="Rust 写给 Java 程序员：所有权机制深度解析 – Welcome To My Blog">
-<meta property="og:description" content="从 Java GC 视角理解 Rust 的所有权、借用和生命周期">
+<title>Rust for Java Programmers: A Deep Dive into Ownership – Welcome To My Blog</title>
+<meta name="description" content="Understanding Rust's ownership, borrowing, and lifetimes from a Java GC perspective">
+<meta property="og:title" content="Rust for Java Programmers: A Deep Dive into Ownership – Welcome To My Blog">
+<meta property="og:description" content="Understanding Rust's ownership, borrowing, and lifetimes from a Java GC perspective">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Rust 写给 Java 程序员：所有权机制深度解析 – Welcome To My Blog",
-  "description": "从 Java GC 视角理解 Rust 的所有权、借用和生命周期",
+  "headline": "Rust for Java Programmers: A Deep Dive into Ownership – Welcome To My Blog",
+  "description": "Understanding Rust's ownership, borrowing, and lifetimes from a Java GC perspective",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">Rust 写给 Java 程序员：所有权机制深度解析</span>
+        <span class="sticky-title">Rust for Java Programmers: A Deep Dive into Ownership</span>
       </div>
     </div>
   </div>
@@ -68,64 +68,64 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/rust-ownership/" rel="bookmark"><time class="entry-date published" datetime="2026-06-16">2026-06-16</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/rust-ownership/" rel="bookmark"><time class="entry-date published" datetime="2026-06-16">2026-06-16</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">Rust 写给 Java 程序员：所有权机制深度解析</h1>
+                <h1 class="entry-title">Rust for Java Programmers: A Deep Dive into Ownership</h1>
               </header>
-              <div class="entry-content"><p>Rust 的所有权（Ownership）是让 Java 程序员最头疼的概念。Java 里我们只管 <code>new</code>，GC 会处理一切。Rust 完全不同——<strong>没有 GC，编译器在编译时就知道每块内存何时释放</strong>。</p>
-<h2>Java 的视角</h2>
+              <div class="entry-content"><p>Rust's ownership is the concept that gives Java programmers the most headaches. In Java, we just <code>new</code> things up, and the GC handles everything. Rust is completely different—<strong>there's no GC; the compiler knows exactly when each piece of memory is freed at compile time</strong>.</p>
+<h2>The Java Perspective</h2>
 <pre class="codehilite"><code class="language-java">String s1 = new String(&quot;hello&quot;);
-String s2 = s1;  // s1 和 s2 指向同一个对象
-// GC 会在没有任何引用时回收内存
+String s2 = s1;  // s1 and s2 point to the same object
+// The GC reclaims memory when there are no more references
 </code></pre>
 
-<p>Java 的做法：<strong>引用计数 + GC 追踪</strong>。程序员不用想内存，运行时帮你管。</p>
-<h2>Rust 的做法</h2>
+<p>Java's approach: <strong>reference counting + GC tracing</strong>. Programmers don't think about memory; the runtime manages it for you.</p>
+<h2>Rust's Approach</h2>
 <pre class="codehilite"><code class="language-rust">let s1 = String::from(&quot;hello&quot;);
-let s2 = s1;       // s1 所有权转移给 s2
-// println!(&quot;{}&quot;, s1);  // 编译错误！s1 已失效
+let s2 = s1;       // Ownership of s1 moves to s2
+// println!(&quot;{}&quot;, s1);  // Compile error! s1 is no longer valid
 </code></pre>
 
-<p>Rust 的核心规则：</p>
+<p>Rust's core rules:</p>
 <ol>
-<li><strong>每个值有且只有一个所有者</strong></li>
-<li><strong>所有者离开作用域，值被 drop</strong></li>
-<li><strong>赋值/传参会转移所有权（move）</strong></li>
+<li><strong>Every value has exactly one owner</strong></li>
+<li><strong>When the owner goes out of scope, the value is dropped</strong></li>
+<li><strong>Assignment/passing transfers ownership (move)</strong></li>
 </ol>
-<h2>为什么 Rust 要这样设计？</h2>
-<p>三个字：<strong>零成本抽象</strong>。</p>
-<p>Java GC 的问题：
-- Stop-the-world 停顿
-- 内存占用比实际需要多 30-50%
-- 不可预测的性能抖动</p>
-<p>Rust 的答案：<strong>编译期确定内存生命周期，运行时零开销</strong>。</p>
-<h2>借用（Borrowing）：不转移所有权的访问</h2>
-<pre class="codehilite"><code class="language-rust">fn print_len(s: &amp;String) {  // 不可变借用
+<h2>Why Did Rust Design It This Way?</h2>
+<p>Three words: <strong>zero-cost abstraction</strong>.</p>
+<p>Java GC problems:
+- Stop-the-world pauses
+- Memory usage 30-50% higher than actually needed
+- Unpredictable performance jitter</p>
+<p>Rust's answer: <strong>determine memory lifetimes at compile time, zero runtime overhead</strong>.</p>
+<h2>Borrowing: Access Without Transferring Ownership</h2>
+<pre class="codehilite"><code class="language-rust">fn print_len(s: &amp;String) {  // Immutable borrow
     println!(&quot;len: {}&quot;, s.len());
 }
 
 let s = String::from(&quot;hello&quot;);
-print_len(&amp;s);    // 借出，不转移所有权
-println!(&quot;{}&quot;, s); // s 仍然可用
+print_len(&amp;s);    // Borrow, don't transfer ownership
+println!(&quot;{}&quot;, s); // s is still usable
 </code></pre>
 
-<h2>对 Java 程序员的建议</h2>
-<p>如果你从 Java 转 Rust，按这个顺序学：</p>
+<h2>Advice for Java Programmers</h2>
+<p>If you're coming from Java to Rust, learn in this order:</p>
 <ol>
-<li>先忘掉继承，拥抱组合 + trait</li>
-<li>接受「编译器是你朋友」——每次编译错误都在教你内存安全</li>
-<li><code>clone()</code> 是你的逃生舱——先让代码跑起来，再优化</li>
-<li>理解 <code>String</code> vs <code>&amp;str</code>、<code>Vec</code> vs <code>&amp;[T]</code> 的区别</li>
+<li>Forget inheritance first; embrace composition + traits</li>
+<li>Accept that "the compiler is your friend"—every compile error is teaching you memory safety</li>
+<li><code>clone()</code> is your escape hatch—get the code running first, then optimize</li>
+<li>Understand the difference between <code>String</code> vs <code>&amp;str</code>, <code>Vec</code> vs <code>&amp;[T]</code></li>
 </ol>
 <blockquote>
-<p>Rust 的学习曲线陡峭，但翻过去之后，你会开始质疑 Java 的每一行代码为什么慢。</p>
+<p>Rust's learning curve is steep, but once you get over it, you'll start questioning why every line of Java code is slow.</p>
 </blockquote></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/doris-3-features/" rel="prev"><span class="nav-links__label">Previous</span> 2026 年 Apache Doris 3.0 新特性全解析</a></div><div class="nav-next"><a href="/posts/hikaricp-tuning/" rel="next"><span class="nav-links__label">Next</span> 后端性能优化：数据库连接池调优实战</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/doris-3-features/" rel="prev"><span class="nav-links__label">Previous</span> Complete Analysis of New Features in Apache Doris 3.0 (2026)</a></div><div class="nav-next"><a href="/posts/hikaricp-tuning/" rel="next"><span class="nav-links__label">Next</span> Backend Performance Optimization: A Practical Guide to Database Connection Pool Tuning</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -143,11 +143,11 @@ println!(&quot;{}&quot;, s); // s 仍然可用
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -189,7 +189,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -198,7 +199,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -238,6 +239,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -245,6 +247,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -252,12 +255,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

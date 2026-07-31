@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LeetCode 146. LRU Cache：面试官最爱的设计题，手写双向链表+哈希表 – Welcome To My Blog</title>
-<meta name="description" content="用 Java 实现 O(1) 的 LRU 缓存，面试中这道题几乎必考，理解双向链表的精妙之处。">
-<meta property="og:title" content="LeetCode 146. LRU Cache：面试官最爱的设计题，手写双向链表+哈希表 – Welcome To My Blog">
-<meta property="og:description" content="用 Java 实现 O(1) 的 LRU 缓存，面试中这道题几乎必考，理解双向链表的精妙之处。">
+<title>LeetCode 146. LRU Cache: The Interviewer's Favorite Design Problem — Hand-Writing a Doubly Linked List + Hash Map – Welcome To My Blog</title>
+<meta name="description" content="Implement an O(1) LRU cache in Java. This problem is almost a guaranteed interview question — understand the elegance of the doubly linked list.">
+<meta property="og:title" content="LeetCode 146. LRU Cache: The Interviewer's Favorite Design Problem — Hand-Writing a Doubly Linked List + Hash Map – Welcome To My Blog">
+<meta property="og:description" content="Implement an O(1) LRU cache in Java. This problem is almost a guaranteed interview question — understand the elegance of the doubly linked list.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "LeetCode 146. LRU Cache：面试官最爱的设计题，手写双向链表+哈希表 – Welcome To My Blog",
-  "description": "用 Java 实现 O(1) 的 LRU 缓存，面试中这道题几乎必考，理解双向链表的精妙之处。",
+  "headline": "LeetCode 146. LRU Cache: The Interviewer's Favorite Design Problem — Hand-Writing a Doubly Linked List + Hash Map – Welcome To My Blog",
+  "description": "Implement an O(1) LRU cache in Java. This problem is almost a guaranteed interview question — understand the elegance of the doubly linked list.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">LeetCode 146. LRU Cache：面试官最爱的设计题，手写双向链表+哈希表</span>
+        <span class="sticky-title">LeetCode 146. LRU Cache: The Interviewer's Favorite Design Problem — Hand-Writing a Doubly Linked List + Hash Map</span>
       </div>
     </div>
   </div>
@@ -71,18 +71,18 @@
                 <span class="cat-links"><a href="/categories/leetcode/" rel="category">LeetCode</a></span><span class="posted-on"><a href="/posts/leetcode-146-lru-cache/" rel="bookmark"><time class="entry-date published" datetime="2025-03-30">2025-03-30</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">LeetCode 146. LRU Cache：面试官最爱的设计题，手写双向链表+哈希表</h1>
+                <h1 class="entry-title">LeetCode 146. LRU Cache: The Interviewer's Favorite Design Problem — Hand-Writing a Doubly Linked List + Hash Map</h1>
               </header>
-              <div class="entry-content"><p>LRU Cache 是面试频率最高的设计题之一。要求 get 和 put 都是 O(1)。</p>
-<h2>思路</h2>
-<p>核心是双向链表 + 哈希表：</p>
+              <div class="entry-content"><p>The LRU Cache is one of the most frequently asked design problems in interviews. It requires both <code>get</code> and <code>put</code> to run in O(1) time.</p>
+<h2>Approach</h2>
+<p>The core is a doubly linked list + hash map:</p>
 <ul>
-<li>哈希表：key → Node，O(1) 查找</li>
-<li>双向链表：维护访问顺序，最近使用的在头部，最久未使用的在尾部</li>
+<li>Hash map: key → Node, for O(1) lookup</li>
+<li>Doubly linked list: maintains access order — most recently used at the head, least recently used at the tail</li>
 </ul>
-<h2>为什么不用 LinkedHashMap？</h2>
-<p>Java 自带的 LinkedHashMap 可以直接实现 LRU（设置 accessOrder=true），但面试官通常要求手写。理解底层实现比调 API 更重要。</p>
-<h2>代码实现</h2>
+<h2>Why Not Use LinkedHashMap?</h2>
+<p>Java's built-in <code>LinkedHashMap</code> can directly implement LRU (by setting <code>accessOrder=true</code>), but interviewers usually expect you to write it by hand. Understanding the underlying implementation matters more than just calling an API.</p>
+<h2>Code Implementation</h2>
 <pre class="codehilite"><code class="language-java">class LRUCache {
     class Node {
         int key, value;
@@ -136,20 +136,20 @@
 }
 </code></pre>
 
-<h2>关键点</h2>
+<h2>Key Points</h2>
 <ul>
-<li>用虚拟头尾节点（dummy head/tail）避免空指针判断</li>
-<li>remove 和 addToHead 是两个核心操作，其他方法基于它们</li>
-<li>get 时要把访问的节点移到头部</li>
-<li>put 时如果 key 已存在要先删除旧的</li>
+<li>Use dummy head/tail nodes to avoid null pointer checks</li>
+<li><code>remove</code> and <code>addToHead</code> are the two core operations; all other methods build on them</li>
+<li>On <code>get</code>, move the accessed node to the head</li>
+<li>On <code>put</code>, if the key already exists, delete the old node first</li>
 </ul>
-<h2>扩展</h2>
-<p>面试官可能会问：如果不用双向链表，还能怎么实现？答：可以用 Java 的 LinkedHashMap（一句话搞定），但手写更体现功底。</p></div>
+<h2>Follow-Up</h2>
+<p>Interviewers might ask: if you couldn't use a doubly linked list, how else could you implement it? Answer: you could use Java's <code>LinkedHashMap</code> (one-liner), but writing it by hand demonstrates deeper understanding.</p></div>
               <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/leetcode/" rel="category">LeetCode</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/mysql-transaction-isolation/" rel="prev"><span class="nav-links__label">Previous</span> MySQL 事务隔离级别面试精讲：脏读、幻读、不可重复读到底怎么区分？</a></div><div class="nav-next"><a href="/posts/terminal-tools-i-use/" rel="next"><span class="nav-links__label">Next</span> 我的终端工具链：2025 年开发效率套件分享</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/mysql-transaction-isolation/" rel="prev"><span class="nav-links__label">Previous</span> MySQL Transaction Isolation Levels Explained for Interviews: How to Distinguish Dirty Reads, Phantom Reads, and Non-Repeatable Reads?</a></div><div class="nav-next"><a href="/posts/terminal-tools-i-use/" rel="next"><span class="nav-links__label">Next</span> My Terminal Toolchain: 2025 Development Efficiency Suite</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -167,11 +167,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -213,7 +213,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -222,7 +223,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -262,6 +263,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -269,6 +271,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -276,12 +279,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

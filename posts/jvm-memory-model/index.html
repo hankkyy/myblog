@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JVM 内存模型面试精讲：堆、栈、方法区和元空间 – Welcome To My Blog</title>
-<meta name="description" content="把 JVM 运行时数据区分成几个部分，用实际代码举例每个区域存什么。">
-<meta property="og:title" content="JVM 内存模型面试精讲：堆、栈、方法区和元空间 – Welcome To My Blog">
-<meta property="og:description" content="把 JVM 运行时数据区分成几个部分，用实际代码举例每个区域存什么。">
+<title>JVM Memory Model Interview Guide: Heap, Stack, Method Area, and Metaspace – Welcome To My Blog</title>
+<meta name="description" content="Break down the JVM runtime data area into several parts, using actual code examples to illustrate what each region stores.">
+<meta property="og:title" content="JVM Memory Model Interview Guide: Heap, Stack, Method Area, and Metaspace – Welcome To My Blog">
+<meta property="og:description" content="Break down the JVM runtime data area into several parts, using actual code examples to illustrate what each region stores.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "JVM 内存模型面试精讲：堆、栈、方法区和元空间 – Welcome To My Blog",
-  "description": "把 JVM 运行时数据区分成几个部分，用实际代码举例每个区域存什么。",
+  "headline": "JVM Memory Model Interview Guide: Heap, Stack, Method Area, and Metaspace – Welcome To My Blog",
+  "description": "Break down the JVM runtime data area into several parts, using actual code examples to illustrate what each region stores.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">JVM 内存模型面试精讲：堆、栈、方法区和元空间</span>
+        <span class="sticky-title">JVM Memory Model Interview Guide: Heap, Stack, Method Area, and Metaspace</span>
       </div>
     </div>
   </div>
@@ -68,54 +68,55 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/jvm-memory-model/" rel="bookmark"><time class="entry-date published" datetime="2025-02-20">2025-02-20</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/jvm-memory-model/" rel="bookmark"><time class="entry-date published" datetime="2025-02-20">2025-02-20</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">JVM 内存模型面试精讲：堆、栈、方法区和元空间</h1>
+                <h1 class="entry-title">JVM Memory Model Interview Guide: Heap, Stack, Method Area, and Metaspace</h1>
               </header>
-              <div class="entry-content"><p>JVM 内存模型是理解 Java 程序运行的基础。</p>
-<h2>JVM 运行时数据区</h2>
+              <div class="entry-content"><p>The JVM memory model is the foundation for understanding how Java programs run.</p>
+<h2>JVM Runtime Data Areas</h2>
 <pre class="codehilite"><code>┌─────────────────────────────┐
-│         方法区/元空间         │  ← 类信息、常量、静态变量
+│     Method Area/Metaspace    │  ← Class info, constants, static variables
 ├─────────────────────────────┤
-│            堆               │  ← 对象实例、数组
+│            Heap              │  ← Object instances, arrays
 ├──────────┬──────────────────┤
-│  虚拟机栈  │   本地方法栈     │  ← 方法调用、局部变量
+│  VM Stack │  Native Method   │  ← Method calls, local variables
+│           │      Stack       │
 ├──────────┴──────────────────┤
-│         程序计数器           │  ← 当前线程执行位置
+│        Program Counter       │  ← Current thread execution position
 └─────────────────────────────┘
 </code></pre>
 
-<h2>堆（Heap）</h2>
+<h2>Heap</h2>
 <ul>
-<li>存放所有对象实例和数组</li>
-<li>线程共享</li>
-<li>GC 的主要区域</li>
-<li>分代：新生代（Eden + S0 + S1）+ 老年代</li>
+<li>Stores all object instances and arrays</li>
+<li>Shared across threads</li>
+<li>Primary area for GC</li>
+<li>Generational: Young Generation (Eden + S0 + S1) + Old Generation</li>
 </ul>
-<h2>虚拟机栈（Stack）</h2>
+<h2>VM Stack</h2>
 <ul>
-<li>每个线程一个栈</li>
-<li>每个方法调用 = 一个栈帧</li>
-<li>栈帧包含：局部变量表、操作数栈、动态链接、返回值</li>
-<li>StackOverflowError：栈深度超过限制（无限递归）</li>
-<li>OutOfMemoryError：栈内存耗尽</li>
+<li>One stack per thread</li>
+<li>Each method call = one stack frame</li>
+<li>Stack frame contains: local variable table, operand stack, dynamic linking, return value</li>
+<li>StackOverflowError: stack depth exceeds limit (infinite recursion)</li>
+<li>OutOfMemoryError: stack memory exhausted</li>
 </ul>
-<h2>方法区 → 元空间</h2>
-<p>JDK 7 的方法区（永久代）在 JDK 8 被移除，改为元空间（Metaspace）。</p>
-<p>元空间使用本地内存（不是堆内存），解决了永久代的 OOM 问题。但如果不限制大小（<code>-XX:MaxMetaspaceSize</code>），理论上也会耗尽本地内存。</p>
-<h2>字符串常量池</h2>
-<p>JDK 7 开始从方法区移到堆里。为什么？方法区 GC 触发条件苛刻，字符串常量在堆里更容易被回收。</p>
-<h2>面试话术</h2>
+<h2>Method Area → Metaspace</h2>
+<p>The method area (PermGen) in JDK 7 was removed in JDK 8 and replaced with Metaspace.</p>
+<p>Metaspace uses native memory (not heap memory), which solves the OOM problem of PermGen. However, if the size is not limited (<code>-XX:MaxMetaspaceSize</code>), it can theoretically exhaust native memory as well.</p>
+<h2>String Constant Pool</h2>
+<p>Starting from JDK 7, it was moved from the method area to the heap. Why? The GC trigger conditions for the method area are strict, and string constants are easier to reclaim in the heap.</p>
+<h2>Interview Script</h2>
 <blockquote>
-<p>JVM 内存分为线程共享的堆和方法区（元空间），以及线程私有的栈和程序计数器。堆存对象，栈存方法调用。JDK 8 的元空间替代了永久代，使用本地内存避免 OOM。</p>
+<p>JVM memory is divided into the heap and method area (Metaspace) shared by threads, as well as the stack and program counter that are private to each thread. The heap stores objects, and the stack stores method calls. In JDK 8, Metaspace replaced PermGen, using native memory to avoid OOM.</p>
 </blockquote>
-<p>关键是要能说出每个区域存什么、什么时候会 OOM 或 StackOverflow。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+<p>The key is being able to explain what each region stores and when OOM or StackOverflow might occur.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/deepseek-r1-open-source/" rel="prev"><span class="nav-links__label">Previous</span> DeepSeek R1 开源：中国 AI 模型的「DeepSeek 时刻」</a></div><div class="nav-next"><a href="/posts/apache-pulsar-intro/" rel="next"><span class="nav-links__label">Next</span> Apache Pulsar 入门：下一代消息队列有什么不一样？</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/deepseek-r1-open-source/" rel="prev"><span class="nav-links__label">Previous</span> DeepSeek R1 Open Source: China's 'DeepSeek Moment' in AI</a></div><div class="nav-next"><a href="/posts/apache-pulsar-intro/" rel="next"><span class="nav-links__label">Next</span> Getting Started with Apache Pulsar: What Makes the Next-Generation Message Queue Different?</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -133,11 +134,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -179,7 +180,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -188,7 +190,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -228,6 +230,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -235,6 +238,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -242,12 +246,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

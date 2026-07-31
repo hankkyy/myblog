@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思 – Welcome To My Blog</title>
-<meta name="description" content="好的 API 设计不是跟风用最新的协议，而是理解每种范式的适用场景和取舍。">
-<meta property="og:title" content="API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思 – Welcome To My Blog">
-<meta property="og:description" content="好的 API 设计不是跟风用最新的协议，而是理解每种范式的适用场景和取舍。">
+<title>The Philosophy of API Design: Reflections from REST to gRPC to GraphQL – Welcome To My Blog</title>
+<meta name="description" content="Good API design isn't about following the latest protocol, but understanding the use cases and trade-offs of each paradigm.">
+<meta property="og:title" content="The Philosophy of API Design: Reflections from REST to gRPC to GraphQL – Welcome To My Blog">
+<meta property="og:description" content="Good API design isn't about following the latest protocol, but understanding the use cases and trade-offs of each paradigm.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思 – Welcome To My Blog",
-  "description": "好的 API 设计不是跟风用最新的协议，而是理解每种范式的适用场景和取舍。",
+  "headline": "The Philosophy of API Design: Reflections from REST to gRPC to GraphQL – Welcome To My Blog",
+  "description": "Good API design isn't about following the latest protocol, but understanding the use cases and trade-offs of each paradigm.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思</span>
+        <span class="sticky-title">The Philosophy of API Design: Reflections from REST to gRPC to GraphQL</span>
       </div>
     </div>
   </div>
@@ -68,33 +68,33 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/api-design-philosophy/" rel="bookmark"><time class="entry-date published" datetime="2025-08-10">2025-08-10</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/api-design-philosophy/" rel="bookmark"><time class="entry-date published" datetime="2025-08-10">2025-08-10</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">API 设计的哲学：从 REST 到 gRPC 再到 GraphQL 的反思</h1>
+                <h1 class="entry-title">The Philosophy of API Design: Reflections from REST to gRPC to GraphQL</h1>
               </header>
-              <div class="entry-content"><p>REST、gRPC、GraphQL 各有各的好，但好的 API 设计跟选择什么协议关系不大。</p>
+              <div class="entry-content"><p>REST, gRPC, and GraphQL each have their strengths, but good API design has little to do with which protocol you choose.</p>
 <h2>REST</h2>
-<p>REST 的核心是资源（Resource）：</p>
-<pre class="codehilite"><code>GET    /users/123      # 获取用户
-POST   /users           # 创建用户
-PUT    /users/123       # 更新用户
-DELETE /users/123       # 删除用户
+<p>The core of REST is the resource:</p>
+<pre class="codehilite"><code>GET    /users/123      # Get user
+POST   /users           # Create user
+PUT    /users/123       # Update user
+DELETE /users/123       # Delete user
 </code></pre>
 
-<p>优点：简单、可缓存、用 HTTP 状态码表达语义。
-缺点：多资源操作时比较麻烦（「获取用户的所有订单中未支付的」需要嵌套 URL 或多轮请求）。</p>
+<p>Pros: Simple, cacheable, uses HTTP status codes to express semantics.
+Cons: Awkward for multi-resource operations (e.g., "get all unpaid orders for a user" requires nested URLs or multiple round trips).</p>
 <h2>gRPC</h2>
-<p>gRPC 的核心是 RPC（远程过程调用）：</p>
+<p>The core of gRPC is RPC (Remote Procedure Call):</p>
 <pre class="codehilite"><code class="language-protobuf">service OrderService {
   rpc CreateOrder(CreateOrderReq) returns (CreateOrderResp);
 }
 </code></pre>
 
-<p>优点：强类型、高性能、流式传输。
-缺点：浏览器支持差（需要 gRPC-Web）、可读性不如 REST。</p>
+<p>Pros: Strong typing, high performance, streaming support.
+Cons: Poor browser support (requires gRPC-Web), less readable than REST.</p>
 <h2>GraphQL</h2>
-<p>GraphQL 的核心是让客户端决定要什么数据：</p>
+<p>The core of GraphQL is letting the client decide what data it needs:</p>
 <pre class="codehilite"><code class="language-graphql">query {
   user(id: 123) {
     name
@@ -103,21 +103,21 @@ DELETE /users/123       # 删除用户
 }
 </code></pre>
 
-<p>优点：一次请求获取所有需要的数据。
-缺点：查询复杂度不可控（一个 GraphQL 查询可能拖垮后端）、缓存困难。</p>
-<h2>怎么选</h2>
+<p>Pros: Fetch all needed data in a single request.
+Cons: Uncontrollable query complexity (a single GraphQL query can bring down the backend), difficult caching.</p>
+<h2>How to Choose</h2>
 <ul>
-<li>对外开放的简单 API → REST</li>
-<li>内部微服务通信 → gRPC</li>
-<li>前端需要复杂数据聚合 → GraphQL</li>
-<li>实时数据 → WebSocket / SSE</li>
+<li>Simple public-facing APIs → REST</li>
+<li>Internal microservice communication → gRPC</li>
+<li>Frontend requiring complex data aggregation → GraphQL</li>
+<li>Real-time data → WebSocket / SSE</li>
 </ul>
-<p>没有银弹。好的 API 设计是让调用者能猜到该怎么用，而不是让调用者去翻文档。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+<p>There's no silver bullet. Good API design is about letting callers guess how to use it, not making them dig through documentation.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/spring-mvc-flow/" rel="prev"><span class="nav-links__label">Previous</span> Spring MVC 请求处理流程：从 DispatcherServlet 到视图渲染</a></div><div class="nav-next"><a href="/posts/leetcode-53-maximum-subarray/" rel="next"><span class="nav-links__label">Next</span> LeetCode 53. 最大子数组和：动态规划入门第一题</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/spring-mvc-flow/" rel="prev"><span class="nav-links__label">Previous</span> Spring MVC Request Handling Flow: From DispatcherServlet to View Rendering</a></div><div class="nav-next"><a href="/posts/leetcode-53-maximum-subarray/" rel="next"><span class="nav-links__label">Next</span> LeetCode 53. Maximum Subarray: The First Dynamic Programming Problem</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -135,11 +135,11 @@ DELETE /users/123       # 删除用户
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -181,7 +181,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -190,7 +191,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -230,6 +231,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -237,6 +239,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -244,12 +247,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

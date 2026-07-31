@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MCP 协议：让 LLM 安全调用外部工具的标准化方案 – Welcome To My Blog</title>
-<meta name="description" content="Model Context Protocol — Anthropic 开源的 AI 工具调用标准，解决了 Agent 与外部系统交互的碎片化问题">
-<meta property="og:title" content="MCP 协议：让 LLM 安全调用外部工具的标准化方案 – Welcome To My Blog">
-<meta property="og:description" content="Model Context Protocol — Anthropic 开源的 AI 工具调用标准，解决了 Agent 与外部系统交互的碎片化问题">
+<title>MCP Protocol: A Standardized Solution for LLMs to Safely Call External Tools – Welcome To My Blog</title>
+<meta name="description" content="Model Context Protocol — Anthropic's open-source standard for AI tool calling, solving the fragmentation problem in Agent-external system interactions">
+<meta property="og:title" content="MCP Protocol: A Standardized Solution for LLMs to Safely Call External Tools – Welcome To My Blog">
+<meta property="og:description" content="Model Context Protocol — Anthropic's open-source standard for AI tool calling, solving the fragmentation problem in Agent-external system interactions">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "MCP 协议：让 LLM 安全调用外部工具的标准化方案 – Welcome To My Blog",
-  "description": "Model Context Protocol — Anthropic 开源的 AI 工具调用标准，解决了 Agent 与外部系统交互的碎片化问题",
+  "headline": "MCP Protocol: A Standardized Solution for LLMs to Safely Call External Tools – Welcome To My Blog",
+  "description": "Model Context Protocol — Anthropic's open-source standard for AI tool calling, solving the fragmentation problem in Agent-external system interactions",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">MCP 协议：让 LLM 安全调用外部工具的标准化方案</span>
+        <span class="sticky-title">MCP Protocol: A Standardized Solution for LLMs to Safely Call External Tools</span>
       </div>
     </div>
   </div>
@@ -68,21 +68,21 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/mcp-protocol/" rel="bookmark"><time class="entry-date published" datetime="2026-06-03">2026-06-03</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/mcp-protocol/" rel="bookmark"><time class="entry-date published" datetime="2026-06-03">2026-06-03</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">MCP 协议：让 LLM 安全调用外部工具的标准化方案</h1>
+                <h1 class="entry-title">MCP Protocol: A Standardized Solution for LLMs to Safely Call External Tools</h1>
               </header>
-              <div class="entry-content"><p>MCP（Model Context Protocol）是 Anthropic 2024 年底开源的标准协议。它的核心目标：<strong>让 LLM 和外部工具/数据源的交互有一个统一标准</strong>。</p>
-<h2>问题</h2>
-<p>现在的 AI Agent 调用工具有多乱：</p>
-<pre class="codehilite"><code>Claude → 自己的工具格式
+              <div class="entry-content"><p>MCP (Model Context Protocol) is a standard protocol open-sourced by Anthropic in late 2024. Its core goal: <strong>to establish a unified standard for interactions between LLMs and external tools/data sources</strong>.</p>
+<h2>The Problem</h2>
+<p>Here's how messy AI Agent tool calling is today:</p>
+<pre class="codehilite"><code>Claude → its own tool format
 GPT → Function Calling
-开源模型 → 各家用各的
+Open-source models → each with their own approach
 </code></pre>
 
-<p>每个工具都要单独适配。MCP 要解决的问题：<strong>就像 USB-C 统一了接口，MCP 统一了 AI 的工具调用协议</strong>。</p>
-<h2>架构</h2>
+<p>Every tool requires separate adaptation. What MCP aims to solve: <strong>Just as USB-C unified connectors, MCP unifies AI's tool calling protocol</strong>.</p>
+<h2>Architecture</h2>
 <pre class="codehilite"><code>┌──────────┐     MCP Protocol     ┌──────────────┐
 │  Host    │◄────────────────────►│  MCP Server  │
 │ (Claude  │   JSON-RPC over      │  (tools)     │
@@ -91,15 +91,15 @@ GPT → Function Calling
 </code></pre>
 
 <ul>
-<li><strong>Host</strong>：AI 应用（Claude Desktop、VS Code、自定义 App）</li>
-<li><strong>Client</strong>：Host 内的协议实现</li>
-<li><strong>Server</strong>：提供具体能力的服务（文件系统、数据库、API）</li>
+<li><strong>Host</strong>: AI application (Claude Desktop, VS Code, custom App)</li>
+<li><strong>Client</strong>: Protocol implementation within the Host</li>
+<li><strong>Server</strong>: Service providing specific capabilities (filesystem, database, API)</li>
 </ul>
-<h2>快速上手</h2>
-<pre class="codehilite"><code class="language-bash"># 安装 MCP 服务端
+<h2>Quick Start</h2>
+<pre class="codehilite"><code class="language-bash"># Install MCP server
 npx @anthropic/mcp-server-filesystem /path/to/allowed/dir
 
-# Claude Desktop 配置
+# Claude Desktop configuration
 {
   &quot;mcpServers&quot;: {
     &quot;filesystem&quot;: {
@@ -110,59 +110,59 @@ npx @anthropic/mcp-server-filesystem /path/to/allowed/dir
 }
 </code></pre>
 
-<h2>已有生态</h2>
+<h2>Existing Ecosystem</h2>
 <table>
 <thead>
 <tr>
 <th>Server</th>
-<th>能力</th>
+<th>Capability</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>filesystem</td>
-<td>读写文件</td>
+<td>Read/write files</td>
 </tr>
 <tr>
 <td>github</td>
-<td>管理仓库/PR</td>
+<td>Manage repos/PRs</td>
 </tr>
 <tr>
 <td>postgres</td>
-<td>数据库查询</td>
+<td>Database queries</td>
 </tr>
 <tr>
 <td>slack</td>
-<td>发送消息</td>
+<td>Send messages</td>
 </tr>
 <tr>
 <td>puppeteer</td>
-<td>浏览器自动化</td>
+<td>Browser automation</td>
 </tr>
 </tbody>
 </table>
-<h2>核心概念</h2>
+<h2>Core Concepts</h2>
 <ul>
-<li><strong>Tools</strong>：LLM 可调用的函数（<code>read_file</code>、<code>search_docs</code>）</li>
-<li><strong>Resources</strong>：LLM 可读取的数据（文件内容、数据库记录）</li>
-<li><strong>Prompts</strong>：预定义的 prompt 模板</li>
+<li><strong>Tools</strong>: Functions callable by the LLM (<code>read_file</code>, <code>search_docs</code>)</li>
+<li><strong>Resources</strong>: Data readable by the LLM (file contents, database records)</li>
+<li><strong>Prompts</strong>: Predefined prompt templates</li>
 </ul>
-<h2>为什么重要</h2>
-<p>之前 AI 工具调用是碎片化的——每个平台自己定义格式。MCP 让「一次编写，到处运行」在 AI 工具领域成为可能。</p>
+<h2>Why It Matters</h2>
+<p>Previously, AI tool calling was fragmented—each platform defined its own format. MCP makes "write once, run anywhere" possible in the AI tools space.</p>
 <blockquote>
-<p>如果你在 2026 年做 AI Agent 开发，MCP 是绕不开的基础设施。</p>
+<p>If you're developing AI Agents in 2026, MCP is infrastructure you can't avoid.</p>
 </blockquote>
 <hr />
-<p><strong>参考来源：</strong></p>
+<p><strong>References:</strong></p>
 <ul>
 <li><a href="https://www.anthropic.com/news/model-context-protocol">Anthropic — Introducing the Model Context Protocol (2024-11)</a></li>
-<li><a href="https://modelcontextprotocol.io/">Model Context Protocol 规范</a></li>
+<li><a href="https://modelcontextprotocol.io/">Model Context Protocol Specification</a></li>
 </ul></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/mcp-protocol-en/" rel="prev"><span class="nav-links__label">Previous</span> MCP Protocol: Standardizing How LLMs Call External Tools</a></div><div class="nav-next"><a href="/posts/deepseek-v4-release/" rel="next"><span class="nav-links__label">Next</span> DeepSeek V4 发布：国产大模型再突破</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/mcp-protocol-en/" rel="prev"><span class="nav-links__label">Previous</span> MCP Protocol: Standardizing How LLMs Call External Tools</a></div><div class="nav-next"><a href="/posts/deepseek-v4-release/" rel="next"><span class="nav-links__label">Next</span> DeepSeek V4 Released: Another Breakthrough for Chinese AI Models</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -180,11 +180,11 @@ npx @anthropic/mcp-server-filesystem /path/to/allowed/dir
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -226,7 +226,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -235,7 +236,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -275,6 +276,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -282,6 +284,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -289,12 +292,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

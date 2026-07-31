@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Redis Cluster 入门：从单机到集群的那些坑 – Welcome To My Blog</title>
-<meta name="description" content="学习 Redis Cluster 的部署、扩容和常见故障处理，总结学习过程中踩过的坑。">
-<meta property="og:title" content="Redis Cluster 入门：从单机到集群的那些坑 – Welcome To My Blog">
-<meta property="og:description" content="学习 Redis Cluster 的部署、扩容和常见故障处理，总结学习过程中踩过的坑。">
+<title>Redis Cluster Getting Started: Pitfalls from Single-Node to Cluster – Welcome To My Blog</title>
+<meta name="description" content="Learn about Redis Cluster deployment, scaling, and common troubleshooting, summarizing the pitfalls encountered during the learning process.">
+<meta property="og:title" content="Redis Cluster Getting Started: Pitfalls from Single-Node to Cluster – Welcome To My Blog">
+<meta property="og:description" content="Learn about Redis Cluster deployment, scaling, and common troubleshooting, summarizing the pitfalls encountered during the learning process.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Redis Cluster 入门：从单机到集群的那些坑 – Welcome To My Blog",
-  "description": "学习 Redis Cluster 的部署、扩容和常见故障处理，总结学习过程中踩过的坑。",
+  "headline": "Redis Cluster Getting Started: Pitfalls from Single-Node to Cluster – Welcome To My Blog",
+  "description": "Learn about Redis Cluster deployment, scaling, and common troubleshooting, summarizing the pitfalls encountered during the learning process.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">Redis Cluster 入门：从单机到集群的那些坑</span>
+        <span class="sticky-title">Redis Cluster Getting Started: Pitfalls from Single-Node to Cluster</span>
       </div>
     </div>
   </div>
@@ -68,28 +68,28 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a><span class="cat-seperator">, </span><a href="/categories/分布式/" rel="category">分布式</a></span><span class="posted-on"><a href="/posts/redis-cluster-practice/" rel="bookmark"><time class="entry-date published" datetime="2025-06-20">2025-06-20</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a><span class="cat-seperator">, </span><a href="/categories/distributed-systems/" rel="category">Distributed Systems</a></span><span class="posted-on"><a href="/posts/redis-cluster-practice/" rel="bookmark"><time class="entry-date published" datetime="2025-06-20">2025-06-20</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">Redis Cluster 入门：从单机到集群的那些坑</h1>
+                <h1 class="entry-title">Redis Cluster Getting Started: Pitfalls from Single-Node to Cluster</h1>
               </header>
-              <div class="entry-content"><p>最近在学习 Redis Cluster，搭了一套 3 主 3 从的环境，过程中踩了不少坑。</p>
-<h2>搭建过程</h2>
-<p>Redis Cluster 最少需要 6 个节点（3 主 3 从），用 <code>redis-cli --cluster create</code> 一条命令就能创建。关键是理解槽位（slot）的概念：整个集群有 16384 个哈希槽，每个主节点负责一部分。</p>
-<h2>扩容时的问题</h2>
-<p>手动做槽位迁移，如果在业务高峰期迁移，Redis 会返回 MOVED 错误。</p>
-<p>解决办法：选择低峰期迁移，并且用逐槽迁移的方式。</p>
-<h2>大 Key 的坑</h2>
-<p>一个 Hash 存了大量数据，迁移时非常慢。最好的做法是拆分大 Key，比如 <code>user:{id}:info</code> 而不是一个超大的 <code>users</code> hash。</p>
-<h2>脑裂问题</h2>
-<p>如果网络抖动导致主节点被孤立，Cluster 自动选主，可能出现两个主同时写入的情况。</p>
-<p>解决办法：配置 <code>min-slaves-to-write 1</code>，确保主节点至少有一个从节点正常时才接受写入。</p>
-<p>Redis Cluster 比单机 Redis 复杂不少，但对于需要高可用的场景来说值得学习。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a><a href="/categories/分布式/" rel="category">分布式</a></span></footer>
+              <div class="entry-content"><p>I've been learning Redis Cluster recently and set up a 3-master 3-slave environment, hitting quite a few pitfalls along the way.</p>
+<h2>Setup Process</h2>
+<p>Redis Cluster requires a minimum of 6 nodes (3 masters and 3 slaves), and you can create it with a single command using <code>redis-cli --cluster create</code>. The key is understanding the concept of slots: the entire cluster has 16,384 hash slots, with each master node responsible for a portion of them.</p>
+<h2>Issues During Scaling</h2>
+<p>When manually migrating slots, if you do it during peak business hours, Redis will return MOVED errors.</p>
+<p>Solution: Choose off-peak hours for migration and migrate slot by slot.</p>
+<h2>The Big Key Pitfall</h2>
+<p>A single Hash storing a large amount of data makes migration very slow. The best practice is to split large keys, such as <code>user:{id}:info</code> instead of one oversized <code>users</code> hash.</p>
+<h2>Split-Brain Problem</h2>
+<p>If network jitter causes a master node to become isolated, Cluster will automatically elect a new master, potentially resulting in two masters accepting writes simultaneously.</p>
+<p>Solution: Configure <code>min-slaves-to-write 1</code> to ensure a master node only accepts writes when it has at least one healthy slave.</p>
+<p>Redis Cluster is significantly more complex than single-node Redis, but it's worth learning for scenarios that require high availability.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a><a href="/categories/distributed-systems/" rel="category">Distributed Systems</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/leetcode-206-reverse-linkedlist/" rel="prev"><span class="nav-links__label">Previous</span> LeetCode 206. 反转链表：迭代和递归两种解法，面试必会</a></div><div class="nav-next"><a href="/posts/neovim-setup-guide/" rel="next"><span class="nav-links__label">Next</span> Neovim 配置指南：2025 年的终端编辑器还能打吗</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/leetcode-206-reverse-linkedlist/" rel="prev"><span class="nav-links__label">Previous</span> LeetCode 206. Reverse Linked List: Iterative and Recursive Solutions, a Must-Know for Interviews</a></div><div class="nav-next"><a href="/posts/neovim-setup-guide/" rel="next"><span class="nav-links__label">Next</span> Neovim Configuration Guide: Is the Terminal Editor Still Worth It in 2025?</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -107,11 +107,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -153,7 +153,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -162,7 +163,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -202,6 +203,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -209,6 +211,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -216,12 +219,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

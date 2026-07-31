@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>系统设计面试：设计一个 API 限流器（Rate Limiter） – Welcome To My Blog</title>
-<meta name="description" content="从令牌桶到滑动窗口，拆解限流算法的核心思路和分布式限流的实现方案。">
-<meta property="og:title" content="系统设计面试：设计一个 API 限流器（Rate Limiter） – Welcome To My Blog">
-<meta property="og:description" content="从令牌桶到滑动窗口，拆解限流算法的核心思路和分布式限流的实现方案。">
+<title>System Design Interview: Designing an API Rate Limiter – Welcome To My Blog</title>
+<meta name="description" content="From token bucket to sliding window, break down the core ideas behind rate limiting algorithms and implementation approaches for distributed rate limiting.">
+<meta property="og:title" content="System Design Interview: Designing an API Rate Limiter – Welcome To My Blog">
+<meta property="og:description" content="From token bucket to sliding window, break down the core ideas behind rate limiting algorithms and implementation approaches for distributed rate limiting.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "系统设计面试：设计一个 API 限流器（Rate Limiter） – Welcome To My Blog",
-  "description": "从令牌桶到滑动窗口，拆解限流算法的核心思路和分布式限流的实现方案。",
+  "headline": "System Design Interview: Designing an API Rate Limiter – Welcome To My Blog",
+  "description": "From token bucket to sliding window, break down the core ideas behind rate limiting algorithms and implementation approaches for distributed rate limiting.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">系统设计面试：设计一个 API 限流器（Rate Limiter）</span>
+        <span class="sticky-title">System Design Interview: Designing an API Rate Limiter</span>
       </div>
     </div>
   </div>
@@ -68,50 +68,50 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/系统设计/" rel="category">系统设计</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/system-design-rate-limiter/" rel="bookmark"><time class="entry-date published" datetime="2026-01-25">2026-01-25</time></a></span>
+                <span class="cat-links"><a href="/categories/system-design/" rel="category">System Design</a><span class="cat-seperator">, </span><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/system-design-rate-limiter/" rel="bookmark"><time class="entry-date published" datetime="2026-01-25">2026-01-25</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">系统设计面试：设计一个 API 限流器（Rate Limiter）</h1>
+                <h1 class="entry-title">System Design Interview: Designing an API Rate Limiter</h1>
               </header>
-              <div class="entry-content"><p>API 限流是每个后端系统都需要的基础能力。面试中常让你设计一个限流器。</p>
-<h2>需求</h2>
+              <div class="entry-content"><p>API rate limiting is a fundamental capability every backend system needs. In interviews, you're often asked to design a rate limiter.</p>
+<h2>Requirements</h2>
 <ul>
-<li>限制每个用户/API Key 的请求频率</li>
-<li>比如：每分钟最多 100 次请求</li>
-<li>超过限制返回 429 Too Many Requests</li>
-<li>需要支持分布式部署</li>
+<li>Limit the request frequency per user/API Key</li>
+<li>For example: maximum 100 requests per minute</li>
+<li>Return 429 Too Many Requests when the limit is exceeded</li>
+<li>Need to support distributed deployment</li>
 </ul>
-<h2>常见算法</h2>
-<h3>固定窗口</h3>
-<p>把时间分成固定窗口（比如每分钟），每个窗口独立计数。简单但有问题——窗口边界处可以发送 2 倍的请求（上分钟的最后 1 秒 + 这分钟的第 1 秒）。</p>
-<h3>滑动窗口日志</h3>
-<p>记录每次请求的时间戳，查询最近 N 秒内的请求数。精确但内存占用大。</p>
-<h3>滑动窗口计数器</h3>
-<p>结合前一个窗口的请求数做加权计算。Redis 的 <code>ZSET</code> 可以实现。</p>
-<h3>令牌桶（最常用）</h3>
-<p>以固定速率往桶里放令牌（比如每秒 10 个）。请求来时取一个令牌——取到就通过，取不到就拒绝。桶有容量上限，允许一定的突发流量。</p>
-<h2>实现</h2>
-<pre class="codehilite"><code class="language-java">// 用 Redis 实现令牌桶
+<h2>Common Algorithms</h2>
+<h3>Fixed Window</h3>
+<p>Divide time into fixed windows (e.g., per minute), with each window counting independently. Simple but has a problem—at window boundaries, you can send 2x the requests (last second of the previous minute + first second of the current minute).</p>
+<h3>Sliding Window Log</h3>
+<p>Record the timestamp of each request and query the number of requests within the last N seconds. Accurate but consumes significant memory.</p>
+<h3>Sliding Window Counter</h3>
+<p>Combine the request count from the previous window with weighted calculation. Can be implemented using Redis <code>ZSET</code>.</p>
+<h3>Token Bucket (Most Commonly Used)</h3>
+<p>Add tokens to the bucket at a fixed rate (e.g., 10 per second). When a request arrives, take a token—if one is available, it passes; if not, it's rejected. The bucket has a capacity limit, allowing for a certain amount of burst traffic.</p>
+<h2>Implementation</h2>
+<pre class="codehilite"><code class="language-java">// Implement token bucket using Redis
 String key = &quot;rate_limit:&quot; + userId;
 long now = System.currentTimeMillis();
 long tokens = redis.incr(key);
-redis.expire(key, 60); // 窗口 60 秒
+redis.expire(key, 60); // 60-second window
 
 if (tokens &gt; 100) return 429;
-// 处理请求...
+// Process the request...
 </code></pre>
 
-<h2>分布式限流</h2>
-<p>多节点部署时，需要共享计数器——用 Redis 解决。但 Redis 本身也可能成为瓶颈。解决方案：
-- 本地限流 + 全局限流双层方案
-- 本地做粗粒度限流（比如单节点 1000/s），全局限严格（比如总体 5000/s）</p>
-<h2>面试要点</h2>
-<p>必须提到令牌桶算法和滑动窗口的区别。能说出分布式限流的双层方案是加分项。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/系统设计/" rel="category">系统设计</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
+<h2>Distributed Rate Limiting</h2>
+<p>When deployed across multiple nodes, you need a shared counter—use Redis to solve this. However, Redis itself can become a bottleneck. Solutions:
+- Two-tier approach: local rate limiting + global rate limiting
+- Coarse-grained local limiting (e.g., 1000/s per node), strict global limiting (e.g., 5000/s overall)</p>
+<h2>Interview Key Points</h2>
+<p>You must mention the difference between the token bucket and sliding window algorithms. Being able to describe the two-tier approach for distributed rate limiting is a plus.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/system-design/" rel="category">System Design</a><a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/meta-threads-growth/" rel="prev"><span class="nav-links__label">Previous</span> Threads 月活突破 5 亿：Meta 的「推特杀手」终于成功了</a></div><div class="nav-next"><a href="/posts/tiktok-shop-global/" rel="next"><span class="nav-links__label">Next</span> TikTok Shop 全球 GMV 突破 500 亿美元：直播带货席卷全球</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/meta-threads-growth/" rel="prev"><span class="nav-links__label">Previous</span> Threads Surpasses 500 Million Monthly Active Users: Meta's 'Twitter Killer' Finally Succeeds</a></div><div class="nav-next"><a href="/posts/tiktok-shop-global/" rel="next"><span class="nav-links__label">Next</span> TikTok Shop Global GMV Surpasses $50 Billion: Livestream Commerce Sweeps the World</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -129,11 +129,11 @@ if (tokens &gt; 100) return 429;
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -175,7 +175,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -184,7 +185,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -224,6 +225,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -231,6 +233,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -238,12 +241,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

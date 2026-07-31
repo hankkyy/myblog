@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kubernetes HPA 自动伸缩深入理解：从 CPU 到自定义指标 – Welcome To My Blog</title>
-<meta name="description" content="理解 K8s Horizontal Pod Autoscaler 的工作原理和配置方法，实现真正的弹性伸缩。">
-<meta property="og:title" content="Kubernetes HPA 自动伸缩深入理解：从 CPU 到自定义指标 – Welcome To My Blog">
-<meta property="og:description" content="理解 K8s Horizontal Pod Autoscaler 的工作原理和配置方法，实现真正的弹性伸缩。">
+<title>Deep Dive into Kubernetes HPA Autoscaling: From CPU to Custom Metrics – Welcome To My Blog</title>
+<meta name="description" content="Understand how the K8s Horizontal Pod Autoscaler works and how to configure it for true elastic scaling.">
+<meta property="og:title" content="Deep Dive into Kubernetes HPA Autoscaling: From CPU to Custom Metrics – Welcome To My Blog">
+<meta property="og:description" content="Understand how the K8s Horizontal Pod Autoscaler works and how to configure it for true elastic scaling.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Kubernetes HPA 自动伸缩深入理解：从 CPU 到自定义指标 – Welcome To My Blog",
-  "description": "理解 K8s Horizontal Pod Autoscaler 的工作原理和配置方法，实现真正的弹性伸缩。",
+  "headline": "Deep Dive into Kubernetes HPA Autoscaling: From CPU to Custom Metrics – Welcome To My Blog",
+  "description": "Understand how the K8s Horizontal Pod Autoscaler works and how to configure it for true elastic scaling.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">Kubernetes HPA 自动伸缩深入理解：从 CPU 到自定义指标</span>
+        <span class="sticky-title">Deep Dive into Kubernetes HPA Autoscaling: From CPU to Custom Metrics</span>
       </div>
     </div>
   </div>
@@ -68,21 +68,21 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/云原生/" rel="category">云原生</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/k8s-hpa-autoscaling/" rel="bookmark"><time class="entry-date published" datetime="2025-05-28">2025-05-28</time></a></span>
+                <span class="cat-links"><a href="/categories/cloud-native/" rel="category">Cloud Native</a><span class="cat-seperator">, </span><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/k8s-hpa-autoscaling/" rel="bookmark"><time class="entry-date published" datetime="2025-05-28">2025-05-28</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">Kubernetes HPA 自动伸缩深入理解：从 CPU 到自定义指标</h1>
+                <h1 class="entry-title">Deep Dive into Kubernetes HPA Autoscaling: From CPU to Custom Metrics</h1>
               </header>
-              <div class="entry-content"><p>HPA（Horizontal Pod Autoscaler）是 K8s 中实现自动伸缩的核心组件。</p>
-<h2>HPA 工作原理</h2>
-<pre class="codehilite"><code>Metrics Server → 采集 CPU/内存指标
+              <div class="entry-content"><p>HPA (Horizontal Pod Autoscaler) is the core component for implementing autoscaling in K8s.</p>
+<h2>How HPA Works</h2>
+<pre class="codehilite"><code>Metrics Server → Collects CPU/memory metrics
        ↓
-HPA Controller → 计算期望副本数
+HPA Controller → Calculates desired replica count
        ↓
-Deployment → 调整 Pod 数量
+Deployment → Adjusts the number of Pods
 </code></pre>
 
-<h2>基本配置</h2>
+<h2>Basic Configuration</h2>
 <pre class="codehilite"><code class="language-yaml">apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
@@ -103,11 +103,11 @@ spec:
         averageUtilization: 70
 </code></pre>
 
-<h2>计算公式</h2>
-<p>期望副本数 = ceil(当前副本数 × (当前指标值 / 目标指标值))</p>
-<p>如果 CPU 使用率是 140%，目标 70%，则期望副本数 = 2 × (140/70) = 4。</p>
-<h2>自定义指标</h2>
-<p>除了 CPU 和内存，还可以基于自定义指标伸缩：</p>
+<h2>Calculation Formula</h2>
+<p>Desired replicas = ceil(current replicas × (current metric value / target metric value))</p>
+<p>If CPU utilization is 140% and the target is 70%, then desired replicas = 2 × (140/70) = 4.</p>
+<h2>Custom Metrics</h2>
+<p>In addition to CPU and memory, you can also scale based on custom metrics:</p>
 <pre class="codehilite"><code class="language-yaml">metrics:
 - type: Pods
   pods:
@@ -118,29 +118,29 @@ spec:
       averageValue: &quot;100&quot;
 </code></pre>
 
-<h2>HPA 的局限性</h2>
+<h2>Limitations of HPA</h2>
 <ol>
-<li><strong>扩容延迟</strong>：默认 15 秒检查一次，可能不够快</li>
-<li><strong>缩容过快</strong>：可能导致 Pod 被反复创建删除（抖动）</li>
-<li><strong>只靠 CPU</strong>：有些应用 CPU 不直接反映负载（比如 IO 密集型）</li>
+<li><strong>Scaling latency</strong>: It checks every 15 seconds by default, which may not be fast enough</li>
+<li><strong>Rapid downscaling</strong>: Can cause Pods to be repeatedly created and deleted (flapping)</li>
+<li><strong>CPU-only focus</strong>: For some applications, CPU doesn't directly reflect load (e.g., I/O-intensive workloads)</li>
 </ol>
-<p>配合 KEDA（Kubernetes Event-driven Autoscaling）可以基于 Kafka 消息积压、Redis 队列长度等事件驱动伸缩。</p>
-<h2>实际建议</h2>
+<p>Combining HPA with KEDA (Kubernetes Event-driven Autoscaling) enables event-driven scaling based on Kafka message backlog, Redis queue length, and more.</p>
+<h2>Practical Recommendations</h2>
 <ul>
-<li>先观察应用的真实负载曲线，再设定 HPA 阈值</li>
-<li>生产环境至少 minReplicas=3，避免单点</li>
-<li>配合 PodDisruptionBudget 确保优雅缩容</li>
+<li>Observe the application's real load curve before setting HPA thresholds</li>
+<li>In production, set at least minReplicas=3 to avoid single points of failure</li>
+<li>Use PodDisruptionBudget together to ensure graceful downscaling</li>
 </ul>
 <hr />
-<p><strong>参考来源：</strong></p>
+<p><strong>References:</strong></p>
 <ul>
-<li><a href="https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/">Kubernetes 文档 — Horizontal Pod Autoscaling</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/">Kubernetes Documentation — Horizontal Pod Autoscaling</a></li>
 </ul></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/云原生/" rel="category">云原生</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/cloud-native/" rel="category">Cloud Native</a><a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/jvm-gc-interview/" rel="prev"><span class="nav-links__label">Previous</span> JVM 垃圾回收面试精讲：从 CMS 到 G1 到 ZGC</a></div><div class="nav-next"><a href="/posts/syncronized-vs-reentrantlock/" rel="next"><span class="nav-links__label">Next</span> synchronized vs ReentrantLock：从面试被问到源码实现</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/jvm-gc-interview/" rel="prev"><span class="nav-links__label">Previous</span> JVM Garbage Collection Interview Deep Dive: From CMS to G1 to ZGC</a></div><div class="nav-next"><a href="/posts/syncronized-vs-reentrantlock/" rel="next"><span class="nav-links__label">Next</span> synchronized vs ReentrantLock: From Interview Questions to Source Code Implementation</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -158,11 +158,11 @@ spec:
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -204,7 +204,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -213,7 +214,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -253,6 +254,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -260,6 +262,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -267,12 +270,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

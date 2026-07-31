@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Docker 镜像层缓存原理：为什么 COPY 顺序影响构建速度 – Welcome To My Blog</title>
-<meta name="description" content="通过一个简单的 Spring Boot 项目，理解 Docker 层缓存的工作机制和最佳实践。">
-<meta property="og:title" content="Docker 镜像层缓存原理：为什么 COPY 顺序影响构建速度 – Welcome To My Blog">
-<meta property="og:description" content="通过一个简单的 Spring Boot 项目，理解 Docker 层缓存的工作机制和最佳实践。">
+<title>Docker Image Layer Caching: Why COPY Order Affects Build Speed – Welcome To My Blog</title>
+<meta name="description" content="Understand how Docker layer caching works and best practices through a simple Spring Boot project.">
+<meta property="og:title" content="Docker Image Layer Caching: Why COPY Order Affects Build Speed – Welcome To My Blog">
+<meta property="og:description" content="Understand how Docker layer caching works and best practices through a simple Spring Boot project.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Docker 镜像层缓存原理：为什么 COPY 顺序影响构建速度 – Welcome To My Blog",
-  "description": "通过一个简单的 Spring Boot 项目，理解 Docker 层缓存的工作机制和最佳实践。",
+  "headline": "Docker Image Layer Caching: Why COPY Order Affects Build Speed – Welcome To My Blog",
+  "description": "Understand how Docker layer caching works and best practices through a simple Spring Boot project.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">Docker 镜像层缓存原理：为什么 COPY 顺序影响构建速度</span>
+        <span class="sticky-title">Docker Image Layer Caching: Why COPY Order Affects Build Speed</span>
       </div>
     </div>
   </div>
@@ -68,39 +68,39 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/docker-layer-caching/" rel="bookmark"><time class="entry-date published" datetime="2025-01-18">2025-01-18</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/docker-layer-caching/" rel="bookmark"><time class="entry-date published" datetime="2025-01-18">2025-01-18</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">Docker 镜像层缓存原理：为什么 COPY 顺序影响构建速度</h1>
+                <h1 class="entry-title">Docker Image Layer Caching: Why COPY Order Affects Build Speed</h1>
               </header>
-              <div class="entry-content"><p>Docker 的镜像层缓存是一个非常重要但容易被忽视的概念。</p>
-<h2>层是什么</h2>
-<p>Docker 镜像由多个只读层叠加而成。Dockerfile 中的每一行指令（FROM、RUN、COPY 等）都会创建一个新的层。这些层会被缓存——如果某一层没有变化，Docker 直接复用缓存，跳过重建。</p>
-<h2>一个典型案例</h2>
-<pre class="codehilite"><code class="language-dockerfile"># 不好的写法
+              <div class="entry-content"><p>Docker's image layer caching is a very important yet often overlooked concept.</p>
+<h2>What Are Layers</h2>
+<p>Docker images are composed of multiple read-only layers stacked together. Each instruction in a Dockerfile (FROM, RUN, COPY, etc.) creates a new layer. These layers are cached—if a layer hasn't changed, Docker reuses the cache directly and skips rebuilding it.</p>
+<h2>A Typical Example</h2>
+<pre class="codehilite"><code class="language-dockerfile"># Bad practice
 COPY . /app
 RUN mvn package
 
-# 好的写法
+# Good practice
 COPY pom.xml /app
 RUN mvn dependency:resolve
 COPY src /app/src
 RUN mvn package
 </code></pre>
 
-<p>为什么第二种写法更快？因为 <code>pom.xml</code> 变化频率远低于源码。先把依赖下载好并缓存住，每次改代码只需要重新编译，不用重新下载依赖。</p>
-<h2>关键原则</h2>
+<p>Why is the second approach faster? Because <code>pom.xml</code> changes far less frequently than source code. By downloading and caching dependencies first, you only need to recompile when code changes, without re-downloading dependencies every time.</p>
+<h2>Key Principles</h2>
 <ul>
-<li>把变化频率低的操作放在前面（安装系统依赖、下载 Maven/npm 依赖）</li>
-<li>把变化频率高的操作放在后面（COPY 源码、编译）</li>
-<li>合理利用多阶段构建减小镜像体积</li>
+<li>Place operations with low change frequency first (installing system dependencies, downloading Maven/npm dependencies)</li>
+<li>Place operations with high change frequency later (COPY source code, compilation)</li>
+<li>Leverage multi-stage builds to reduce image size</li>
 </ul>
-<p>理解了层缓存，Docker 构建速度能提升数倍。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+<p>Understanding layer caching can speed up Docker builds several times over.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/java-collection-framework/" rel="prev"><span class="nav-links__label">Previous</span> Java 集合框架面试全解：ArrayList、LinkedList、HashMap 底层原理</a></div><div class="nav-next"><a href="/posts/sam-altman-fired-return/" rel="next"><span class="nav-links__label">Next</span> OpenAI 宫斗续集：Sam Altman 回归一年后 OpenAI 变成什么样了？</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/java-collection-framework/" rel="prev"><span class="nav-links__label">Previous</span> Java Collections Framework Interview Guide: ArrayList, LinkedList, HashMap Under the Hood</a></div><div class="nav-next"><a href="/posts/sam-altman-fired-return/" rel="next"><span class="nav-links__label">Next</span> OpenAI Drama Continues: What Has OpenAI Become One Year After Sam Altman's Return?</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -118,11 +118,11 @@ RUN mvn package
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -164,7 +164,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -173,7 +174,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -213,6 +214,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -220,6 +222,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -227,12 +230,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

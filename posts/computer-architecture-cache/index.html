@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>计算机架构面试入门：CPU 缓存和伪共享（False Sharing） – Welcome To My Blog</title>
-<meta name="description" content="理解 CPU 三级缓存的工作机制，以及为什么伪共享会让多线程程序变慢。">
-<meta property="og:title" content="计算机架构面试入门：CPU 缓存和伪共享（False Sharing） – Welcome To My Blog">
-<meta property="og:description" content="理解 CPU 三级缓存的工作机制，以及为什么伪共享会让多线程程序变慢。">
+<title>Computer Architecture Interview Primer: CPU Cache and False Sharing – Welcome To My Blog</title>
+<meta name="description" content="Understand how the CPU's three-level cache works, and why false sharing slows down multithreaded programs.">
+<meta property="og:title" content="Computer Architecture Interview Primer: CPU Cache and False Sharing – Welcome To My Blog">
+<meta property="og:description" content="Understand how the CPU's three-level cache works, and why false sharing slows down multithreaded programs.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "计算机架构面试入门：CPU 缓存和伪共享（False Sharing） – Welcome To My Blog",
-  "description": "理解 CPU 三级缓存的工作机制，以及为什么伪共享会让多线程程序变慢。",
+  "headline": "Computer Architecture Interview Primer: CPU Cache and False Sharing – Welcome To My Blog",
+  "description": "Understand how the CPU's three-level cache works, and why false sharing slows down multithreaded programs.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">计算机架构面试入门：CPU 缓存和伪共享（False Sharing）</span>
+        <span class="sticky-title">Computer Architecture Interview Primer: CPU Cache and False Sharing</span>
       </div>
     </div>
   </div>
@@ -68,61 +68,61 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/computer-architecture-cache/" rel="bookmark"><time class="entry-date published" datetime="2025-10-10">2025-10-10</time></a></span>
+                <span class="cat-links"><a href="/categories/tech/" rel="category">Tech</a></span><span class="posted-on"><a href="/posts/computer-architecture-cache/" rel="bookmark"><time class="entry-date published" datetime="2025-10-10">2025-10-10</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">计算机架构面试入门：CPU 缓存和伪共享（False Sharing）</h1>
+                <h1 class="entry-title">Computer Architecture Interview Primer: CPU Cache and False Sharing</h1>
               </header>
-              <div class="entry-content"><p>计算机架构的知识让你写出高性能代码。</p>
-<h2>存储层次</h2>
-<pre class="codehilite"><code>寄存器（0 延迟）
+              <div class="entry-content"><p>Knowledge of computer architecture lets you write high-performance code.</p>
+<h2>Memory Hierarchy</h2>
+<pre class="codehilite"><code>Registers (0 cycles)
   ↓
-L1 Cache（~4 个时钟周期，32KB）
+L1 Cache (~4 clock cycles, 32KB)
   ↓
-L2 Cache（~12 个时钟周期，256KB）
+L2 Cache (~12 clock cycles, 256KB)
   ↓
-L3 Cache（~40 个时钟周期，8MB-32MB，共享）
+L3 Cache (~40 clock cycles, 8MB-32MB, shared)
   ↓
-主存（~200 个时钟周期）
+Main Memory (~200 clock cycles)
   ↓
-SSD（~100μs）
+SSD (~100μs)
 </code></pre>
 
-<p>每往下走一层，速度差一个数量级。这就是为什么局部性原理（时间局部性 + 空间局部性）如此重要。</p>
-<h2>CPU 缓存行（Cache Line）</h2>
-<p>CPU 缓存不是按字节存取的，而是按「缓存行」——固定大小的块（通常 64 字节）。即使你只读一个 int（4 字节），CPU 也会加载整个缓存行。</p>
-<h2>伪共享（False Sharing）</h2>
-<p><strong>什么是伪共享</strong>：</p>
+<p>Each step down the hierarchy introduces an order-of-magnitude difference in speed. This is why the principle of locality (temporal locality + spatial locality) is so important.</p>
+<h2>CPU Cache Line</h2>
+<p>CPU caches are not accessed byte-by-byte, but in "cache lines"—fixed-size blocks (typically 64 bytes). Even if you only read a single int (4 bytes), the CPU loads the entire cache line.</p>
+<h2>False Sharing</h2>
+<p><strong>What is false sharing</strong>:</p>
 <pre class="codehilite"><code class="language-java">class Counter {
-    volatile long a;  // 线程 1 只写 a
-    volatile long b;  // 线程 2 只写 b
+    volatile long a;  // Thread 1 only writes a
+    volatile long b;  // Thread 2 only writes b
 }
 </code></pre>
 
-<p>a 和 b 可能在同一个 64 字节的缓存行里。线程 1 修改 a 时，整个缓存行被标记为「脏」，线程 2 在另一个核心上的缓存行副本就失效了。即使它们操作的是不同的变量，也要反复同步缓存行。</p>
-<p><strong>解决</strong>：填充（Padding）。</p>
+<p>a and b may reside in the same 64-byte cache line. When Thread 1 modifies a, the entire cache line is marked "dirty," and Thread 2's copy of the cache line on another core is invalidated. Even though they operate on different variables, they must repeatedly synchronize the cache line.</p>
+<p><strong>Solution</strong>: Padding.</p>
 <pre class="codehilite"><code class="language-java">class Counter {
-    @Contended  // JDK 8+ 的注解（需要 -XX:-RestrictContended）
+    @Contended  // JDK 8+ annotation (requires -XX:-RestrictContended)
     volatile long a;
     @Contended
     volatile long b;
 }
 </code></pre>
 
-<p>或者手动填充：</p>
+<p>Or manual padding:</p>
 <pre class="codehilite"><code class="language-java">class PaddedLong {
     volatile long value = 0;
-    long p1, p2, p3, p4, p5, p6, p7; // 填充到 64 字节
+    long p1, p2, p3, p4, p5, p6, p7; // Pad to 64 bytes
 }
 </code></pre>
 
-<h2>为什么要学这个</h2>
-<p>Disruptor（高性能队列）利用了对缓存行的深刻理解，比 ArrayBlockingQueue 快 5-10 倍。高性能编程的瓶颈往往不在算法，而在硬件。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+<h2>Why Learn This</h2>
+<p>Disruptor (a high-performance queue) leverages a deep understanding of cache lines and is 5-10x faster than ArrayBlockingQueue. The bottleneck in high-performance programming is often not the algorithm, but the hardware.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/tech/" rel="category">Tech</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/hashmap-source-code/" rel="prev"><span class="nav-links__label">Previous</span> HashMap 源码深度解析：JDK 8 的红黑树化和扩容机制</a></div><div class="nav-next"><a href="/posts/kafka-alternatives-2025/" rel="next"><span class="nav-links__label">Next</span> Kafka 不再是唯一选择：2025 消息队列选型指南</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/hashmap-source-code/" rel="prev"><span class="nav-links__label">Previous</span> Deep Dive into HashMap Source Code: Red-Black Tree Conversion and Resizing in JDK 8</a></div><div class="nav-next"><a href="/posts/kafka-alternatives-2025/" rel="next"><span class="nav-links__label">Next</span> Kafka Is No Longer the Only Choice: 2025 Message Queue Selection Guide</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -140,11 +140,11 @@ SSD（~100μs）
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -186,7 +186,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -195,7 +196,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -235,6 +236,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -242,6 +244,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -249,12 +252,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

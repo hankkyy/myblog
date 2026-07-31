@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Redis 为什么快？单线程、IO 多路复用与数据结构分析 – Welcome To My Blog</title>
-<meta name="description" content="从线程模型、epoll、高效数据结构三个层面解释 Redis 高性能的秘密">
-<meta property="og:title" content="Redis 为什么快？单线程、IO 多路复用与数据结构分析 – Welcome To My Blog">
-<meta property="og:description" content="从线程模型、epoll、高效数据结构三个层面解释 Redis 高性能的秘密">
+<title>Why Is Redis Fast? Analysis of Single-Threading, IO Multiplexing, and Data Structures – Welcome To My Blog</title>
+<meta name="description" content="Explaining the secret behind Redis's high performance from three perspectives: thread model, epoll, and efficient data structures">
+<meta property="og:title" content="Why Is Redis Fast? Analysis of Single-Threading, IO Multiplexing, and Data Structures – Welcome To My Blog">
+<meta property="og:description" content="Explaining the secret behind Redis's high performance from three perspectives: thread model, epoll, and efficient data structures">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Redis 为什么快？单线程、IO 多路复用与数据结构分析 – Welcome To My Blog",
-  "description": "从线程模型、epoll、高效数据结构三个层面解释 Redis 高性能的秘密",
+  "headline": "Why Is Redis Fast? Analysis of Single-Threading, IO Multiplexing, and Data Structures – Welcome To My Blog",
+  "description": "Explaining the secret behind Redis's high performance from three perspectives: thread model, epoll, and efficient data structures",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">Redis 为什么快？单线程、IO 多路复用与数据结构分析</span>
+        <span class="sticky-title">Why Is Redis Fast? Analysis of Single-Threading, IO Multiplexing, and Data Structures</span>
       </div>
     </div>
   </div>
@@ -68,61 +68,61 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/redis-fast/" rel="bookmark"><time class="entry-date published" datetime="2026-06-09">2026-06-09</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/redis-fast/" rel="bookmark"><time class="entry-date published" datetime="2026-06-09">2026-06-09</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">Redis 为什么快？单线程、IO 多路复用与数据结构分析</h1>
+                <h1 class="entry-title">Why Is Redis Fast? Analysis of Single-Threading, IO Multiplexing, and Data Structures</h1>
               </header>
-              <div class="entry-content"><p>Redis 单线程却能支撑 10 万 QPS。这篇文章解释背后的设计。</p>
-<h2>1. 为什么单线程？</h2>
-<p>Redis 选择单线程不是因为不会写多线程，而是<strong>内存操作太快，多线程的上下文切换和锁竞争反而拖慢性能</strong>。</p>
-<p>一个 Redis 命令的执行路径：</p>
-<pre class="codehilite"><code>解析命令 → 查找 key → 执行操作 → 返回结果
+              <div class="entry-content"><p>Redis is single-threaded yet can handle 100,000 QPS. This article explains the design behind it.</p>
+<h2>1. Why Single-Threaded?</h2>
+<p>Redis chose single-threading not because it can't write multi-threaded code, but because <strong>memory operations are so fast that multi-threading's context switching and lock contention actually slow things down</strong>.</p>
+<p>The execution path of a Redis command:</p>
+<pre class="codehilite"><code>Parse command → Look up key → Execute operation → Return result
 </code></pre>
 
-<p>全部是纯内存操作，耗时微秒级。相比之下，线程切换需要 1-10 微秒，锁竞争更贵。</p>
-<p>但 Redis 6.0 引入了<strong>IO 多线程</strong>——网络读写可以多线程，命令执行仍然是单线程。</p>
-<h2>2. IO 多路复用：epoll</h2>
-<p>单线程怎么处理几万个客户端连接？答案是 epoll。</p>
-<pre class="codehilite"><code class="language-python"># 伪代码：epoll 工作流程
+<p>All are pure in-memory operations, taking microseconds. In comparison, thread switching takes 1-10 microseconds, and lock contention is even more expensive.</p>
+<p>However, Redis 6.0 introduced <strong>IO multi-threading</strong> — network reads/writes can be multi-threaded, but command execution remains single-threaded.</p>
+<h2>2. IO Multiplexing: epoll</h2>
+<p>How does a single thread handle tens of thousands of client connections? The answer is epoll.</p>
+<pre class="codehilite"><code class="language-python"># Pseudocode: epoll workflow
 epoll_fd = epoll_create()
 for client in clients:
     epoll_ctl(epoll_fd, ADD, client.fd, EPOLLIN)
 
 while True:
-    events = epoll_wait(epoll_fd, timeout=10)  # 阻塞等待
+    events = epoll_wait(epoll_fd, timeout=10)  # Blocking wait
     for fd, event in events:
-        handle_client(fd)  # 只处理就绪的连接
+        handle_client(fd)  # Only handle ready connections
 </code></pre>
 
-<p>对比：
-- <code>select</code>：遍历所有 fd → O(n)，最多 1024 个
-- <code>poll</code>：遍历所有 fd → O(n)，无上限但不高效
-- <code>epoll</code>：只返回就绪的 fd → O(1)，基于红黑树 + 就绪链表</p>
-<h2>3. 高效数据结构</h2>
-<p>Redis 快不只是因为内存，还因为数据结构设计得巧妙。</p>
-<p><strong>SDS (Simple Dynamic String)</strong>：</p>
+<p>Comparison:
+- <code>select</code>: Iterates over all fds → O(n), max 1024
+- <code>poll</code>: Iterates over all fds → O(n), no upper limit but not efficient
+- <code>epoll</code>: Only returns ready fds → O(1), based on red-black tree + ready list</p>
+<h2>3. Efficient Data Structures</h2>
+<p>Redis is fast not just because of memory, but also because of cleverly designed data structures.</p>
+<p><strong>SDS (Simple Dynamic String)</strong>:</p>
 <pre class="codehilite"><code class="language-c">struct sdshdr {
-    int len;     // 已用长度
-    int free;    // 剩余空间
-    char buf[];  // 实际数据
+    int len;     // Used length
+    int free;    // Remaining space
+    char buf[];  // Actual data
 };
 </code></pre>
 
 <ul>
-<li>O(1) 获取字符串长度（C 字符串要 O(n)）</li>
-<li>预分配空间，减少 realloc</li>
-<li>二进制安全</li>
+<li>O(1) string length retrieval (C strings require O(n))</li>
+<li>Pre-allocated space reduces realloc calls</li>
+<li>Binary safe</li>
 </ul>
-<p><strong>ziplist</strong>：连续内存存储，省指针开销。小数据量时比链表紧凑 5-10 倍。</p>
-<p><strong>skiplist</strong>：ZSet 的底层结构，平均 O(log n)，实现比平衡树简单。</p>
-<h2>4. 性能数据</h2>
+<p><strong>ziplist</strong>: Contiguous memory storage saves pointer overhead. 5-10x more compact than linked lists for small data volumes.</p>
+<p><strong>skiplist</strong>: The underlying structure for ZSet, average O(log n), simpler to implement than balanced trees.</p>
+<h2>4. Performance Data</h2>
 <table>
 <thead>
 <tr>
-<th>操作</th>
-<th>单机 QPS</th>
-<th>延迟 P99</th>
+<th>Operation</th>
+<th>Single-node QPS</th>
+<th>P99 Latency</th>
 </tr>
 </thead>
 <tbody>
@@ -149,13 +149,13 @@ while True:
 </tbody>
 </table>
 <blockquote>
-<p>Redis 的快是「正确的架构选择 × 极致的数据结构优化」的结果，不是蛮力堆机器能比的。</p>
+<p>Redis's speed is the result of "correct architectural choices × extreme data structure optimization," not something brute-force hardware scaling can match.</p>
 </blockquote></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/internship-thoughts/" rel="prev"><span class="nav-links__label">Previous</span> 后端实习两个月，我学到的东西比大学两年都多</a></div><div class="nav-next"><a href="/posts/columnar-storage/" rel="next"><span class="nav-links__label">Next</span> 为什么 ClickHouse 比 MySQL 快 100 倍？列式存储原理</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/internship-thoughts/" rel="prev"><span class="nav-links__label">Previous</span> Two Months of Backend Internship Taught Me More Than Two Years of University</a></div><div class="nav-next"><a href="/posts/columnar-storage/" rel="next"><span class="nav-links__label">Next</span> Why Is ClickHouse 100x Faster Than MySQL? The Principle of Columnar Storage</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -173,11 +173,11 @@ while True:
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -219,7 +219,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -228,7 +229,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -268,6 +269,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -275,6 +277,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -282,12 +285,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

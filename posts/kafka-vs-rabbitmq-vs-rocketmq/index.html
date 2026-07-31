@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kafka vs RabbitMQ vs RocketMQ：消息队列选型面试全攻略 – Welcome To My Blog</title>
-<meta name="description" content="从吞吐量、可靠性、延迟、功能四个维度对比三大消息队列，面试时能讲出所以然。">
-<meta property="og:title" content="Kafka vs RabbitMQ vs RocketMQ：消息队列选型面试全攻略 – Welcome To My Blog">
-<meta property="og:description" content="从吞吐量、可靠性、延迟、功能四个维度对比三大消息队列，面试时能讲出所以然。">
+<title>Kafka vs RabbitMQ vs RocketMQ: A Complete Guide to Message Queue Selection for Interviews – Welcome To My Blog</title>
+<meta name="description" content="Compare the three major message queues from four dimensions—throughput, reliability, latency, and features—so you can explain your choices convincingly in interviews.">
+<meta property="og:title" content="Kafka vs RabbitMQ vs RocketMQ: A Complete Guide to Message Queue Selection for Interviews – Welcome To My Blog">
+<meta property="og:description" content="Compare the three major message queues from four dimensions—throughput, reliability, latency, and features—so you can explain your choices convincingly in interviews.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Kafka vs RabbitMQ vs RocketMQ：消息队列选型面试全攻略 – Welcome To My Blog",
-  "description": "从吞吐量、可靠性、延迟、功能四个维度对比三大消息队列，面试时能讲出所以然。",
+  "headline": "Kafka vs RabbitMQ vs RocketMQ: A Complete Guide to Message Queue Selection for Interviews – Welcome To My Blog",
+  "description": "Compare the three major message queues from four dimensions—throughput, reliability, latency, and features—so you can explain your choices convincingly in interviews.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">Kafka vs RabbitMQ vs RocketMQ：消息队列选型面试全攻略</span>
+        <span class="sticky-title">Kafka vs RabbitMQ vs RocketMQ: A Complete Guide to Message Queue Selection for Interviews</span>
       </div>
     </div>
   </div>
@@ -68,17 +68,17 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/分布式/" rel="category">分布式</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/kafka-vs-rabbitmq-vs-rocketmq/" rel="bookmark"><time class="entry-date published" datetime="2025-09-18">2025-09-18</time></a></span>
+                <span class="cat-links"><a href="/categories/distributed-systems/" rel="category">Distributed Systems</a><span class="cat-seperator">, </span><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/kafka-vs-rabbitmq-vs-rocketmq/" rel="bookmark"><time class="entry-date published" datetime="2025-09-18">2025-09-18</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">Kafka vs RabbitMQ vs RocketMQ：消息队列选型面试全攻略</h1>
+                <h1 class="entry-title">Kafka vs RabbitMQ vs RocketMQ: A Complete Guide to Message Queue Selection for Interviews</h1>
               </header>
-              <div class="entry-content"><p>消息队列选型是面试中常见的问题。三个主流 MQ 各有擅长。</p>
-<h2>简单对比</h2>
+              <div class="entry-content"><p>Message queue selection is a common interview question. Each of the three mainstream MQs has its own strengths.</p>
+<h2>Quick Comparison</h2>
 <table>
 <thead>
 <tr>
-<th>特性</th>
+<th>Feature</th>
 <th>Kafka</th>
 <th>RabbitMQ</th>
 <th>RocketMQ</th>
@@ -86,69 +86,69 @@
 </thead>
 <tbody>
 <tr>
-<td>吞吐</td>
-<td>极高（百万/秒）</td>
-<td>中等（万/秒）</td>
-<td>高（十万/秒）</td>
+<td>Throughput</td>
+<td>Extremely high (millions/sec)</td>
+<td>Medium (tens of thousands/sec)</td>
+<td>High (hundreds of thousands/sec)</td>
 </tr>
 <tr>
-<td>延迟</td>
-<td>毫秒级</td>
-<td>微秒级</td>
-<td>毫秒级</td>
+<td>Latency</td>
+<td>Millisecond-level</td>
+<td>Microsecond-level</td>
+<td>Millisecond-level</td>
 </tr>
 <tr>
-<td>可靠性</td>
-<td>高（副本+ISR）</td>
-<td>高（镜像队列）</td>
-<td>很高（同步刷盘）</td>
+<td>Reliability</td>
+<td>High (replicas + ISR)</td>
+<td>High (mirrored queues)</td>
+<td>Very high (synchronous disk flush)</td>
 </tr>
 <tr>
-<td>协议</td>
-<td>自有协议</td>
+<td>Protocol</td>
+<td>Proprietary protocol</td>
 <td>AMQP</td>
-<td>自定义（兼容 JMS）</td>
+<td>Custom (JMS-compatible)</td>
 </tr>
 <tr>
-<td>事务消息</td>
-<td>不原生支持</td>
-<td>不支持</td>
-<td>支持</td>
+<td>Transactional Messages</td>
+<td>Not natively supported</td>
+<td>Not supported</td>
+<td>Supported</td>
 </tr>
 <tr>
-<td>顺序消息</td>
-<td>分区内有序</td>
-<td>不保证</td>
-<td>支持</td>
+<td>Ordered Messages</td>
+<td>Ordered within partitions</td>
+<td>Not guaranteed</td>
+<td>Supported</td>
 </tr>
 <tr>
-<td>延时消息</td>
-<td>不原生支持</td>
-<td>插件支持</td>
-<td>原生支持</td>
+<td>Delayed Messages</td>
+<td>Not natively supported</td>
+<td>Supported via plugins</td>
+<td>Natively supported</td>
 </tr>
 </tbody>
 </table>
-<h2>各自的擅长场景</h2>
-<p><strong>Kafka</strong>：日志收集、流处理、大数据管道。核心优势是高吞吐 + 持久化 + 消息回溯。</p>
-<p><strong>RabbitMQ</strong>：业务解耦、异步调用。核心优势是灵活的路由 + 丰富的插件。</p>
-<p><strong>RocketMQ</strong>：阿里的交易、物流、支付场景。核心优势是事务消息 + 顺序消息 + 亿级消息堆积。</p>
-<h2>面试怎么答</h2>
+<h2>Ideal Use Cases for Each</h2>
+<p><strong>Kafka</strong>: Log collection, stream processing, big data pipelines. Core strengths are high throughput + persistence + message replay.</p>
+<p><strong>RabbitMQ</strong>: Business decoupling, asynchronous calls. Core strengths are flexible routing + rich plugins.</p>
+<p><strong>RocketMQ</strong>: Alibaba's transaction, logistics, and payment scenarios. Core strengths are transactional messages + ordered messages + billion-level message accumulation.</p>
+<h2>How to Answer in an Interview</h2>
 <blockquote>
-<p>选型主要看场景。大数据流处理选 Kafka（高吞吐、持久化）；传统业务解耦选 RabbitMQ（灵活路由）；金融级可靠性要求选 RocketMQ（事务消息、顺序消息）。</p>
+<p>Selection mainly depends on the scenario. For big data stream processing, choose Kafka (high throughput, persistence); for traditional business decoupling, choose RabbitMQ (flexible routing); for financial-grade reliability requirements, choose RocketMQ (transactional messages, ordered messages).</p>
 </blockquote>
-<h2>加分项</h2>
+<h2>Bonus Points</h2>
 <ul>
-<li>Kafka 的 Topic 逻辑上分为多个 Partition，是并行和扩展的基础</li>
-<li>RabbitMQ 的 Exchange 有四种类型（direct、topic、fanout、headers）</li>
-<li>RocketMQ 是阿里双十一的核心基础设施，经过极端场景验证</li>
+<li>Kafka's Topic is logically divided into multiple Partitions, which is the foundation of parallelism and scalability</li>
+<li>RabbitMQ's Exchange has four types (direct, topic, fanout, headers)</li>
+<li>RocketMQ is the core infrastructure behind Alibaba's Double 11, battle-tested under extreme conditions</li>
 </ul>
-<p>三个都了解过最好。但至少深入一个。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/分布式/" rel="category">分布式</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
+<p>It's best to have a working knowledge of all three. But go deep into at least one.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/distributed-systems/" rel="category">Distributed Systems</a><a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/learning-from-failure/" rel="prev"><span class="nav-links__label">Previous</span> 那些年我搞砸过的技术决策</a></div><div class="nav-next"><a href="/posts/tencent-cloud-price-war/" rel="next"><span class="nav-links__label">Next</span> 腾讯云降价 60%：中国云计算进入价格战时代</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/learning-from-failure/" rel="prev"><span class="nav-links__label">Previous</span> The Technical Decisions I Screwed Up Over the Years</a></div><div class="nav-next"><a href="/posts/tencent-cloud-price-war/" rel="next"><span class="nav-links__label">Next</span> Tencent Cloud Cuts Prices by 60%: China's Cloud Computing Enters an Era of Price Wars</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -166,11 +166,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -212,7 +212,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -221,7 +222,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -261,6 +262,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -268,6 +270,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -275,12 +278,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

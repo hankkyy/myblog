@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>数据库引擎的静默革命：B+Tree 统治四十年后，新玩家来了 – Welcome To My Blog</title>
-<meta name="description" content="从 B+Tree 到 LSM、向量索引、学习索引——数据库索引结构正在经历四十年来最大的变化，而大多数 CRUD 程序员还没注意到。">
-<meta property="og:title" content="数据库引擎的静默革命：B+Tree 统治四十年后，新玩家来了 – Welcome To My Blog">
-<meta property="og:description" content="从 B+Tree 到 LSM、向量索引、学习索引——数据库索引结构正在经历四十年来最大的变化，而大多数 CRUD 程序员还没注意到。">
+<title>The Silent Revolution in Database Engines: After 40 Years of B+Tree Dominance, New Players Arrive – Welcome To My Blog</title>
+<meta name="description" content="From B+Tree to LSM, vector indexes, and learned indexes—database index structures are undergoing their biggest shift in four decades, and most CRUD developers haven't noticed yet.">
+<meta property="og:title" content="The Silent Revolution in Database Engines: After 40 Years of B+Tree Dominance, New Players Arrive – Welcome To My Blog">
+<meta property="og:description" content="From B+Tree to LSM, vector indexes, and learned indexes—database index structures are undergoing their biggest shift in four decades, and most CRUD developers haven't noticed yet.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "数据库引擎的静默革命：B+Tree 统治四十年后，新玩家来了 – Welcome To My Blog",
-  "description": "从 B+Tree 到 LSM、向量索引、学习索引——数据库索引结构正在经历四十年来最大的变化，而大多数 CRUD 程序员还没注意到。",
+  "headline": "The Silent Revolution in Database Engines: After 40 Years of B+Tree Dominance, New Players Arrive – Welcome To My Blog",
+  "description": "From B+Tree to LSM, vector indexes, and learned indexes—database index structures are undergoing their biggest shift in four decades, and most CRUD developers haven't noticed yet.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">数据库引擎的静默革命：B+Tree 统治四十年后，新玩家来了</span>
+        <span class="sticky-title">The Silent Revolution in Database Engines: After 40 Years of B+Tree Dominance, New Players Arrive</span>
       </div>
     </div>
   </div>
@@ -68,49 +68,49 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/数据库/" rel="category">数据库</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/database-index-revolution/" rel="bookmark"><time class="entry-date published" datetime="2026-07-06">2026-07-06</time></a></span>
+                <span class="cat-links"><a href="/categories/database/" rel="category">Database</a><span class="cat-seperator">, </span><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/database-index-revolution/" rel="bookmark"><time class="entry-date published" datetime="2026-07-06">2026-07-06</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">数据库引擎的静默革命：B+Tree 统治四十年后，新玩家来了</h1>
+                <h1 class="entry-title">The Silent Revolution in Database Engines: After 40 Years of B+Tree Dominance, New Players Arrive</h1>
               </header>
-              <div class="entry-content"><p>你有没有想过一个问题：为什么 MySQL 用 B+Tree、RocksDB 用 LSM Tree、向量数据库用 HNSW？</p>
-<p>大多数后端程序员背了"最左前缀"和"回表查询"，但从来没想过：<strong>为什么不同数据库选了不同的索引结构？如果换一种会怎样？</strong></p>
-<p>这背后是数据库引擎层面正在发生的一场静默革命。</p>
-<h2>B+Tree：四十年的老国王</h2>
-<p>B+Tree 的设计哲学是"读优化"：数据按顺序排列在磁盘页上，B+Tree 的每个节点刚好填满一个磁盘页。查找时从根遍历到叶子，磁盘 I/O 次数等于树的高度。</p>
-<p>这个设计在机械硬盘时代是完美的——随机读写慢，顺序读写快。B+Tree 把数据紧挨着放，最大限度减少寻道。</p>
-<p>但 SSD 改变了游戏规则。SSD 没有寻道时间，随机读和顺序读的差距大大缩小。B+Tree 最核心的优化假设被动摇了。</p>
-<h2>LSM Tree：写入优先的反叛者</h2>
-<p>LSM（Log-Structured Merge-Tree）反着来：写入先到内存的 MemTable（跳表或红黑树），满了之后直接顺序刷盘成一个不可变的 SSTable 文件。后台线程定期合并这些文件。</p>
-<p>结果是：<strong>LSM 的写入比 B+Tree 快一个数量级，但读取要多检查几层 SSTable</strong>。</p>
-<p>RocksDB、Cassandra、Apache Doris 都基于 LSM。在日志、时序数据、IoT 等写入密集型场景下，LSM 是王者。</p>
-<h2>向量索引：AI 时代的新物种</h2>
-<p>过去两年最火的方向。传统索引回答"等于什么"或"在什么范围"，向量索引回答"和什么最像"。</p>
-<p>FAISS、ScaNN、HNSW——这些算法正在从实验室走进数据库内核。pgvector 让 PostgreSQL 能做向量检索，Elasticsearch 和 Redis 也加了向量搜索。</p>
-<p>我预测：5 年内，向量索引会和 B+Tree 一样平常。你今天随口说"给这个字段加个索引"，明天会说"给这段话加个向量索引"。</p>
-<h2>学习索引：用模型替代数据结构</h2>
-<p>2018 年 Jeff Dean 团队在 Google 提出了这个概念。核心想法很颠覆：B+Tree 本质上就是一个把 key 映射到位置的函数。既然这样，为什么不用一个小型神经网络来学习这个映射？</p>
-<p>学习索引的空间效率极高——一个 B+Tree 可能几 MB，一个学习索引可能几十 KB。在嵌入式设备和边缘节点上，这是巨大的优势。</p>
-<p>但目前还在学术界。最大挑战是数据更新——数据分布一变，模型就得重训。</p>
-<h2>为什么这很重要</h2>
-<p>大多数 CRUD 程序员一辈子只用 B+Tree，因为 MySQL 默认就是它。但了解这些方向有几个好处：</p>
+              <div class="entry-content"><p>Have you ever wondered: why does MySQL use B+Tree, RocksDB use LSM Tree, and vector databases use HNSW?</p>
+<p>Most backend developers memorize "leftmost prefix" and "table lookups" but never stop to think: <strong>Why do different databases choose different index structures? What would happen if they swapped?</strong></p>
+<p>Behind this lies a silent revolution happening at the database engine level.</p>
+<h2>B+Tree: The Forty-Year-Old King</h2>
+<p>B+Tree's design philosophy is "read-optimized": data is arranged sequentially on disk pages, and each node of the B+Tree fits exactly into one disk page. Lookups traverse from root to leaf, with disk I/O equal to the tree's height.</p>
+<p>This design was perfect in the mechanical hard drive era—random reads/writes were slow, sequential reads/writes were fast. B+Tree packs data tightly together to minimize seek time.</p>
+<p>But SSDs changed the game. SSDs have no seek time, and the gap between random and sequential reads has narrowed dramatically. B+Tree's core optimization assumption has been shaken.</p>
+<h2>LSM Tree: The Write-First Rebel</h2>
+<p>LSM (Log-Structured Merge-Tree) flips the script: writes first go to an in-memory MemTable (a skip list or red-black tree), and when full, are flushed sequentially to disk as immutable SSTable files. Background threads periodically merge these files.</p>
+<p>The result: <strong>LSM writes are an order of magnitude faster than B+Tree, but reads must check multiple SSTable layers</strong>.</p>
+<p>RocksDB, Cassandra, and Apache Doris are all based on LSM. In write-intensive scenarios like logging, time-series data, and IoT, LSM reigns supreme.</p>
+<h2>Vector Indexes: The New Species of the AI Era</h2>
+<p>This is the hottest direction of the past two years. Traditional indexes answer "what equals X" or "what's in this range," while vector indexes answer "what's most similar to this."</p>
+<p>FAISS, ScaNN, HNSW—these algorithms are moving from the lab into database kernels. pgvector brings vector search to PostgreSQL, and Elasticsearch and Redis have added vector search too.</p>
+<p>My prediction: within 5 years, vector indexes will be as commonplace as B+Tree. Today you casually say "add an index to this field"; tomorrow you'll say "add a vector index to this paragraph."</p>
+<h2>Learned Indexes: Replacing Data Structures with Models</h2>
+<p>In 2018, Jeff Dean's team at Google introduced this concept. The core idea is disruptive: a B+Tree is essentially a function mapping keys to positions. If that's the case, why not use a small neural network to learn this mapping?</p>
+<p>Learned indexes are extremely space-efficient—a B+Tree might take several MB, while a learned index might take just tens of KB. On embedded devices and edge nodes, this is a huge advantage.</p>
+<p>But it's still in academia. The biggest challenge is data updates—when the data distribution changes, the model needs retraining.</p>
+<h2>Why This Matters</h2>
+<p>Most CRUD developers use B+Tree their entire careers because it's MySQL's default. But understanding these directions has several benefits:</p>
 <ol>
-<li><strong>选型有依据</strong>。读多写少选 B+Tree，写多读少用 LSM，语义搜索加向量索引——每个选择都有代价和收益</li>
-<li><strong>面试不怯场</strong>。如果面试官问"MySQL 索引为什么用 B+Tree"，你能聊到 LSM、向量索引、学习索引，这比背八股高级太多</li>
-<li><strong>看到趋势</strong>。数据库是软件大厦的地基。地基在变，上层也会变</li>
+<li><strong>Informed choices</strong>. Read-heavy, write-light workloads favor B+Tree; write-heavy, read-light favors LSM; semantic search calls for vector indexes—every choice has trade-offs</li>
+<li><strong>Interview confidence</strong>. If an interviewer asks "why does MySQL use B+Tree for indexes," you can discuss LSM, vector indexes, and learned indexes—far more impressive than reciting textbook answers</li>
+<li><strong>Seeing the trend</strong>. Databases are the foundation of the software stack. When the foundation shifts, everything above it shifts too</li>
 </ol>
-<p>四十年的 B+Tree 垄断正在结束。不是说 B+Tree 会被淘汰——而是终于有了足够好的替代方案，让你可以根据场景做最优选择。这才是技术进步真正的模样。</p>
+<p>Four decades of B+Tree dominance are coming to an end. It's not that B+Tree will be eliminated—it's that viable alternatives have finally emerged, letting you make the optimal choice for your scenario. That's what real technological progress looks like.</p>
 <hr />
-<p><strong>参考来源：</strong></p>
+<p><strong>References:</strong></p>
 <ul>
 <li><a href="https://arxiv.org/abs/1712.01208">Google AI — The Case for Learned Index Structures (Jeff Dean et al., 2018)</a></li>
 <li><a href="https://github.com/facebookresearch/faiss">Facebook Research — FAISS: A Library for Efficient Similarity Search</a></li>
 </ul></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/数据库/" rel="category">数据库</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/database/" rel="category">Database</a><a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/fable5-returns-limited/" rel="prev"><span class="nav-links__label">Previous</span> Fable 5 回来了，但已经不是原来的 Fable 5 了</a></div><div class="nav-next"><a href="/posts/chinese-llm-landscape-k2/" rel="next"><span class="nav-links__label">Next</span> 中国大模型走到哪了：Kimi K2 发布前夜的观察</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/fable5-returns-limited/" rel="prev"><span class="nav-links__label">Previous</span> Fable 5 Is Back, But It's Not the Same Fable 5 Anymore</a></div><div class="nav-next"><a href="/posts/chinese-llm-landscape-k2/" rel="next"><span class="nav-links__label">Next</span> Where China's Large Models Stand: Observations on the Eve of Kimi K2's Release</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -128,11 +128,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -174,7 +174,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -183,7 +184,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -223,6 +224,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -230,6 +232,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -237,12 +240,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

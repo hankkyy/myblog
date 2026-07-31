@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>后量子密码学入门：量子计算机会破解 HTTPS 吗？ – Welcome To My Blog</title>
-<meta name="description" content="了解量子计算对现有加密体系的威胁，以及 NIST 标准化的后量子加密算法。">
-<meta property="og:title" content="后量子密码学入门：量子计算机会破解 HTTPS 吗？ – Welcome To My Blog">
-<meta property="og:description" content="了解量子计算对现有加密体系的威胁，以及 NIST 标准化的后量子加密算法。">
+<title>A Beginner's Guide to Post-Quantum Cryptography: Will Quantum Computers Break HTTPS? – Welcome To My Blog</title>
+<meta name="description" content="Learn about the threat quantum computing poses to existing encryption systems, and the NIST-standardized post-quantum cryptographic algorithms.">
+<meta property="og:title" content="A Beginner's Guide to Post-Quantum Cryptography: Will Quantum Computers Break HTTPS? – Welcome To My Blog">
+<meta property="og:description" content="Learn about the threat quantum computing poses to existing encryption systems, and the NIST-standardized post-quantum cryptographic algorithms.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "后量子密码学入门：量子计算机会破解 HTTPS 吗？ – Welcome To My Blog",
-  "description": "了解量子计算对现有加密体系的威胁，以及 NIST 标准化的后量子加密算法。",
+  "headline": "A Beginner's Guide to Post-Quantum Cryptography: Will Quantum Computers Break HTTPS? – Welcome To My Blog",
+  "description": "Learn about the threat quantum computing poses to existing encryption systems, and the NIST-standardized post-quantum cryptographic algorithms.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">后量子密码学入门：量子计算机会破解 HTTPS 吗？</span>
+        <span class="sticky-title">A Beginner's Guide to Post-Quantum Cryptography: Will Quantum Computers Break HTTPS?</span>
       </div>
     </div>
   </div>
@@ -68,49 +68,49 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/post-quantum-crypto/" rel="bookmark"><time class="entry-date published" datetime="2025-07-30">2025-07-30</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/post-quantum-crypto/" rel="bookmark"><time class="entry-date published" datetime="2025-07-30">2025-07-30</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">后量子密码学入门：量子计算机会破解 HTTPS 吗？</h1>
+                <h1 class="entry-title">A Beginner's Guide to Post-Quantum Cryptography: Will Quantum Computers Break HTTPS?</h1>
               </header>
-              <div class="entry-content"><p>量子计算机离实用还有距离，但加密算法的过渡已经开始了。</p>
-<h2>量子计算机为什么威胁加密</h2>
-<p>现在的 HTTPS 依赖两种加密：</p>
+              <div class="entry-content"><p>Quantum computers are still far from practical use, but the transition of encryption algorithms has already begun.</p>
+<h2>Why Quantum Computers Threaten Encryption</h2>
+<p>Today's HTTPS relies on two types of encryption:</p>
 <ul>
-<li>对称加密（AES）：量子计算机用 Grover 算法可以把破解时间从 2^128 降到 2^64。解决方法是把密钥加长到 256 位。</li>
-<li>非对称加密（RSA/ECC）：用量子计算机的 Shor 算法可以在多项式时间内破解。这个是致命的——现有公钥体系的基础全部作废。</li>
+<li>Symmetric encryption (AES): Quantum computers using Grover's algorithm can reduce the cracking time from 2^128 to 2^64. The solution is to extend the key length to 256 bits.</li>
+<li>Asymmetric encryption (RSA/ECC): Shor's algorithm on quantum computers can break these in polynomial time. This is fatal—the entire foundation of current public-key systems is invalidated.</li>
 </ul>
-<h2>后量子密码学（PQC）</h2>
-<p>NIST 已经在 2024 年标准化了三组算法：</p>
+<h2>Post-Quantum Cryptography (PQC)</h2>
+<p>NIST has already standardized three families of algorithms in 2024:</p>
 <ul>
-<li>CRYSTALS-Kyber：公钥加密/密钥交换</li>
-<li>CRYSTALS-Dilithium：数字签名</li>
-<li>SPHINCS+：数字签名（备选方案）</li>
+<li>CRYSTALS-Kyber: Public-key encryption/key exchange</li>
+<li>CRYSTALS-Dilithium: Digital signatures</li>
+<li>SPHINCS+: Digital signatures (backup option)</li>
 </ul>
-<p>这些算法基于格（lattice）数学问题，量子计算机也无法有效破解。</p>
-<h2>时间线</h2>
+<p>These algorithms are based on lattice mathematics problems, which quantum computers cannot efficiently solve.</p>
+<h2>Timeline</h2>
 <ul>
-<li>2024：NIST 标准发布</li>
-<li>2025-2026：主流浏览器和操作系统开始支持</li>
-<li>2028-2030：企业级迁移</li>
-<li>2030+：全面切换到后量子加密</li>
+<li>2024: NIST standards released</li>
+<li>2025-2026: Mainstream browsers and operating systems begin support</li>
+<li>2028-2030: Enterprise-level migration</li>
+<li>2030+: Full transition to post-quantum encryption</li>
 </ul>
-<h2>开发者需要做什么</h2>
-<p>目前不用做什么。但可以关注：
-- OpenSSL 和 BoringSSL 的 PQC 支持进度
-- 云服务商的密钥管理服务更新
-- 不要在代码里硬编码加密算法，通过配置切换</p>
-<p>这不是一个紧急问题，但所有的加密体系都需要在十年内完成迁移。</p>
+<h2>What Developers Need to Do</h2>
+<p>There's nothing urgent to do right now. But you can keep an eye on:
+- PQC support progress in OpenSSL and BoringSSL
+- Updates to cloud providers' key management services
+- Avoid hardcoding encryption algorithms in code—switch them via configuration</p>
+<p>This isn't an urgent issue, but all encryption systems need to complete migration within a decade.</p>
 <hr />
-<p><strong>参考来源：</strong></p>
+<p><strong>References:</strong></p>
 <ul>
 <li><a href="https://www.nist.gov/pqcrypto">NIST — Post-Quantum Cryptography Standards</a></li>
 </ul></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/bytedance-ai-video-generator/" rel="prev"><span class="nav-links__label">Previous</span> 字节跳动推出 AI 视频生成工具「即梦」：短视频创作的门槛又降低了</a></div><div class="nav-next"><a href="/posts/huawei-ascend-910c/" rel="next"><span class="nav-links__label">Next</span> 华为昇腾 910C 量产：国产 AI 芯片能替代英伟达吗？</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/bytedance-ai-video-generator/" rel="prev"><span class="nav-links__label">Previous</span> ByteDance Launches AI Video Generation Tool 'Jimeng': Lowering the Barrier to Short-Form Video Creation</a></div><div class="nav-next"><a href="/posts/huawei-ascend-910c/" rel="next"><span class="nav-links__label">Next</span> Huawei Ascend 910C Enters Mass Production: Can Domestic AI Chips Replace NVIDIA?</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -128,11 +128,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -174,7 +174,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -183,7 +184,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -223,6 +224,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -230,6 +232,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -237,12 +240,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

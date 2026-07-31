@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WebAssembly 在后端：第三年了，拐点将至 – Welcome To My Blog</title>
-<meta name="description" content="WASI 0.3 预览版发布后，Wasm 在服务端的生态正在加速。它不会取代 Docker，但它会取代那些 Docker 太重了的场景。">
-<meta property="og:title" content="WebAssembly 在后端：第三年了，拐点将至 – Welcome To My Blog">
-<meta property="og:description" content="WASI 0.3 预览版发布后，Wasm 在服务端的生态正在加速。它不会取代 Docker，但它会取代那些 Docker 太重了的场景。">
+<title>WebAssembly on the Backend: Year Three, the Turning Point Approaches – Welcome To My Blog</title>
+<meta name="description" content="With the WASI 0.3 preview release, the server-side Wasm ecosystem is accelerating. It won't replace Docker, but it will replace the scenarios where Docker is too heavy.">
+<meta property="og:title" content="WebAssembly on the Backend: Year Three, the Turning Point Approaches – Welcome To My Blog">
+<meta property="og:description" content="With the WASI 0.3 preview release, the server-side Wasm ecosystem is accelerating. It won't replace Docker, but it will replace the scenarios where Docker is too heavy.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "WebAssembly 在后端：第三年了，拐点将至 – Welcome To My Blog",
-  "description": "WASI 0.3 预览版发布后，Wasm 在服务端的生态正在加速。它不会取代 Docker，但它会取代那些 Docker 太重了的场景。",
+  "headline": "WebAssembly on the Backend: Year Three, the Turning Point Approaches – Welcome To My Blog",
+  "description": "With the WASI 0.3 preview release, the server-side Wasm ecosystem is accelerating. It won't replace Docker, but it will replace the scenarios where Docker is too heavy.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">WebAssembly 在后端：第三年了，拐点将至</span>
+        <span class="sticky-title">WebAssembly on the Backend: Year Three, the Turning Point Approaches</span>
       </div>
     </div>
   </div>
@@ -68,55 +68,55 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a><span class="cat-seperator">, </span><a href="/categories/云原生/" rel="category">云原生</a></span><span class="posted-on"><a href="/posts/wasm-backend-2026/" rel="bookmark"><time class="entry-date published" datetime="2026-07-22">2026-07-22</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a><span class="cat-seperator">, </span><a href="/categories/cloud-native/" rel="category">Cloud Native</a></span><span class="posted-on"><a href="/posts/wasm-backend-2026/" rel="bookmark"><time class="entry-date published" datetime="2026-07-22">2026-07-22</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">WebAssembly 在后端：第三年了，拐点将至</h1>
+                <h1 class="entry-title">WebAssembly on the Backend: Year Three, the Turning Point Approaches</h1>
               </header>
-              <div class="entry-content"><p>这周 Kimi 和 Fable 5 抢了所有头条。但有一件事被低估了：WASI 0.3 预览版上个月发布了，带来了异步 I/O 支持。对于 WebAssembly 在后端的未来，这可能是一个转折点。</p>
-<h2>为什么 Wasm 值得关注</h2>
-<p>Wasm 最颠覆的特性是<strong>冷启动速度</strong>。</p>
-<p>Docker 容器的冷启动（拉镜像 → 解压 → 启动进程）至少要几百毫秒，Java 应用更是以秒为单位。Wasm 的冷启动是<strong>微秒级</strong>——因为 Wasm 模块就是一个编译好的字节码文件，不需要启动操作系统进程。</p>
-<p>这在 Serverless 场景下是革命性的：用户请求到达 → 冷启动 Wasm 模块 → 处理请求 → 销毁。整个生命周期不到 1 毫秒。这是 Serverless 的终极形态——每个请求一个独立的、安全的、瞬时的执行环境。</p>
-<h2>WASI 0.3 的关键突破</h2>
-<p>之前 WASI 只有同步 I/O，这意味着你没法在 Wasm 里高效处理网络请求。WASI 0.3 的 <code>wasi:io/poll</code> 接口终于让异步 I/O 成为可能。</p>
-<p>简单说：<strong>WASI 0.3 之前，Wasm 只能跑函数。之后，可以跑服务了。</strong></p>
-<p>另外，Wasm 的沙箱隔离是在语言 VM 层面的，不共享操作系统内核。和 Docker 相比，安全边界更强。这让它天然适合多租户平台——每个租户一个 Wasm 沙箱，比容器更安全也更便宜。</p>
-<h2>现实的差距</h2>
-<p>不吹不黑，Wasm 在后端的现实是这样的：</p>
+              <div class="entry-content"><p>This week, Kimi and Fable 5 grabbed all the headlines. But one thing flew under the radar: the WASI 0.3 preview was released last month, bringing async I/O support. This could be a turning point for the future of WebAssembly on the backend.</p>
+<h2>Why Wasm Matters</h2>
+<p>The most disruptive feature of Wasm is <strong>cold start speed</strong>.</p>
+<p>Docker containers take at least a few hundred milliseconds to cold start (pull image → unpack → launch process), and Java applications take seconds. Wasm cold starts are <strong>microsecond-level</strong> — because a Wasm module is just a compiled bytecode file that doesn't require booting an OS process.</p>
+<p>This is revolutionary in serverless scenarios: user request arrives → cold start Wasm module → process request → destroy. The entire lifecycle takes less than 1 millisecond. This is the ultimate form of serverless — an independent, secure, ephemeral execution environment for every request.</p>
+<h2>The Key Breakthrough in WASI 0.3</h2>
+<p>Previously, WASI only had synchronous I/O, which meant you couldn't efficiently handle network requests in Wasm. The <code>wasi:io/poll</code> interface in WASI 0.3 finally makes async I/O possible.</p>
+<p>In simple terms: <strong>Before WASI 0.3, Wasm could only run functions. After it, Wasm can run services.</strong></p>
+<p>Additionally, Wasm's sandbox isolation happens at the language VM level and doesn't share the OS kernel. Compared to Docker, the security boundary is stronger. This makes it naturally suited for multi-tenant platforms — one Wasm sandbox per tenant is both more secure and cheaper than containers.</p>
+<h2>The Reality Gap</h2>
+<p>To be fair, here's what the reality of Wasm on the backend looks like:</p>
 <ul>
-<li><strong>Rust</strong> 支持最好——wasm32-wasip2 target 已经可用，Tokio 异步运行时也能编译到 Wasm</li>
-<li><strong>Go</strong> 在追赶——Go 1.24 改进了 Wasm 支持，但 goroutine 调度还有限制</li>
-<li><strong>Java</strong> 还在早期——GraalVM 可以编译到 Wasm，但生态（数据库驱动、HTTP 客户端）远未成熟</li>
-<li><strong>可观测性</strong>是盲区——日志、Metrics、Tracing 在 Wasm 里怎么做？目前没有标准方案</li>
+<li><strong>Rust</strong> has the best support — the wasm32-wasip2 target is already available, and the Tokio async runtime can compile to Wasm</li>
+<li><strong>Go</strong> is catching up — Go 1.24 improved Wasm support, but goroutine scheduling still has limitations</li>
+<li><strong>Java</strong> is still early — GraalVM can compile to Wasm, but the ecosystem (database drivers, HTTP clients) is far from mature</li>
+<li><strong>Observability</strong> is a blind spot — how do you do logging, metrics, and tracing in Wasm? There's no standard solution yet</li>
 </ul>
-<h2>谁在用？</h2>
+<h2>Who's Using It?</h2>
 <ul>
-<li><strong>Cloudflare Workers</strong>：最成功的 Wasm 服务端应用，每天处理万亿次请求</li>
-<li><strong>Fermyon Spin</strong>：基于 Wasm 的 Serverless 框架，已经有一些企业 case</li>
-<li><strong>Docker</strong> 官方宣布支持 Wasm 作为容器运行时的替代</li>
+<li><strong>Cloudflare Workers</strong>: The most successful server-side Wasm application, handling trillions of requests daily</li>
+<li><strong>Fermyon Spin</strong>: A Wasm-based serverless framework with some enterprise use cases already</li>
+<li><strong>Docker</strong> officially announced support for Wasm as an alternative container runtime</li>
 </ul>
-<h2>我的判断</h2>
-<p>Wasm 在后端的定位不是"替代 Docker"，而是"替代那些 Docker 太重了的场景"：</p>
+<h2>My Take</h2>
+<p>Wasm's position on the backend isn't to "replace Docker," but to "replace the scenarios where Docker is too heavy":</p>
 <ul>
-<li><strong>边缘计算</strong>：CDN 边缘节点、IoT 网关——需要极快启动、极小 footprint</li>
-<li><strong>事件驱动短任务</strong>：Webhook 处理、数据转换、图片缩放——生灭在毫秒之间</li>
-<li><strong>多租户平台</strong>：每个租户一个 Wasm 沙箱，比容器更安全、更便宜</li>
+<li><strong>Edge computing</strong>: CDN edge nodes, IoT gateways — where you need extremely fast startup and minimal footprint</li>
+<li><strong>Event-driven short tasks</strong>: Webhook processing, data transformation, image resizing — born and gone within milliseconds</li>
+<li><strong>Multi-tenant platforms</strong>: One Wasm sandbox per tenant, more secure and cheaper than containers</li>
 </ul>
-<p>2027 年之前，应该会有一个用 Wasm 写的正经后端框架获得广泛关注。</p>
-<p>在 Kimi K3 和 Fable 5 抢走所有注意力的这一周，Wasm 的进步显得很安静。但历史的经验是：那些安静进步的技术，往往最终影响更大。</p>
+<p>Before 2027, there should be a serious backend framework written in Wasm that gains widespread attention.</p>
+<p>In a week where Kimi K3 and Fable 5 stole all the spotlight, Wasm's progress has been quiet. But history shows that quietly advancing technologies often end up having the biggest impact.</p>
 <hr />
-<p><strong>参考来源：</strong></p>
+<p><strong>References:</strong></p>
 <ul>
-<li><a href="https://github.com/WebAssembly/WASI">WASI 0.3 预览版 — WASI Preview 3</a></li>
+<li><a href="https://github.com/WebAssembly/WASI">WASI 0.3 Preview — WASI Preview 3</a></li>
 <li><a href="https://developers.cloudflare.com/workers/">Cloudflare Workers — WebAssembly on the edge</a></li>
 <li><a href="https://www.fermyon.com/spin">Fermyon — Spin: Serverless WebAssembly</a></li>
 </ul></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a><a href="/categories/云原生/" rel="category">云原生</a></span></footer>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a><a href="/categories/cloud-native/" rel="category">Cloud Native</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/ai-supply-limits-era/" rel="prev"><span class="nav-links__label">Previous</span> 一周两件大事：AI 正在进入限量供应时代</a></div><div class="nav-next"><a href="/posts/saga-pattern-decline/" rel="next"><span class="nav-links__label">Next</span> Saga 模式的黄昏？2026 年分布式事务的新思路</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/ai-supply-limits-era/" rel="prev"><span class="nav-links__label">Previous</span> Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></div><div class="nav-next"><a href="/posts/saga-pattern-decline/" rel="next"><span class="nav-links__label">Next</span> The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -134,11 +134,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -180,7 +180,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -189,7 +190,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -229,6 +230,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -236,6 +238,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -243,12 +246,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>读源码是成为更好程序员的最佳捷径 – Welcome To My Blog</title>
-<meta name="description" content="分享读源码的方法：从 Redis 的简洁代码到 Spring 的复杂架构，不同级别的代码该怎么读。">
-<meta property="og:title" content="读源码是成为更好程序员的最佳捷径 – Welcome To My Blog">
-<meta property="og:description" content="分享读源码的方法：从 Redis 的简洁代码到 Spring 的复杂架构，不同级别的代码该怎么读。">
+<title>Reading Source Code Is the Best Shortcut to Becoming a Better Programmer – Welcome To My Blog</title>
+<meta name="description" content="Sharing methods for reading source code: from Redis's clean code to Spring's complex architecture, how to read code at different levels.">
+<meta property="og:title" content="Reading Source Code Is the Best Shortcut to Becoming a Better Programmer – Welcome To My Blog">
+<meta property="og:description" content="Sharing methods for reading source code: from Redis's clean code to Spring's complex architecture, how to read code at different levels.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "读源码是成为更好程序员的最佳捷径 – Welcome To My Blog",
-  "description": "分享读源码的方法：从 Redis 的简洁代码到 Spring 的复杂架构，不同级别的代码该怎么读。",
+  "headline": "Reading Source Code Is the Best Shortcut to Becoming a Better Programmer – Welcome To My Blog",
+  "description": "Sharing methods for reading source code: from Redis's clean code to Spring's complex architecture, how to read code at different levels.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">读源码是成为更好程序员的最佳捷径</span>
+        <span class="sticky-title">Reading Source Code Is the Best Shortcut to Becoming a Better Programmer</span>
       </div>
     </div>
   </div>
@@ -68,42 +68,42 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a><span class="cat-seperator">, </span><a href="/categories/杂谈/" rel="category">杂谈</a></span><span class="posted-on"><a href="/posts/reading-source-code/" rel="bookmark"><time class="entry-date published" datetime="2025-05-08">2025-05-08</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a><span class="cat-seperator">, </span><a href="/categories/random-thoughts/" rel="category">Random Thoughts</a></span><span class="posted-on"><a href="/posts/reading-source-code/" rel="bookmark"><time class="entry-date published" datetime="2025-05-08">2025-05-08</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">读源码是成为更好程序员的最佳捷径</h1>
+                <h1 class="entry-title">Reading Source Code Is the Best Shortcut to Becoming a Better Programmer</h1>
               </header>
-              <div class="entry-content"><p>很多人觉得读源码太难了，其实有方法。</p>
-<h2>为什么读源码</h2>
+              <div class="entry-content"><p>Many people think reading source code is too hard, but there are actually methods.</p>
+<h2>Why Read Source Code</h2>
 <ul>
-<li>文档会过时，代码不会骗你</li>
-<li>理解为什么这样设计，而不只是怎么用</li>
-<li>写出更符合框架设计哲学的代码</li>
-<li>为贡献开源项目做准备</li>
+<li>Documentation goes stale; code never lies</li>
+<li>Understand why it's designed this way, not just how to use it</li>
+<li>Write code that better aligns with the framework's design philosophy</li>
+<li>Prepare for contributing to open source projects</li>
 </ul>
-<h2>怎么读</h2>
-<h3>1. 从入口开始</h3>
-<p>找到 main 函数或请求处理的第一行代码，跟着调用链往下走。</p>
-<h3>2. 画调用图</h3>
-<p>不用工具，纸和笔就够了。每个函数的功能用一句话总结。</p>
-<h3>3. 忽略细节</h3>
-<p>第一次通读时忽略异常处理、日志、参数校验。这些会干扰对主流程的理解。</p>
-<h3>4. 修一个小 bug</h3>
-<p>找一个 good first issue，试着修复。修 bug 是理解代码最快的方式。</p>
-<h2>推荐阅读顺序</h2>
+<h2>How to Read</h2>
+<h3>1. Start from the Entry Point</h3>
+<p>Find the main function or the first line of code that handles a request, then follow the call chain downward.</p>
+<h3>2. Draw a Call Graph</h3>
+<p>No tools needed—paper and pen are enough. Summarize each function's purpose in one sentence.</p>
+<h3>3. Ignore the Details</h3>
+<p>On your first pass, ignore exception handling, logging, and parameter validation. These will interfere with your understanding of the main flow.</p>
+<h3>4. Fix a Small Bug</h3>
+<p>Find a good first issue and try to fix it. Fixing bugs is the fastest way to understand code.</p>
+<h2>Recommended Reading Order</h2>
 <ul>
-<li>入门级：Redis 源码（代码极其简洁，C 语言）</li>
-<li>进阶：Netty 核心模块（Reactor 模式的教科书实现）</li>
-<li>高级：Spring IoC 容器（设计模式的集大成者）</li>
+<li>Beginner: Redis source code (extremely clean code, written in C)</li>
+<li>Intermediate: Netty core modules (a textbook implementation of the Reactor pattern)</li>
+<li>Advanced: Spring IoC container (a culmination of design patterns)</li>
 </ul>
-<h2>心态</h2>
-<p>不要期望一次就读懂全部。每次带着一个问题去读：「这块代码是做什么的？」「为什么要这样设计？」。</p>
-<p>读源码最大的收获不是「看懂了什么」，而是「发现原来这么复杂的东西也是普通程序员一行一行写出来的」。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a><a href="/categories/杂谈/" rel="category">杂谈</a></span></footer>
+<h2>Mindset</h2>
+<p>Don't expect to understand everything in one read. Go in with one question each time: "What does this piece of code do?" "Why is it designed this way?"</p>
+<p>The biggest takeaway from reading source code isn't "what you understood," but realizing that "something this complex was also written line by line by ordinary programmers."</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a><a href="/categories/random-thoughts/" rel="category">Random Thoughts</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/git-workflow-best-practices/" rel="prev"><span class="nav-links__label">Previous</span> Git 工作流最佳实践：从单人项目到团队协作</a></div><div class="nav-next"><a href="/posts/leetcode-239-sliding-window/" rel="next"><span class="nav-links__label">Next</span> LeetCode 239. 滑动窗口最大值：单调队列的经典应用</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/git-workflow-best-practices/" rel="prev"><span class="nav-links__label">Previous</span> Git Workflow Best Practices: From Solo Projects to Team Collaboration</a></div><div class="nav-next"><a href="/posts/leetcode-239-sliding-window/" rel="next"><span class="nav-links__label">Next</span> LeetCode 239. Sliding Window Maximum: A Classic Application of Monotonic Queue</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -121,11 +121,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -167,7 +167,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -176,7 +177,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -216,6 +217,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -223,6 +225,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -230,12 +233,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

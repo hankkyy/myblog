@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>synchronized vs ReentrantLock：从面试被问到源码实现 – Welcome To My Blog</title>
-<meta name="description" content="对比 Java 内置锁和显式锁的差异，包括锁升级过程和 AQS 原理。">
-<meta property="og:title" content="synchronized vs ReentrantLock：从面试被问到源码实现 – Welcome To My Blog">
-<meta property="og:description" content="对比 Java 内置锁和显式锁的差异，包括锁升级过程和 AQS 原理。">
+<title>synchronized vs ReentrantLock: From Interview Questions to Source Code Implementation – Welcome To My Blog</title>
+<meta name="description" content="Comparing the differences between Java's built-in lock and explicit lock, including lock upgrade process and AQS principles.">
+<meta property="og:title" content="synchronized vs ReentrantLock: From Interview Questions to Source Code Implementation – Welcome To My Blog">
+<meta property="og:description" content="Comparing the differences between Java's built-in lock and explicit lock, including lock upgrade process and AQS principles.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "synchronized vs ReentrantLock：从面试被问到源码实现 – Welcome To My Blog",
-  "description": "对比 Java 内置锁和显式锁的差异，包括锁升级过程和 AQS 原理。",
+  "headline": "synchronized vs ReentrantLock: From Interview Questions to Source Code Implementation – Welcome To My Blog",
+  "description": "Comparing the differences between Java's built-in lock and explicit lock, including lock upgrade process and AQS principles.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">synchronized vs ReentrantLock：从面试被问到源码实现</span>
+        <span class="sticky-title">synchronized vs ReentrantLock: From Interview Questions to Source Code Implementation</span>
       </div>
     </div>
   </div>
@@ -68,96 +68,96 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/syncronized-vs-reentrantlock/" rel="bookmark"><time class="entry-date published" datetime="2025-05-30">2025-05-30</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/syncronized-vs-reentrantlock/" rel="bookmark"><time class="entry-date published" datetime="2025-05-30">2025-05-30</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">synchronized vs ReentrantLock：从面试被问到源码实现</h1>
+                <h1 class="entry-title">synchronized vs ReentrantLock: From Interview Questions to Source Code Implementation</h1>
               </header>
-              <div class="entry-content"><p>synchronized 和 ReentrantLock 有什么区别？十个面试九个问。</p>
-<h2>用法对比</h2>
+              <div class="entry-content"><p>What's the difference between synchronized and ReentrantLock? Nine out of ten interviews ask this question.</p>
+<h2>Usage Comparison</h2>
 <pre class="codehilite"><code class="language-java">// synchronized
 synchronized (lock) {
-    // 临界区
+    // critical section
 }
 
 // ReentrantLock
 lock.lock();
 try {
-    // 临界区
+    // critical section
 } finally {
-    lock.unlock();  // 必须在 finally 中释放！
+    lock.unlock();  // Must be released in finally!
 }
 </code></pre>
 
-<h2>核心区别</h2>
+<h2>Core Differences</h2>
 <table>
 <thead>
 <tr>
-<th>特性</th>
+<th>Feature</th>
 <th>synchronized</th>
 <th>ReentrantLock</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>实现</td>
-<td>JVM 内置（monitorenter/exit）</td>
-<td>JDK 层面（AQS）</td>
+<td>Implementation</td>
+<td>JVM built-in (monitorenter/exit)</td>
+<td>JDK level (AQS)</td>
 </tr>
 <tr>
-<td>可中断</td>
-<td>不支持</td>
+<td>Interruptible</td>
+<td>Not supported</td>
 <td>lockInterruptibly()</td>
 </tr>
 <tr>
-<td>超时获取</td>
-<td>不支持</td>
+<td>Timeout acquisition</td>
+<td>Not supported</td>
 <td>tryLock(time, unit)</td>
 </tr>
 <tr>
-<td>公平锁</td>
-<td>非公平</td>
-<td>可公平可非公平</td>
+<td>Fair lock</td>
+<td>Unfair</td>
+<td>Can be fair or unfair</td>
 </tr>
 <tr>
-<td>多条件</td>
-<td>一个条件队列</td>
-<td>多个 Condition</td>
+<td>Multiple conditions</td>
+<td>One condition queue</td>
+<td>Multiple Conditions</td>
 </tr>
 <tr>
-<td>性能</td>
-<td>JDK 6+ 优化后旗鼓相当</td>
-<td>差不多</td>
+<td>Performance</td>
+<td>Comparable after JDK 6+ optimization</td>
+<td>About the same</td>
 </tr>
 </tbody>
 </table>
-<h2>JDK 6 的锁升级</h2>
-<p>synchronized 在 JDK 6 之前是重量级锁（直接操作系统互斥量）。JDK 6 引入了锁升级：</p>
+<h2>Lock Upgrade in JDK 6</h2>
+<p>Before JDK 6, synchronized was a heavyweight lock (directly using OS mutex). JDK 6 introduced lock upgrade:</p>
 <ol>
-<li><strong>无锁</strong>：没有线程竞争</li>
-<li><strong>偏向锁</strong>：同一个线程多次获取，直接通过（CAS 标记线程 ID）</li>
-<li><strong>轻量级锁</strong>：多个线程交替执行（CAS 自旋）</li>
-<li><strong>重量级锁</strong>：真正的阻塞（操作系统层面）</li>
+<li><strong>No lock</strong>: No thread contention</li>
+<li><strong>Biased lock</strong>: Same thread acquires multiple times, passes directly (CAS marks thread ID)</li>
+<li><strong>Lightweight lock</strong>: Multiple threads execute alternately (CAS spin)</li>
+<li><strong>Heavyweight lock</strong>: True blocking (OS level)</li>
 </ol>
-<h2>ReentrantLock 底层：AQS</h2>
-<p>ReentrantLock 基于 AQS（AbstractQueuedSynchronizer）。AQS 维护了一个 state（volatile int）和一个 FIFO 等待队列。</p>
+<h2>ReentrantLock Under the Hood: AQS</h2>
+<p>ReentrantLock is based on AQS (AbstractQueuedSynchronizer). AQS maintains a state (volatile int) and a FIFO waiting queue.</p>
 <ul>
-<li>加锁：CAS 把 state 从 0 改为 1</li>
-<li>重入：同一个线程再获取，state + 1</li>
-<li>释放：state - 1，state 为 0 时唤醒等待线程</li>
+<li>Locking: CAS changes state from 0 to 1</li>
+<li>Reentrancy: Same thread acquires again, state + 1</li>
+<li>Release: state - 1, when state reaches 0, wake up waiting threads</li>
 </ul>
-<h2>什么时候用 ReentrantLock</h2>
+<h2>When to Use ReentrantLock</h2>
 <ul>
-<li>需要尝试获取锁（tryLock）</li>
-<li>需要可中断的锁</li>
-<li>需要公平锁（先来先得）</li>
+<li>Need to try acquiring the lock (tryLock)</li>
+<li>Need an interruptible lock</li>
+<li>Need a fair lock (first come, first served)</li>
 </ul>
-<p>能用 synchronized 就用 synchronized。代码更简单，出错的概率更小。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+<p>Use synchronized whenever possible. The code is simpler, and the chance of errors is lower.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/k8s-hpa-autoscaling/" rel="prev"><span class="nav-links__label">Previous</span> Kubernetes HPA 自动伸缩深入理解：从 CPU 到自定义指标</a></div><div class="nav-next"><a href="/posts/aws-reinvent-2025/" rel="next"><span class="nav-links__label">Next</span> AWS re:Invent 2025：Amazon 的 AI 全线反击</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/k8s-hpa-autoscaling/" rel="prev"><span class="nav-links__label">Previous</span> Deep Dive into Kubernetes HPA Autoscaling: From CPU to Custom Metrics</a></div><div class="nav-next"><a href="/posts/aws-reinvent-2025/" rel="next"><span class="nav-links__label">Next</span> AWS re:Invent 2025: Amazon's Full-Scale AI Counterattack</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -175,11 +175,11 @@ try {
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -221,7 +221,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -230,7 +231,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -270,6 +271,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -277,6 +279,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -284,12 +287,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

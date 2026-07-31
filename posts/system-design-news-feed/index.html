@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>系统设计面试：设计一个社交媒体的信息流（News Feed） – Welcome To My Blog</title>
-<meta name="description" content="以 Twitter/微博为例，拆解信息流的生成、推送和拉取策略，理解推模式和拉模式的取舍。">
-<meta property="og:title" content="系统设计面试：设计一个社交媒体的信息流（News Feed） – Welcome To My Blog">
-<meta property="og:description" content="以 Twitter/微博为例，拆解信息流的生成、推送和拉取策略，理解推模式和拉模式的取舍。">
+<title>System Design Interview: Designing a Social Media News Feed – Welcome To My Blog</title>
+<meta name="description" content="Using Twitter/Weibo as an example, break down the strategies for generating, pushing, and pulling a news feed, and understand the trade-offs between push-based and pull-based models.">
+<meta property="og:title" content="System Design Interview: Designing a Social Media News Feed – Welcome To My Blog">
+<meta property="og:description" content="Using Twitter/Weibo as an example, break down the strategies for generating, pushing, and pulling a news feed, and understand the trade-offs between push-based and pull-based models.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "系统设计面试：设计一个社交媒体的信息流（News Feed） – Welcome To My Blog",
-  "description": "以 Twitter/微博为例，拆解信息流的生成、推送和拉取策略，理解推模式和拉模式的取舍。",
+  "headline": "System Design Interview: Designing a Social Media News Feed – Welcome To My Blog",
+  "description": "Using Twitter/Weibo as an example, break down the strategies for generating, pushing, and pulling a news feed, and understand the trade-offs between push-based and pull-based models.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">系统设计面试：设计一个社交媒体的信息流（News Feed）</span>
+        <span class="sticky-title">System Design Interview: Designing a Social Media News Feed</span>
       </div>
     </div>
   </div>
@@ -68,54 +68,54 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/系统设计/" rel="category">系统设计</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/system-design-news-feed/" rel="bookmark"><time class="entry-date published" datetime="2025-08-22">2025-08-22</time></a></span>
+                <span class="cat-links"><a href="/categories/system-design/" rel="category">System Design</a><span class="cat-seperator">, </span><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/system-design-news-feed/" rel="bookmark"><time class="entry-date published" datetime="2025-08-22">2025-08-22</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">系统设计面试：设计一个社交媒体的信息流（News Feed）</h1>
+                <h1 class="entry-title">System Design Interview: Designing a Social Media News Feed</h1>
               </header>
-              <div class="entry-content"><p>信息流（News Feed / Timeline）是社交媒体的核心，也是系统设计面试的经典题。</p>
-<h2>需求</h2>
+              <div class="entry-content"><p>The News Feed / Timeline is the core of social media and a classic system design interview question.</p>
+<h2>Requirements</h2>
 <ul>
-<li>用户看到自己关注的人发的帖子</li>
-<li>按时间倒序排列</li>
-<li>支持图片和视频</li>
-<li>千万级 DAU</li>
+<li>Users see posts from people they follow</li>
+<li>Sorted in reverse chronological order</li>
+<li>Support images and videos</li>
+<li>Tens of millions of DAU</li>
 </ul>
-<h2>推模式 vs 拉模式</h2>
-<p><strong>推模式（Fan-out on Write）</strong>：
-- 用户发帖时，预先推送到所有粉丝的信息流里
-- 读的时候直接从 Redis 拿，O(1)
-- 缺点：明星用户有上亿粉丝，写扩散成本巨大</p>
-<p><strong>拉模式（Fan-out on Read）</strong>：
-- 用户查看信息流时，实时拉取所有关注的人的最新帖子
-- 写操作简单
-- 缺点：关注的人多了，读操作很慢</p>
-<h2>混合模式（实际用的方案）</h2>
+<h2>Push Model vs Pull Model</h2>
+<p><strong>Push Model (Fan-out on Write)</strong>:
+- When a user posts, the post is pre-pushed to all followers' feeds
+- Reading is done directly from Redis, O(1)
+- Drawback: celebrities have hundreds of millions of followers, making write fan-out extremely costly</p>
+<p><strong>Pull Model (Fan-out on Read)</strong>:
+- When a user views their feed, the latest posts from all followed users are pulled in real time
+- Write operations are simple
+- Drawback: the more people you follow, the slower the read operation</p>
+<h2>Hybrid Model (the approach actually used)</h2>
 <ul>
-<li>普通用户（粉丝少）：用推模式，发帖时推送给粉丝</li>
-<li>大 V（粉丝多）：用拉模式，粉丝查看时实时拉取</li>
-<li>最终结果合并：推的结果 + 拉的结果 → 排序 → 返回</li>
+<li>Regular users (few followers): use the push model, pushing posts to followers when they post</li>
+<li>Big influencers (many followers): use the pull model, pulling in real time when followers view their feed</li>
+<li>Final results are merged: pushed results + pulled results → sorted → returned</li>
 </ul>
-<h2>存储设计</h2>
+<h2>Storage Design</h2>
 <ul>
-<li>帖子存储：MySQL 分库分表（按 user_id 分片）</li>
-<li>信息流缓存：Redis List（每个用户一个 Timeline，存储最近 1000 条）</li>
-<li>图片/视频：CDN + 对象存储</li>
-<li>热数据：最近 3 天的帖子在 Redis，更久的在 MySQL</li>
+<li>Post storage: MySQL sharded by database and table (sharded by user_id)</li>
+<li>Feed cache: Redis List (one Timeline per user, storing the most recent 1000 posts)</li>
+<li>Images/videos: CDN + object storage</li>
+<li>Hot data: posts from the last 3 days in Redis, older ones in MySQL</li>
 </ul>
-<h2>核心优化</h2>
+<h2>Key Optimizations</h2>
 <ul>
-<li>分页：用游标（cursor）而不是 offset，避免深分页问题</li>
-<li>异步：发帖后先写入，后台异步推送给粉丝</li>
-<li>去重：有的粉丝可能同时被推送又被拉取，需要合并去重</li>
+<li>Pagination: use cursor instead of offset to avoid deep pagination issues</li>
+<li>Asynchronous: after posting, write first, then push to followers asynchronously in the background</li>
+<li>Deduplication: some followers may be both pushed to and pulled from, requiring merge and deduplication</li>
 </ul>
-<h2>面试要点</h2>
-<p>必须提到推拉结合的混合模式。这是面试官最想听到的关键词。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/系统设计/" rel="category">系统设计</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
+<h2>Interview Key Points</h2>
+<p>You must mention the hybrid model combining push and pull. This is the keyword the interviewer most wants to hear.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/system-design/" rel="category">System Design</a><a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/cap-theorem-explained/" rel="prev"><span class="nav-links__label">Previous</span> CAP 定理面试精讲：你只能三选二，但现实没有那么简单</a></div><div class="nav-next"><a href="/posts/microsoft-nuclear-ai/" rel="next"><span class="nav-links__label">Next</span> 微软签下核电站供电合同：AI 数据中心的电力需求有多恐怖？</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/cap-theorem-explained/" rel="prev"><span class="nav-links__label">Previous</span> CAP Theorem Interview Deep Dive: You Can Only Pick Two, But Reality Is More Complex</a></div><div class="nav-next"><a href="/posts/microsoft-nuclear-ai/" rel="next"><span class="nav-links__label">Next</span> Microsoft Signs Nuclear Power Deal: How Massive Is AI Data Center Electricity Demand?</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -133,11 +133,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -179,7 +179,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -188,7 +189,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -228,6 +229,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -235,6 +237,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -242,12 +245,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

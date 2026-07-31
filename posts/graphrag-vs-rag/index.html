@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GraphRAG 正在改变检索增强生成：当知识图谱遇上 LLM – Welcome To My Blog</title>
-<meta name="description" content="微软 GraphRAG 论文发布四个月后，这个方向的热度不降反升。它到底解决了什么问题？值不值得上？">
-<meta property="og:title" content="GraphRAG 正在改变检索增强生成：当知识图谱遇上 LLM – Welcome To My Blog">
-<meta property="og:description" content="微软 GraphRAG 论文发布四个月后，这个方向的热度不降反升。它到底解决了什么问题？值不值得上？">
+<title>GraphRAG Is Transforming Retrieval-Augmented Generation: When Knowledge Graphs Meet LLMs – Welcome To My Blog</title>
+<meta name="description" content="Four months after Microsoft's GraphRAG paper, interest in this direction has only grown. What problems does it actually solve? Is it worth adopting?">
+<meta property="og:title" content="GraphRAG Is Transforming Retrieval-Augmented Generation: When Knowledge Graphs Meet LLMs – Welcome To My Blog">
+<meta property="og:description" content="Four months after Microsoft's GraphRAG paper, interest in this direction has only grown. What problems does it actually solve? Is it worth adopting?">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "GraphRAG 正在改变检索增强生成：当知识图谱遇上 LLM – Welcome To My Blog",
-  "description": "微软 GraphRAG 论文发布四个月后，这个方向的热度不降反升。它到底解决了什么问题？值不值得上？",
+  "headline": "GraphRAG Is Transforming Retrieval-Augmented Generation: When Knowledge Graphs Meet LLMs – Welcome To My Blog",
+  "description": "Four months after Microsoft's GraphRAG paper, interest in this direction has only grown. What problems does it actually solve? Is it worth adopting?",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">GraphRAG 正在改变检索增强生成：当知识图谱遇上 LLM</span>
+        <span class="sticky-title">GraphRAG Is Transforming Retrieval-Augmented Generation: When Knowledge Graphs Meet LLMs</span>
       </div>
     </div>
   </div>
@@ -68,46 +68,46 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/ai/" rel="category">AI</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/graphrag-vs-rag/" rel="bookmark"><time class="entry-date published" datetime="2026-06-24">2026-06-24</time></a></span>
+                <span class="cat-links"><a href="/categories/ai/" rel="category">AI</a><span class="cat-seperator">, </span><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/graphrag-vs-rag/" rel="bookmark"><time class="entry-date published" datetime="2026-06-24">2026-06-24</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">GraphRAG 正在改变检索增强生成：当知识图谱遇上 LLM</h1>
+                <h1 class="entry-title">GraphRAG Is Transforming Retrieval-Augmented Generation: When Knowledge Graphs Meet LLMs</h1>
               </header>
-              <div class="entry-content"><p>传统 RAG 有一个致命缺陷：<strong>它能回答"点"的问题，回答不了"面"的问题。</strong></p>
-<p>你问"这个微服务的 QPS 上限是多少？"——传统 RAG 轻松搞定。你问"这个系统经历过哪些重大架构变更？"——传统 RAG 直接跪了。因为答案不在任何一个文档片段里，而是分散在几十个文档中。</p>
-<p>微软 2 月发布的 GraphRAG 试图解决这个问题。四个月过去了，这个方向的关注度不降反升。我也在项目里试了一下。</p>
-<h2>核心思路</h2>
-<p>传统 RAG：切文档 → 向量化 → 检索 → 喂给 LLM</p>
-<p>GraphRAG 多了一步：在向量检索之前，先用 LLM 从文档中提取实体和关系，构建一个知识图谱。然后在这个图上做<strong>社区发现</strong>（Community Detection），为每个"社区"（一组紧密关联的实体）生成摘要。</p>
-<p>当用户问一个需要全局理解的问题时，系统返回的不是碎片化的文档片段，而是社区摘要 + 相关关系。这让 LLM 能看到"森林"而不只是"树木"。</p>
-<p>打个比方：传统 RAG 像是一个帮你从图书馆找书的管理员。GraphRAG 像是一个读过所有书之后给你写读书笔记的研究助理。</p>
-<h2>实际效果</h2>
-<p>我自己做了一个小规模测试：</p>
+              <div class="entry-content"><p>Traditional RAG has a fatal flaw: <strong>it can answer "point" questions, but not "big-picture" questions.</strong></p>
+<p>Ask "What's the QPS limit for this microservice?" — traditional RAG handles it with ease. Ask "What major architectural changes has this system gone through?" — traditional RAG falls flat. Because the answer isn't in any single document chunk; it's scattered across dozens of documents.</p>
+<p>Microsoft's GraphRAG, released in February, aims to solve this problem. Four months later, interest in this direction has only intensified. I've also tried it in my own project.</p>
+<h2>Core Idea</h2>
+<p>Traditional RAG: chunk documents → vectorize → retrieve → feed to LLM</p>
+<p>GraphRAG adds one more step: before vector retrieval, it uses an LLM to extract entities and relationships from documents, building a knowledge graph. It then performs <strong>community detection</strong> on this graph, generating summaries for each "community" (a tightly connected group of entities).</p>
+<p>When a user asks a question that requires global understanding, the system returns not fragmented document chunks, but community summaries plus relevant relationships. This lets the LLM see the "forest" rather than just the "trees."</p>
+<p>To use an analogy: traditional RAG is like a librarian who helps you find books in the library. GraphRAG is like a research assistant who writes reading notes for you after reading all the books.</p>
+<h2>Real-World Results</h2>
+<p>I ran a small-scale test myself:</p>
 <ul>
-<li><strong>数据集</strong>：一个中台项目的全套文档（架构设计、API 文档、on-call 记录、技术选型 RFC，200+ 页）</li>
-<li><strong>测试 query</strong>：15 个需要跨文档推理的问题</li>
+<li><strong>Dataset</strong>: Full documentation for a middle-platform project (architecture design, API docs, on-call records, technical selection RFCs, 200+ pages)</li>
+<li><strong>Test queries</strong>: 15 questions requiring cross-document reasoning</li>
 </ul>
-<p>传统 RAG 准确率：<strong>53%</strong>。GraphRAG：<strong>87%</strong>。</p>
-<p>差距最大的场景是"这个系统的服务间调用关系是怎样的？"——GraphRAG 直接从图结构中推导，不需要检索。</p>
-<h2>代价</h2>
-<p>GraphRAG 不是免费午餐：
-- <strong>构建成本</strong>：200 页文档用了约 50 万 token 做实体提取和社区摘要
-- <strong>延迟</strong>：双层检索比纯向量检索慢 2-3 倍
-- <strong>运维</strong>：图数据库（Neo4j 或类似）增加了复杂度</p>
-<h2>我的判断</h2>
-<p>GraphRAG 和传统 RAG 不是替代关系，是<strong>互补关系</strong>。80% 的用户 query 用传统 RAG 就够了。但那 20% 需要跨文档推理的问题——正是最能体现 AI 价值的场景。</p>
-<p>如果你在做的是一个真正要理解组织知识体系的系统（而不是 FAQ 客服机器人），GraphRAG 值得认真考虑。四个月前它是论文，现在它是可用的工程方案。</p>
-<p>有时候技术的进步不是"更快更好"，而是"能做以前做不了的事"。GraphRAG 属于这一类。</p>
+<p>Traditional RAG accuracy: <strong>53%</strong>. GraphRAG: <strong>87%</strong>.</p>
+<p>The biggest gap was in "What does the inter-service call relationship look like in this system?" — GraphRAG derived it directly from the graph structure, no retrieval needed.</p>
+<h2>The Cost</h2>
+<p>GraphRAG isn't a free lunch:
+- <strong>Build cost</strong>: 200 pages of documents consumed roughly 500K tokens for entity extraction and community summaries
+- <strong>Latency</strong>: Two-tier retrieval is 2-3x slower than pure vector retrieval
+- <strong>Operations</strong>: A graph database (Neo4j or similar) adds complexity</p>
+<h2>My Take</h2>
+<p>GraphRAG and traditional RAG aren't substitutes — they're <strong>complementary</strong>. 80% of user queries are fine with traditional RAG. But that 20% requiring cross-document reasoning — those are precisely the scenarios where AI delivers the most value.</p>
+<p>If you're building a system that truly needs to understand an organization's knowledge base (rather than an FAQ chatbot), GraphRAG is worth serious consideration. Four months ago it was a paper; now it's a viable engineering solution.</p>
+<p>Sometimes technological progress isn't about being "faster and better" — it's about "doing things that were previously impossible." GraphRAG falls into that category.</p>
 <hr />
-<p><strong>参考来源：</strong></p>
+<p><strong>References:</strong></p>
 <ul>
 <li><a href="https://arxiv.org/abs/2404.16130">Microsoft Research — GraphRAG: Unlocking LLM discovery on narrative private data (Feb 2026)</a></li>
 </ul></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/ai/" rel="category">AI</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/ai/" rel="category">AI</a><a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/graphrag-vs-rag-en/" rel="prev"><span class="nav-links__label">Previous</span> GraphRAG Is Changing Retrieval-Augmented Generation: When Knowledge Graphs Meet LLMs</a></div><div class="nav-next"><a href="/posts/post-fable5-ecosystem/" rel="next"><span class="nav-links__label">Next</span> 没有 Fable 5 的日子里：开发者社区在用什么替代？</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/fable5-export-control/" rel="prev"><span class="nav-links__label">Previous</span> When the US Government Halts Fable 5: The First Shot in AI Export Controls</a></div><div class="nav-next"><a href="/posts/graphrag-vs-rag-en/" rel="next"><span class="nav-links__label">Next</span> GraphRAG Is Changing Retrieval-Augmented Generation: When Knowledge Graphs Meet LLMs</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -125,11 +125,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -171,7 +171,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -180,7 +181,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -220,6 +221,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -227,6 +229,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -234,12 +237,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

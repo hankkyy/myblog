@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LeetCode 560. 和为 K 的子数组：前缀和 + HashMap 的巧妙组合 – Welcome To My Blog</title>
-<meta name="description" content="从 O(n²) 的暴力到 O(n) 的哈希表优化，理解前缀和这种「空间换时间」的经典技巧。">
-<meta property="og:title" content="LeetCode 560. 和为 K 的子数组：前缀和 + HashMap 的巧妙组合 – Welcome To My Blog">
-<meta property="og:description" content="从 O(n²) 的暴力到 O(n) 的哈希表优化，理解前缀和这种「空间换时间」的经典技巧。">
+<title>LeetCode 560. Subarray Sum Equals K: The Clever Combination of Prefix Sum + HashMap – Welcome To My Blog</title>
+<meta name="description" content="From O(n²) brute force to O(n) hash map optimization, understand the classic 'space for time' technique of prefix sums.">
+<meta property="og:title" content="LeetCode 560. Subarray Sum Equals K: The Clever Combination of Prefix Sum + HashMap – Welcome To My Blog">
+<meta property="og:description" content="From O(n²) brute force to O(n) hash map optimization, understand the classic 'space for time' technique of prefix sums.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "LeetCode 560. 和为 K 的子数组：前缀和 + HashMap 的巧妙组合 – Welcome To My Blog",
-  "description": "从 O(n²) 的暴力到 O(n) 的哈希表优化，理解前缀和这种「空间换时间」的经典技巧。",
+  "headline": "LeetCode 560. Subarray Sum Equals K: The Clever Combination of Prefix Sum + HashMap – Welcome To My Blog",
+  "description": "From O(n²) brute force to O(n) hash map optimization, understand the classic 'space for time' technique of prefix sums.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">LeetCode 560. 和为 K 的子数组：前缀和 + HashMap 的巧妙组合</span>
+        <span class="sticky-title">LeetCode 560. Subarray Sum Equals K: The Clever Combination of Prefix Sum + HashMap</span>
       </div>
     </div>
   </div>
@@ -71,24 +71,24 @@
                 <span class="cat-links"><a href="/categories/leetcode/" rel="category">LeetCode</a></span><span class="posted-on"><a href="/posts/leetcode-560-subarray-sum/" rel="bookmark"><time class="entry-date published" datetime="2025-09-10">2025-09-10</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">LeetCode 560. 和为 K 的子数组：前缀和 + HashMap 的巧妙组合</h1>
+                <h1 class="entry-title">LeetCode 560. Subarray Sum Equals K: The Clever Combination of Prefix Sum + HashMap</h1>
               </header>
-              <div class="entry-content"><p>和为 K 的子数组是一道非常好的 Medium 题，教会我们前缀和的妙用。</p>
-<h2>题目</h2>
-<p>给定数组 <code>[1,2,3]</code> 和 k=3，求连续子数组和为 3 的个数。答案是 2：<code>[1,2]</code> 和 <code>[3]</code>。</p>
-<h2>暴力解法 O(n²)</h2>
-<p>枚举所有子数组并求和。时间复杂度太高。</p>
-<h2>前缀和</h2>
-<p>前缀和 <code>prefix[i]</code> 表示 <code>nums[0]</code> 到 <code>nums[i-1]</code> 的和。</p>
-<p>子数组 <code>nums[i..j]</code> 的和 = <code>prefix[j+1] - prefix[i]</code>。</p>
-<p>所以问题转化为：找到有多少对 (i, j) 满足 <code>prefix[j] - prefix[i] = k</code>。</p>
-<h2>哈希表优化</h2>
-<p>遍历时维护一个 HashMap，key 是前缀和，value 是该前缀和出现的次数。</p>
-<p>对于当前前缀和 <code>sum</code>，如果 <code>sum - k</code> 在 HashMap 中，说明之前出现过和为 <code>sum - k</code> 的前缀，那么中间那段的和就是 k。</p>
-<h2>代码</h2>
+              <div class="entry-content"><p>Subarray Sum Equals K is an excellent Medium problem that teaches us the beauty of prefix sums.</p>
+<h2>Problem</h2>
+<p>Given the array <code>[1,2,3]</code> and k=3, find the number of contiguous subarrays whose sum equals 3. The answer is 2: <code>[1,2]</code> and <code>[3]</code>.</p>
+<h2>Brute Force Solution O(n²)</h2>
+<p>Enumerate all subarrays and compute their sums. The time complexity is too high.</p>
+<h2>Prefix Sum</h2>
+<p>The prefix sum <code>prefix[i]</code> represents the sum of <code>nums[0]</code> through <code>nums[i-1]</code>.</p>
+<p>The sum of subarray <code>nums[i..j]</code> = <code>prefix[j+1] - prefix[i]</code>.</p>
+<p>So the problem transforms into: find how many pairs (i, j) satisfy <code>prefix[j] - prefix[i] = k</code>.</p>
+<h2>Hash Map Optimization</h2>
+<p>While iterating, maintain a HashMap where the key is the prefix sum and the value is the number of times that prefix sum has occurred.</p>
+<p>For the current prefix sum <code>sum</code>, if <code>sum - k</code> exists in the HashMap, it means a prefix with sum <code>sum - k</code> appeared before, so the sum of the segment in between equals k.</p>
+<h2>Code</h2>
 <pre class="codehilite"><code class="language-java">public int subarraySum(int[] nums, int k) {
     Map&lt;Integer, Integer&gt; map = new HashMap&lt;&gt;();
-    map.put(0, 1); // 前缀和为 0 出现 1 次
+    map.put(0, 1); // prefix sum 0 occurs once
     int sum = 0, count = 0;
 
     for (int num : nums) {
@@ -102,18 +102,18 @@
 }
 </code></pre>
 
-<h2>为什么 map.put(0, 1)</h2>
-<p>想象数组第一个元素就等于 k。此时 <code>sum - k = 0</code>，我们需要有一个「前缀和为 0 出现了 1 次」的记录。</p>
-<h2>扩展</h2>
-<p>前缀和 + HashMap 是处理「子数组和」类问题的通用技巧。类似的题：
-- LeetCode 974（和可被 K 整除的子数组）
-- LeetCode 523（连续子数组和是 K 的倍数）</p>
-<p>掌握这个技巧，能解决一类问题。</p></div>
+<h2>Why map.put(0, 1)</h2>
+<p>Imagine the first element of the array equals k. At that point, <code>sum - k = 0</code>, so we need a record that "prefix sum 0 has occurred once."</p>
+<h2>Extension</h2>
+<p>Prefix sum + HashMap is a general technique for handling "subarray sum" type problems. Similar problems include:
+- LeetCode 974 (Subarray Sums Divisible by K)
+- LeetCode 523 (Continuous Subarray Sum)</p>
+<p>Mastering this technique allows you to solve a whole class of problems.</p></div>
               <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/leetcode/" rel="category">LeetCode</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/tesla-optimus-robot-2025/" rel="prev"><span class="nav-links__label">Previous</span> 特斯拉 Optimus 机器人开始在工厂「打工」</a></div><div class="nav-next"><a href="/posts/learning-from-failure/" rel="next"><span class="nav-links__label">Next</span> 那些年我搞砸过的技术决策</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/tesla-optimus-robot-2025/" rel="prev"><span class="nav-links__label">Previous</span> Tesla Optimus Robot Starts 'Working' in Factory</a></div><div class="nav-next"><a href="/posts/learning-from-failure/" rel="next"><span class="nav-links__label">Next</span> The Technical Decisions I Screwed Up Over the Years</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -131,11 +131,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -177,7 +177,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -186,7 +187,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -226,6 +227,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -233,6 +235,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -240,12 +243,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

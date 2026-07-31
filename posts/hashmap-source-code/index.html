@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HashMap 源码深度解析：JDK 8 的红黑树化和扩容机制 – Welcome To My Blog</title>
-<meta name="description" content="逐行分析 HashMap 的 put 方法和扩容逻辑，理解为什么面试官总问 HashMap。">
-<meta property="og:title" content="HashMap 源码深度解析：JDK 8 的红黑树化和扩容机制 – Welcome To My Blog">
-<meta property="og:description" content="逐行分析 HashMap 的 put 方法和扩容逻辑，理解为什么面试官总问 HashMap。">
+<title>Deep Dive into HashMap Source Code: Red-Black Tree Conversion and Resizing in JDK 8 – Welcome To My Blog</title>
+<meta name="description" content="A line-by-line analysis of HashMap's put method and resizing logic, explaining why interviewers always ask about HashMap.">
+<meta property="og:title" content="Deep Dive into HashMap Source Code: Red-Black Tree Conversion and Resizing in JDK 8 – Welcome To My Blog">
+<meta property="og:description" content="A line-by-line analysis of HashMap's put method and resizing logic, explaining why interviewers always ask about HashMap.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "HashMap 源码深度解析：JDK 8 的红黑树化和扩容机制 – Welcome To My Blog",
-  "description": "逐行分析 HashMap 的 put 方法和扩容逻辑，理解为什么面试官总问 HashMap。",
+  "headline": "Deep Dive into HashMap Source Code: Red-Black Tree Conversion and Resizing in JDK 8 – Welcome To My Blog",
+  "description": "A line-by-line analysis of HashMap's put method and resizing logic, explaining why interviewers always ask about HashMap.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">HashMap 源码深度解析：JDK 8 的红黑树化和扩容机制</span>
+        <span class="sticky-title">Deep Dive into HashMap Source Code: Red-Black Tree Conversion and Resizing in JDK 8</span>
       </div>
     </div>
   </div>
@@ -68,46 +68,46 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/hashmap-source-code/" rel="bookmark"><time class="entry-date published" datetime="2025-10-05">2025-10-05</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/hashmap-source-code/" rel="bookmark"><time class="entry-date published" datetime="2025-10-05">2025-10-05</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">HashMap 源码深度解析：JDK 8 的红黑树化和扩容机制</h1>
+                <h1 class="entry-title">Deep Dive into HashMap Source Code: Red-Black Tree Conversion and Resizing in JDK 8</h1>
               </header>
-              <div class="entry-content"><p>HashMap 是 Java 面试出场率最高的数据结构。</p>
-<h2>数据结构</h2>
-<p>JDK 8 的 HashMap = 数组 + 链表 + 红黑树。数组的每个位置是一个「桶」（bucket），桶里可能是链表或红黑树。</p>
-<h2>put 方法的流程</h2>
+              <div class="entry-content"><p>HashMap is the most frequently asked data structure in Java interviews.</p>
+<h2>Data Structure</h2>
+<p>HashMap in JDK 8 = array + linked list + red-black tree. Each position in the array is a "bucket," which may contain a linked list or a red-black tree.</p>
+<h2>The put Method Flow</h2>
 <pre class="codehilite"><code class="language-java">public V put(K key, V value) {
-    // 1. 计算 hash
+    // 1. Calculate hash
     int hash = (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16);
 
-    // 2. 定位桶位置
-    int index = (n - 1) &amp; hash;  // 等价于 hash % n，但位运算更快
+    // 2. Locate bucket index
+    int index = (n - 1) &amp; hash;  // Equivalent to hash % n, but bitwise is faster
 
-    // 3. 如果桶为空，直接放
-    // 4. 如果桶不为空，遍历链表/树
-    //     - 找到相等的 key，更新 value
-    //     - 没找到，插入
-    // 5. 链表长度 &gt;= 8 且数组长度 &gt;= 64，转为红黑树
-    // 6. size &gt; threshold，扩容
+    // 3. If bucket is empty, insert directly
+    // 4. If bucket is not empty, traverse the linked list/tree
+    //     - If an equal key is found, update the value
+    //     - If not found, insert
+    // 5. If linked list length &gt;= 8 and array length &gt;= 64, convert to red-black tree
+    // 6. If size &gt; threshold, resize
 }
 </code></pre>
 
-<h2>为什么用 (n-1) &amp; hash</h2>
-<p>因为 n（数组长度）总是 2 的幂，（n-1）的二进制全是 1。<code>(n-1) &amp; hash</code> 等价于 <code>hash % n</code>，但位运算比取模快得多。</p>
-<h2>为什么 hash 要 &gt;&gt;&gt; 16</h2>
-<p>把 hashCode 的高 16 位和低 16 位混合，让高位也参与索引计算。否则当数组较小时，只有低位参与运算，分布不均匀。</p>
-<h2>红黑树化</h2>
-<p>链表长度 &gt;= 8（TREEIFY_THRESHOLD）且数组长度 &gt;= 64（MIN_TREEIFY_CAPACITY）时转为红黑树，提升查找效率（O(n) → O(log n)）。</p>
-<p>为什么阈值是 8？官方注释说，在理想的 hash 分布下，链表达到 8 的概率是 0.00000006。</p>
-<h2>扩容</h2>
-<p>当 <code>size &gt; threshold</code>（容量 * 负载因子，默认 0.75）时扩容为原来的两倍。扩容时重新计算每个元素的位置——要么在原来位置，要么在原来位置 + 旧容量。</p>
-<p>HashMap 的设计处处体现着对性能的极致追求。理解了它的源码，你对数据结构的理解会上一个台阶。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+<h2>Why Use (n-1) &amp; hash</h2>
+<p>Because n (the array length) is always a power of 2, the binary representation of (n-1) is all 1s. <code>(n-1) &amp; hash</code> is equivalent to <code>hash % n</code>, but bitwise operations are much faster than modulo.</p>
+<h2>Why hash &gt;&gt;&gt; 16</h2>
+<p>This mixes the high 16 bits and low 16 bits of the hashCode, allowing the high bits to participate in index calculation. Otherwise, when the array is small, only the low bits are involved, leading to uneven distribution.</p>
+<h2>Red-Black Tree Conversion</h2>
+<p>When the linked list length &gt;= 8 (TREEIFY_THRESHOLD) and the array length &gt;= 64 (MIN_TREEIFY_CAPACITY), the linked list is converted to a red-black tree to improve lookup efficiency (O(n) → O(log n)).</p>
+<p>Why is the threshold 8? According to the official comments, under an ideal hash distribution, the probability of a linked list reaching length 8 is 0.00000006.</p>
+<h2>Resizing</h2>
+<p>When <code>size &gt; threshold</code> (capacity * load factor, default 0.75), the HashMap resizes to twice its original size. During resizing, each element's position is recalculated—it either stays in its original position or moves to the original position + old capacity.</p>
+<p>HashMap's design reflects an extreme pursuit of performance at every turn. Once you understand its source code, your understanding of data structures will reach a new level.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/service-mesh-istio-intro/" rel="prev"><span class="nav-links__label">Previous</span> Service Mesh 入门：Istio 到底解决了什么问题？</a></div><div class="nav-next"><a href="/posts/computer-architecture-cache/" rel="next"><span class="nav-links__label">Next</span> 计算机架构面试入门：CPU 缓存和伪共享（False Sharing）</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/service-mesh-istio-intro/" rel="prev"><span class="nav-links__label">Previous</span> Service Mesh 101: What Problem Does Istio Actually Solve?</a></div><div class="nav-next"><a href="/posts/computer-architecture-cache/" rel="next"><span class="nav-links__label">Next</span> Computer Architecture Interview Primer: CPU Cache and False Sharing</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -125,11 +125,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -171,7 +171,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -180,7 +181,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -220,6 +221,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -227,6 +229,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -234,12 +237,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

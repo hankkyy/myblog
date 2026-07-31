@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Java 25 发布：虚拟线程稳定版、字符串模板正式 GA – Welcome To My Blog</title>
-<meta name="description" content="Java 25 带来了虚拟线程正式版和字符串模板等重磅特性，Java 后端的性能又提升了一个台阶。">
-<meta property="og:title" content="Java 25 发布：虚拟线程稳定版、字符串模板正式 GA – Welcome To My Blog">
-<meta property="og:description" content="Java 25 带来了虚拟线程正式版和字符串模板等重磅特性，Java 后端的性能又提升了一个台阶。">
+<title>Java 25 Released: Virtual Threads Stable, String Templates Officially GA – Welcome To My Blog</title>
+<meta name="description" content="Java 25 brings major features like the official release of virtual threads and string templates, taking Java backend performance to the next level.">
+<meta property="og:title" content="Java 25 Released: Virtual Threads Stable, String Templates Officially GA – Welcome To My Blog">
+<meta property="og:description" content="Java 25 brings major features like the official release of virtual threads and string templates, taking Java backend performance to the next level.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Java 25 发布：虚拟线程稳定版、字符串模板正式 GA – Welcome To My Blog",
-  "description": "Java 25 带来了虚拟线程正式版和字符串模板等重磅特性，Java 后端的性能又提升了一个台阶。",
+  "headline": "Java 25 Released: Virtual Threads Stable, String Templates Officially GA – Welcome To My Blog",
+  "description": "Java 25 brings major features like the official release of virtual threads and string templates, taking Java backend performance to the next level.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">Java 25 发布：虚拟线程稳定版、字符串模板正式 GA</span>
+        <span class="sticky-title">Java 25 Released: Virtual Threads Stable, String Templates Officially GA</span>
       </div>
     </div>
   </div>
@@ -68,49 +68,49 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/java-25-features/" rel="bookmark"><time class="entry-date published" datetime="2026-03-18">2026-03-18</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/java-25-features/" rel="bookmark"><time class="entry-date published" datetime="2026-03-18">2026-03-18</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">Java 25 发布：虚拟线程稳定版、字符串模板正式 GA</h1>
+                <h1 class="entry-title">Java 25 Released: Virtual Threads Stable, String Templates Officially GA</h1>
               </header>
-              <div class="entry-content"><p>Java 25 正式发布，几个特性很值得关注。</p>
-<h2>虚拟线程（Virtual Threads）正式 GA</h2>
-<p>虚拟线程在 Java 21 里是 Preview，现在已经稳定。</p>
-<pre class="codehilite"><code class="language-java">// 以前：一个请求一个平台线程，线程池耗尽就阻塞
+              <div class="entry-content"><p>Java 25 has been officially released, and several features are worth paying attention to.</p>
+<h2>Virtual Threads Officially GA</h2>
+<p>Virtual threads were in Preview in Java 21 and are now stable.</p>
+<pre class="codehilite"><code class="language-java">// Before: one request per platform thread, blocking when the thread pool is exhausted
 ExecutorService exec = Executors.newFixedThreadPool(200);
 
-// 现在：一个请求一个虚拟线程，几乎没有限制
+// Now: one request per virtual thread, with virtually no limits
 ExecutorService exec = Executors.newVirtualThreadPerTaskExecutor();
 </code></pre>
 
-<p>实测下来，同样的机器资源配置，使用虚拟线程后吞吐量提升了 3-5 倍。因为虚拟线程不占用 OS 线程，阻塞时会被自动挂起，释放底层平台线程。</p>
-<h2>字符串模板（String Templates）</h2>
-<p>告别 StringBuilder 地狱：</p>
-<pre class="codehilite"><code class="language-java">// 以前
+<p>In real-world testing, with the same machine resource configuration, throughput improved by 3-5 times when using virtual threads. This is because virtual threads don't occupy OS threads—when blocked, they are automatically suspended, freeing up the underlying platform threads.</p>
+<h2>String Templates</h2>
+<p>Say goodbye to StringBuilder hell:</p>
+<pre class="codehilite"><code class="language-java">// Before
 String sql = &quot;SELECT * FROM users WHERE id = &quot; + userId;
 
-// 现在
+// Now
 String sql = STR.&quot;SELECT * FROM users WHERE id = \{userId}&quot;;
 </code></pre>
 
-<p>注意：字符串模板默认做了 SQL 注入防护，不同处理器有不同转义规则。</p>
-<h2>其他改进</h2>
+<p>Note: String templates include SQL injection protection by default, and different processors have different escaping rules.</p>
+<h2>Other Improvements</h2>
 <ul>
-<li>Pattern Matching 进一步完善</li>
-<li>Foreign Function &amp; Memory API 正式 GA</li>
-<li>ZGC 分代模式默认开启</li>
+<li>Pattern Matching further refined</li>
+<li>Foreign Function &amp; Memory API officially GA</li>
+<li>ZGC generational mode enabled by default</li>
 </ul>
-<p>Java 这几年的演进速度真的快，跟上了云原生时代的需求。</p>
+<p>Java's evolution pace in recent years has been remarkably fast, keeping up with the demands of the cloud-native era.</p>
 <hr />
-<p><strong>参考来源：</strong></p>
+<p><strong>References:</strong></p>
 <ul>
 <li><a href="https://openjdk.org/jeps/">OpenJDK — JEP Index</a></li>
 </ul></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/gpt5-launch-thoughts/" rel="prev"><span class="nav-links__label">Previous</span> GPT-5 发布了，但对大多数开发者的影响可能没那么大</a></div><div class="nav-next"><a href="/posts/stripe-valuation-drop/" rel="next"><span class="nav-links__label">Next</span> Stripe 估值从 950 亿跌到 500 亿：支付巨头的黄金时代过去了？</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/gpt5-launch-thoughts/" rel="prev"><span class="nav-links__label">Previous</span> GPT-5 is Out, But Its Impact on Most Developers May Not Be That Big</a></div><div class="nav-next"><a href="/posts/stripe-valuation-drop/" rel="next"><span class="nav-links__label">Next</span> Stripe's Valuation Drops from $95B to $50B: Is the Golden Era for Payment Giants Over?</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -128,11 +128,11 @@ String sql = STR.&quot;SELECT * FROM users WHERE id = \{userId}&quot;;
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -174,7 +174,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -183,7 +184,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -223,6 +224,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -230,6 +232,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -237,12 +240,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

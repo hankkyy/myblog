@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LeetCode 25. K 个一组翻转链表：递归解法的简洁与优雅 – Welcome To My Blog</title>
-<meta name="description" content="用递归思路解决链表翻转的 Hard 题，代码虽短但逻辑极强，面试中能写出递归解会加分很多。">
-<meta property="og:title" content="LeetCode 25. K 个一组翻转链表：递归解法的简洁与优雅 – Welcome To My Blog">
-<meta property="og:description" content="用递归思路解决链表翻转的 Hard 题，代码虽短但逻辑极强，面试中能写出递归解会加分很多。">
+<title>LeetCode 25. Reverse Nodes in k-Group: The Elegance of a Recursive Solution – Welcome To My Blog</title>
+<meta name="description" content="Using a recursive approach to solve this Hard-level linked list reversal problem. The code is short but highly logical, and writing a recursive solution in an interview earns major points.">
+<meta property="og:title" content="LeetCode 25. Reverse Nodes in k-Group: The Elegance of a Recursive Solution – Welcome To My Blog">
+<meta property="og:description" content="Using a recursive approach to solve this Hard-level linked list reversal problem. The code is short but highly logical, and writing a recursive solution in an interview earns major points.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "LeetCode 25. K 个一组翻转链表：递归解法的简洁与优雅 – Welcome To My Blog",
-  "description": "用递归思路解决链表翻转的 Hard 题，代码虽短但逻辑极强，面试中能写出递归解会加分很多。",
+  "headline": "LeetCode 25. Reverse Nodes in k-Group: The Elegance of a Recursive Solution – Welcome To My Blog",
+  "description": "Using a recursive approach to solve this Hard-level linked list reversal problem. The code is short but highly logical, and writing a recursive solution in an interview earns major points.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">LeetCode 25. K 个一组翻转链表：递归解法的简洁与优雅</span>
+        <span class="sticky-title">LeetCode 25. Reverse Nodes in k-Group: The Elegance of a Recursive Solution</span>
       </div>
     </div>
   </div>
@@ -71,20 +71,20 @@
                 <span class="cat-links"><a href="/categories/leetcode/" rel="category">LeetCode</a></span><span class="posted-on"><a href="/posts/leetcode-25-reverse-k-group/" rel="bookmark"><time class="entry-date published" datetime="2025-07-08">2025-07-08</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">LeetCode 25. K 个一组翻转链表：递归解法的简洁与优雅</h1>
+                <h1 class="entry-title">LeetCode 25. Reverse Nodes in k-Group: The Elegance of a Recursive Solution</h1>
               </header>
-              <div class="entry-content"><p>K 个一组翻转链表是链表题中的 Hard，但用递归来做非常简洁。</p>
-<h2>题目</h2>
-<p>给定链表 <code>1→2→3→4→5</code>，k=3，输出 <code>3→2→1→4→5</code>（最后不足 k 个的保持原样）。</p>
-<h2>递归思路</h2>
+              <div class="entry-content"><p>Reverse Nodes in k-Group is a Hard-level linked list problem, but solving it recursively is remarkably concise.</p>
+<h2>Problem</h2>
+<p>Given the linked list <code>1→2→3→4→5</code> and k=3, the output is <code>3→2→1→4→5</code> (the last group with fewer than k nodes remains unchanged).</p>
+<h2>Recursive Approach</h2>
 <ul>
-<li>从当前节点开始，数 k 个节点</li>
-<li>如果够 k 个，翻转这 k 个节点，然后递归处理剩下的</li>
-<li>如果不够 k 个，直接返回当前节点</li>
+<li>Starting from the current node, count k nodes</li>
+<li>If there are at least k nodes, reverse these k nodes, then recursively process the rest</li>
+<li>If there are fewer than k nodes, return the current node as-is</li>
 </ul>
-<h2>代码</h2>
+<h2>Code</h2>
 <pre class="codehilite"><code class="language-java">public ListNode reverseKGroup(ListNode head, int k) {
-    // 检查是否有 k 个节点
+    // Check if there are at least k nodes
     ListNode cur = head;
     int count = 0;
     while (cur != null &amp;&amp; count &lt; k) {
@@ -93,7 +93,7 @@
     }
 
     if (count == k) {
-        // 翻转前 k 个
+        // Reverse the first k nodes
         ListNode prev = null;
         cur = head;
         for (int i = 0; i &lt; k; i++) {
@@ -102,30 +102,30 @@
             prev = cur;
             cur = next;
         }
-        // head 现在成了翻转后的尾节点，连接递归结果
+        // head is now the tail of the reversed group; connect it to the recursive result
         head.next = reverseKGroup(cur, k);
-        return prev; // prev 是翻转后的头节点
+        return prev; // prev is the new head of the reversed group
     }
 
-    return head; // 不足 k 个，不翻转
+    return head; // Fewer than k nodes, no reversal
 }
 </code></pre>
 
-<h2>代码精妙之处</h2>
+<h2>Key Insights of the Code</h2>
 <ol>
-<li>先检查够不够 k 个——不够直接返回，够了才翻转</li>
-<li>翻转后 head 变成尾节点，递归处理剩下的接在 head.next</li>
-<li>prev 是翻转后的新头节点</li>
-<li>递归终止条件：不足 k 个</li>
+<li>First check if there are enough nodes — if not, return immediately; only reverse when there are k nodes</li>
+<li>After reversal, head becomes the tail node; recursively process the rest and attach it to head.next</li>
+<li>prev is the new head of the reversed group</li>
+<li>Recursion termination condition: fewer than k nodes remaining</li>
 </ol>
-<h2>迭代解法对比</h2>
-<p>迭代解需要更复杂的指针操作。递归解虽然简洁但需要注意栈深度——题目保证链表长度不超过 5000，递归是安全的。</p>
-<p>这道题是链表题的集大成者，面试中能写出递归解非常加分。</p></div>
+<h2>Comparison with the Iterative Solution</h2>
+<p>The iterative solution requires more complex pointer manipulation. The recursive solution is more concise, but you need to be mindful of stack depth — the problem guarantees the linked list length does not exceed 5000, so recursion is safe.</p>
+<p>This problem is a comprehensive test of linked list skills, and writing a recursive solution in an interview earns significant bonus points.</p></div>
               <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/leetcode/" rel="category">LeetCode</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/thread-pool-interview/" rel="prev"><span class="nav-links__label">Previous</span> 线程池面试八连问：核心参数、拒绝策略和调优思路</a></div><div class="nav-next"><a href="/posts/spring-bean-lifecycle/" rel="next"><span class="nav-links__label">Next</span> Spring Bean 生命周期：从实例化到销毁经历了什么？</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/thread-pool-interview/" rel="prev"><span class="nav-links__label">Previous</span> Eight Key Thread Pool Interview Questions: Core Parameters, Rejection Policies, and Tuning Strategies</a></div><div class="nav-next"><a href="/posts/spring-bean-lifecycle/" rel="next"><span class="nav-links__label">Next</span> Spring Bean Lifecycle: What Happens from Instantiation to Destruction?</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -143,11 +143,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -189,7 +189,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -198,7 +199,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -238,6 +239,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -245,6 +247,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -252,12 +255,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Spring Bean 生命周期：从实例化到销毁经历了什么？ – Welcome To My Blog</title>
-<meta name="description" content="梳理 Spring Bean 从创建到销毁的完整生命周期，面试时可以画图回答。">
-<meta property="og:title" content="Spring Bean 生命周期：从实例化到销毁经历了什么？ – Welcome To My Blog">
-<meta property="og:description" content="梳理 Spring Bean 从创建到销毁的完整生命周期，面试时可以画图回答。">
+<title>Spring Bean Lifecycle: What Happens from Instantiation to Destruction? – Welcome To My Blog</title>
+<meta name="description" content="A clear walkthrough of the complete Spring Bean lifecycle from creation to destruction — perfect for answering interview questions with a diagram.">
+<meta property="og:title" content="Spring Bean Lifecycle: What Happens from Instantiation to Destruction? – Welcome To My Blog">
+<meta property="og:description" content="A clear walkthrough of the complete Spring Bean lifecycle from creation to destruction — perfect for answering interview questions with a diagram.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Spring Bean 生命周期：从实例化到销毁经历了什么？ – Welcome To My Blog",
-  "description": "梳理 Spring Bean 从创建到销毁的完整生命周期，面试时可以画图回答。",
+  "headline": "Spring Bean Lifecycle: What Happens from Instantiation to Destruction? – Welcome To My Blog",
+  "description": "A clear walkthrough of the complete Spring Bean lifecycle from creation to destruction — perfect for answering interview questions with a diagram.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">Spring Bean 生命周期：从实例化到销毁经历了什么？</span>
+        <span class="sticky-title">Spring Bean Lifecycle: What Happens from Instantiation to Destruction?</span>
       </div>
     </div>
   </div>
@@ -68,58 +68,58 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/spring-bean-lifecycle/" rel="bookmark"><time class="entry-date published" datetime="2025-07-12">2025-07-12</time></a></span>
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/spring-bean-lifecycle/" rel="bookmark"><time class="entry-date published" datetime="2025-07-12">2025-07-12</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">Spring Bean 生命周期：从实例化到销毁经历了什么？</h1>
+                <h1 class="entry-title">Spring Bean Lifecycle: What Happens from Instantiation to Destruction?</h1>
               </header>
-              <div class="entry-content"><p>Spring Bean 的生命周期是面试的经典题。完整流程如下：</p>
-<h2>生命周期全流程</h2>
-<pre class="codehilite"><code>1. 实例化（Instantiation）
-   → 调用构造方法创建对象
+              <div class="entry-content"><p>The Spring Bean lifecycle is a classic interview question. Here's the complete flow:</p>
+<h2>Full Lifecycle Flow</h2>
+<pre class="codehilite"><code>1. Instantiation
+   → Constructor is called to create the object
 
-2. 属性赋值（Populate Properties）
-   → 依赖注入（@Autowired 的字段被赋值）
+2. Populate Properties
+   → Dependency injection (fields annotated with @Autowired are assigned)
 
 3. BeanNameAware / BeanFactoryAware
-   → 如果 Bean 实现了这些 Aware 接口，调用 setBeanName()、setBeanFactory()
+   → If the Bean implements these Aware interfaces, setBeanName() and setBeanFactory() are invoked
 
 4. BeanPostProcessor.postProcessBeforeInitialization
-   → 初始化前的拦截点
+   → Interception point before initialization
 
 5. InitializingBean.afterPropertiesSet()
-   → 如果实现了 InitializingBean 接口
+   → If the InitializingBean interface is implemented
 
-6. @PostConstruct 方法
-   → 通常在这做初始化工作（推荐）
+6. @PostConstruct method
+   → Typically used for initialization work here (recommended)
 
 7. BeanPostProcessor.postProcessAfterInitialization
-   → 初始化后的拦截点（AOP 代理在这里生成！）
+   → Interception point after initialization (AOP proxies are generated here!)
 
-8. 就绪（Bean is ready to use）
+8. Ready (Bean is ready to use)
 
 9. @PreDestroy / DisposableBean.destroy()
-   → 销毁时的回调
+   → Callback during destruction
 </code></pre>
 
-<h2>面试时怎么答</h2>
-<p>不要一开始就背全部步骤。先说三个关键词：</p>
+<h2>How to Answer in an Interview</h2>
+<p>Don't recite all the steps at once. Start with three key phrases:</p>
 <blockquote>
-<p>Bean 的生命周期分为三阶段：创建（实例化 + 属性注入）、初始化（@PostConstruct 等回调）、销毁（@PreDestroy）。其中最关键的是 BeanPostProcessor——AOP 就是通过它在初始化后生成代理对象的。</p>
+<p>The Bean lifecycle is divided into three phases: creation (instantiation + property injection), initialization (@PostConstruct and other callbacks), and destruction (@PreDestroy). The most critical part is BeanPostProcessor — AOP uses it to generate proxy objects after initialization.</p>
 </blockquote>
-<p>然后被追问再说详细步骤。</p>
-<h2>几个重要的点</h2>
+<p>Then go into the detailed steps if asked to elaborate.</p>
+<h2>Key Points to Remember</h2>
 <ul>
-<li><strong>BeanPostProcessor</strong> 是最强大的扩展点——它可以修改任何 Bean（AOP、@Autowired 都是靠它实现的）</li>
-<li><strong>@PostConstruct &gt; InitializingBean</strong>：推荐用 @PostConstruct，代码侵入性更小</li>
-<li>如果你自定义了一个 BeanPostProcessor，注意不要在里面执行耗时操作——每个 Bean 都会经过它</li>
+<li><strong>BeanPostProcessor</strong> is the most powerful extension point — it can modify any Bean (AOP and @Autowired are both implemented through it)</li>
+<li><strong>@PostConstruct &gt; InitializingBean</strong>: @PostConstruct is recommended because it's less invasive to your code</li>
+<li>If you define a custom BeanPostProcessor, avoid performing time-consuming operations inside it — every Bean passes through it</li>
 </ul>
-<p>理解了 Bean 生命周期，Spring 的大部分「魔法」都能解释通了。</p></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/技术/" rel="category">技术</a></span></footer>
+<p>Once you understand the Bean lifecycle, most of Spring's "magic" becomes clear.</p></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/leetcode-25-reverse-k-group/" rel="prev"><span class="nav-links__label">Previous</span> LeetCode 25. K 个一组翻转链表：递归解法的简洁与优雅</a></div><div class="nav-next"><a href="/posts/baidu-ernie-5/" rel="next"><span class="nav-links__label">Next</span> 百度发布文心大模型 5.0：在国内 AI 竞争中还能保持领先吗？</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/leetcode-25-reverse-k-group/" rel="prev"><span class="nav-links__label">Previous</span> LeetCode 25. Reverse Nodes in k-Group: The Elegance of a Recursive Solution</a></div><div class="nav-next"><a href="/posts/baidu-ernie-5/" rel="next"><span class="nav-links__label">Next</span> Baidu Releases ERNIE 5.0: Can It Stay Ahead in China's AI Race?</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -137,11 +137,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -183,7 +183,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -192,7 +193,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -232,6 +233,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -239,6 +241,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -246,12 +249,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';

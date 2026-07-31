@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Service Mesh 入门：Istio 到底解决了什么问题？ – Welcome To My Blog</title>
-<meta name="description" content="理解 Service Mesh 的核心概念——Sidecar、流量管理、可观测性，以及它和 API 网关的区别。">
-<meta property="og:title" content="Service Mesh 入门：Istio 到底解决了什么问题？ – Welcome To My Blog">
-<meta property="og:description" content="理解 Service Mesh 的核心概念——Sidecar、流量管理、可观测性，以及它和 API 网关的区别。">
+<title>Service Mesh 101: What Problem Does Istio Actually Solve? – Welcome To My Blog</title>
+<meta name="description" content="Understand the core concepts of Service Mesh — Sidecar, traffic management, observability, and how it differs from API Gateway.">
+<meta property="og:title" content="Service Mesh 101: What Problem Does Istio Actually Solve? – Welcome To My Blog">
+<meta property="og:description" content="Understand the core concepts of Service Mesh — Sidecar, traffic management, observability, and how it differs from API Gateway.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
 <meta name="twitter:card" content="summary">
@@ -16,8 +16,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "Service Mesh 入门：Istio 到底解决了什么问题？ – Welcome To My Blog",
-  "description": "理解 Service Mesh 的核心概念——Sidecar、流量管理、可观测性，以及它和 API 网关的区别。",
+  "headline": "Service Mesh 101: What Problem Does Istio Actually Solve? – Welcome To My Blog",
+  "description": "Understand the core concepts of Service Mesh — Sidecar, traffic management, observability, and how it differs from API Gateway.",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-17",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
@@ -57,7 +57,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">Service Mesh 入门：Istio 到底解决了什么问题？</span>
+        <span class="sticky-title">Service Mesh 101: What Problem Does Istio Actually Solve?</span>
       </div>
     </div>
   </div>
@@ -68,62 +68,62 @@
           <main id="main" class="site-main">
             <article class="post type-post status-publish format-standard hentry">
               <div class="entry-meta">
-                <span class="cat-links"><a href="/categories/云原生/" rel="category">云原生</a><span class="cat-seperator">, </span><a href="/categories/分布式/" rel="category">分布式</a><span class="cat-seperator">, </span><a href="/categories/技术/" rel="category">技术</a></span><span class="posted-on"><a href="/posts/service-mesh-istio-intro/" rel="bookmark"><time class="entry-date published" datetime="2025-09-30">2025-09-30</time></a></span>
+                <span class="cat-links"><a href="/categories/cloud-native/" rel="category">Cloud Native</a><span class="cat-seperator">, </span><a href="/categories/distributed-systems/" rel="category">Distributed Systems</a><span class="cat-seperator">, </span><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/service-mesh-istio-intro/" rel="bookmark"><time class="entry-date published" datetime="2025-09-30">2025-09-30</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">Service Mesh 入门：Istio 到底解决了什么问题？</h1>
+                <h1 class="entry-title">Service Mesh 101: What Problem Does Istio Actually Solve?</h1>
               </header>
-              <div class="entry-content"><p>Service Mesh 是微服务架构的下一阶段。Istio 是目前最流行的 Service Mesh 实现。</p>
-<h2>微服务通信的痛点</h2>
-<p>在微服务架构中，服务之间的通信变得复杂：
-- 服务发现：A 怎么找到 B？
-- 负载均衡：多个 B 实例怎么分配流量？
-- 超时重试：B 挂了怎么办？
-- 熔断降级：B 太慢了怎么办？
-- 灰度发布：怎么把 10% 流量切到新版本？</p>
-<p>以前这些逻辑要写在每个服务里。Service Mesh 把这部分剥离出来。</p>
-<h2>Sidecar 模式</h2>
-<p>每个服务 Pod 旁边放一个 Sidecar 代理（Envoy）。所有进出流量都经过它：</p>
+              <div class="entry-content"><p>Service Mesh is the next stage of microservices architecture. Istio is currently the most popular Service Mesh implementation.</p>
+<h2>The Pain Points of Microservices Communication</h2>
+<p>In a microservices architecture, communication between services becomes complex:
+- Service discovery: How does A find B?
+- Load balancing: How is traffic distributed across multiple B instances?
+- Timeout and retry: What happens when B goes down?
+- Circuit breaking and degradation: What happens when B is too slow?
+- Canary releases: How do you shift 10% of traffic to a new version?</p>
+<p>Previously, this logic had to be written into every service. Service Mesh extracts this part out.</p>
+<h2>The Sidecar Pattern</h2>
+<p>A Sidecar proxy (Envoy) is placed next to each service Pod. All inbound and outbound traffic passes through it:</p>
 <pre class="codehilite"><code>Service A → Envoy Proxy → Envoy Proxy → Service B
 </code></pre>
 
-<p>应用代码不需要知道网络细节——Sidecar 帮你处理了。</p>
-<h2>Istio 的架构</h2>
+<p>The application code doesn't need to know about network details — the Sidecar handles it for you.</p>
+<h2>Istio's Architecture</h2>
 <ul>
-<li><strong>数据面</strong>：Envoy（Sidecar），负责实际处理流量</li>
-<li><strong>控制面</strong>：Istiod，配置和管理 Envoy</li>
-<li><strong>Ingress/Egress Gateway</strong>：管理进出集群的流量</li>
+<li><strong>Data Plane</strong>: Envoy (Sidecar), responsible for actually processing traffic</li>
+<li><strong>Control Plane</strong>: Istiod, configures and manages Envoy</li>
+<li><strong>Ingress/Egress Gateway</strong>: Manages traffic entering and leaving the cluster</li>
 </ul>
-<h2>核心功能</h2>
-<p><strong>流量管理</strong>：
-- 金丝雀发布：把 5% 流量路由到新版本
-- 故障注入：故意注入延迟测试容错
-- 超时和重试策略</p>
-<p><strong>可观测性</strong>：
-- 自动生成分布式追踪（Jaeger/Zipkin）
-- 指标收集（Prometheus）
-- 可视化（Kiali）</p>
-<p><strong>安全</strong>：
-- 服务间的 mTLS（双向 TLS 加密）
-- 基于身份的访问控制</p>
-<h2>Istio vs API 网关</h2>
+<h2>Core Features</h2>
+<p><strong>Traffic Management</strong>:
+- Canary releases: Route 5% of traffic to a new version
+- Fault injection: Deliberately inject latency to test fault tolerance
+- Timeout and retry policies</p>
+<p><strong>Observability</strong>:
+- Automatic distributed tracing (Jaeger/Zipkin)
+- Metrics collection (Prometheus)
+- Visualization (Kiali)</p>
+<p><strong>Security</strong>:
+- mTLS between services (mutual TLS encryption)
+- Identity-based access control</p>
+<h2>Istio vs API Gateway</h2>
 <ul>
-<li>API 网关是集群入口（南北流量）</li>
-<li>Service Mesh 是服务间通信（东西流量）</li>
+<li>API Gateway is the cluster entry point (north-south traffic)</li>
+<li>Service Mesh is for inter-service communication (east-west traffic)</li>
 </ul>
-<p>两者各司其职，可以同时使用。</p>
-<h2>学习建议</h2>
-<p>Istio 的概念很多，建议先在 Minikube 上搭一个 demo 环境，体验金丝雀发布和故障注入。动手比看书快得多。</p>
+<p>Both serve different purposes and can be used together.</p>
+<h2>Learning Recommendations</h2>
+<p>Istio has many concepts. I recommend setting up a demo environment on Minikube first to experience canary releases and fault injection. Hands-on practice is much faster than reading books.</p>
 <hr />
-<p><strong>参考来源：</strong></p>
+<p><strong>References:</strong></p>
 <ul>
-<li><a href="https://istio.io/">Istio 官方文档</a></li>
+<li><a href="https://istio.io/">Istio Official Documentation</a></li>
 </ul></div>
-              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/云原生/" rel="category">云原生</a><a href="/categories/分布式/" rel="category">分布式</a><a href="/categories/技术/" rel="category">技术</a></span></footer>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/cloud-native/" rel="category">Cloud Native</a><a href="/categories/distributed-systems/" rel="category">Distributed Systems</a><a href="/categories/technology/" rel="category">Technology</a></span></footer>
             </article>
             <nav class="navigation post-navigation" aria-label="Posts">
             <h2 class="screen-reader-text">Post Navigation</h2>
-            <div class="nav-links"><div class="nav-previous"><a href="/posts/shopee-layoffs-2025/" rel="prev"><span class="nav-links__label">Previous</span> Shopee 母公司冬海集团裁员 15%：东南亚电商的寒冬还没结束</a></div><div class="nav-next"><a href="/posts/hashmap-source-code/" rel="next"><span class="nav-links__label">Next</span> HashMap 源码深度解析：JDK 8 的红黑树化和扩容机制</a></div></div>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/shopee-layoffs-2025/" rel="prev"><span class="nav-links__label">Previous</span> Shopee Parent Sea Limited Cuts 15% of Workforce: Southeast Asia's E-commerce Winter Isn't Over Yet</a></div><div class="nav-next"><a href="/posts/hashmap-source-code/" rel="next"><span class="nav-links__label">Next</span> Deep Dive into HashMap Source Code: Red-Black Tree Conversion and Resizing in JDK 8</a></div></div>
           </nav>
             <a href="/about/" class="author-bio-link">
             <div class="author-bio">
@@ -141,11 +141,11 @@
         </div><aside id="secondary" class="widget-area">
           <section class="widget widget_recent_entries">
             <h2 class="widget-title">Recent Posts</h2>
-            <ul><li><a href="/posts/client-side-visual-search/">如何在浏览器里实现一个古董拍卖平台的「以图搜图」引擎</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agent 正在重塑软件开发：不只是「写得更快」</a></li><li><a href="/posts/saga-pattern-decline/">Saga 模式的黄昏？2026 年分布式事务的新思路</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly 在后端：第三年了，拐点将至</a></li><li><a href="/posts/ai-supply-limits-era/">一周两件大事：AI 正在进入限量供应时代</a></li></ul>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
           </section>
           <section class="widget widget_tag_cloud">
             <h2 class="widget-title">Categories</h2>
-            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/technology/">Technology</a><a href="/categories/ai/">ai</a><a href="/categories/云原生/">云原生</a><a href="/categories/分布式/">分布式</a><a href="/categories/技术/">技术</a><a href="/categories/数据库/">数据库</a><a href="/categories/新闻/">新闻</a><a href="/categories/杂谈/">杂谈</a><a href="/categories/系统设计/">系统设计</a></div>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
           </section>
         </aside></div>
   </div>
@@ -187,7 +187,8 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
   </div>
 </div>
 <style>
-#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000}
+#chat-widget{position:fixed;bottom:28px;right:28px;z-index:1000;pointer-events:none}
+#chat-widget>*{pointer-events:auto}
 #chat-toggle{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#146bb7,#1a8ad4);color:#fff;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(20,107,183,.3);transition:transform .25s,box-shadow .25s;position:relative}
 #chat-toggle::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:rgba(20,107,183,.15);animation:chatPulse 2.5s ease-in-out infinite}
 @keyframes chatPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0}}
@@ -196,7 +197,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
 #chat-toggle-close-emoji{line-height:1;font-size:18px;font-weight:700}
 #chat-panel{display:none;position:absolute;bottom:60px;right:0;width:360px;max-width:calc(100vw - 32px);height:500px;max-height:calc(100vh - 120px);background:#fff;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.12);flex-direction:column;overflow:hidden}
 #chat-panel.open{display:flex}
-#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+#chat-header{background:#16181a;color:#fff;padding:14px 18px;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;user-select:none;-webkit-user-select:none;touch-action:none}
 #chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#fafbfc}
 .chat-msg{display:flex;max-width:85%}
 .chat-msg.user{align-self:flex-end}
@@ -236,6 +237,7 @@ var chatHeader=document.getElementById('chat-header');
 chatHeader.style.cursor='move';
 chatHeader.addEventListener('mousedown',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.clientX-dragOffsetX;
   dragStartY=e.clientY-dragOffsetY;
@@ -243,6 +245,7 @@ chatHeader.addEventListener('mousedown',function(e){
 });
 chatHeader.addEventListener('touchstart',function(e){
   if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
   isDragging=true;
   dragStartX=e.touches[0].clientX-dragOffsetX;
   dragStartY=e.touches[0].clientY-dragOffsetY;
@@ -250,12 +253,14 @@ chatHeader.addEventListener('touchstart',function(e){
 },{passive:false});
 document.addEventListener('mousemove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.clientX-dragStartX;
   dragOffsetY=e.clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
 });
 document.addEventListener('touchmove',function(e){
   if(!isDragging)return;
+  e.preventDefault();
   dragOffsetX=e.touches[0].clientX-dragStartX;
   dragOffsetY=e.touches[0].clientY-dragStartY;
   panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
