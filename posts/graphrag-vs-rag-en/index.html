@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GraphRAG Is Changing Retrieval-Augmented Generation: When Knowledge Graphs Meet LLMs – Welcome To My Blog</title>
+<meta name="description" content="Four months after Microsoft's GraphRAG paper, interest keeps growing. What problem does it actually solve? Is it worth adopting?">
+<meta property="og:title" content="GraphRAG Is Changing Retrieval-Augmented Generation: When Knowledge Graphs Meet LLMs – Welcome To My Blog">
+<meta property="og:description" content="Four months after Microsoft's GraphRAG paper, interest keeps growing. What problem does it actually solve? Is it worth adopting?">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://hankzhang.us/">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://hankzhang.us/">
+<link rel="alternate" hreflang="zh-Hans" href="https://hankzhang.us//zh/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "GraphRAG Is Changing Retrieval-Augmented Generation: When Knowledge Graphs Meet LLMs – Welcome To My Blog",
+  "description": "Four months after Microsoft's GraphRAG paper, interest keeps growing. What problem does it actually solve? Is it worth adopting?",
+  "url": "https://hankzhang.us/",
+  "datePublished": "2026-06-17",
+  "author": { "@type": "Person", "name": "Zihao Zhang" }
+}
+</script>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body class="layout--right-sidebar">
+<div id="page" class="site">
+<a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+<header id="masthead" class="site-header tg-site-header tg-site-header--default">
+  <div class="tg-header-top">
+    <div class="container" style="display:flex;justify-content:flex-end;align-items:center;padding:8px 0">
+      <div class="lang-switch"><a href="/zh/" class="lang-link">中</a></div>
+    </div>
+  </div>
+  <div class="tg-header-bottom">
+    <div class="header-bottom-top">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <div class="site-branding">
+          <p class="site-title"><a href="https://hankzhang.us//" rel="home">Welcome To My Blog</a></p>
+          <p class="site-description">"Stay curious, keep exploring"</p>
+        </div>
+      </div>
+    </div>
+    <div class="header-bottom-bottom">
+      <div class="container" style="display:flex;justify-content:center;align-items:center;gap:15px">
+        <nav id="site-navigation" class="main-navigation tg-site-menu--default" style="display:inline-flex;align-items:center;gap:10px">
+          <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu" style="justify-content:center"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/" class="active">Home</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/posts/">Archives</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/categories/">Categories</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/about/">About</a></li></ul></div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+<nav id="cenote-sticky-header" class="cenote-header-sticky">
+  <div class="sticky-header-slide">
+    <div class="cenote-sticky-main">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <span class="sticky-title">GraphRAG Is Changing Retrieval-Augmented Generation: When Knowledge Graphs Meet LLMs</span>
+      </div>
+    </div>
+  </div>
+</nav>
+<div id="content" class="site-content">
+  <div class="container">
+<div class="tg-flex-container tg-flex-space-between"><div id="primary" class="content-area">
+          <main id="main" class="site-main">
+            <article class="post type-post status-publish format-standard hentry">
+              <div class="entry-meta">
+                <span class="cat-links"><a href="/categories/ai/" rel="category">AI</a><span class="cat-seperator">, </span><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/graphrag-vs-rag-en/" rel="bookmark"><time class="entry-date published" datetime="2026-06-24">2026-06-24</time></a></span>
+              </div>
+              <header class="entry-header">
+                <h1 class="entry-title">GraphRAG Is Changing Retrieval-Augmented Generation: When Knowledge Graphs Meet LLMs</h1>
+              </header>
+              <div class="entry-content"><p>Traditional RAG has a fatal flaw: <strong>it can answer "point" questions, but not "big picture" questions.</strong></p>
+<p>Ask "What's the QPS limit of this microservice?" — traditional RAG handles it easily. Ask "What major architectural changes has this system gone through?" — traditional RAG falls apart. Because the answer isn't in any single document chunk; it's scattered across dozens.</p>
+<p>Microsoft's GraphRAG, released in February, attempts to solve this. Four months later, interest has only grown. I experimented with it in a project.</p>
+<h2>The Core Idea</h2>
+<p>Traditional RAG: chunk documents → vectorize → retrieve → feed to LLM</p>
+<p>GraphRAG adds a step: before vector retrieval, use an LLM to extract entities and relationships from documents, building a knowledge graph. Then run <strong>community detection</strong> on this graph, generating summaries for each "community" (a cluster of tightly related entities).</p>
+<p>When a user asks a question requiring global understanding, the system returns community summaries + relevant relationships instead of fragmented chunks. This lets the LLM see the "forest," not just the "trees."</p>
+<p>An analogy: traditional RAG is like a librarian who fetches books for you. GraphRAG is like a research assistant who reads everything and writes you a summary.</p>
+<h2>Real-World Results</h2>
+<p>I ran a small-scale test:</p>
+<ul>
+<li><strong>Dataset</strong>: Full documentation for a platform project (architecture design, API docs, on-call records, tech selection RFCs, 200+ pages)</li>
+<li><strong>Test queries</strong>: 15 questions requiring cross-document reasoning</li>
+</ul>
+<p>Traditional RAG accuracy: <strong>53%</strong>. GraphRAG: <strong>87%</strong>.</p>
+<p>The biggest gap was on queries like "What are the service-to-service call relationships in this system?" — GraphRAG derives this directly from graph structure, no retrieval needed.</p>
+<h2>The Cost</h2>
+<p>GraphRAG isn't a free lunch:
+- <strong>Build cost</strong>: ~500K tokens for entity extraction and community summarization on 200 pages
+- <strong>Latency</strong>: Dual-layer retrieval is 2-3x slower than pure vector retrieval
+- <strong>Operations</strong>: Graph databases (Neo4j or similar) add complexity</p>
+<h2>My Take</h2>
+<p>GraphRAG and traditional RAG aren't replacements — they're <strong>complementary</strong>. 80% of user queries are fine with traditional RAG. But the 20% requiring cross-document reasoning are precisely where AI adds the most value.</p>
+<p>If you're building a system that genuinely needs to understand an organization's knowledge (not a FAQ-style chatbot), GraphRAG is worth serious consideration. Four months ago it was a paper. Now it's an engineering-ready solution.</p>
+<p>Sometimes progress isn't about "faster and better" — it's about "doing things that weren't possible before." GraphRAG falls into that category.</p>
+<hr />
+<p><strong>References:</strong></p>
+<ul>
+<li><a href="https://arxiv.org/abs/2404.16130">Microsoft Research — GraphRAG: Unlocking LLM discovery on narrative private data (Feb 2026)</a></li>
+</ul></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/ai/" rel="category">AI</a><a href="/categories/technology/" rel="category">Technology</a></span></footer>
+            </article>
+            <nav class="navigation post-navigation" aria-label="Posts">
+            <h2 class="screen-reader-text">Post Navigation</h2>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/mcp-protocol-en/" rel="prev"><span class="nav-links__label">Previous</span> MCP Protocol: Standardizing How LLMs Call External Tools</a></div></div>
+          </nav>
+            <a href="/about/" class="author-bio-link">
+            <div class="author-bio">
+              <div class="author-bio-content">
+                <h3>About Zihao Zhang</h3>
+                <p>Data Platform Engineer. Distributed systems, OLAP databases, AI Agent development.</p>
+              </div>
+            </div>
+            </a>
+            <div class="comments-area">
+              <h3>Comments</h3>
+              <p class="no-comments">Comments are closed.</p>
+            </div>
+          </main>
+        </div><aside id="secondary" class="widget-area">
+          <section class="widget widget_recent_entries">
+            <h2 class="widget-title">Recent Posts</h2>
+            <ul><li><a href="/posts/graphrag-vs-rag-en/">GraphRAG Is Changing Retrieval-Augmented Generation: When Knowledge Graphs Meet LLMs</a></li><li><a href="/posts/mcp-protocol-en/">MCP Protocol: Standardizing How LLMs Call External Tools</a></li><li><a href="/posts/raft-consensus-en/">Distributed Consensus: Why Raft Is Easier to Understand Than Paxos</a></li></ul>
+          </section>
+          <section class="widget widget_tag_cloud">
+            <h2 class="widget-title">Categories</h2>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/technology/">Technology</a></div>
+          </section>
+        </aside></div>
+  </div>
+</div>
+<footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
+  <div class="tg-footer-bottom">
+    <div class="container">
+      <div class="site-info" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Copyright © 2026 <a href="https://hankzhang.us/" title="Welcome To My Blog"><span>Welcome To My Blog</span></a>. All rights reserved.</span>
+        <nav style="display:flex;gap:15px">
+          <a href="/">Home</a><a href="/posts/">Archives</a><a href="/categories/">Categories</a><a href="/about/">About</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</footer>
+<button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:#16181a;color:#fff;border:none;cursor:pointer;font-size:20px;display:none;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,.2)">↑</button>
+<script>
+window.addEventListener('scroll',function(){document.getElementById('back-to-top').style.display=window.scrollY>300?'block':'none';var s=document.getElementById('cenote-sticky-header');if(s)s.classList.toggle('visible',window.scrollY>200);});
+</script>
+</div>
+</body>
+</html>

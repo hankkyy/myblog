@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCP Protocol: Standardizing How LLMs Call External Tools – Welcome To My Blog</title>
+<meta name="description" content="Model Context Protocol — Anthropic's open-source standard for AI tool calling, solving fragmentation in Agent-external system interaction">
+<meta property="og:title" content="MCP Protocol: Standardizing How LLMs Call External Tools – Welcome To My Blog">
+<meta property="og:description" content="Model Context Protocol — Anthropic's open-source standard for AI tool calling, solving fragmentation in Agent-external system interaction">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://hankzhang.us/">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://hankzhang.us/">
+<link rel="alternate" hreflang="zh-Hans" href="https://hankzhang.us//zh/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "MCP Protocol: Standardizing How LLMs Call External Tools – Welcome To My Blog",
+  "description": "Model Context Protocol — Anthropic's open-source standard for AI tool calling, solving fragmentation in Agent-external system interaction",
+  "url": "https://hankzhang.us/",
+  "datePublished": "2026-06-17",
+  "author": { "@type": "Person", "name": "Zihao Zhang" }
+}
+</script>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="icon" type="image/png" href="/favicon.png">
+</head>
+<body class="layout--right-sidebar">
+<div id="page" class="site">
+<a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+<header id="masthead" class="site-header tg-site-header tg-site-header--default">
+  <div class="tg-header-top">
+    <div class="container" style="display:flex;justify-content:flex-end;align-items:center;padding:8px 0">
+      <div class="lang-switch"><a href="/zh/" class="lang-link">中</a></div>
+    </div>
+  </div>
+  <div class="tg-header-bottom">
+    <div class="header-bottom-top">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <div class="site-branding">
+          <p class="site-title"><a href="https://hankzhang.us//" rel="home">Welcome To My Blog</a></p>
+          <p class="site-description">"Stay curious, keep exploring"</p>
+        </div>
+      </div>
+    </div>
+    <div class="header-bottom-bottom">
+      <div class="container" style="display:flex;justify-content:center;align-items:center;gap:15px">
+        <nav id="site-navigation" class="main-navigation tg-site-menu--default" style="display:inline-flex;align-items:center;gap:10px">
+          <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu" style="justify-content:center"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/" class="active">Home</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/posts/">Archives</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/categories/">Categories</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/about/">About</a></li></ul></div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+<nav id="cenote-sticky-header" class="cenote-header-sticky">
+  <div class="sticky-header-slide">
+    <div class="cenote-sticky-main">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <span class="sticky-title">MCP Protocol: Standardizing How LLMs Call External Tools</span>
+      </div>
+    </div>
+  </div>
+</nav>
+<div id="content" class="site-content">
+  <div class="container">
+<div class="tg-flex-container tg-flex-space-between"><div id="primary" class="content-area">
+          <main id="main" class="site-main">
+            <article class="post type-post status-publish format-standard hentry">
+              <div class="entry-meta">
+                <span class="cat-links"><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/mcp-protocol-en/" rel="bookmark"><time class="entry-date published" datetime="2026-06-03">2026-06-03</time></a></span>
+              </div>
+              <header class="entry-header">
+                <h1 class="entry-title">MCP Protocol: Standardizing How LLMs Call External Tools</h1>
+              </header>
+              <div class="entry-content"><p>MCP (Model Context Protocol) is an open standard released by Anthropic in late 2024. Its core goal: <strong>a unified standard for how LLMs interact with external tools and data sources</strong>.</p>
+<h2>The Problem</h2>
+<p>AI agent tool calling today is a mess:</p>
+<pre class="codehilite"><code>Claude → its own tool format
+GPT → Function Calling
+Open-source models → everyone does their own thing
+</code></pre>
+
+<p>Every tool needs custom integration. What MCP solves: <strong>just like USB-C unified connectors, MCP unifies AI tool-calling protocols</strong>.</p>
+<h2>Architecture</h2>
+<pre class="codehilite"><code>┌──────────┐     MCP Protocol     ┌──────────────┐
+│  Host    │◄────────────────────►│  MCP Server  │
+│ (Claude  │   JSON-RPC over      │  (tools)     │
+│  Desktop)│   stdio/HTTP          │              │
+└──────────┘                      └──────────────┘
+</code></pre>
+
+<ul>
+<li><strong>Host</strong>: AI application (Claude Desktop, VS Code, custom apps)</li>
+<li><strong>Client</strong>: Protocol implementation inside the host</li>
+<li><strong>Server</strong>: Services providing capabilities (filesystem, database, APIs)</li>
+</ul>
+<h2>Quick Start</h2>
+<pre class="codehilite"><code class="language-bash"># Install MCP server
+npx @anthropic/mcp-server-filesystem /path/to/allowed/dir
+
+# Claude Desktop config
+{
+  &quot;mcpServers&quot;: {
+    &quot;filesystem&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;@anthropic/mcp-server-filesystem&quot;, &quot;/path&quot;]
+    }
+  }
+}
+</code></pre>
+
+<h2>Existing Ecosystem</h2>
+<table>
+<thead>
+<tr>
+<th>Server</th>
+<th>Capability</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>filesystem</td>
+<td>Read/write files</td>
+</tr>
+<tr>
+<td>github</td>
+<td>Manage repos/PRs</td>
+</tr>
+<tr>
+<td>postgres</td>
+<td>Database queries</td>
+</tr>
+<tr>
+<td>slack</td>
+<td>Send messages</td>
+</tr>
+<tr>
+<td>puppeteer</td>
+<td>Browser automation</td>
+</tr>
+</tbody>
+</table>
+<h2>Core Concepts</h2>
+<ul>
+<li><strong>Tools</strong>: Functions LLMs can invoke (<code>read_file</code>, <code>search_docs</code>)</li>
+<li><strong>Resources</strong>: Data LLMs can read (file contents, database records)</li>
+<li><strong>Prompts</strong>: Predefined prompt templates</li>
+</ul>
+<h2>Why It Matters</h2>
+<p>Previously, AI tool calling was fragmented — every platform defined its own format. MCP makes "write once, run anywhere" possible in the AI tooling space.</p>
+<blockquote>
+<p>If you're building AI Agents in 2026, MCP is foundational infrastructure you can't ignore.</p>
+</blockquote>
+<hr />
+<p><strong>References:</strong></p>
+<ul>
+<li><a href="https://www.anthropic.com/news/model-context-protocol">Anthropic — Introducing the Model Context Protocol (2024-11)</a></li>
+<li><a href="https://modelcontextprotocol.io/">Model Context Protocol Specification</a></li>
+</ul></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
+            </article>
+            <nav class="navigation post-navigation" aria-label="Posts">
+            <h2 class="screen-reader-text">Post Navigation</h2>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/raft-consensus-en/" rel="prev"><span class="nav-links__label">Previous</span> Distributed Consensus: Why Raft Is Easier to Understand Than Paxos</a></div><div class="nav-next"><a href="/posts/graphrag-vs-rag-en/" rel="next"><span class="nav-links__label">Next</span> GraphRAG Is Changing Retrieval-Augmented Generation: When Knowledge Graphs Meet LLMs</a></div></div>
+          </nav>
+            <a href="/about/" class="author-bio-link">
+            <div class="author-bio">
+              <div class="author-bio-content">
+                <h3>About Zihao Zhang</h3>
+                <p>Data Platform Engineer. Distributed systems, OLAP databases, AI Agent development.</p>
+              </div>
+            </div>
+            </a>
+            <div class="comments-area">
+              <h3>Comments</h3>
+              <p class="no-comments">Comments are closed.</p>
+            </div>
+          </main>
+        </div><aside id="secondary" class="widget-area">
+          <section class="widget widget_recent_entries">
+            <h2 class="widget-title">Recent Posts</h2>
+            <ul><li><a href="/posts/graphrag-vs-rag-en/">GraphRAG Is Changing Retrieval-Augmented Generation: When Knowledge Graphs Meet LLMs</a></li><li><a href="/posts/mcp-protocol-en/">MCP Protocol: Standardizing How LLMs Call External Tools</a></li><li><a href="/posts/raft-consensus-en/">Distributed Consensus: Why Raft Is Easier to Understand Than Paxos</a></li></ul>
+          </section>
+          <section class="widget widget_tag_cloud">
+            <h2 class="widget-title">Categories</h2>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/technology/">Technology</a></div>
+          </section>
+        </aside></div>
+  </div>
+</div>
+<footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
+  <div class="tg-footer-bottom">
+    <div class="container">
+      <div class="site-info" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Copyright © 2026 <a href="https://hankzhang.us/" title="Welcome To My Blog"><span>Welcome To My Blog</span></a>. All rights reserved.</span>
+        <nav style="display:flex;gap:15px">
+          <a href="/">Home</a><a href="/posts/">Archives</a><a href="/categories/">Categories</a><a href="/about/">About</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</footer>
+<button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:#16181a;color:#fff;border:none;cursor:pointer;font-size:20px;display:none;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,.2)">↑</button>
+<script>
+window.addEventListener('scroll',function(){document.getElementById('back-to-top').style.display=window.scrollY>300?'block':'none';var s=document.getElementById('cenote-sticky-header');if(s)s.classList.toggle('visible',window.scrollY>200);});
+</script>
+</div>
+</body>
+</html>

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://hankzhang.us/</loc><changefreq>daily</changefreq></url>
+  <url><loc>https://hankzhang.us//posts/graphrag-vs-rag-en/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us//posts/mcp-protocol-en/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us//posts/raft-consensus-en/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us//categories/ai/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us//categories/technology/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://hankzhang.us//categories/distributed-systems/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://hankzhang.us//posts/</loc><changefreq>monthly</changefreq></url>
   <url><loc>https://hankzhang.us//about/</loc><changefreq>monthly</changefreq></url>
   <url><loc>https://hankzhang.us//</loc><changefreq>daily</changefreq></url>
