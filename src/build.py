@@ -540,7 +540,18 @@ window.sendMessage=async function(){{
     sendBtn.disabled=false;
     if(text===ADMIN_PASSWORD){{
       addMessage('assistant','{t['admin_chat_ok']}');
-      setTimeout(function(){{openAdmin();}},600);
+      setTimeout(function(){{
+        var ao=document.getElementById('admin-overlay');
+        if(ao)ao.classList.add('open');
+        var ap=document.getElementById('admin-password');
+        if(ap){{ap.value='';ap.focus();}}
+        var al=document.getElementById('admin-login');
+        if(al)al.style.display='flex';
+        var as=document.getElementById('admin-logs');
+        if(as)as.style.display='none';
+        var lb=document.getElementById('admin-logout-btn');
+        if(lb)lb.style.display='none';
+      }},600);
     }}else{{
       addMessage('assistant','{t['admin_chat_wrong']}');
     }}
