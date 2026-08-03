@@ -111,7 +111,9 @@ What really drives me, though, isn't any single tool — it's four questions I k
 
 **Healthcare Data Platform** — My internship project. A real-time data infrastructure for medical data mining and analytics, built on Java 17, Spring Boot 3, Spring Cloud Alibaba, Apache Doris, Flink CDC, and Kubernetes. Serving over five thousand medical institutions. This is the most ambitious system I've worked on to date.
 
-**My Blog (纵横四海)** — This very site. Over 140 articles on backend engineering, distributed systems, databases, and AI. Bilingual, built with a Python static site generator I wrote myself, deployed on Vercel. The AI chat agent you're talking to right now? Also something I built.
+**My Blog (纵横四海)** — This very site. Over 140 articles on backend engineering, distributed systems, databases, and AI. Bilingual, built with a custom Python static site generator, deployed on Vercel's edge network.
+
+**This AI Chat Agent** — I designed and built the agent you're talking to from the ground up. It runs on DeepSeek's API with server-sent events (SSE) for real-time streaming, deployed as a Vercel serverless function with rate limiting and CloudBase NoSQL for conversation persistence. The real engineering is in the system prompt — over 180 lines of personality design, behavioral guardrails, and a structured knowledge base covering my entire background. I fine-tuned the tone, the conversational dynamics, even the way it teases and deflects — every interaction pattern was deliberate. The frontend chat widget renders Markdown in real time with a streaming cursor animation, and the whole thing is hand-wired into the static site generator. It's prompt engineering taken seriously — not just a wrapper around an API.
 
 **Hermes Agent / Hermes Desktop** — An open-source AI agent ecosystem I contribute to. Python and TypeScript, with Electron for the desktop companion, MCP protocol support, a plugin system, and a terminal UI. The project has over thirteen thousand stars on GitHub and a community I'm proud to be part of.
 
