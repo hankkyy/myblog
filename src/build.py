@@ -83,6 +83,7 @@ T = {
             ("Backend Performance Optimization", "JVM tuning, SQL optimization, caching strategies"),
         ],
         "project_eastwood_desc": "Antique auction platform. Full-stack Next.js + TypeScript + Supabase app. Browser-side visual search engine (multi-dimensional feature signatures, weighted similarity, confidence gating), bilingual CN/EN, dark luxury theme design system.",
+        "project_unimed_desc": "Real-time healthcare data platform. Java 17, Spring Boot 3, Spring Cloud Alibaba, Apache Doris, Flink CDC, Kubernetes. Serving 5,000+ medical institutions.",
         "project_trek_desc": "Self-hosted travel planner with real-time collaboration, interactive maps, and itinerary management.",
         "project_rag_desc": "RAG-based customer support system for robot vacuum products, supporting knowledge base retrieval and intelligent Q&A.",
         "project_hermes_desc": "Desktop companion app for Hermes Agent, providing localized AI Agent interaction experience.",
@@ -181,6 +182,7 @@ T = {
             ("后端性能优化", "JVM 调优、SQL 优化、缓存策略"),
         ],
         "project_eastwood_desc": "古董拍卖平台。Next.js + TypeScript + Supabase 全栈应用。浏览器端视觉搜索引擎（多维特征签名、加权相似度、置信度门控），中英双语，暗色奢华主题设计系统。",
+        "project_unimed_desc": "实时医疗数据平台。Java 17、Spring Boot 3、Spring Cloud Alibaba、Apache Doris、Flink CDC、Kubernetes。服务 5000+ 医疗机构。",
         "project_trek_desc": "自托管旅行规划器，支持实时协作、交互式地图和行程管理。",
         "project_rag_desc": "基于 RAG 的扫地机器人产品客服系统，支持知识库检索和智能问答。",
         "project_hermes_desc": "Hermes Agent 桌面伴侣应用，提供本地化 AI Agent 交互体验。",
@@ -1272,6 +1274,18 @@ def build_site(lang, posts):
               </div>
               <p class="project-desc">{t['project_eastwood_desc']}</p>
               <div class="project-tags"><span>TypeScript</span><span>Next.js</span><span>Supabase</span><span>CV</span><span>Canvas API</span></div>
+            </div>
+
+            <div class="project-card">
+              <div class="project-header">
+                <span class="project-emoji">🏥</span>
+                <div>
+                  <strong class="project-name">UniMed — Healthcare Data Platform</strong>
+                  <span class="project-link"><span style="color:#94a3b8;font-size:.82rem">Internship Project</span></span>
+                </div>
+              </div>
+              <p class="project-desc">{t['project_unimed_desc']}</p>
+              <div class="project-tags"><span>Java 17</span><span>Spring Boot 3</span><span>Doris</span><span>Flink CDC</span><span>K8s</span></div>
             </div>
 
             <div class="project-card">
