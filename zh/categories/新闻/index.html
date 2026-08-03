@@ -831,6 +831,8 @@ var closeIcon=document.getElementById('chat-toggle-close-emoji');
 var isOpen=false;
 var isStreaming=false;
 var isComposing=false;
+var adminMode=false;
+var ADMIN_PASSWORD='001215';
 var sessionId='s'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
 var dragOffsetX=0,dragOffsetY=0;
 var isDragging=false,dragStartX=0,dragStartY=0;
@@ -922,6 +924,30 @@ window.sendMessage=async function(){
   isStreaming=true;
   sendBtn.disabled=true;
 
+  // ---- Admin mode: chat-triggered access ----
+  if(adminMode){
+    typing.remove();
+    isStreaming=false;
+    sendBtn.disabled=false;
+    if(text===ADMIN_PASSWORD){
+      addMessage('assistant','✅ 验证通过，正在打开管理面板...');
+      setTimeout(function(){openAdmin();},600);
+    }else{
+      addMessage('assistant','❌ 密码错误。请重试，或输入其他内容取消。');
+    }
+    adminMode=false;
+    return;
+  }
+  if(/切换到管理模式|admin mode|\/admin|管理模式|管理面板/i.test(text)){
+    typing.remove();
+    isStreaming=false;
+    sendBtn.disabled=false;
+    adminMode=true;
+    addMessage('assistant','🔐 请输入管理密码（输入其他内容取消）：');
+    return;
+  }
+  // ---- End admin mode ----
+
   // Build conversation history from visible messages
   var history=[];
   var msgs=messages.querySelectorAll('.chat-msg:not(.typing)');
@@ -983,7 +1009,7 @@ window.sendMessage=async function(){
 };
 })();
 </script>
-<!-- Hidden Admin Panel (triple-click footer copyright to open) -->
+<!-- Hidden Admin Panel (type "切换到管理模式" in chat or Ctrl+Shift+A) -->
 <div id="admin-overlay">
   <div id="admin-panel">
     <div id="admin-header">
@@ -1049,23 +1075,6 @@ var logsList=document.getElementById('admin-logs-list');
 var pagination=document.getElementById('admin-pagination');
 var adminPassword='';
 var currentPage=1;
-	var clickCount=0;
-	var clickTimer=null;
-	var copyrightEl=document.getElementById('footer-copyright');
-
-	// Triple-click on footer copyright text to open admin panel
-	copyrightEl.addEventListener('click',function(e){
-	  e.preventDefault();
-	  clickCount++;
-	  clearTimeout(clickTimer);
-	  if(clickCount>=3){
-	    clickCount=0;
-	    openAdmin();
-	    return;
-	  }
-	  clickTimer=setTimeout(function(){clickCount=0;},800);
-	});
-
 	// Keyboard shortcut: Ctrl+Shift+A (Win/Linux) or Cmd+Shift+A (Mac)
 	document.addEventListener('keydown',function(e){
 	  if((e.ctrlKey||e.metaKey)&&e.shiftKey&&e.code==='KeyA'&&!overlay.classList.contains('open')){
@@ -1074,7 +1083,7 @@ var currentPage=1;
 	  }
 	});
 
-	console.info('🔑 Admin: triple-click footer or press Ctrl+Shift+A');
+	console.info('🔑 Admin: type "切换到管理模式" in chat or press Ctrl+Shift+A');
 
 window.openAdmin=function(){
   overlay.classList.add('open');
