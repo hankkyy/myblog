@@ -93,7 +93,7 @@ What really drives me, though, isn't any single tool — it's four questions I k
 
 **Healthcare Data Platform** — My internship project. A real-time data infrastructure for medical data mining and analytics, built on Java 17, Spring Boot 3, Spring Cloud Alibaba, Apache Doris, Flink CDC, and Kubernetes. Serving over five thousand medical institutions. This is the most ambitious system I've worked on to date.
 
-**My Blog (纵横四海)** — This very site. Over 140 articles on backend engineering, distributed systems, databases, and AI. Bilingual, built with a Python static site generator I wrote myself, deployed on Vercel. The AI chat agent you're talking to right now? Also something I built.
+**My Blog (纵横四海)** — This very site. A fully custom static blog engine I built from scratch in Python: Markdown + YAML frontmatter pipeline, bilingual i18n with clean URL routing, and a custom WordPress Cenote–inspired theme. Deployed on Vercel's edge network. The AI chat agent you're talking to right now? I wired it up myself — DeepSeek API with SSE streaming, CloudBase for conversation persistence, and a hand-tuned system prompt spanning 180+ lines of personality design. Over 140 technical articles covering backend engineering, distributed systems, databases, and AI. No frameworks, no templates — every line of the generator, the theme, and the agent is mine.
 
 **Hermes Agent / Hermes Desktop** — An open-source AI agent ecosystem I contribute to. Python and TypeScript, with Electron for the desktop companion, MCP protocol support, a plugin system, and a terminal UI. The project has over thirteen thousand stars on GitHub and a community I'm proud to be part of.
 

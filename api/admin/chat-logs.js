@@ -1,21 +1,19 @@
 /**
- * Admin API — Read chat logs from CloudBase NoSQL
+ * Admin API — Read chat logs from CloudBase NoSQL via HTTP API
  * Password-protected with brute-force protection
  */
 
-const cloudbase = require('@cloudbase/node-sdk');
-
-const ENV_ID = 'hanoi-d4gj8vd2q1e7a3dc0';
+const CLOUDBASE_ENV = 'hanoi-d4gj8vd2q1e7a3dc0';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'hankyky';
+const CLOUDBASE_API_KEY = process.env.CLOUDBASE_API_KEY || '';
 
-const app = cloudbase.init({ env: ENV_ID });
-const db = app.database();
+const BASE_URL = `https://${CLOUDBASE_ENV}.api.tcloudbasegateway.com/v1/database/instances/(default)/databases/(default)`;
 
 // --- Brute-force protection ---
 const attemptMap = new Map();
-const MAX_ATTEMPTS = 5;           // lock out after this many failures
-const LOCKOUT_BASE_MS = 30_000;   // 30s base lockout
-const CLEANUP_INTERVAL_MS = 300_000; // clean stale entries every 5 min
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_BASE_MS = 30_000;
+const CLEANUP_INTERVAL_MS = 300_000;
 
 function getClientIp(req) {
   return req.headers['x-forwarded-for']?.split(',')[0]?.trim()
@@ -29,7 +27,6 @@ function checkBruteForce(ip) {
   const entry = attemptMap.get(ip);
   if (!entry) return { blocked: false };
 
-  // Exponential backoff: 30s, 60s, 120s, 240s...
   const lockoutDuration = LOCKOUT_BASE_MS * Math.pow(2, Math.max(0, entry.failures - MAX_ATTEMPTS));
   const blockedUntil = entry.lastAttempt + lockoutDuration;
 
@@ -38,7 +35,6 @@ function checkBruteForce(ip) {
     return { blocked: true, waitSec };
   }
 
-  // Lockout expired — reset if they've waited long enough
   if (entry.failures >= MAX_ATTEMPTS) {
     attemptMap.set(ip, { failures: 0, lastAttempt: now });
   }
@@ -57,7 +53,6 @@ function recordSuccess(ip) {
   attemptMap.delete(ip);
 }
 
-// Cleanup stale entries inside handler to avoid serverless timer issues
 function cleanupStaleEntries() {
   const now = Date.now();
   for (const [ip, entry] of attemptMap) {
@@ -65,6 +60,50 @@ function cleanupStaleEntries() {
   }
 }
 
+// Convert EJSON $date to ISO string for frontend compatibility
+function normalizeMessages(messages) {
+  if (!Array.isArray(messages)) return [];
+  return messages.map(m => ({
+    role: m.role,
+    content: m.content,
+  }));
+}
+
+function parseEjsonDate(val) {
+  if (val && typeof val === 'object' && val.$date) {
+    const ms = val.$date.$numberLong
+      ? Number(val.$date.$numberLong)
+      : Number(val.$date);
+    return new Date(ms).toISOString();
+  }
+  return val;
+}
+
+function normalizeLog(doc) {
+  return {
+    id: doc._id?.$oid || doc._id,
+    sessionId: doc.sessionId,
+    timestamp: parseEjsonDate(doc.timestamp),
+    messages: normalizeMessages(doc.messages),
+  };
+}
+
+async function cloudbaseRequest(path, options = {}) {
+  const url = `${BASE_URL}${path}`;
+  const res = await fetch(url, {
+    ...options,
+    headers: {
+      'Authorization': `Bearer ${CLOUDBASE_API_KEY}`,
+      'Content-Type': 'application/json',
+      ...(options.headers || {}),
+    },
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`CloudBase API error ${res.status}: ${text}`);
+  }
+  return res.json();
+}
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -77,7 +116,6 @@ export default async function handler(req, res) {
   const clientIp = getClientIp(req);
   cleanupStaleEntries();
 
-  // Check brute-force lockout
   const { blocked, waitSec } = checkBruteForce(clientIp);
   if (blocked) {
     return res.status(429).json({
@@ -96,23 +134,20 @@ export default async function handler(req, res) {
 
     recordSuccess(clientIp);
 
-    // Count total
-    const countResult = await db.collection('chat_logs').count();
-    const total = countResult.total;
+    // Count total documents
+    const countResult = await cloudbaseRequest(
+      `/collections/chat_logs/documents?count=true`
+    );
+    const total = countResult.total || 0;
 
-    // Fetch logs, newest first, paginated
-    const result = await db.collection('chat_logs')
-      .orderBy('timestamp', 'desc')
-      .skip((page - 1) * pageSize)
-      .limit(pageSize)
-      .get();
+    // Fetch logs with ordering and pagination
+    const order = JSON.stringify([{ field: 'timestamp', direction: 'desc' }]);
+    const offset = (page - 1) * pageSize;
+    const queryResult = await cloudbaseRequest(
+      `/collections/chat_logs/documents?order=${encodeURIComponent(order)}&limit=${pageSize}&offset=${offset}`
+    );
 
-    const logs = result.data.map(item => ({
-      id: item._id,
-      sessionId: item.sessionId,
-      timestamp: item.timestamp,
-      messages: item.messages,
-    }));
+    const logs = (queryResult.list || []).map(normalizeLog);
 
     return res.json({
       logs,
