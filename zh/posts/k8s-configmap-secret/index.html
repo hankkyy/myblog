@@ -497,10 +497,11 @@ var adminPassword='';
 var currentPage=1;
 	var clickCount=0;
 	var clickTimer=null;
-	var footerEl=document.getElementById('colophon');
+	var copyrightEl=document.getElementById('footer-copyright');
 
-	// Triple-click anywhere in footer to open admin panel
-	footerEl.addEventListener('click',function(e){
+	// Triple-click on footer copyright text to open admin panel
+	copyrightEl.addEventListener('click',function(e){
+	  e.preventDefault();
 	  clickCount++;
 	  clearTimeout(clickTimer);
 	  if(clickCount>=3){
@@ -508,7 +509,7 @@ var currentPage=1;
 	    openAdmin();
 	    return;
 	  }
-	  clickTimer=setTimeout(function(){clickCount=0;},1500);
+	  clickTimer=setTimeout(function(){clickCount=0;},800);
 	});
 
 	// Keyboard shortcut: Ctrl+Shift+A (Win/Linux) or Cmd+Shift+A (Mac)
