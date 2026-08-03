@@ -82,14 +82,14 @@ T = {
             ("AI Agent Development & Applications", "RAG, MCP, LLM application architecture"),
             ("Backend Performance Optimization", "JVM tuning, SQL optimization, caching strategies"),
         ],
-        "project_eastwood_desc": "Antique auction platform. Full-stack Next.js + TypeScript + Supabase app. Browser-side visual search engine (multi-dimensional feature signatures, weighted similarity, confidence gating), bilingual CN/EN, dark luxury theme design system.",
+        "project_eastwood_desc": "Antique auction platform built with Next.js, TypeScript, and Supabase. Features a client-side visual search engine that matches items by visual similarity, with bilingual CN/EN support.",
         "project_unimed_desc": "Real-time healthcare data platform. Java 17, Spring Boot 3, Spring Cloud Alibaba, Apache Doris, Flink CDC, Kubernetes. Serving 5,000+ medical institutions.",
         "project_trek_desc": "Self-hosted travel planner with real-time collaboration, interactive maps, and itinerary management.",
         "project_rag_desc": "RAG-based customer support system for robot vacuum products, supporting knowledge base retrieval and intelligent Q&A.",
-        "project_hermes_desc": "Desktop companion app for Hermes Agent, providing localized AI Agent interaction experience.",
-        "project_blackhorse_desc": "High-concurrency review platform inspired by Dianping. Redis + Redisson distributed locking under heavy traffic.",
-        "project_skytakeout_desc": "Food delivery backend. Practicing patterns that power apps millions use daily.",
-        "project_ectf_desc": "Embedded security competition — attack phase. Vulnerability exploitation at the hardware-software boundary.",
+        "project_hermes_desc": "Desktop app for AI agent interaction, built with Electron and TypeScript.",
+        "project_blackhorse_desc": "High-concurrency review platform with Redis + Redisson distributed locking.",
+        "project_skytakeout_desc": "Food delivery backend — practicing high-concurrency architecture patterns with Redis and Redisson.",
+        "project_ectf_desc": "Embedded security competition — attack phase. Hardware-software boundary vulnerability exploitation.",
         "hobby_text": 'Passionate about travel and aviation. Half of my geography knowledge comes from books, the other half from airplane windows at 30,000 feet.<br>Seeing the world shapes your vision — visit more places, meet more people, understand more.',
         "blog_about_text": 'A static site built with Python, deployed on Vercel. Theme inspired by WordPress Cenote.<br>Technical notes, project retrospectives, industry observations. Quality over frequency.',
         "flight_hours": "Total Flight Hours",
@@ -102,7 +102,7 @@ T = {
         "copyright": 'Copyright © {year} <a href="{url}" title="{title}"><span>{title}</span></a>. All rights reserved.',
         "chat_title": "Ask Me Anything",
         "chat_placeholder": "Say something...",
-        "chat_welcome": "Hey, I'm Hank's digital twin. What brings you here?",
+        "chat_welcome": "Hi! I'm Hank's AI assistant. Ask me about his work, projects, or background.",
         "chat_send": "Send",
         "chat_typing": "Thinking...",
         "chat_disclaimer": "⚠️ AI-powered · May be inaccurate · Powered by DeepSeek",
@@ -113,11 +113,11 @@ T = {
         "admin_empty": "No conversations yet.",
         "admin_logout": "Lock",
         "admin_close": "Close",
-        "admin_chat_prompt": "🔐 Enter admin password (or type anything else to cancel):",
-        "admin_chat_wrong": "❌ Wrong password. Try again or type anything else to cancel.",
-        "admin_chat_ok": "✅ Access granted. Opening admin panel...",
-        "admin_chat_cancelled": "🔒 Admin mode cancelled.",
-        "chat_error_stream": "⚠️ Response interrupted. Please try again.",
+        "admin_chat_prompt": "Enter admin password (or type anything else to cancel):",
+        "admin_chat_wrong": "Wrong password. Try again or type anything else to cancel.",
+        "admin_chat_ok": "Access granted. Opening admin panel...",
+        "admin_chat_cancelled": "Admin mode cancelled.",
+        "chat_error_stream": "Response interrupted. Please try again.",
         "chat_error_unavailable": "Sorry, the service is temporarily unavailable. Please try again later.",
     },
     "zh": {
@@ -181,14 +181,14 @@ T = {
             ("AI Agent 开发与应用", "RAG、MCP、LLM 应用架构"),
             ("后端性能优化", "JVM 调优、SQL 优化、缓存策略"),
         ],
-        "project_eastwood_desc": "古董拍卖平台。Next.js + TypeScript + Supabase 全栈应用。浏览器端视觉搜索引擎（多维特征签名、加权相似度、置信度门控），中英双语，暗色奢华主题设计系统。",
+        "project_eastwood_desc": "古董拍卖平台，基于 Next.js、TypeScript 和 Supabase 构建。实现了客户端视觉搜索引擎，通过特征提取与相似度匹配来检索拍品，支持中英双语。",
         "project_unimed_desc": "实时医疗数据平台。Java 17、Spring Boot 3、Spring Cloud Alibaba、Apache Doris、Flink CDC、Kubernetes。服务 5000+ 医疗机构。",
         "project_trek_desc": "自托管旅行规划器，支持实时协作、交互式地图和行程管理。",
         "project_rag_desc": "基于 RAG 的扫地机器人产品客服系统，支持知识库检索和智能问答。",
-        "project_hermes_desc": "Hermes Agent 桌面伴侣应用，提供本地化 AI Agent 交互体验。",
+        "project_hermes_desc": "基于 Electron 和 TypeScript 构建的桌面应用，用于本地 AI Agent 交互。",
         "project_blackhorse_desc": "高并发点评类平台，Redis + Redisson 分布式锁应对大流量场景。",
-        "project_skytakeout_desc": "外卖后端系统，实践百万用户级应用的常见架构模式。",
-        "project_ectf_desc": "嵌入式安全竞赛——攻击阶段，硬件与软件的边界漏洞利用。",
+        "project_skytakeout_desc": "外卖后端系统，基于 Redis 和 Redisson 实践高并发架构模式。",
+        "project_ectf_desc": "嵌入式安全竞赛——攻击阶段，硬件与软件边界的安全漏洞利用。",
         "hobby_text": "热爱旅行和航空。地理知识，一半来自书本，另一半来自三万英尺高空的舷窗。<br>相信眼界决定世界——去更多地方，见更多人，理解更多事。",
         "blog_about_text": "用 Python 构建的静态站点，部署在 Vercel。外观参考 WordPress Cenote 主题。<br>写技术笔记、项目复盘、行业观察。不追求日更，追求每篇都值得读。",
         "flight_hours": "累计飞行时长",
@@ -201,7 +201,7 @@ T = {
         "copyright": 'Copyright © {year} <a href="{url}" title="{title}"><span>{title}</span></a>. All rights reserved.',
         "chat_title": "随便问问",
         "chat_placeholder": "说点什么吧...",
-        "chat_welcome": "嘿，我是 Hank 的数字分身，怎么找到这儿的？",
+        "chat_welcome": "你好！我是 Hank 的 AI 助手，关于他的工作、项目或经历，欢迎随时提问。",
         "chat_send": "发送",
         "chat_typing": "思考中...",
         "chat_disclaimer": "⚠️ AI 生成内容 · 可能不准确 · 由 DeepSeek 驱动",
@@ -212,11 +212,11 @@ T = {
         "admin_empty": "暂无对话记录。",
         "admin_logout": "锁定",
         "admin_close": "关闭",
-        "admin_chat_prompt": "🔐 请输入管理密码（输入其他内容取消）：",
-        "admin_chat_wrong": "❌ 密码错误。请重试，或输入其他内容取消。",
-        "admin_chat_ok": "✅ 验证通过，正在打开管理面板...",
-        "admin_chat_cancelled": "🔒 已取消管理模式。",
-        "chat_error_stream": "⚠️ 回复中断，请重试。",
+        "admin_chat_prompt": "请输入管理密码（输入其他内容取消）：",
+        "admin_chat_wrong": "密码错误。请重试，或输入其他内容取消。",
+        "admin_chat_ok": "验证通过，正在打开管理面板...",
+        "admin_chat_cancelled": "已取消管理模式。",
+        "chat_error_stream": "回复中断，请重试。",
         "chat_error_unavailable": "抱歉，服务暂时不可用，请稍后重试。",
     },
 }
@@ -362,8 +362,8 @@ window.addEventListener('scroll',function(){{document.getElementById('back-to-to
 <!-- AI Chat Widget -->
 <div id="chat-widget">
   <button id="chat-toggle" onclick="toggleChat()" title="{t['chat_title']}">
-    <span id="chat-toggle-emoji">💬</span>
-    <span id="chat-toggle-close-emoji" style="display:none">✕</span>
+    <span id="chat-toggle-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></span>
+    <span id="chat-toggle-close" style="display:none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
   </button>
   <div id="chat-panel">
     <div id="chat-header">
@@ -386,8 +386,8 @@ var panel=document.getElementById('chat-panel');
 var input=document.getElementById('chat-input');
 var messages=document.getElementById('chat-messages');
 var sendBtn=document.getElementById('chat-send-btn');
-var chatIcon=document.getElementById('chat-toggle-emoji');
-var closeIcon=document.getElementById('chat-toggle-close-emoji');
+var chatIcon=document.getElementById('chat-toggle-icon');
+var closeIcon=document.getElementById('chat-toggle-close');
 var isOpen=false;
 var isStreaming=false;
 var isComposing=false;
@@ -681,7 +681,7 @@ var currentPage=1;
 	  }}
 	}});
 
-	console.info('🔑 Admin: type "切换到管理模式" in chat or press Ctrl+Shift+A');
+	console.info('Admin: type "切换到管理模式" in chat or press Ctrl+Shift+A');
 
 window.openAdmin=function(){{
   overlay.classList.add('open');
@@ -1217,25 +1217,20 @@ def build_site(lang, posts):
         )
 
         skills = [
-            ("skill_lang", "skill_lang_val", "☕"), ("skill_fw", "skill_fw_val", "⚙️"),
-            ("skill_db", "skill_db_val", "🗄️"), ("skill_mq", "skill_mq_val", "📨"),
-            ("skill_infra", "skill_infra_val", "🐳"), ("skill_ai", "skill_ai_val", "🤖"),
-            ("skill_tools", "skill_tools_val", "🔧"),
+            ("skill_lang", "skill_lang_val"), ("skill_fw", "skill_fw_val"),
+            ("skill_db", "skill_db_val"), ("skill_mq", "skill_mq_val"),
+            ("skill_infra", "skill_infra_val"), ("skill_ai", "skill_ai_val"),
+            ("skill_tools", "skill_tools_val"),
         ]
         skill_cards = "".join(
-            f'<div class="skill-card skill-card-feat"><span class="skill-icon">{icon}</span><span class="skill-label">{t[sk]}</span><span class="skill-value">{t[sv]}</span></div>'
-            for sk, sv, icon in skills
+            f'<div class="skill-card skill-card-feat"><span class="skill-label">{t[sk]}</span><span class="skill-value">{t[sv]}</span></div>'
+            for sk, sv in skills
         )
 
         about_name_html = t['about_name'] + (f'<span class="about-name-en">{t["about_name_sub"]}</span>' if t["about_name_sub"] else "")
 
         about_html = f"""
           <section class="about-intro">
-            <div class="about-hero-decor">
-              <span class="hero-blob hero-blob-1"></span>
-              <span class="hero-blob hero-blob-2"></span>
-              <span class="hero-blob hero-blob-3"></span>
-            </div>
             <div class="about-intro-left">
               <img src="/avatar.jpg" alt="{t['about_hero_img_alt']}" class="about-avatar" width="80" height="80">
               <p class="about-greeting"><span class="greeting-dot"></span>{t['about_greeting']}</p>
@@ -1266,7 +1261,6 @@ def build_site(lang, posts):
             <h2 class="about-label">{t['about_projects']}</h2>
             <div class="project-card">
               <div class="project-header">
-                <span class="project-emoji">🏛️</span>
                 <div>
                   <strong class="project-name">Eastwood Auction</strong>
                   <span class="project-link"><a href="https://github.com/hankkyy/EastWood-Auction" target="_blank">GitHub ↗</a> · <a href="https://hankzhang.us/posts/client-side-visual-search/" target="_blank">{'Tech Article ↗' if lang == 'en' else '技术文章 ↗'}</a></span>
@@ -1278,7 +1272,6 @@ def build_site(lang, posts):
 
             <div class="project-card">
               <div class="project-header">
-                <span class="project-emoji">🏥</span>
                 <div>
                   <strong class="project-name">UniMed — Healthcare Data Platform</strong>
                   <span class="project-link"><span style="color:#94a3b8;font-size:.82rem">Internship Project</span></span>
@@ -1290,7 +1283,6 @@ def build_site(lang, posts):
 
             <div class="project-card">
               <div class="project-header">
-                <span class="project-emoji">✈️</span>
                 <div>
                   <strong class="project-name">TREK — Trip Planner</strong>
                   <span class="project-link"><a href="https://github.com/hankkyy/TREK" target="_blank">GitHub ↗</a></span>
@@ -1302,7 +1294,6 @@ def build_site(lang, posts):
 
             <div class="project-card">
               <div class="project-header">
-                <span class="project-emoji">🤖</span>
                 <div>
                   <strong class="project-name">RAG Customer Support Agent</strong>
                   <span class="project-link"><a href="https://github.com/hankkyy/RAG-Based-Customer-Support-Agent-for-Robot-Vacuum-Products" target="_blank">GitHub ↗</a></span>
@@ -1314,7 +1305,6 @@ def build_site(lang, posts):
 
             <div class="project-card">
               <div class="project-header">
-                <span class="project-emoji">🖥️</span>
                 <div>
                   <strong class="project-name">Hermes Desktop</strong>
                   <span class="project-link"><a href="https://github.com/hankkyy/hermes-desktop" target="_blank">GitHub ↗</a></span>
@@ -1326,7 +1316,6 @@ def build_site(lang, posts):
 
             <div class="project-card">
               <div class="project-header">
-                <span class="project-emoji">🔐</span>
                 <div>
                   <strong class="project-name">MITRE eCTF 2025</strong>
                   <span class="project-link"><span style="color:#94a3b8;font-size:.82rem">Embedded Security Competition</span></span>
