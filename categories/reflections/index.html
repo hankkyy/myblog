@@ -225,7 +225,7 @@ var isOpen=false;
 var isStreaming=false;
 var isComposing=false;
 var adminMode=false;
-var ADMIN_PASSWORD='001215';
+var ADMIN_PASSWORD='hankyky';
 var sessionId='s'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
 var dragOffsetX=0,dragOffsetY=0;
 var isDragging=false,dragStartX=0,dragStartY=0;
@@ -365,16 +365,7 @@ window.sendMessage=async function(){
     if(text===ADMIN_PASSWORD){
       addMessage('assistant','✅ Access granted. Opening admin panel...');
       setTimeout(function(){
-        var ao=document.getElementById('admin-overlay');
-        if(ao)ao.classList.add('open');
-        var ap=document.getElementById('admin-password');
-        if(ap){ap.value='';ap.focus();}
-        var al=document.getElementById('admin-login');
-        if(al)al.style.display='flex';
-        var as=document.getElementById('admin-logs');
-        if(as)as.style.display='none';
-        var lb=document.getElementById('admin-logout-btn');
-        if(lb)lb.style.display='none';
+        if(window.unlockAdminWithPassword)window.unlockAdminWithPassword(text);
       },600);
     }else{
       addMessage('assistant','❌ Wrong password. Try again or type anything else to cancel.');
@@ -551,6 +542,16 @@ overlay.addEventListener('click',function(e){
 window.unlockAdmin=function(){
   adminPassword=pwdInput.value;
   if(!adminPassword)return;
+  loadLogs(1);
+};
+
+// Called from chat-based admin auth — bypasses the login form
+window.unlockAdminWithPassword=function(pwd){
+  overlay.classList.add('open');
+  adminPassword=pwd;
+  loginSection.style.display='none';
+  logsSection.style.display='block';
+  logoutBtn.style.display='block';
   loadLogs(1);
 };
 
