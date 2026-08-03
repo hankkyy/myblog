@@ -39,13 +39,13 @@ function checkRateLimit(ip) {
   return { allowed: entry.count <= RATE_LIMIT_MAX, remaining, reset: resetSec };
 }
 
-// Periodic cleanup of stale entries
-setInterval(() => {
+// Cleanup stale entries inside handler to avoid serverless timer issues
+function cleanupStaleRateLimitEntries() {
   const now = Date.now();
   for (const [ip, entry] of rateLimitMap) {
     if (now - entry.windowStart > RATE_LIMIT_WINDOW_MS * 2) rateLimitMap.delete(ip);
   }
-}, CLEANUP_INTERVAL_MS).unref?.();
+}
 
 
 const SYSTEM_PROMPT = `You are an AI assistant representing Zihao Zhang (also known as Hank Zhang, 张子豪).
@@ -189,6 +189,7 @@ export default async function handler(req, res) {
 
   // --- Rate limiting ---
   const clientIp = getClientIp(req);
+  cleanupStaleRateLimitEntries();
   const { allowed, remaining, reset } = checkRateLimit(clientIp);
   res.setHeader('X-RateLimit-Limit', RATE_LIMIT_MAX);
   res.setHeader('X-RateLimit-Remaining', remaining);

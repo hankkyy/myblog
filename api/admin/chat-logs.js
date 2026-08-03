@@ -57,13 +57,13 @@ function recordSuccess(ip) {
   attemptMap.delete(ip);
 }
 
-// Periodic cleanup of stale entries
-setInterval(() => {
+// Cleanup stale entries inside handler to avoid serverless timer issues
+function cleanupStaleEntries() {
   const now = Date.now();
   for (const [ip, entry] of attemptMap) {
     if (now - entry.lastAttempt > CLEANUP_INTERVAL_MS) attemptMap.delete(ip);
   }
-}, CLEANUP_INTERVAL_MS).unref?.();
+}
 
 
 export default async function handler(req, res) {
@@ -75,6 +75,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const clientIp = getClientIp(req);
+  cleanupStaleEntries();
 
   // Check brute-force lockout
   const { blocked, waitSec } = checkBruteForce(clientIp);

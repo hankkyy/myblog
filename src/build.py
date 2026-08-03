@@ -86,6 +86,9 @@ T = {
         "project_trek_desc": "Self-hosted travel planner with real-time collaboration, interactive maps, and itinerary management.",
         "project_rag_desc": "RAG-based customer support system for robot vacuum products, supporting knowledge base retrieval and intelligent Q&A.",
         "project_hermes_desc": "Desktop companion app for Hermes Agent, providing localized AI Agent interaction experience.",
+        "project_blackhorse_desc": "High-concurrency review platform inspired by Dianping. Redis + Redisson distributed locking under heavy traffic.",
+        "project_skytakeout_desc": "Food delivery backend. Practicing patterns that power apps millions use daily.",
+        "project_ectf_desc": "Embedded security competition — attack phase. Vulnerability exploitation at the hardware-software boundary.",
         "hobby_text": 'Passionate about travel and aviation. Half of my geography knowledge comes from books, the other half from airplane windows at 30,000 feet.<br>Seeing the world shapes your vision — visit more places, meet more people, understand more.',
         "blog_about_text": 'A static site built with Python, deployed on Vercel. Theme inspired by WordPress Cenote.<br>Technical notes, project retrospectives, industry observations. Quality over frequency.',
         "flight_hours": "Total Flight Hours",
@@ -181,6 +184,9 @@ T = {
         "project_trek_desc": "自托管旅行规划器，支持实时协作、交互式地图和行程管理。",
         "project_rag_desc": "基于 RAG 的扫地机器人产品客服系统，支持知识库检索和智能问答。",
         "project_hermes_desc": "Hermes Agent 桌面伴侣应用，提供本地化 AI Agent 交互体验。",
+        "project_blackhorse_desc": "高并发点评类平台，Redis + Redisson 分布式锁应对大流量场景。",
+        "project_skytakeout_desc": "外卖后端系统，实践百万用户级应用的常见架构模式。",
+        "project_ectf_desc": "嵌入式安全竞赛——攻击阶段，硬件与软件的边界漏洞利用。",
         "hobby_text": "热爱旅行和航空。地理知识，一半来自书本，另一半来自三万英尺高空的舷窗。<br>相信眼界决定世界——去更多地方，见更多人，理解更多事。",
         "blog_about_text": "用 Python 构建的静态站点，部署在 Vercel。外观参考 WordPress Cenote 主题。<br>写技术笔记、项目复盘、行业观察。不追求日更，追求每篇都值得读。",
         "flight_hours": "累计飞行时长",
@@ -1303,6 +1309,42 @@ def build_site(lang, posts):
               <p class="project-desc">{t['project_hermes_desc']}</p>
               <div class="project-tags"><span>TypeScript</span><span>Electron</span><span>AI Agent</span></div>
             </div>
+
+            <div class="project-card">
+              <div class="project-header">
+                <span class="project-emoji">⭐</span>
+                <div>
+                  <strong class="project-name">Blackhorse Rating</strong>
+                  <span class="project-link"><a href="https://github.com/hankkyy/Blackhorse-Rating" target="_blank">GitHub ↗</a></span>
+                </div>
+              </div>
+              <p class="project-desc">{t['project_blackhorse_desc']}</p>
+              <div class="project-tags"><span>Java</span><span>Spring Boot</span><span>Redis</span><span>Redisson</span></div>
+            </div>
+
+            <div class="project-card">
+              <div class="project-header">
+                <span class="project-emoji">🍔</span>
+                <div>
+                  <strong class="project-name">Sky-Take-Out</strong>
+                  <span class="project-link"><a href="https://github.com/hankkyy/Sky-Take-Out" target="_blank">GitHub ↗</a></span>
+                </div>
+              </div>
+              <p class="project-desc">{t['project_skytakeout_desc']}</p>
+              <div class="project-tags"><span>Java</span><span>Spring Boot</span><span>MyBatis-Plus</span><span>JWT</span></div>
+            </div>
+
+            <div class="project-card">
+              <div class="project-header">
+                <span class="project-emoji">🔐</span>
+                <div>
+                  <strong class="project-name">MITRE eCTF 2025</strong>
+                  <span class="project-link"><span style="color:#94a3b8;font-size:.82rem">Embedded Security Competition</span></span>
+                </div>
+              </div>
+              <p class="project-desc">{t['project_ectf_desc']}</p>
+              <div class="project-tags"><span>C</span><span>Python</span><span>Security</span><span>Embedded Systems</span></div>
+            </div>
           </section>
 
           <section class="about-block">
@@ -1314,6 +1356,7 @@ def build_site(lang, posts):
               <div class="travel-stats">
                 <div class="travel-stat"><strong>319<span class="stat-unit">h</span>&thinsp;40<span class="stat-unit">min</span></strong><span>{t['flight_hours']}</span></div>
                 <div class="travel-stat"><strong>238,719<span class="stat-unit">km</span></strong><span>{t['flight_km']}</span></div>
+                <div class="travel-stat"><strong>{total_cities}</strong><span>{t['cities_count_label']}</span></div>
               </div>
             </div>
           </section>
