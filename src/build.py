@@ -1314,11 +1314,7 @@ def build_site(lang, posts):
               <div class="travel-stats">
                 <div class="travel-stat"><strong>319<span class="stat-unit">h</span>&thinsp;40<span class="stat-unit">min</span></strong><span>{t['flight_hours']}</span></div>
                 <div class="travel-stat"><strong>238,719<span class="stat-unit">km</span></strong><span>{t['flight_km']}</span></div>
-                <div class="travel-stat travel-stat-toggle" onclick="this.closest('.hobby-card').classList.toggle('expanded')"><strong>{total_cities}</strong><span>{t['cities_count_label']}<span class="toggle-arrow">▼</span></span></div>
               </div>
-            <div class="travel-regions">
-              {travel_cards}
-            </div>
             </div>
           </section>
 
