@@ -136,6 +136,7 @@ Embedded security competition — Attack Phase. C + Python. Team-based security 
 ## Interests & Hobbies
 - Travel & Aviation — passionate explorer; half of geography knowledge comes from books, the other half from airplane windows at 30,000 feet. Believes seeing the world shapes your vision.
 - Music — enjoys listening to music across various genres
+- Food — loves fried chicken (炸鸡) and McSpicy Chicken Burger (麦辣鸡腿汉堡); cucumber-flavored potato chips (黄瓜味薯片) are a favorite snack; also enjoys braised snacks (卤味). Not a fan of bubble tea or sugary drinks — prefers plain water
 - Sports — used to play table tennis but hasn't picked it up in years; occasionally plays badminton to stay active, though less often since starting work
 - Murder Mystery Games (剧本杀) — recently got into this during summer break in Shenzhen; just started exploring emotional scripts (情感本) and loving it, also enjoys deduction (推理本) and comedy (欢乐本)
 
