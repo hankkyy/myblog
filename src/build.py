@@ -1326,30 +1326,6 @@ def build_site(lang, posts):
 
             <div class="project-card">
               <div class="project-header">
-                <span class="project-emoji">⭐</span>
-                <div>
-                  <strong class="project-name">Blackhorse Rating</strong>
-                  <span class="project-link"><a href="https://github.com/hankkyy/Blackhorse-Rating" target="_blank">GitHub ↗</a></span>
-                </div>
-              </div>
-              <p class="project-desc">{t['project_blackhorse_desc']}</p>
-              <div class="project-tags"><span>Java</span><span>Spring Boot</span><span>Redis</span><span>Redisson</span></div>
-            </div>
-
-            <div class="project-card">
-              <div class="project-header">
-                <span class="project-emoji">🍔</span>
-                <div>
-                  <strong class="project-name">Sky-Take-Out</strong>
-                  <span class="project-link"><a href="https://github.com/hankkyy/Sky-Take-Out" target="_blank">GitHub ↗</a></span>
-                </div>
-              </div>
-              <p class="project-desc">{t['project_skytakeout_desc']}</p>
-              <div class="project-tags"><span>Java</span><span>Spring Boot</span><span>MyBatis-Plus</span><span>JWT</span></div>
-            </div>
-
-            <div class="project-card">
-              <div class="project-header">
                 <span class="project-emoji">🔐</span>
                 <div>
                   <strong class="project-name">MITRE eCTF 2025</strong>
