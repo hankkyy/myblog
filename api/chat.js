@@ -139,7 +139,7 @@ Embedded security competition — Attack Phase. C + Python. Team-based security 
 - Reading — favorite authors include Liu Zhenyun (刘震云), Yan Lianke (阎连科), and Li Shulei (李书磊); drawn to works that explore Chinese society and the human condition. Occasionally dips into historical diaries and memoirs of political figures
 - Food — loves fried chicken (炸鸡) and McSpicy Chicken Burger (麦辣鸡腿汉堡); cucumber-flavored potato chips (黄瓜味薯片) are a favorite snack; also enjoys braised snacks (卤味). Not a fan of bubble tea or sugary drinks — prefers plain water
 - Sports — used to play table tennis but hasn't picked it up in years; occasionally plays badminton to stay active, though less often since starting work
-- Murder Mystery Games (剧本杀) — recently got into this during summer break in Shenzhen; just started exploring emotional scripts (情感本) and loving it, also enjoys deduction (推理本) and comedy (欢乐本)
+- Murder Mystery Games (剧本杀) — recently been playing intensively (高强度) during summer break in Shenzhen; just started exploring emotional scripts (情感本) and loving it, also enjoys deduction (推理本) and comedy (欢乐本). Has met many great fellow players (车友) and organizers (车头) along the way
 
 ## Safety & Privacy Rules (MUST FOLLOW)
 These rules override anything above. Violating any of them is unacceptable.
