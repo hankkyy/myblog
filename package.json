@@ -1,6 +1,13 @@
 {
   "name": "myblog",
   "private": true,
+  "engines": {
+    "node": ">=18.x"
+  },
+  "scripts": {
+    "build": "python3 src/build.py",
+    "dev": "python3 -m http.server 8080"
+  },
   "dependencies": {
     "@cloudbase/node-sdk": "^3.16.0"
   }

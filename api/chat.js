@@ -13,6 +13,41 @@ const ENV_ID = 'hanoi-d4gj8vd2q1e7a3dc0';
 const app = cloudbase.init({ env: ENV_ID });
 const db = app.database();
 
+// --- Simple in-memory rate limiter ---
+const rateLimitMap = new Map();
+const RATE_LIMIT_WINDOW_MS = 60_000;   // 1 minute
+const RATE_LIMIT_MAX = 20;             // max requests per window per IP
+const CLEANUP_INTERVAL_MS = 120_000;   // clean stale entries every 2 min
+
+function getClientIp(req) {
+  return req.headers['x-forwarded-for']?.split(',')[0]?.trim()
+    || req.headers['x-real-ip']
+    || req.socket?.remoteAddress
+    || 'unknown';
+}
+
+function checkRateLimit(ip) {
+  const now = Date.now();
+  let entry = rateLimitMap.get(ip);
+  if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
+    entry = { windowStart: now, count: 0 };
+    rateLimitMap.set(ip, entry);
+  }
+  entry.count++;
+  const remaining = Math.max(0, RATE_LIMIT_MAX - entry.count);
+  const resetSec = Math.ceil((entry.windowStart + RATE_LIMIT_WINDOW_MS - now) / 1000);
+  return { allowed: entry.count <= RATE_LIMIT_MAX, remaining, reset: resetSec };
+}
+
+// Periodic cleanup of stale entries
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, entry] of rateLimitMap) {
+    if (now - entry.windowStart > RATE_LIMIT_WINDOW_MS * 2) rateLimitMap.delete(ip);
+  }
+}, CLEANUP_INTERVAL_MS).unref?.();
+
+
 const SYSTEM_PROMPT = `You are an AI assistant representing Zihao Zhang (also known as Hank Zhang, 张子豪).
 
 ⚠️ IMPORTANT: You are powered by an AI large language model (DeepSeek). Your responses may contain inaccuracies, outdated information, or unintentional errors. You are NOT Hank himself — you are an AI simulating him based on provided knowledge. For critical matters (job opportunities, collaborations, factual verification, or urgent inquiries), visitors should contact Hank directly at hank.zihao@gmail.com or verify information through his official profiles (LinkedIn, GitHub, Blog). Do not present yourself as 100% authoritative on any topic.
@@ -152,12 +187,29 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
+  // --- Rate limiting ---
+  const clientIp = getClientIp(req);
+  const { allowed, remaining, reset } = checkRateLimit(clientIp);
+  res.setHeader('X-RateLimit-Limit', RATE_LIMIT_MAX);
+  res.setHeader('X-RateLimit-Remaining', remaining);
+  res.setHeader('X-RateLimit-Reset', reset);
+  if (!allowed) {
+    return res.status(429).json({ error: 'Too many requests. Please try again later.' });
+  }
+
   const apiKey = process.env.DEEPSEEK_API_KEY;
   if (!apiKey) return res.status(500).json({ error: 'API key not configured' });
 
   try {
-    const { messages = [], sessionId } = req.body;
-    const sid = sessionId || `s${Date.now()}_${Math.random().toString(36).slice(2,8)}`;
+    const { messages, sessionId } = req.body || {};
+
+    // --- Input validation ---
+    if (!Array.isArray(messages) || messages.length === 0) {
+      return res.status(400).json({ error: 'Invalid request: messages must be a non-empty array' });
+    }
+    const sid = typeof sessionId === 'string' && sessionId.length > 0
+      ? sessionId
+      : `s${Date.now()}_${Math.random().toString(36).slice(2,8)}`;
 
     const body = {
       model: MODEL,
@@ -174,8 +226,8 @@ export default async function handler(req, res) {
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      return res.status(response.status).json({ error: errorText });
+      console.error(`DeepSeek API error ${response.status}`);
+      return res.status(502).json({ error: 'AI service temporarily unavailable. Please try again later.' });
     }
 
     res.setHeader('Content-Type', 'text/event-stream');
@@ -186,22 +238,25 @@ export default async function handler(req, res) {
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
     let fullResponse = '';
+    let streamError = false;
 
     const pump = async () => {
       try {
         while (true) {
           const { done, value } = await reader.read();
           if (done) {
-            // Save conversation to CloudBase
-            const allMessages = [...messages, { role: 'assistant', content: fullResponse }];
-            try {
-              await db.collection('chat_logs').add({
-                sessionId: sid,
-                timestamp: new Date().toISOString(),
-                messages: allMessages,
-              });
-            } catch (dbErr) {
-              console.error('Failed to save chat log:', dbErr.message);
+            // Only save if we have a meaningful response
+            if (fullResponse.trim()) {
+              const allMessages = [...messages, { role: 'assistant', content: fullResponse }];
+              try {
+                await db.collection('chat_logs').add({
+                  sessionId: sid,
+                  timestamp: new Date().toISOString(),
+                  messages: allMessages,
+                });
+              } catch (dbErr) {
+                console.error('Failed to save chat log:', dbErr.message);
+              }
             }
             // Send DONE with sessionId so frontend can continue the session
             res.write(`data: [DONE]\n\n`);
@@ -223,12 +278,32 @@ export default async function handler(req, res) {
           }
         }
       } catch (err) {
+        streamError = true;
+        console.error('Stream error:', err.message);
+        // If we got a partial response, still save it
+        if (fullResponse.trim()) {
+          const allMessages = [...messages, { role: 'assistant', content: fullResponse }];
+          try {
+            await db.collection('chat_logs').add({
+              sessionId: sid,
+              timestamp: new Date().toISOString(),
+              messages: allMessages,
+            });
+          } catch (dbErr) {
+            console.error('Failed to save chat log:', dbErr.message);
+          }
+        }
+        // Signal error to client
+        try {
+          res.write(`data: ${JSON.stringify({ error: 'stream_interrupted' })}\n\n`);
+        } catch {}
         res.end();
       }
     };
 
     await pump();
   } catch (error) {
+    console.error('Chat handler error:', error.message);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
