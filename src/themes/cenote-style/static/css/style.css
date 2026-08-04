@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Catamaran:wght@700&family=Roboto:wght@400;700&display=swap');
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{font-size:16px;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent;scroll-behavior:smooth;height:-webkit-fill-available}
+html{font-size:16px;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent;scroll-behavior:smooth;height:-webkit-fill-available;min-height:100vh;min-height:100dvh}
 body{font-family:"Roboto",helvetica,arial,sans-serif;font-weight:400;font-size:16px;color:#363b40;line-height:1.6;background:#fff;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 a{color:#146bb7;text-decoration:none}
 a:hover,a:active,a:focus{color:#146bb7}
@@ -728,7 +728,7 @@ pre code{background:none;padding:0}
   #chat-panel {
     position: fixed; top: 0; left: 0; right: 0; 
     width: 100% !important; max-width: 100% !important;
-    height: 100dvh; max-height: 100dvh;
+    height: 100%; height: calc(var(--vh, 1vh) * 100); height: -webkit-fill-available; height: 100dvh; max-height: 100%; max-height: calc(var(--vh, 1vh) * 100); max-height: -webkit-fill-available; max-height: 100dvh;
     border-radius: 0; box-shadow: none;
     overscroll-behavior: contain;
     transform: translateY(100%);

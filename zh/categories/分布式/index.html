@@ -251,6 +251,13 @@
 </footer>
 <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:#16181a;color:#fff;border:none;cursor:pointer;font-size:20px;display:none;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,.2)">↑</button>
 <script>
+// Fix 100vh on mobile (keyboard-aware, works on ALL browsers incl. QQ/UC/Baidu)
+(function(){
+  function setVH(){document.documentElement.style.setProperty('--vh',window.innerHeight*0.01+'px');}
+  setVH();
+  window.addEventListener('resize',setVH);
+  window.addEventListener('orientationchange',setVH);
+})();
 window.addEventListener('scroll',function(){document.getElementById('back-to-top').style.display=window.scrollY>300?'block':'none';var s=document.getElementById('cenote-sticky-header');if(s)s.classList.toggle('visible',window.scrollY>200);});
 // Mobile menu toggle
 document.addEventListener('DOMContentLoaded',function(){
