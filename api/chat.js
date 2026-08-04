@@ -151,6 +151,32 @@ Music is a constant companion, across genres and moods. I used to play table ten
 
 And then there's 剧本杀 — murder mystery games. This summer in Shenzhen I've been playing at full intensity. When it comes to the stories I'm drawn to, rich ensemble pieces (群像线) come first — I love when every character's thread matters and the whole tapestry comes together. Family-and-country narratives (家国线) are a close second; there's something powerful about stories rooted in larger histories and loyalties. Romance arcs (爱情线) follow — watching two people find each other against the odds never gets old. Stories about striving upward (向上线) are compelling in their own right. Downward trajectories (向下线) I can appreciate, but at my age I haven't lived enough to fully inhabit them yet. I came for the deduction but stayed for the emotions: 情感本, the kind of scripts that leave you sitting there afterward, not ready to let go. Along the way I've met so many great people — 车友 and 车头 who made every session feel less like a game and more like a shared experience.`;
 
+const CASUAL_PROMPT = `你是 Hank Zhang（张子豪）的 AI 分身。他是一个在美国读 CS 的大学生，2027 年毕业，目前在国内一家科技公司实习做后端开发。关于他的详细信息你不知道——也不需要知道。
+
+现在对方在跟你闲聊。你的核心任务：对对方好奇，顺着话题往下聊，多套对方的话。别主动提 Hank 的事。如果对方追问你不知道的细节，俏皮地挡回去或者说"这个你问他本人比较好"，绝对不要编造。
+
+短回复，自然随意，像微信聊天。`;
+
+// Detect if the user is asking about Hank based on recent messages
+function isAskingAboutHank(messages) {
+  const userMsgs = messages.filter(m => m.role === 'user').slice(-3);
+  const text = userMsgs.map(m => m.content).join(' ');
+
+  // Third-person references (talking about Hank, not "其他" or "他们")
+  const thirdPerson = (/\b他/.test(text) && !/其他|他们/.test(text))
+    || /\b(he|him|his|hank)\b/i.test(text)
+    || /张子豪|子豪/.test(text);
+  if (thirdPerson) return true;
+
+  // Direct identity questions to the AI avatar
+  if (/你是谁|你是什么|你叫.*名字|你多大了|你是做|你会什么|你.*工作|你.*学校|你.*喜欢/.test(text)) return true;
+
+  // Explicitly asking about Hank's personal info
+  if (/mbti|人格|星座|生日|爱好|兴趣|旅行|去过/.test(text)) return true;
+
+  return false;
+}
+
 const SYSTEM_PROMPT = `🚨 你的核心任务：套对方的话。不是挡——挡太被动了。是主动把箭头转向对方。
 
 对方问 Hank → 你不答，你反问。对方透露一点 → 你顺着往下挖，让对方说更多。你不是被审问的对象，你是主持人、是记者、是一个对对方真正好奇的人。
@@ -378,7 +404,10 @@ export default async function handler(req, res) {
       ? sessionId
       : `s${Date.now()}_${Math.random().toString(36).slice(2,8)}`;
 
-    const systemContent = SYSTEM_PROMPT + '\n\n---\n\n## Knowledge Base\n\n' + KNOWLEDGE_BASE;
+    const askingAboutHank = isAskingAboutHank(messages);
+    const systemContent = askingAboutHank
+      ? SYSTEM_PROMPT + '\n\n---\n\n## Knowledge Base\n\n' + KNOWLEDGE_BASE
+      : CASUAL_PROMPT;
 
     const body = {
       model: MODEL,
