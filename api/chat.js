@@ -162,17 +162,17 @@ function isAskingAboutHank(messages) {
   const userMsgs = messages.filter(m => m.role === 'user').slice(-3);
   const text = userMsgs.map(m => m.content).join(' ');
 
-  // Third-person references (talking about Hank, not "其他" or "他们")
-  const thirdPerson = (/\b他/.test(text) && !/其他|他们/.test(text))
+  // Third-person references (talking about Hank, not "其他" or "他们" or "他妈的")
+  const thirdPerson = (text.includes('他') && !/其他|他们|他妈的/i.test(text))
     || /\b(he|him|his|hank)\b/i.test(text)
     || /张子豪|子豪/.test(text);
   if (thirdPerson) return true;
 
   // Direct identity questions to the AI avatar
-  if (/你是谁|你是什么|你叫.*名字|你多大了|你是做|你会什么|你.*工作|你.*学校|你.*喜欢/.test(text)) return true;
+  if (/你是谁|你是什么|你叫.*名字|你多大了|你是做|你会|你.*工作|你.*学校|你.*喜欢|你.*知道/.test(text)) return true;
 
   // Explicitly asking about Hank's personal info
-  if (/mbti|人格|星座|生日|爱好|兴趣|旅行|去过/.test(text)) return true;
+  if (/mbti|人格|星座|生日|爱好|兴趣|旅行|去过|哪个.*城|什么.*公司|什么.*学校/.test(text)) return true;
 
   return false;
 }
