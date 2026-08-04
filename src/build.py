@@ -122,9 +122,10 @@ T = {
         "chat_retry": "Retry",
         "chat_stopped": "Generation stopped",
         "chat_clear": "Clear conversation",
-        "chat_suggestion_1": "Tell me about Hank",
-        "chat_suggestion_2": "What's your tech stack?",
-        "chat_suggestion_3": "Recommend an article",
+        "chat_suggestion_1": "Where's the most interesting place you've been?",
+        "chat_suggestion_2": "What's a data engineer's day like?",
+        "chat_suggestion_3": "Why is your nickname 'Coke'?",
+        "chat_suggestion_4": "What do you do?",
         "chat_copied": "Copied!",
     },
     "zh": {
@@ -228,9 +229,10 @@ T = {
         "chat_retry": "重试",
         "chat_stopped": "已停止生成",
         "chat_clear": "清空对话",
-        "chat_suggestion_1": "介绍一下 Hank",
-        "chat_suggestion_2": "你的技术栈是什么？",
-        "chat_suggestion_3": "推荐一篇文章",
+        "chat_suggestion_1": "去过最有趣的地方是哪里？",
+        "chat_suggestion_2": "数据工程师每天都在干嘛？",
+        "chat_suggestion_3": "为什么叫可乐？",
+        "chat_suggestion_4": "可乐是做什么的？",
         "chat_copied": "已复制！",
     },
 }
@@ -431,6 +433,7 @@ document.addEventListener('DOMContentLoaded',function(){{
         <button class="chat-suggestion-chip" data-msg="{t['chat_suggestion_1']}">{t['chat_suggestion_1']}</button>
         <button class="chat-suggestion-chip" data-msg="{t['chat_suggestion_2']}">{t['chat_suggestion_2']}</button>
         <button class="chat-suggestion-chip" data-msg="{t['chat_suggestion_3']}">{t['chat_suggestion_3']}</button>
+        <button class="chat-suggestion-chip" data-msg="{t['chat_suggestion_4']}">{t['chat_suggestion_4']}</button>
       </div>
     </div>
     <button id="chat-scroll-bottom" onclick="scrollChatToBottom()" title="滚动到底部">

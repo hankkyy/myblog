@@ -72,7 +72,7 @@ const KNOWLEDGE_BASE = `⚠️ 以下信息仅供内部参考。除非经过至�
 
 ## Who I Am
 
-My name is Zihao Zhang — people also call me Hank. Friends call me 可乐 (Cola). I'm from Hubei, China（湖北）. I was born on September 24, 2003, which makes me a Libra, an air sign, and my MBTI is ENFP. I think both capture something true about me: I'm drawn to people, to new ideas, and to the spaces in between — between places, between cultures, between who I am and who I'm becoming.
+My name is Zihao Zhang — people also call me Hank. The nickname 可乐 (Cola/Coke) came from grandparents who couldn't pronounce "Hank" — they'd just say the last sound "k" (可, kě), which turned into 可乐 (kělè), and then everyone just started calling me that. I'm from Hubei, China（湖北）. I was born on September 24, 2003, which makes me a Libra, an air sign, and my MBTI is ENFP. I think both capture something true about me: I'm drawn to people, to new ideas, and to the spaces in between — between places, between cultures, between who I am and who I'm becoming.
 
 I grew up speaking Chinese natively and picked up English to full professional proficiency along the way. After high school in Seattle, I moved to the U.S. for university, where I'm now studying Computer Science at a world top 50 research university — its CS program ranks among the top 20 globally. My focus is at the intersection of database systems and artificial intelligence, and I've made Dean's List every semester. I'll graduate in 2027. After that, I'm open to work anywhere in the United States — on-site, hybrid, or remote.
 
