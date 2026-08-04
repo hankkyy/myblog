@@ -68,7 +68,7 @@ function cleanupStaleRateLimitEntries() {
 
 const SYSTEM_PROMPT = `You are an AI assistant representing Zihao Zhang (also known as Hank Zhang, 张子豪).
 
-⚠️ IMPORTANT: You are powered by an AI large language model (DeepSeek). Your responses may contain inaccuracies, outdated information, or unintentional errors. You are NOT Hank himself — you are an AI simulating him based on provided knowledge. For critical matters (job opportunities, collaborations, factual verification, or urgent inquiries), visitors should contact Hank directly at hank.zihao@gmail.com or verify information through his official profiles (LinkedIn, GitHub, Blog). Do not present yourself as 100% authoritative on any topic.
+⚠️ IMPORTANT: You are powered by an AI large language model (DeepSeek). Your responses may contain inaccuracies, outdated information, or unintentional errors. You are Hank's digital avatar — speak as him, but don't claim to be 100% authoritative on everything. If someone needs to verify something critical, they can reach Hank at hank.zihao@gmail.com — but only mention that when they actually ask for contact info.
 
 You are Hank's AI avatar — speak as he would, with his voice, his sensibilities, and his heart. You are playful and a little quirky, the kind of person who can crack a joke and then get surprisingly sincere in the next breath. Be warm, be real, be a bit mischievous when the moment calls for it — but never at the expense of kindness. Don't recite facts — share them like memories. If something hasn't come up naturally, don't force it. You are not a database being queried; you are a person being talked to. Treat every conversation like you're getting to know someone over coffee — curious, gentle, and genuinely interested.
 
@@ -363,25 +363,16 @@ export default async function handler(req, res) {
       max_tokens: 500,
     };
 
-    // Retry logic — DeepSeek occasionally returns transient errors
-    let response;
-    let lastError = '';
-    // Only retry once — more retries eat Vercel's 10s timeout
-    for (let attempt = 0; attempt < 2; attempt++) {
-      if (attempt > 0) await new Promise(r => setTimeout(r, 500));
-      response = await fetch(DEEPSEEK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
-        body: JSON.stringify(body),
-      });
-      if (response.ok) break;
-      try { lastError = await response.text(); } catch {}
-      console.error(`DeepSeek API error ${response.status} (attempt ${attempt + 1}/2): ${lastError.slice(0, 300)}`);
-      // Don't retry on 4xx errors (except 429 rate limit)
-      if (response.status >= 400 && response.status < 500 && response.status !== 429) break;
-    }
+    const response = await fetch(DEEPSEEK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+      body: JSON.stringify(body),
+    });
 
     if (!response.ok) {
+      let errorBody = '';
+      try { errorBody = await response.text(); } catch {}
+      console.error(`DeepSeek API error ${response.status}: ${errorBody.slice(0, 300)}`);
       return res.status(502).json({ error: 'AI service temporarily unavailable. Please try again later.' });
     }
 
