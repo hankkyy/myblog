@@ -332,25 +332,6 @@ document.addEventListener('keydown',function(e){
   }
 });
 
-// Mobile: keep chat input above keyboard (iOS Safari)
-if(window.visualViewport){
-  var resizeTimer;
-  window.visualViewport.addEventListener('resize',function(){
-    if(!isOpen)return;
-    clearTimeout(resizeTimer);
-    resizeTimer=setTimeout(function(){
-      var isMobile=window.innerWidth<=768;
-      if(!isMobile)return;
-      // On mobile full-screen panel, lock bottom to visual viewport height
-      var vh=window.visualViewport.height;
-      var offsetTop=window.visualViewport.offsetTop;
-      panel.style.height=vh+'px';
-      panel.style.top=offsetTop+'px';
-      // Scroll to bottom so latest messages + input are visible
-      messages.scrollTop=messages.scrollHeight;
-    },100);
-  });
-}
 
 // Render markdown to HTML with fallback for plain text
 function renderMarkdown(text){
