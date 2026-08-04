@@ -595,11 +595,15 @@ window.sendMessage=async function(){
   });
 
   try{
+    var controller=new AbortController();
+    var timeoutId=setTimeout(function(){controller.abort();},15000);
     var resp=await fetch('/api/chat',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({messages:history,sessionId:sessionId})
+      body:JSON.stringify({messages:history,sessionId:sessionId}),
+      signal:controller.signal
     });
+    clearTimeout(timeoutId);
     if(!resp.ok)throw new Error('API error');
     typing.remove();
 

@@ -206,7 +206,7 @@ window.addEventListener('scroll',function(){document.getElementById('back-to-top
     <div id="chat-messages">
       <div class="chat-msg assistant chat-welcome-msg"><div class="chat-bubble">你好！我是 Hank 的数字分身，你怎么找到这里的！</div></div>
     </div>
-    <div id="chat-disclaimer">⚠️ AI 生成内容 · 可能不准确 · 由 DeepSeek 驱动</div>
+    <div id="chat-disclaimer">AI大模型辅助内容生成 · 信息可能有误 · 由 DeepSeek 驱动</div>
     <div id="chat-input-area">
       <input type="text" id="chat-input" placeholder="说点什么吧..." autocomplete="off" spellcheck="false">
       <button id="chat-send-btn" onclick="sendMessage()">发送</button>
@@ -414,11 +414,15 @@ window.sendMessage=async function(){
   });
 
   try{
+    var controller=new AbortController();
+    var timeoutId=setTimeout(function(){controller.abort();},15000);
     var resp=await fetch('/api/chat',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({messages:history,sessionId:sessionId})
+      body:JSON.stringify({messages:history,sessionId:sessionId}),
+      signal:controller.signal
     });
+    clearTimeout(timeoutId);
     if(!resp.ok)throw new Error('API error');
     typing.remove();
 

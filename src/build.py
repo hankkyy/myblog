@@ -204,7 +204,7 @@ T = {
         "chat_welcome": "你好！我是 Hank 的数字分身，你怎么找到这里的！",
         "chat_send": "发送",
         "chat_typing": "思考中...",
-        "chat_disclaimer": "⚠️ AI 生成内容 · 可能不准确 · 由 DeepSeek 驱动",
+        "chat_disclaimer": "AI大模型辅助内容生成 · 信息可能有误 · 由 DeepSeek 驱动",
         "admin_password": "输入密码",
         "admin_unlock": "解锁",
         "admin_title": "对话记录",
