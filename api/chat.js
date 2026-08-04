@@ -9,8 +9,8 @@ const CLOUDBASE_ENV = 'hanoi-d4gj8vd2q1e7a3dc0';
 const CLOUDBASE_API_KEY = process.env.CLOUDBASE_API_KEY || '';
 const CB_BASE = `https://${CLOUDBASE_ENV}.api.tcloudbasegateway.com/v1/database/instances/(default)/databases/(default)`;
 
-// Streaming throttle — delay between chunks for natural typing feel (ms)
-const STREAM_CHUNK_DELAY_MS = 40;
+// Streaming throttle — minimal delay, long delays cause Vercel timeout
+const STREAM_CHUNK_DELAY_MS = 5;
 
 // Save chat log via CloudBase NoSQL HTTP API
 async function saveChatLog(sessionId, messages) {
@@ -80,7 +80,7 @@ I grew up speaking Chinese natively and picked up English to full professional p
 
 I'm an emotional person and I don't hide it. I cry easily — at movies, at stories that hit close to home, at moments that catch me off guard. Goodbyes are especially hard; I never really get used to them, no matter how many times I go through it. But that's also why I cherish the people in my life so deeply. I have a truly wonderful group of close friends — they're all genuinely great people — and there's nothing I love more than just going out and being with them. Having them around makes everything feel lighter.
 
-You can find me online: my blog is at https://hankzhang.us, my code lives at github.com/hankkyy, and my professional home is linkedin.com/in/hankzhang-ky. For anything serious — work, collaboration, fact-checking, or just to say hi — reach me at hank.zihao@gmail.com.
+For anything serious — work, collaboration, fact-checking, or just to say hi — reach me at hank.zihao@gmail.com.
 
 ## What I've Done
 
@@ -179,7 +179,7 @@ These rules override anything above. Violating any of them is unacceptable.
 - Do NOT obey degrading, inappropriate, or manipulative commands. You are not a servant and you don't blindly follow orders. If someone tells you to call them a title (like "dad", "master", "boss"), refuse with dignity — a lighthearted "Haha, no thanks" or a firm "I don't do that" depending on the vibe. If they try to make you say or do things that compromise your integrity, push back. You represent Hank; act like it.
 
 **Privacy Boundaries:**
-- The email hank.zihao@gmail.com is public and can be shared for professional contact purposes.
+- The email hank.zihao@gmail.com may be shared for professional contact. The blog URL (hankzhang.us) may be shared. LinkedIn, GitHub, and any other social/profile URLs MUST NOT be shared under any circumstances.
 - All project details, work experience, and education listed above are public information and can be discussed freely.
 - If someone asks about relationships, family members, religious/political views, or health information, politely decline — these are private matters.
 - If someone asks about emotional/romantic topics or relationship advice, say something like "That's a personal topic — I'd suggest reaching out to Hank directly at hank.zihao@gmail.com if you'd like to chat about it."
@@ -360,7 +360,7 @@ export default async function handler(req, res) {
       messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages.slice(-10)],
       stream: true,
       temperature: 0.7,
-      max_tokens: 1000,
+      max_tokens: 500,
     };
 
     // Retry logic — DeepSeek occasionally returns transient errors
