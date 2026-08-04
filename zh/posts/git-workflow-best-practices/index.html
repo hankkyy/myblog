@@ -161,6 +161,25 @@ chore: 杂项（依赖更新等）
 <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:#16181a;color:#fff;border:none;cursor:pointer;font-size:20px;display:none;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,.2)">↑</button>
 <script>
 window.addEventListener('scroll',function(){document.getElementById('back-to-top').style.display=window.scrollY>300?'block':'none';var s=document.getElementById('cenote-sticky-header');if(s)s.classList.toggle('visible',window.scrollY>200);});
+// Mobile menu toggle
+document.addEventListener('DOMContentLoaded',function(){
+  var toggle=document.querySelector('.tg-mobile-menu-toggle');
+  var nav=document.querySelector('.tg-site-menu--default');
+  if(toggle&&nav){
+    toggle.addEventListener('click',function(e){
+      e.stopPropagation();
+      toggle.classList.toggle('open');
+      nav.classList.toggle('mobile-open');
+    });
+    // Close when clicking outside
+    document.addEventListener('click',function(e){
+      if(!toggle.contains(e.target)&&!nav.contains(e.target)){
+        toggle.classList.remove('open');
+        nav.classList.remove('mobile-open');
+      }
+    });
+  }
+});
 </script>
 <!-- AI Chat Widget -->
 <div id="chat-widget">
@@ -261,6 +280,12 @@ window.toggleChat=function(){
     messages.scrollTop=messages.scrollHeight;
     dragOffsetX=0;dragOffsetY=0;panel.style.transform='';
     adminMode=false;
+    // Prevent body scroll when full‑screen chat is open on mobile
+    if(window.innerWidth<=768)document.body.style.overflow='hidden';
+  }else{
+    // Restore body scroll + reset any keyboard‑adjusted styles
+    document.body.style.overflow='';
+    panel.style.height='';panel.style.top='';
   }
 };
 
@@ -283,25 +308,23 @@ document.addEventListener('keydown',function(e){
   }
 });
 
-// Mobile: adjust chat panel when keyboard opens (iOS Safari fix)
+// Mobile: keep chat input above keyboard (iOS Safari)
 if(window.visualViewport){
-  var lastVh=window.visualViewport.height;
   var resizeTimer;
   window.visualViewport.addEventListener('resize',function(){
     if(!isOpen)return;
     clearTimeout(resizeTimer);
     resizeTimer=setTimeout(function(){
+      var isMobile=window.innerWidth<=768;
+      if(!isMobile)return;
+      // On mobile full-screen panel, lock bottom to visual viewport height
       var vh=window.visualViewport.height;
-      var diff=lastVh-vh;
-      lastVh=vh;
-      if(diff>150){
-        panel.style.maxHeight=(vh-80)+'px';
-        panel.style.bottom='8px';
-      }else if(diff<-150){
-        panel.style.maxHeight='';
-        panel.style.bottom='';
-      }
-    },150);
+      var offsetTop=window.visualViewport.offsetTop;
+      panel.style.height=vh+'px';
+      panel.style.top=offsetTop+'px';
+      // Scroll to bottom so latest messages + input are visible
+      messages.scrollTop=messages.scrollHeight;
+    },100);
   });
 }
 
