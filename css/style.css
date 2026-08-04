@@ -152,7 +152,7 @@ blockquote p{margin-bottom:0;font-style:italic}
 @keyframes blobFloat{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(15px,-20px) scale(1.05)}50%{transform:translate(-10px,10px) scale(.95)}75%{transform:translate(-20px,-5px) scale(1.02)}}
 /* Avatar */
 .about-intro-left{position:relative;z-index:1}
-.about-avatar{width:80px;height:80px;border-radius:50%;object-fit:cover;margin-bottom:24px;box-shadow:0 8px 24px rgba(20,107,183,.25);display:block}
+.about-avatar{width:80px;height:80px;border-radius:8px;object-fit:cover;margin-bottom:24px;box-shadow:0 8px 24px rgba(20,107,183,.25);display:block}
 .about-greeting{font-size:.82rem;color:#146bb7;text-transform:uppercase;letter-spacing:4px;margin:0 0 8px;font-weight:600;display:flex;align-items:center;gap:8px}
 .greeting-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#146bb7;animation:dotPulse 2s ease-in-out infinite}
 @keyframes dotPulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(20,107,183,.4)}50%{opacity:.6;box-shadow:0 0 0 8px rgba(20,107,183,0)}}

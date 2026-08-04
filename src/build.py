@@ -17,7 +17,7 @@ SITE = {"title":"Welcome To My Blog","url":"https://hankzhang.us/","desc":"「�
 AUTHOR = "Zihao Zhang"
 YEAR = str(datetime.now().year)
 MENU = [("首页","/"),("文章列表","/posts/"),("分类","/categories/"),("关于","/about/")]
-SAFE = {".git","src","vercel.json",".gitignore","README.md","pagefind","images","api","package.json","package-lock.json","node_modules"}
+SAFE = {".git","src","vercel.json",".gitignore","README.md","pagefind","images","api","package.json","package-lock.json","node_modules","css","manifest.json","sw.js","icon-192x192.png","icon-512x512.png","apple-touch-icon.png"}
 
 # i18n strings
 T = {
@@ -300,6 +300,13 @@ def page_html(title_tag, body, *, lang="en", base_path="", current="/", desc="",
 </script>
 <link rel="stylesheet" href="/css/style.css">
 <link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hank's Blog">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="mobile-web-app-capable" content="yes">
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body class="{bc}">
@@ -873,6 +880,12 @@ document.addEventListener('keydown',function(e){{
 }})();
 </script>
 </div>
+<script>
+// Register Service Worker for PWA (offline support + Add to Home Screen)
+if('serviceWorker' in navigator){{
+  navigator.serviceWorker.register('/sw.js');
+}}
+</script>
 </body>
 </html>"""
 
