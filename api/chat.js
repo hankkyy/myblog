@@ -363,14 +363,28 @@ export default async function handler(req, res) {
       max_tokens: 1000,
     };
 
-    const response = await fetch(DEEPSEEK_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
-      body: JSON.stringify(body),
-    });
+    // Retry logic — DeepSeek occasionally returns transient errors
+    let response;
+    let lastError = '';
+    for (let attempt = 0; attempt < 3; attempt++) {
+      if (attempt > 0) {
+        const delay = Math.min(1000 * Math.pow(2, attempt), 4000);
+        console.warn(`DeepSeek retry ${attempt}/${2} after ${delay}ms`);
+        await new Promise(r => setTimeout(r, delay));
+      }
+      response = await fetch(DEEPSEEK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
+        body: JSON.stringify(body),
+      });
+      if (response.ok) break;
+      try { lastError = await response.text(); } catch {}
+      console.error(`DeepSeek API error ${response.status} (attempt ${attempt + 1}/3): ${lastError.slice(0, 500)}`);
+      // Don't retry on 4xx errors (except 429 rate limit)
+      if (response.status >= 400 && response.status < 500 && response.status !== 429) break;
+    }
 
     if (!response.ok) {
-      console.error(`DeepSeek API error ${response.status}`);
       return res.status(502).json({ error: 'AI service temporarily unavailable. Please try again later.' });
     }
 
