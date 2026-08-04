@@ -61,12 +61,23 @@ function cleanupStaleEntries() {
 }
 
 // Convert EJSON $date to ISO string for frontend compatibility
+// Also filters out welcome/greeting messages from the admin view
 function normalizeMessages(messages) {
   if (!Array.isArray(messages)) return [];
-  return messages.map(m => ({
-    role: m.role,
-    content: m.content,
-  }));
+  return messages
+    .filter(m => {
+      if (m.role !== 'assistant') return true;
+      const c = (m.content || '').trim();
+      // Filter out AI welcome messages and their HTML-formatted variants
+      if (c.includes('AI 助手，关于他的工作') || c.includes("AI assistant. Ask me about his work")) return false;
+      if (c === '你好！我是 Hank 的 AI 助手，关于他的工作、项目或经历，欢迎随时提问。') return false;
+      if (c === "Hi! I'm Hank's AI assistant. Ask me about his work, projects, or background.") return false;
+      return true;
+    })
+    .map(m => ({
+      role: m.role,
+      content: m.content,
+    }));
 }
 
 function parseEjsonDate(val) {
