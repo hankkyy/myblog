@@ -68,10 +68,8 @@ function normalizeMessages(messages) {
     .filter(m => {
       if (m.role !== 'assistant') return true;
       const c = (m.content || '').trim();
-      // Filter out AI welcome messages and their HTML-formatted variants
-      if (c.includes('AI 助手，关于他的工作') || c.includes("AI assistant. Ask me about his work")) return false;
-      if (c === '你好！我是 Hank 的 AI 助手，关于他的工作、项目或经历，欢迎随时提问。') return false;
-      if (c === "Hi! I'm Hank's AI assistant. Ask me about his work, projects, or background.") return false;
+      // Filter out AI welcome messages
+      if (c.includes('数字分身') || c.includes("digital avatar")) return false;
       return true;
     })
     .map(m => ({
