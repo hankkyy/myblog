@@ -236,15 +236,31 @@ document.addEventListener('DOMContentLoaded',function(){
   <div id="chat-panel">
     <div id="chat-header">
       <span>Ask Me Anything</span>
-      <button onclick="toggleChat()" style="background:none;border:none;color:#fff;cursor:pointer;font-size:18px;line-height:1">&times;</button>
+      <div id="chat-header-actions">
+        <button id="chat-clear-btn" onclick="clearConversation()" title="Clear conversation">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+        </button>
+        <button onclick="toggleChat(true)" style="background:none;border:none;color:#fff;cursor:pointer;font-size:18px;line-height:1;padding:4px 8px">&times;</button>
+      </div>
     </div>
     <div id="chat-messages">
       <div class="chat-msg assistant chat-welcome-msg"><div class="chat-bubble">Hey! I'm Hank's digital avatar. How'd you find your way here?</div></div>
+      <div id="chat-suggestions">
+        <button class="chat-suggestion-chip" data-msg="Tell me about Hank">Tell me about Hank</button>
+        <button class="chat-suggestion-chip" data-msg="What's your tech stack?">What's your tech stack?</button>
+        <button class="chat-suggestion-chip" data-msg="Recommend an article">Recommend an article</button>
+      </div>
     </div>
+    <button id="chat-scroll-bottom" onclick="scrollChatToBottom()" title="滚动到底部">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
     <div id="chat-disclaimer">⚠️ AI-powered · May be inaccurate · Powered by DeepSeek</div>
     <div id="chat-input-area">
-      <input type="text" id="chat-input" placeholder="Say something..." autocomplete="off" spellcheck="false">
+      <textarea id="chat-input" placeholder="Say something..." autocomplete="off" spellcheck="false" rows="1"></textarea>
       <button id="chat-send-btn" onclick="sendMessage()">Send</button>
+      <button id="chat-stop-btn" onclick="stopGeneration()" style="display:none" title="停止生成">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+      </button>
     </div>
   </div>
 </div>
@@ -254,12 +270,16 @@ var panel=document.getElementById('chat-panel');
 var input=document.getElementById('chat-input');
 var messages=document.getElementById('chat-messages');
 var sendBtn=document.getElementById('chat-send-btn');
+var stopBtn=document.getElementById('chat-stop-btn');
+var scrollBtn=document.getElementById('chat-scroll-bottom');
 var chatIcon=document.getElementById('chat-toggle-icon');
 var closeIcon=document.getElementById('chat-toggle-close');
 var isOpen=false;
 var isStreaming=false;
 var isComposing=false;
 var adminMode=false;
+var streamAbort=null;
+var lastUserMsg=null;
 var sessionId='s'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
 var dragOffsetX=0,dragOffsetY=0;
 var isDragging=false,dragStartX=0,dragStartY=0;
@@ -272,12 +292,17 @@ if(typeof marked!=='undefined'){marked.setOptions({breaks:true,gfm:true});}
 input.addEventListener('compositionstart',function(){isComposing=true;});
 input.addEventListener('compositionend',function(){isComposing=false;});
 
-// Enter to send — respects IME composition
+// Enter to send, Shift+Enter for newline — respects IME composition
 input.addEventListener('keydown',function(e){
   if(e.key==='Enter'&&!isComposing&&!e.shiftKey){
     e.preventDefault();
     sendMessage();
   }
+});
+// Auto-grow textarea
+input.addEventListener('input',function(){
+  input.style.height='auto';
+  input.style.height=(input.scrollHeight)+'px';
 });
 
 // Make panel draggable by header
@@ -316,7 +341,7 @@ document.addEventListener('touchmove',function(e){
 document.addEventListener('mouseup',function(){isDragging=false;panel.style.transition='';});
 document.addEventListener('touchend',function(){isDragging=false;panel.style.transition='';});
 
-window.toggleChat=function(){
+window.toggleChat=function(manualClose){
   isOpen=!isOpen;
   panel.classList.toggle('open',isOpen);
   chatIcon.style.display=isOpen?'none':'block';
@@ -326,19 +351,60 @@ window.toggleChat=function(){
     messages.scrollTop=messages.scrollHeight;
     dragOffsetX=0;dragOffsetY=0;panel.style.transform='';
     adminMode=false;
-    // Prevent body scroll when full‑screen chat is open on mobile
     if(window.innerWidth<=768)document.body.style.overflow='hidden';
+    // Push history state for back-gesture support
+    try{history.pushState({chatOpen:true},'');}catch(e){}
   }else{
-    // Restore body scroll + reset any keyboard‑adjusted styles
     document.body.style.overflow='';
     panel.style.height='';panel.style.top='';
+    if(!manualClose){try{history.back();}catch(e){}}
   }
+};
+
+// Back button/gesture closes chat
+window.addEventListener('popstate',function(e){
+  if(isOpen&&e.state&&e.state.chatOpen){
+    // This is our own state being popped — just close chat, don't navigate
+  }
+  if(isOpen){
+    isOpen=false;
+    panel.classList.remove('open');
+    chatIcon.style.display='block';
+    closeIcon.style.display='none';
+    document.body.style.overflow='';
+    panel.style.height='';panel.style.top='';
+    if(isStreaming&&streamAbort){streamAbort.abort();streamAbort=null;}
+    finishStream();
+  }
+});
+
+// Suggestion chip clicks
+document.getElementById('chat-suggestions').addEventListener('click',function(e){
+  var chip=e.target.closest('.chat-suggestion-chip');
+  if(!chip||isStreaming)return;
+  var msg=chip.getAttribute('data-msg');
+  if(msg){input.value=msg;sendMessage();}
+});
+
+// Clear conversation
+window.clearConversation=function(){
+  if(isStreaming)return;
+  // Remove all messages except welcome
+  var all=messages.querySelectorAll('.chat-msg:not(.chat-welcome-msg)');
+  for(var i=0;i<all.length;i++)all[i].remove();
+  // Reset session
+  sessionId='s'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
+  lastUserMsg=null;
+  // Show suggestions again
+  var sug=document.getElementById('chat-suggestions');
+  if(sug)sug.style.display='';
+  input.focus();
 };
 
 // Click outside chat panel to close
 document.addEventListener('click',function(e){
   if(isOpen&&!panel.contains(e.target)&&e.target!==chatToggle&&!chatToggle.contains(e.target)){
-    toggleChat();
+    toggleChat(true);
   }
 });
 
@@ -350,9 +416,23 @@ document.addEventListener('keydown',function(e){
       addMessage('assistant','Admin mode cancelled.');
       return;
     }
-    if(isOpen){toggleChat();}
+    if(isOpen){toggleChat(true);}
   }
 });
+
+// Scroll-to-bottom button
+messages.addEventListener('scroll',function(){
+  var atBottom=messages.scrollHeight-messages.scrollTop-messages.clientHeight<80;
+  scrollBtn.classList.toggle('visible',!atBottom&&messages.scrollHeight>messages.clientHeight+100);
+});
+window.scrollChatToBottom=function(){
+  messages.scrollTo({top:messages.scrollHeight,behavior:'smooth'});
+};
+
+// Stop AI generation
+window.stopGeneration=function(){
+  if(streamAbort){streamAbort.abort();streamAbort=null;}
+};
 
 
 // Render markdown to HTML with fallback for plain text
@@ -366,28 +446,55 @@ function addMessage(role,text,isHtml){
   div.className='chat-msg '+role;
   if(isHtml){div.innerHTML='<div class="chat-bubble">'+text+'</div>';}
   else{var s=text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');div.innerHTML='<div class="chat-bubble">'+s+'</div>';}
+  // Add copy button to assistant messages (not welcome/typing)
+  if(role==='assistant'&&!div.classList.contains('chat-welcome-msg')&&!div.classList.contains('typing')){
+    var copyBtn=document.createElement('button');
+    copyBtn.className='chat-copy-btn';
+    copyBtn.title='Copied!';
+    copyBtn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+    copyBtn.addEventListener('click',function(){
+      var bubble=div.querySelector('.chat-bubble');
+      var txt=bubble.textContent.trim();
+      try{
+        navigator.clipboard.writeText(txt).then(function(){
+          copyBtn.classList.add('copied');
+          setTimeout(function(){copyBtn.classList.remove('copied');},1500);
+        });
+      }catch(e){}
+    });
+    div.querySelector('.chat-bubble').appendChild(copyBtn);
+  }
   messages.appendChild(div);
+  // Hide suggestions after first real message
+  var sug=document.getElementById('chat-suggestions');
+  if(sug&&role==='user')sug.style.display='none';
   requestAnimationFrame(function(){messages.scrollTop=messages.scrollHeight;});
   return div;
 }
 
-function addTyping(){return addMessage('assistant typing','Thinking...');}
+function addTyping(){var div=document.createElement('div');div.className='chat-msg assistant typing';div.innerHTML='<div class="chat-bubble"><span class="typing-dots"><span></span><span></span><span></span></span></div>';messages.appendChild(div);requestAnimationFrame(function(){messages.scrollTop=messages.scrollHeight;});return div;}
 
 window.sendMessage=async function(){
   if(isStreaming)return;
   var text=input.value.trim();
   if(!text)return;
   input.value='';
+  input.style.height='auto';
+
+  // Haptic feedback on mobile
+  try{if(window.navigator&&navigator.vibrate)navigator.vibrate(10);}catch(e){}
+
+  lastUserMsg=text;
   addMessage('user',text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'));
   var typing=addTyping();
   isStreaming=true;
-  sendBtn.disabled=true;
+  sendBtn.style.display='none';
+  stopBtn.style.display='';
 
   // ---- Admin mode: chat-triggered access ----
   if(adminMode){
     typing.remove();
-    isStreaming=false;
-    sendBtn.disabled=false;
+    finishStream();
     adminMode=false;
     try{
       var adminResp=await fetch('/api/admin/chat-logs',{
@@ -407,17 +514,16 @@ window.sendMessage=async function(){
       }else if(adminResp.status===401){
         addMessage('assistant','Wrong password. Try again or type anything else to cancel.');
       }else{
-        addMessage('assistant','Sorry, the service is temporarily unavailable. Please try again later.');
+        addErrorMessage();
       }
     }catch(e){
-      addMessage('assistant','Sorry, the service is temporarily unavailable. Please try again later.');
+      addErrorMessage();
     }
     return;
   }
   if(/切换到管理模式|admin mode|\/admin|管理模式|管理面板/i.test(text)){
     typing.remove();
-    isStreaming=false;
-    sendBtn.disabled=false;
+    finishStream();
     adminMode=true;
     addMessage('assistant','Enter admin password (or type anything else to cancel):');
     return;
@@ -434,13 +540,13 @@ window.sendMessage=async function(){
   });
 
   try{
-    var controller=new AbortController();
-    var timeoutId=setTimeout(function(){controller.abort();},15000);
+    streamAbort=new AbortController();
+    var timeoutId=setTimeout(function(){if(streamAbort)streamAbort.abort();},25000);
     var resp=await fetch('/api/chat',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({messages:history,sessionId:sessionId}),
-      signal:controller.signal
+      signal:streamAbort.signal
     });
     clearTimeout(timeoutId);
     if(!resp.ok)throw new Error('API error');
@@ -492,11 +598,45 @@ window.sendMessage=async function(){
     else{bubble.innerHTML='<em>Response interrupted. Please try again.</em>';}
   }catch(e){
     typing.remove();
-    addMessage('assistant','Sorry, the service is temporarily unavailable. Please try again later.');
+    if(e.name==='AbortError'){
+      // User stopped generation — add partial text if any, or a subtle indicator
+      var lastBubble=messages.querySelector('.chat-msg.assistant:not(.typing):not(.chat-welcome-msg):last-of-type .chat-bubble');
+      if(lastBubble&&lastBubble.classList.contains('streaming')){
+        lastBubble.classList.remove('streaming');
+        if(!lastBubble.textContent.trim())lastBubble.innerHTML='<em>Generation stopped</em>';
+      }else{
+        addMessage('assistant','Generation stopped');
+      }
+    }else{
+      addErrorMessage();
+    }
   }
+  finishStream();
+};
+
+function finishStream(){
   isStreaming=false;
-  sendBtn.disabled=false;
+  streamAbort=null;
+  sendBtn.style.display='';
+  stopBtn.style.display='none';
   input.focus();
+}
+
+function addErrorMessage(){
+  var div=document.createElement('div');
+  div.className='chat-msg assistant';
+  div.innerHTML='<div class="chat-bubble chat-error-bubble"><span>Sorry, the service is temporarily unavailable. Please try again later.</span> <button class="chat-retry-btn" onclick="retryLastMessage()">Retry</button></div>';
+  messages.appendChild(div);
+  requestAnimationFrame(function(){messages.scrollTop=messages.scrollHeight;});
+}
+
+window.retryLastMessage=function(){
+  if(isStreaming||!lastUserMsg)return;
+  // Remove the error message bubble
+  var errBubble=messages.querySelector('.chat-error-bubble');
+  if(errBubble){var errMsg=errBubble.closest('.chat-msg');if(errMsg)errMsg.remove();}
+  input.value=lastUserMsg;
+  sendMessage();
 };
 })();
 </script>
