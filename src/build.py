@@ -308,10 +308,13 @@ def page_html(title_tag, body, *, lang="en", base_path="", current="/", desc="",
   "headline": "{title_tag}",
   "description": "{desc or t['site_desc']}",
   "url": "{page_full_url}",
-  "datePublished": "{date_published or '2026-08-03'}",
+  "datePublished": "{date_published or datetime.now().strftime('%Y-%m-%d')}",
   "author": {{ "@type": "Person", "name": "{AUTHOR}" }}
 }}
 </script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Catamaran:wght@700&family=Roboto:wght@400;700&display=swap">
 <link rel="stylesheet" href="/css/style.css">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -641,6 +644,7 @@ function addMessage(role,text,isHtml){{
         }});
       }}catch(e){{}}
     }});
+    div.querySelector('.chat-bubble').classList.add('has-copy-btn');
     div.querySelector('.chat-bubble').appendChild(copyBtn);
   }}
   messages.appendChild(div);
@@ -946,6 +950,8 @@ window.openAdminWithData=function(data,pwd){{
 
 // Shared helper: strip HTML tags for preview text
 function stripHtml(h){{var d=document.createElement('div');d.innerHTML=h;return d.textContent||d.innerText||'';}}
+// Shared helper: escape HTML to prevent XSS in rendered content
+function escapeHtml(s){{var d=document.createElement('div');d.appendChild(document.createTextNode(s));return d.innerHTML;}}
 
 // Shared helper: render a single log entry
 function renderLogEntry(log){{
@@ -962,7 +968,7 @@ function renderLogEntry(log){{
     log.messages.forEach(function(m){{
       var msgDiv=document.createElement('div');
       msgDiv.className='log-msg '+m.role;
-      msgDiv.innerHTML='<div class="log-bubble"><div class="log-content">'+m.content+'</div></div>';
+      msgDiv.innerHTML='<div class="log-bubble"><div class="log-content">'+escapeHtml(m.content)+'</div></div>';
       body.appendChild(msgDiv);
     }});
   }}
@@ -1056,7 +1062,11 @@ if('serviceWorker' in navigator){{
 
 
 def parse_page(md_path):
-    post = frontmatter.load(md_path)
+    try:
+        post = frontmatter.load(md_path)
+    except Exception as e:
+        print(f"Warning: Failed to parse {md_path.name} — {e}, skipping")
+        return None
     content_html = markdown(post.content, extensions=["extra", "codehilite"])
     # Clean: remove code blocks (```...```) and inline code from original markdown
     raw_md = re.sub(r'```[\s\S]*?```', '', post.content)
@@ -1396,179 +1406,179 @@ def build_site(lang, posts):
         about = parse_page(CONTENT / "about.md")
     except Exception as e:
         print(f"Warning: Could not parse about.md — {e}")
-    if True:  # always build about page
-        (out_root / "about").mkdir(parents=True, exist_ok=True)
+    # Build about page
+    (out_root / "about").mkdir(parents=True, exist_ok=True)
 
-        mainland_cities = TRAVEL_CITIES[0][2]
-        international_cities = TRAVEL_CITIES[1][2]
-        total_cities = len(mainland_cities) + len(international_cities)
-        mainland_tags = "".join(f'<span class="travel-tag">{c}</span>' for c in mainland_cities)
-        international_tags = "".join(f'<span class="travel-tag">{c}</span>' for c in international_cities)
-        travel_cards = f"""<div class="travel-col">
-              <div class="travel-col-title">{t['mainland_china']} <span class="travel-col-num">{len(mainland_cities)}</span></div>
-              <div class="travel-tags">{mainland_tags}</div>
+    mainland_cities = TRAVEL_CITIES[0][2]
+    international_cities = TRAVEL_CITIES[1][2]
+    total_cities = len(mainland_cities) + len(international_cities)
+    mainland_tags = "".join(f'<span class="travel-tag">{c}</span>' for c in mainland_cities)
+    international_tags = "".join(f'<span class="travel-tag">{c}</span>' for c in international_cities)
+    travel_cards = f"""<div class="travel-col">
+          <div class="travel-col-title">{t['mainland_china']} <span class="travel-col-num">{len(mainland_cities)}</span></div>
+          <div class="travel-tags">{mainland_tags}</div>
+        </div>
+        <div class="travel-col">
+          <div class="travel-col-title">{t['international']} <span class="travel-col-num">{len(international_cities)}</span></div>
+          <div class="travel-tags">{international_tags}</div>
+        </div>"""
+
+    focus_html = "".join(
+        f'<div class="focus-item"><div class="focus-marker"><span class="focus-num">{i+1:02d}</span></div><div class="focus-body"><strong class="focus-text">{title}</strong><p class="focus-desc">{desc}</p></div></div>'
+        for i, (title, desc) in enumerate(t["focus_items"])
+    )
+
+    skills = [
+        ("skill_lang", "skill_lang_val"), ("skill_fw", "skill_fw_val"),
+        ("skill_db", "skill_db_val"), ("skill_mq", "skill_mq_val"),
+        ("skill_infra", "skill_infra_val"), ("skill_ai", "skill_ai_val"),
+        ("skill_tools", "skill_tools_val"),
+    ]
+    skill_cards = "".join(
+        f'<div class="skill-card skill-card-feat"><span class="skill-label">{t[sk]}</span><span class="skill-value">{t[sv]}</span></div>'
+        for sk, sv in skills
+    )
+
+    about_name_html = t['about_name'] + (f'<span class="about-name-en">{t["about_name_sub"]}</span>' if t["about_name_sub"] else "")
+
+    about_html = f"""
+      <section class="about-intro">
+        <div class="about-intro-left">
+          <img src="/avatar.jpg" alt="{t['about_hero_img_alt']}" class="about-avatar" width="80" height="80">
+          <p class="about-greeting"><span class="greeting-dot"></span>{t['about_greeting']}</p>
+          <h1 class="about-name">{about_name_html}</h1>
+          <p class="about-bio">{t['about_bio']}</p>
+          <div class="about-stats">
+            <div class="about-stat"><strong>{len(posts)}</strong><span>{t['articles_count']}</span></div>
+            <div class="about-stat"><strong>{len(cats)}</strong><span>{t['categories_count']}</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="about-block">
+        <h2 class="about-label">{t['about_skills']}</h2>
+        <div class="skill-grid">
+          {skill_cards}
+        </div>
+      </section>
+
+      <section class="about-block">
+        <h2 class="about-label">{t['about_focus']}</h2>
+        <div class="focus-list">
+          {focus_html}
+        </div>
+      </section>
+
+      <section class="about-block">
+        <h2 class="about-label">{t['about_projects']}</h2>
+        <div class="project-card">
+          <div class="project-header">
+            <div>
+              <strong class="project-name">Eastwood Auction</strong>
+              <span class="project-link"><a href="https://github.com/hankkyy/EastWood-Auction" target="_blank">GitHub ↗</a> · <a href="https://hankzhang.us/posts/client-side-visual-search/" target="_blank">{'Tech Article ↗' if lang == 'en' else '技术文章 ↗'}</a></span>
             </div>
-            <div class="travel-col">
-              <div class="travel-col-title">{t['international']} <span class="travel-col-num">{len(international_cities)}</span></div>
-              <div class="travel-tags">{international_tags}</div>
-            </div>"""
+          </div>
+          <p class="project-desc">{t['project_eastwood_desc']}</p>
+          <div class="project-tags"><span>TypeScript</span><span>Next.js</span><span>Supabase</span><span>CV</span><span>Canvas API</span></div>
+        </div>
 
-        focus_html = "".join(
-            f'<div class="focus-item"><div class="focus-marker"><span class="focus-num">{i+1:02d}</span></div><div class="focus-body"><strong class="focus-text">{title}</strong><p class="focus-desc">{desc}</p></div></div>'
-            for i, (title, desc) in enumerate(t["focus_items"])
-        )
-
-        skills = [
-            ("skill_lang", "skill_lang_val"), ("skill_fw", "skill_fw_val"),
-            ("skill_db", "skill_db_val"), ("skill_mq", "skill_mq_val"),
-            ("skill_infra", "skill_infra_val"), ("skill_ai", "skill_ai_val"),
-            ("skill_tools", "skill_tools_val"),
-        ]
-        skill_cards = "".join(
-            f'<div class="skill-card skill-card-feat"><span class="skill-label">{t[sk]}</span><span class="skill-value">{t[sv]}</span></div>'
-            for sk, sv in skills
-        )
-
-        about_name_html = t['about_name'] + (f'<span class="about-name-en">{t["about_name_sub"]}</span>' if t["about_name_sub"] else "")
-
-        about_html = f"""
-          <section class="about-intro">
-            <div class="about-intro-left">
-              <img src="/avatar.jpg" alt="{t['about_hero_img_alt']}" class="about-avatar" width="80" height="80">
-              <p class="about-greeting"><span class="greeting-dot"></span>{t['about_greeting']}</p>
-              <h1 class="about-name">{about_name_html}</h1>
-              <p class="about-bio">{t['about_bio']}</p>
-              <div class="about-stats">
-                <div class="about-stat"><strong>{len(posts)}</strong><span>{t['articles_count']}</span></div>
-                <div class="about-stat"><strong>{len(cats)}</strong><span>{t['categories_count']}</span></div>
-              </div>
+        <div class="project-card">
+          <div class="project-header">
+            <div>
+              <strong class="project-name">UniMed — Healthcare Data Platform</strong>
+              <span class="project-link"><span style="color:#94a3b8;font-size:.82rem">Internship Project</span></span>
             </div>
-          </section>
+          </div>
+          <p class="project-desc">{t['project_unimed_desc']}</p>
+          <div class="project-tags"><span>Java 17</span><span>Spring Boot 3</span><span>Doris</span><span>Flink CDC</span><span>K8s</span></div>
+        </div>
 
-          <section class="about-block">
-            <h2 class="about-label">{t['about_skills']}</h2>
-            <div class="skill-grid">
-              {skill_cards}
+        <div class="project-card">
+          <div class="project-header">
+            <div>
+              <strong class="project-name">TREK — Trip Planner</strong>
+              <span class="project-link"><a href="https://github.com/hankkyy/TREK" target="_blank">GitHub ↗</a></span>
             </div>
-          </section>
+          </div>
+          <p class="project-desc">{t['project_trek_desc']}</p>
+          <div class="project-tags"><span>TypeScript</span><span>Next.js</span><span>Supabase</span></div>
+        </div>
 
-          <section class="about-block">
-            <h2 class="about-label">{t['about_focus']}</h2>
-            <div class="focus-list">
-              {focus_html}
+        <div class="project-card">
+          <div class="project-header">
+            <div>
+              <strong class="project-name">RAG Customer Support Agent</strong>
+              <span class="project-link"><a href="https://github.com/hankkyy/RAG-Based-Customer-Support-Agent-for-Robot-Vacuum-Products" target="_blank">GitHub ↗</a></span>
             </div>
-          </section>
+          </div>
+          <p class="project-desc">{t['project_rag_desc']}</p>
+          <div class="project-tags"><span>Python</span><span>LangChain</span><span>RAG</span><span>Chroma</span></div>
+        </div>
 
-          <section class="about-block">
-            <h2 class="about-label">{t['about_projects']}</h2>
-            <div class="project-card">
-              <div class="project-header">
-                <div>
-                  <strong class="project-name">Eastwood Auction</strong>
-                  <span class="project-link"><a href="https://github.com/hankkyy/EastWood-Auction" target="_blank">GitHub ↗</a> · <a href="https://hankzhang.us/posts/client-side-visual-search/" target="_blank">{'Tech Article ↗' if lang == 'en' else '技术文章 ↗'}</a></span>
-                </div>
-              </div>
-              <p class="project-desc">{t['project_eastwood_desc']}</p>
-              <div class="project-tags"><span>TypeScript</span><span>Next.js</span><span>Supabase</span><span>CV</span><span>Canvas API</span></div>
+        <div class="project-card">
+          <div class="project-header">
+            <div>
+              <strong class="project-name">Hermes Desktop</strong>
+              <span class="project-link"><a href="https://github.com/hankkyy/hermes-desktop" target="_blank">GitHub ↗</a></span>
             </div>
+          </div>
+          <p class="project-desc">{t['project_hermes_desc']}</p>
+          <div class="project-tags"><span>TypeScript</span><span>Electron</span><span>AI Agent</span></div>
+        </div>
 
-            <div class="project-card">
-              <div class="project-header">
-                <div>
-                  <strong class="project-name">UniMed — Healthcare Data Platform</strong>
-                  <span class="project-link"><span style="color:#94a3b8;font-size:.82rem">Internship Project</span></span>
-                </div>
-              </div>
-              <p class="project-desc">{t['project_unimed_desc']}</p>
-              <div class="project-tags"><span>Java 17</span><span>Spring Boot 3</span><span>Doris</span><span>Flink CDC</span><span>K8s</span></div>
+        <div class="project-card">
+          <div class="project-header">
+            <div>
+              <strong class="project-name">MITRE eCTF 2025</strong>
+              <span class="project-link"><span style="color:#94a3b8;font-size:.82rem">Embedded Security Competition</span></span>
             </div>
+          </div>
+          <p class="project-desc">{t['project_ectf_desc']}</p>
+          <div class="project-tags"><span>C</span><span>Python</span><span>Security</span><span>Embedded Systems</span></div>
+        </div>
+      </section>
 
-            <div class="project-card">
-              <div class="project-header">
-                <div>
-                  <strong class="project-name">TREK — Trip Planner</strong>
-                  <span class="project-link"><a href="https://github.com/hankkyy/TREK" target="_blank">GitHub ↗</a></span>
-                </div>
-              </div>
-              <p class="project-desc">{t['project_trek_desc']}</p>
-              <div class="project-tags"><span>TypeScript</span><span>Next.js</span><span>Supabase</span></div>
-            </div>
+      <section class="about-block">
+        <h2 class="about-label">{t['about_hobby']}</h2>
+        <div class="hobby-card">
+          <p class="about-text">
+            {t['hobby_text']}
+          </p>
+          <div class="travel-stats">
+            <div class="travel-stat"><strong>319<span class="stat-unit">h</span>&thinsp;40<span class="stat-unit">min</span></strong><span>{t['flight_hours']}</span></div>
+            <div class="travel-stat"><strong>238,719<span class="stat-unit">km</span></strong><span>{t['flight_km']}</span></div>
+            <div class="travel-stat"><strong>{total_cities}</strong><span>{t['cities_count_label']}</span></div>
+          </div>
+        </div>
+      </section>
 
-            <div class="project-card">
-              <div class="project-header">
-                <div>
-                  <strong class="project-name">RAG Customer Support Agent</strong>
-                  <span class="project-link"><a href="https://github.com/hankkyy/RAG-Based-Customer-Support-Agent-for-Robot-Vacuum-Products" target="_blank">GitHub ↗</a></span>
-                </div>
-              </div>
-              <p class="project-desc">{t['project_rag_desc']}</p>
-              <div class="project-tags"><span>Python</span><span>LangChain</span><span>RAG</span><span>Chroma</span></div>
-            </div>
+      <section class="about-block">
+        <h2 class="about-label">{t['about_blog']}</h2>
+        <div class="blog-about-card">
+          <p class="about-text">
+            {t['blog_about_text']}
+          </p>
+        </div>
+      </section>
 
-            <div class="project-card">
-              <div class="project-header">
-                <div>
-                  <strong class="project-name">Hermes Desktop</strong>
-                  <span class="project-link"><a href="https://github.com/hankkyy/hermes-desktop" target="_blank">GitHub ↗</a></span>
-                </div>
-              </div>
-              <p class="project-desc">{t['project_hermes_desc']}</p>
-              <div class="project-tags"><span>TypeScript</span><span>Electron</span><span>AI Agent</span></div>
-            </div>
-
-            <div class="project-card">
-              <div class="project-header">
-                <div>
-                  <strong class="project-name">MITRE eCTF 2025</strong>
-                  <span class="project-link"><span style="color:#94a3b8;font-size:.82rem">Embedded Security Competition</span></span>
-                </div>
-              </div>
-              <p class="project-desc">{t['project_ectf_desc']}</p>
-              <div class="project-tags"><span>C</span><span>Python</span><span>Security</span><span>Embedded Systems</span></div>
-            </div>
-          </section>
-
-          <section class="about-block">
-            <h2 class="about-label">{t['about_hobby']}</h2>
-            <div class="hobby-card">
-              <p class="about-text">
-                {t['hobby_text']}
-              </p>
-              <div class="travel-stats">
-                <div class="travel-stat"><strong>319<span class="stat-unit">h</span>&thinsp;40<span class="stat-unit">min</span></strong><span>{t['flight_hours']}</span></div>
-                <div class="travel-stat"><strong>238,719<span class="stat-unit">km</span></strong><span>{t['flight_km']}</span></div>
-                <div class="travel-stat"><strong>{total_cities}</strong><span>{t['cities_count_label']}</span></div>
-              </div>
-            </div>
-          </section>
-
-          <section class="about-block">
-            <h2 class="about-label">{t['about_blog']}</h2>
-            <div class="blog-about-card">
-              <p class="about-text">
-                {t['blog_about_text']}
-              </p>
-            </div>
-          </section>
-
-          <section class="about-block contact-block">
-            <h2 class="about-label">{t['about_contact']}</h2>
-            <div class="contact-links">
-              <a href="mailto:hank.zihao@gmail.com" class="contact-link"><svg class="contact-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#EA4335"/><path d="M4 6l8 6 8-6" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 6v12H4V6" stroke="#fff" stroke-width="2.2" fill="none"/></svg> hank.zihao@gmail.com</a>
-            </div>
-          </section>
-        """
-        about_title = about["title"] if about else t.get("about_title", "About")
-        (out_root / "about" / "index.html").write_text(page_html(
-            f"{about_title} – {SITE['title']}",
-            f"""<div id="primary" class="content-area">
-          <main id="main" class="site-main">
-            {about_html}
-          </main>
-        </div>""",
-            lang=lang, base_path=base_path,
-            current=f"{base_path}/about/",
-            body_class="layout--no-sidebar"))
+      <section class="about-block contact-block">
+        <h2 class="about-label">{t['about_contact']}</h2>
+        <div class="contact-links">
+          <a href="mailto:hank.zihao@gmail.com" class="contact-link"><svg class="contact-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="4" fill="#EA4335"/><path d="M4 6l8 6 8-6" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 6v12H4V6" stroke="#fff" stroke-width="2.2" fill="none"/></svg> hank.zihao@gmail.com</a>
+        </div>
+      </section>
+    """
+    about_title = about["title"] if about else t.get("about_title", "About")
+    (out_root / "about" / "index.html").write_text(page_html(
+        f"{about_title} – {SITE['title']}",
+        f"""<div id="primary" class="content-area">
+      <main id="main" class="site-main">
+        {about_html}
+      </main>
+    </div>""",
+        lang=lang, base_path=base_path,
+        current=f"{base_path}/about/",
+        body_class="layout--no-sidebar"))
 
     return len(cats)
 
@@ -1601,7 +1611,9 @@ def build():
     posts_dir = CONTENT / "posts"
     if posts_dir.exists():
         for f in posts_dir.glob("*.md"):
-            posts.append(parse_page(f))
+            parsed = parse_page(f)
+            if parsed is not None:
+                posts.append(parsed)
     posts.sort(key=lambda p: p["date"], reverse=True)
 
     # Filter posts by language: en (default or explicit) → /, zh → /zh/

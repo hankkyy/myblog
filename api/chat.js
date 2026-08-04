@@ -32,6 +32,8 @@ async function saveChatLog(sessionId, messages) {
 }
 
 // --- Simple in-memory rate limiter ---
+// NOTE: This resets on serverless cold starts. For production-grade rate limiting,
+// consider using Vercel Edge Config, Upstash Redis, or CloudBase's built-in rate limiter.
 const rateLimitMap = new Map();
 const RATE_LIMIT_WINDOW_MS = 60_000;   // 1 minute
 const RATE_LIMIT_MAX = 20;             // max requests per window per IP
@@ -419,6 +421,16 @@ export default async function handler(req, res) {
     if (!Array.isArray(messages) || messages.length === 0) {
       return res.status(400).json({ error: 'Invalid request: messages must be a non-empty array' });
     }
+    if (messages.length > 40) {
+      return res.status(400).json({ error: 'Too many messages. Maximum 40 messages per request.' });
+    }
+    // Only send last 10 messages to the AI — earlier ones are for context persistence
+    const recentMessages = messages.slice(-10);
+    for (const msg of recentMessages) {
+      if (typeof msg.content === 'string' && msg.content.length > 4000) {
+        return res.status(400).json({ error: 'Message too long. Maximum 4000 characters per message.' });
+      }
+    }
     const sid = typeof sessionId === 'string' && sessionId.length > 0
       ? sessionId
       : `s${Date.now()}_${Math.random().toString(36).slice(2,8)}`;
@@ -430,7 +442,7 @@ export default async function handler(req, res) {
 
     const body = {
       model: MODEL,
-      messages: [{ role: 'system', content: systemContent }, ...messages.slice(-10)],
+      messages: [{ role: 'system', content: systemContent }, ...recentMessages],
       stream: true,
       temperature: 0.7,
       max_tokens: 500,
@@ -457,6 +469,7 @@ export default async function handler(req, res) {
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
     let fullResponse = '';
+    let sseBuffer = '';
     let streamError = false;
 
     const pump = async () => {
@@ -478,8 +491,10 @@ export default async function handler(req, res) {
           res.write(chunk);
           // Throttle for natural typing feel
           await new Promise(r => setTimeout(r, STREAM_CHUNK_DELAY_MS));
-          // Accumulate assistant response from SSE chunks
-          const lines = chunk.split('\n');
+          // Accumulate assistant response from SSE chunks with cross-chunk buffering
+          sseBuffer += chunk;
+          const lines = sseBuffer.split('\n');
+          sseBuffer = lines.pop() || '';  // keep incomplete line in buffer
           for (const line of lines) {
             if (line.startsWith('data: ') && line !== 'data: [DONE]') {
               try {

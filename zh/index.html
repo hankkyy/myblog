@@ -19,10 +19,13 @@
   "headline": "Welcome To My Blog – 「保持好奇心，继续探索世界」",
   "description": "「保持好奇心，继续探索世界」",
   "url": "https://hankzhang.us/zh/",
-  "datePublished": "2026-08-03",
+  "datePublished": "2026-08-04",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
 }
 </script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Catamaran:wght@700&family=Roboto:wght@400;700&display=swap">
 <link rel="stylesheet" href="/css/style.css">
 <link rel="icon" type="image/png" href="/favicon.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -500,6 +503,7 @@ function addMessage(role,text,isHtml){
         });
       }catch(e){}
     });
+    div.querySelector('.chat-bubble').classList.add('has-copy-btn');
     div.querySelector('.chat-bubble').appendChild(copyBtn);
   }
   messages.appendChild(div);
@@ -805,6 +809,8 @@ window.openAdminWithData=function(data,pwd){
 
 // Shared helper: strip HTML tags for preview text
 function stripHtml(h){var d=document.createElement('div');d.innerHTML=h;return d.textContent||d.innerText||'';}
+// Shared helper: escape HTML to prevent XSS in rendered content
+function escapeHtml(s){var d=document.createElement('div');d.appendChild(document.createTextNode(s));return d.innerHTML;}
 
 // Shared helper: render a single log entry
 function renderLogEntry(log){
@@ -821,7 +827,7 @@ function renderLogEntry(log){
     log.messages.forEach(function(m){
       var msgDiv=document.createElement('div');
       msgDiv.className='log-msg '+m.role;
-      msgDiv.innerHTML='<div class="log-bubble"><div class="log-content">'+m.content+'</div></div>';
+      msgDiv.innerHTML='<div class="log-bubble"><div class="log-content">'+escapeHtml(m.content)+'</div></div>';
       body.appendChild(msgDiv);
     });
   }

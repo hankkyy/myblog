@@ -1,5 +1,6 @@
 // Service Worker for Hank's Blog — offline support & PWA install
-const CACHE = 'hankblog-v1';
+const CACHE = 'hankblog-v2';
+const MAX_CACHE_ITEMS = 200;
 const STATIC_ASSETS = [
   '/',
   '/css/style.css',
@@ -46,7 +47,10 @@ self.addEventListener('fetch', (e) => {
       fetch(e.request)
         .then((res) => {
           const clone = res.clone();
-          caches.open(CACHE).then((cache) => cache.put(e.request, clone));
+          caches.open(CACHE).then((cache) => {
+            cache.put(e.request, clone);
+            trimCache(cache);
+          });
           return res;
         })
         .catch(() =>
@@ -59,7 +63,10 @@ self.addEventListener('fetch', (e) => {
       caches.match(e.request).then((cached) => {
         const fetched = fetch(e.request).then((res) => {
           const clone = res.clone();
-          caches.open(CACHE).then((cache) => cache.put(e.request, clone));
+          caches.open(CACHE).then((cache) => {
+            cache.put(e.request, clone);
+            trimCache(cache);
+          });
           return res;
         });
         return cached || fetched;
@@ -67,3 +74,14 @@ self.addEventListener('fetch', (e) => {
     );
   }
 });
+
+// Trim oldest entries when cache exceeds limit
+async function trimCache(cache) {
+  const keys = await cache.keys();
+  if (keys.length > MAX_CACHE_ITEMS) {
+    const toDelete = keys.slice(0, keys.length - MAX_CACHE_ITEMS + 50);
+    for (const req of toDelete) {
+      await cache.delete(req);
+    }
+  }
+}

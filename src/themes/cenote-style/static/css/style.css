@@ -1,5 +1,5 @@
 /* === 1:1 匹配 sinyalee.com/blog Cenote 主题 === */
-@import url('https://fonts.googleapis.com/css2?family=Catamaran:wght@700&family=Roboto:wght@400;700&display=swap');
+/* Fonts loaded via <link> in HTML head — see build.py */
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:16px;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent;scroll-behavior:smooth;height:-webkit-fill-available;min-height:100vh;min-height:100dvh}
@@ -226,7 +226,7 @@ blockquote p{margin-bottom:0;font-style:italic}
 @media(max-width:768px){
   /* Typography */
   html{font-size:16px}
-  h1{font-size:1.65rem}h2{font-size:1.4rem}h3{font-size:1.2rem}
+  h1{font-size:1.75rem}h2{font-size:1.5rem}h3{font-size:1.2rem}
   h4{font-size:1.1rem}h5{font-size:1.05rem}h6{font-size:1rem}
 
   /* Layout */
@@ -234,11 +234,11 @@ blockquote p{margin-bottom:0;font-style:italic}
   .site-content{padding:20px 0}
   .layout--right-sidebar #primary,.layout--right-sidebar #secondary{width:100%!important;padding:0!important}
   .layout--right-sidebar #secondary{margin-top:40px}
-  .layout--right-sidebar .hentry .entry-title{font-size:1.55rem!important}
+  .layout--right-sidebar .hentry .entry-title{font-size:1.75rem!important}
 
   /* Grid → single column, tighter gaps */
   .tg-archive-grid{display:block!important;gap:0!important}
-  .tg-archive-grid article{width:100%!important;margin-bottom:48px!important}
+  .tg-archive-grid article{width:100%!important;margin-bottom:80px!important}
   .tg-archive-featured article{margin-bottom:48px!important}
 
   /* Article cards */
@@ -313,8 +313,6 @@ blockquote p{margin-bottom:0;font-style:italic}
   .about-intro::after{width:40px;height:3px}
   .about-avatar{width:64px;height:64px;margin-bottom:18px}
   .about-greeting{font-size:.75rem;letter-spacing:2px}
-  .about-name{font-size:1.7rem}
-  .about-name-en{font-size:1rem;display:block}
   .about-bio{font-size:.95rem;margin-bottom:24px}
   .about-stats{gap:10px;flex-wrap:wrap}
   .about-stat{min-width:80px;padding:14px 20px}
@@ -504,19 +502,6 @@ pre code{background:none;padding:0}
 .tg-site-footer .site-info{color:#bdbdbd;font-size:.85rem}
 .tg-site-footer .site-info a{color:#146bb7}
 
-@media(max-width:768px){
-  .layout--right-sidebar #primary,.layout--right-sidebar #secondary{width:100%!important;padding:0!important}
-  .layout--right-sidebar #secondary{margin-top:40px}
-  .tg-archive-grid{display:block!important;gap:0!important}
-  .tg-archive-grid article{width:100%!important;margin-bottom:80px!important}
-  .header-bottom-bottom .container{flex-direction:column;gap:10px}
-  .tg-header-action-menu li.tg-mobile-menu-toggle{display:flex}
-  .tg-site-menu--default{display:none}
-  h1{font-size:1.75rem}h2{font-size:1.5rem}
-  .layout--right-sidebar .hentry .entry-title{font-size:1.75rem!important}
-  .entry-meta{flex-wrap:wrap}
-}
-
 /* === Project Card (About Page) === */
 .project-card {
   background: #faf9f7;
@@ -568,6 +553,7 @@ pre code{background:none;padding:0}
   50% { transform: scale(1.3); opacity: 0; }
 }
 #chat-toggle:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(20,107,183,.4); }
+#chat-toggle:focus-visible { outline: 3px solid #146bb7; outline-offset: 3px; }
 #chat-toggle-emoji { line-height: 1; }
 #chat-toggle-close-emoji { line-height: 1; font-size: 18px; font-weight: 700; }
 #chat-panel {
@@ -643,7 +629,7 @@ pre code{background:none;padding:0}
   background: #f1f5f9; color: #e83e8c; padding: 2px 6px;
   border-radius: 4px; font-size: .9em;
   font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
-  word-break: break-all;
+  overflow-wrap: break-word; word-break: break-word;
 }
 .chat-msg.assistant .chat-bubble pre {
   background: #1e293b; color: #e2e8f0; padding: 12px 14px;
@@ -737,13 +723,15 @@ pre code{background:none;padding:0}
 .chat-msg.assistant .chat-copy-btn.copied { opacity: 1; }
 .chat-copy-btn:hover { color: #146bb7; background: rgba(20,107,183,.1); }
 .chat-copy-btn.copied { color: #22c55e; background: rgba(34,197,94,.1); }
-.chat-msg.assistant .chat-bubble { position: relative; padding-right: 32px; }
+.chat-msg.assistant .chat-bubble { position: relative; }
+.chat-msg.assistant .chat-bubble.has-copy-btn { padding-right: 32px; }
 #chat-send-btn {
   background: #146bb7; color: #fff; border: none; border-radius: 20px;
   padding: 10px 20px; font-size: 13px; font-weight: 600;
   cursor: pointer; transition: background .2s; white-space: nowrap;
 }
 #chat-send-btn:hover { background: #0e5a9e; }
+#chat-send-btn:focus-visible { outline: 3px solid #146bb7; outline-offset: 2px; }
 #chat-send-btn:disabled { opacity: .5; cursor: default; }
 
 /* Stop generation button */
@@ -919,3 +907,13 @@ pre code{background:none;padding:0}
 .page-btn.active { background: #16181a; color: #fff; border-color: #16181a; }
 .log-chevron { transition: transform .2s; font-size: 12px; color: #adb5bd; }
 .log-entry.open .log-chevron { transform: rotate(180deg); }
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

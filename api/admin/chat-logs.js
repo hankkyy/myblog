@@ -4,12 +4,17 @@
  */
 
 const CLOUDBASE_ENV = 'hanoi-d4gj8vd2q1e7a3dc0';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'hankyky';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+if (!ADMIN_PASSWORD) {
+  console.error('CRITICAL: ADMIN_PASSWORD environment variable is not configured. Admin API will reject all requests.');
+}
 const CLOUDBASE_API_KEY = process.env.CLOUDBASE_API_KEY || '';
 
 const BASE_URL = `https://${CLOUDBASE_ENV}.api.tcloudbasegateway.com/v1/database/instances/(default)/databases/(default)`;
 
 // --- Brute-force protection ---
+// NOTE: This resets on serverless cold starts. For production-grade protection,
+// consider using Vercel Edge Config or an external key-value store.
 const attemptMap = new Map();
 const MAX_ATTEMPTS = 5;
 const LOCKOUT_BASE_MS = 30_000;
@@ -134,6 +139,10 @@ export default async function handler(req, res) {
   }
 
   try {
+    if (!ADMIN_PASSWORD) {
+      return res.status(500).json({ error: 'Admin password not configured on server.' });
+    }
+
     const { password, page = 1, pageSize = 20 } = req.body || {};
 
     if (!password || password !== ADMIN_PASSWORD) {
