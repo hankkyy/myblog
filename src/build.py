@@ -126,6 +126,7 @@ T = {
         "chat_suggestion_2": "What's a data engineer's day like?",
         "chat_suggestion_3": "Why is your nickname 'Coke'?",
         "chat_suggestion_4": "What do you do?",
+        "chat_auto_refresh": "That was a great chat! Let me refresh my memory and we can keep going. 👋",
         "chat_copied": "Copied!",
     },
     "zh": {
@@ -233,6 +234,7 @@ T = {
         "chat_suggestion_2": "数据工程师每天都在干嘛？",
         "chat_suggestion_3": "为什么叫可乐？",
         "chat_suggestion_4": "可乐是做什么的？",
+        "chat_auto_refresh": "聊了这么多轮，让我刷新一下记忆，咱们继续！👋",
         "chat_copied": "已复制！",
     },
 }
@@ -466,6 +468,8 @@ var adminMode=false;
 var streamAbort=null;
 var lastUserMsg=null;
 var sessionId='s'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
+var msgCount=0;
+var AUTO_REFRESH_LIMIT=20;
 var dragOffsetX=0,dragOffsetY=0;
 var isDragging=false,dragStartX=0,dragStartY=0;
 var chatToggle=document.getElementById('chat-toggle');
@@ -580,6 +584,7 @@ window.clearConversation=function(){{
   // Reset session
   sessionId='s'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
   lastUserMsg=null;
+  msgCount=0;
   // Show suggestions again
   var sug=document.getElementById('chat-suggestions');
   if(sug)sug.style.display='';
@@ -782,6 +787,14 @@ window.sendMessage=async function(){{
     bubble.classList.remove('streaming');
     if(fullText){{bubble.innerHTML=renderMarkdown(fullText);}}
     else{{bubble.innerHTML='<em>{t['chat_error_stream']}</em>';}}
+    // Auto-refresh after N rounds to keep quality fresh
+    msgCount++;
+    if(msgCount>=AUTO_REFRESH_LIMIT){{
+      setTimeout(function(){{
+        addMessage('assistant','{t['chat_auto_refresh']}');
+        setTimeout(function(){{clearConversation();}},1200);
+      }},600);
+    }}
   }}catch(e){{
     typing.remove();
     if(e.name==='AbortError'){{

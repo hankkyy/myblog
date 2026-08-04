@@ -265,6 +265,8 @@ var adminMode=false;
 var streamAbort=null;
 var lastUserMsg=null;
 var sessionId='s'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
+var msgCount=0;
+var AUTO_REFRESH_LIMIT=20;
 var dragOffsetX=0,dragOffsetY=0;
 var isDragging=false,dragStartX=0,dragStartY=0;
 var chatToggle=document.getElementById('chat-toggle');
@@ -379,6 +381,7 @@ window.clearConversation=function(){
   // Reset session
   sessionId='s'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
   lastUserMsg=null;
+  msgCount=0;
   // Show suggestions again
   var sug=document.getElementById('chat-suggestions');
   if(sug)sug.style.display='';
@@ -581,6 +584,14 @@ window.sendMessage=async function(){
     bubble.classList.remove('streaming');
     if(fullText){bubble.innerHTML=renderMarkdown(fullText);}
     else{bubble.innerHTML='<em>回复中断，请重试。</em>';}
+    // Auto-refresh after N rounds to keep quality fresh
+    msgCount++;
+    if(msgCount>=AUTO_REFRESH_LIMIT){
+      setTimeout(function(){
+        addMessage('assistant','聊了这么多轮，让我刷新一下记忆，咱们继续！👋');
+        setTimeout(function(){clearConversation();},1200);
+      },600);
+    }
   }catch(e){
     typing.remove();
     if(e.name==='AbortError'){
