@@ -425,7 +425,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Too many messages. Maximum 40 messages per request.' });
     }
     // Only send last 10 messages to the AI — earlier ones are for context persistence
-    const recentMessages = messages.slice(-16);
+    const recentMessages = messages.slice(-30);
     for (const msg of recentMessages) {
       if (typeof msg.content === 'string' && msg.content.length > 4000) {
         return res.status(400).json({ error: 'Message too long. Maximum 4000 characters per message.' });

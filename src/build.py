@@ -126,7 +126,9 @@ T = {
         "chat_suggestion_2": "What's a data engineer's day like?",
         "chat_suggestion_3": "Why is your nickname 'Coke'?",
         "chat_suggestion_4": "What do you do?",
-        "chat_auto_refresh": "That was a great chat! Let me refresh my memory and we can keep going. 👋",
+        "chat_refresh_hint": "That was a long chat — my context is getting full and quality might dip. Want to start fresh?",
+        "chat_refresh_btn": "Start fresh",
+        "chat_continue_btn": "Keep chatting",
         "chat_copied": "Copied!",
     },
     "zh": {
@@ -234,7 +236,9 @@ T = {
         "chat_suggestion_2": "数据工程师每天都在干嘛？",
         "chat_suggestion_3": "为什么叫可乐？",
         "chat_suggestion_4": "可乐是做什么的？",
-        "chat_auto_refresh": "聊了这么多轮，让我刷新一下记忆，咱们继续！👋",
+        "chat_refresh_hint": "已经聊了30轮，对话质量可能会下降。要不要刷新重新开始？",
+        "chat_refresh_btn": "刷新对话",
+        "chat_continue_btn": "继续聊",
         "chat_copied": "已复制！",
     },
 }
@@ -442,6 +446,11 @@ document.addEventListener('DOMContentLoaded',function(){{
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
     </button>
     <div id="chat-disclaimer">{t['chat_disclaimer']}</div>
+    <div id="chat-refresh-hint" style="display:none">
+      <span class="chat-refresh-hint-text">{t['chat_refresh_hint']}</span>
+      <button class="chat-refresh-btn" onclick="clearConversation();hideRefreshHint();">{t['chat_refresh_btn']}</button>
+      <button class="chat-continue-btn" onclick="hideRefreshHint();">{t['chat_continue_btn']}</button>
+    </div>
     <div id="chat-input-area">
       <textarea id="chat-input" placeholder="{t['chat_placeholder']}" autocomplete="off" spellcheck="false" rows="1"></textarea>
       <button id="chat-send-btn" onclick="sendMessage()">{t['chat_send']}</button>
@@ -469,7 +478,7 @@ var streamAbort=null;
 var lastUserMsg=null;
 var sessionId='s'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
 var msgCount=0;
-var AUTO_REFRESH_LIMIT=20;
+var AUTO_REFRESH_LIMIT=30;
 var dragOffsetX=0,dragOffsetY=0;
 var isDragging=false,dragStartX=0,dragStartY=0;
 var chatToggle=document.getElementById('chat-toggle');
@@ -585,11 +594,24 @@ window.clearConversation=function(){{
   sessionId='s'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
   lastUserMsg=null;
   msgCount=0;
+  hideRefreshHint();
   // Show suggestions again
   var sug=document.getElementById('chat-suggestions');
   if(sug)sug.style.display='';
   input.focus();
 }};
+
+function showRefreshHint(){{
+  var hint=document.getElementById('chat-refresh-hint');
+  if(hint)hint.style.display='';
+}}
+
+function hideRefreshHint(){{
+  var hint=document.getElementById('chat-refresh-hint');
+  if(hint)hint.style.display='none';
+  // Extend the threshold so it won't pop up again immediately
+  AUTO_REFRESH_LIMIT=msgCount+15;
+}}
 
 // Click outside chat panel to close
 document.addEventListener('click',function(e){{
@@ -787,13 +809,10 @@ window.sendMessage=async function(){{
     bubble.classList.remove('streaming');
     if(fullText){{bubble.innerHTML=renderMarkdown(fullText);}}
     else{{bubble.innerHTML='<em>{t['chat_error_stream']}</em>';}}
-    // Auto-refresh after N rounds to keep quality fresh
+    // Show refresh hint after N rounds — quality may degrade with long context
     msgCount++;
     if(msgCount>=AUTO_REFRESH_LIMIT){{
-      setTimeout(function(){{
-        addMessage('assistant','{t['chat_auto_refresh']}');
-        setTimeout(function(){{clearConversation();}},1200);
-      }},600);
+      showRefreshHint();
     }}
   }}catch(e){{
     typing.remove();
