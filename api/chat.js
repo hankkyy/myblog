@@ -406,7 +406,7 @@ Data Platform Engineer intern at a major Chinese tech company's healthcare divis
 ## Projects
 - **Eastwood Auction**: Full-stack antique auction platform. Next.js + TypeScript + Supabase, SwiftUI mobile shell, eBay API. Visual search engine with multi-dimensional feature signatures, confidence-gated matching. Bilingual. eastwoodauction.vercel.app
 - **Healthcare Data Platform**: Real-time medical data infrastructure (internship). Java 17, Spring Boot 3, Spring Cloud Alibaba, Apache Doris, Flink CDC, K8s. 5000+ medical institutions.
-- **This Blog (纵横四海)**: 140+ articles on backend, distributed systems, databases, AI. Custom Python SSG, Vercel edge deployment, bilingual.
+- **This Blog (纵横四海)**: Custom Python SSG, Vercel edge deployment, bilingual.
 - **This AI Chat Agent**: Custom-built from scratch. DeepSeek API + SSE streaming + Vercel serverless + CloudBase NoSQL. Full prompt engineering — personality, guardrails, knowledge base.
 - **Hermes Agent**: Open-source AI agent ecosystem — 13k+ GitHub stars. Python/TypeScript, Electron, MCP protocol, plugin system. Active contributor.
 - **Blackhorse Rating**: High-concurrency review platform. Java, Spring Boot, Redis + Redisson distributed locking.
