@@ -271,6 +271,14 @@ T = {
     },
 }
 
+# Auto-collect all chat suggestion strings (both languages) for admin title dedup
+_ALL_SUGGESTIONS = sorted(set(
+    v for lang in T.values()
+    for k, v in lang.items()
+    if k.startswith("chat_suggestion_")
+))
+ALL_SUGGESTIONS_JS = ",\n  ".join(f'"{s}"' for s in _ALL_SUGGESTIONS)
+
 # 旅行城市数据 — 来源：航旅纵横行程导出（含广州、东莞）
 # 两栏：中国大陆 / 国际（含港澳台）
 TRAVEL_CITIES = [
@@ -1258,16 +1266,9 @@ function stripHtml(h){{var d=document.createElement('div');d.innerHTML=h;return 
 // Shared helper: escape HTML to prevent XSS in rendered content
 function escapeHtml(s){{var d=document.createElement('div');d.appendChild(document.createTextNode(s));return d.innerHTML;}}
 
-// Known suggestion questions — skip these when picking log titles
+// Known suggestion questions — auto-generated from i18n T dict, skip when picking log titles
 var __suggestions=[
-  "Where's the most interesting place you've been?",
-  "What's a data engineer's day like?",
-  "Why is your nickname 'Coke'?",
-  "What do you do?",
-  "去过最有趣的地方是哪里？",
-  "数据工程师每天都在干嘛？",
-  "为什么叫可乐？",
-  "可乐是做什么的？"
+{ALL_SUGGESTIONS_JS}
 ];
 function __isSuggestion(text){{
   for(var i=0;i<__suggestions.length;i++){{if(text===__suggestions[i])return true;}}
@@ -1287,6 +1288,15 @@ function renderLogEntry(log){{
       if(m.role!=='user')continue;
       var t=stripHtml(m.content).trim();
       if(t&&!__isSuggestion(t)){{preview=t.slice(0,80);break;}}
+    }}
+    // Fallback: no meaningful user message → use AI's first response as title
+    if(!preview){{
+      for(var i=0;i<log.messages.length;i++){{
+        var m=log.messages[i];
+        if(m.role!=='assistant')continue;
+        var t=stripHtml(m.content).trim();
+        if(t){{preview=t.slice(0,80);break;}}
+      }}
     }}
   }}
   var title=preview||'新对话 — '+timeStr;
