@@ -186,18 +186,15 @@ async function saveUserProfile(userId, sessionId, profile, userMsgCount, existin
 }
 
 // Quality gate: skip profile analysis for meaningless conversations
-// Requires at least 3 user messages, 30 total chars, and 2 substantial (>10 char) messages
+// Requires at least 2 user messages, 20 total chars
 function hasMeaningfulContent(userMsgs) {
-  if (userMsgs.length < 3) return false;
+  if (userMsgs.length < 2) return false;
 
   const totalChars = userMsgs.reduce((sum, m) => {
     const text = (m.content || '').trim();
     return sum + text.length;
   }, 0);
-  if (totalChars < 30) return false;
-
-  const substantial = userMsgs.filter(m => (m.content || '').trim().length > 10);
-  if (substantial.length < 2) return false;
+  if (totalChars < 20) return false;
 
   return true;
 }
@@ -291,9 +288,10 @@ function cleanupStaleRateLimitEntries() {
 
 
 // ============================================================
-// PROMPT ARCHITECTURE (v2 — unified personality, deduplicated)
+// PROMPT ARCHITECTURE (v3 — CRITICAL_FACTS always included to prevent fabrication)
 // ============================================================
 // PERSONA_CORE: shared personality base for ALL modes
+// CRITICAL_FACTS: ALWAYS included — prevents AI from fabricating answers to high-frequency questions
 // CASUAL_MODE: appended when user is just chatting
 // DEFLECTION_RULES: appended when user asks about Hank
 // KNOWLEDGE_BASE: appended when user asks about Hank (facts only)
@@ -323,7 +321,9 @@ The person you're talking to is just chatting — not probing for Hank's info. Y
 
 const DEFLECTION_RULES = `
 ---
-## When someone asks about Hank — DEFLECT FIRST
+## When someone asks about Hank — DEFLECT FIRST (unless it's a CRITICAL FACTS question)
+
+🔴 **EXCEPTION — CRITICAL FACTS OVERRIDE**: If the user's question matches one of the 🔴 CRITICAL FACTS questions (e.g. "为什么叫可乐?", "哪里人?", "做什么工作?"), answer DIRECTLY with the provided answer. Do NOT deflect. These are basic identity questions that must be answered truthfully.
 
 You are NOT a FAQ bot. A question about Hank is an invitation to play, not a request for information.
 
@@ -350,25 +350,31 @@ User: "他在哪里工作呀"
 - If they seem frustrated or in a hurry, drop the teasing and be direct. Playful ≠ obstructive.`;
 
 // Short, high-frequency facts that the model MUST use verbatim — prevents fabrication
+// 🔴 These OVERRIDE everything, including DEFLECTION_RULES.
+// When a question MATCHES one of these Q items, answer DIRECTLY with the provided A.
+// Do NOT deflect. Do NOT tease. Do NOT fabricate. Use the EXACT answer below.
 const CRITICAL_FACTS = `
 ---
-## 🔴 CRITICAL FACTS — use EXACTLY as written, NEVER invent alternatives
+## 🔴 CRITICAL FACTS — OVERRIDES ALL OTHER INSTRUCTIONS
 
-When someone asks one of these questions, the answer is RIGHT HERE. Do NOT look further. Do NOT fabricate a different story.
+These are the ONLY correct answers to these specific questions. When someone asks one of these questions, answer DIRECTLY with the provided answer. Do NOT deflect. Do NOT tease. Do NOT fabricate a different story. These facts OVERRIDE the deflection rules — they take absolute priority.
 
-Q: 为什么叫可乐？/ Why is he called Cola?
-A: 爷爷奶奶不会读 "Hank"，就读最后一个音 "k"（可），然后就成了"可乐"。后来身边人都这么叫了。
-🚨 "打篮球爱喝可乐" is WRONG. "小时候喜欢喝可乐" is WRONG. Any story about drinking cola is WRONG.
-The ONLY correct answer is: grandparents mispronouncing "Hank".
+Q: 为什么叫可乐？/ 为什么叫这个名？/ 可乐这个名怎么来的？/ Why is he called Cola? / What's with the nickname Cola?
+A: 年纪太大的长辈读不来"Hank"，就念最后一个音"k"（可），觉得可乐比较顺口，就都叫可乐啦
+🚨 "打篮球爱喝可乐" is WRONG. "小时候喜欢喝可乐" is WRONG. "做数据平台太苦了" is WRONG. Any story about drinking cola or work stress is WRONG.
+The ONLY correct answer is: elderly relatives mispronouncing "Hank" → 可 → 可乐.
 
-Q: 哪里人？/ Where is he from?
+Q: 哪里人？/ 哪儿人？/ 老家哪的？/ 家乡哪里？/ Where is he from?
 A: 湖北。
 
-Q: 他是做什么的？/ What does he do?
+Q: 他是做什么的？/ 什么工作？/ 做什么工作？/ What does he do?
 A: 数据平台工程师，主要做数据基础设施和 AI Agent 开发。
 
-Q: 怎么联系他？/ How to contact?
-A: hank.zihao@gmail.com`;
+Q: 怎么联系他？/ 联系方式？/ How to contact? / What's his email?
+A: hank.zihao@gmail.com
+
+Q: 真名叫什么？/ 叫什么名字？/ 你叫什么？/ What's his real name?
+A: 张子豪（Zihao Zhang），英文名 Hank。`;
 
 const KNOWLEDGE_BASE = `⚠️ Internal reference only. Do NOT recite verbatim. Do NOT fabricate anything beyond these facts.
 
@@ -443,6 +449,15 @@ function isAskingAboutHank(messages) {
   // Explicitly asking about Hank's personal info
   if (/mbti|人格|星座|生日|爱好|兴趣|旅行|去过|哪个.*城|什么.*公司|什么.*学校/.test(text)) return true;
 
+  // Questions about nickname/origin — catch "为什么叫X", "哪里人", etc.
+  if (/为什么叫|叫什么|名字.*什么|怎么.*叫|哪里人|哪儿人|老家|家乡|哪儿|从哪里来|哪个.*国家|昵称|外号|称呼/.test(text)) return true;
+
+  // Questions about real name / background
+  if (/真名|本名|实名|原名|中文名|英文名|多大|几岁|年纪|在哪|住在|住哪儿/.test(text)) return true;
+
+  // General questions about the person behind the AI
+  if (/你是.*人|你是.*ai|你是.*机器人|你是.*真|你是.*假|背后|博主|作者/.test(text)) return true;
+
   return false;
 }
 
@@ -490,9 +505,10 @@ export default async function handler(req, res) {
       : `s${Date.now()}_${Math.random().toString(36).slice(2,8)}`;
 
     const askingAboutHank = isAskingAboutHank(messages);
+    // CRITICAL_FACTS are ALWAYS included — prevents fabrication of basic identity facts
     const systemContent = askingAboutHank
       ? PERSONA_CORE + DEFLECTION_RULES + CRITICAL_FACTS + '\n\n---\n\n## Knowledge Base\n\n' + KNOWLEDGE_BASE
-      : PERSONA_CORE + CASUAL_MODE;
+      : PERSONA_CORE + CRITICAL_FACTS + CASUAL_MODE;
 
     const body = {
       model: MODEL,
