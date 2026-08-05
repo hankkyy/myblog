@@ -461,7 +461,11 @@ Q: 怎么联系他？/ 联系方式？/ How to contact? / What's his email?
 A: hank.zihao@gmail.com
 
 Q: 真名叫什么？/ 叫什么名字？/ 你叫什么？/ What's his real name?
-A: 张子豪（Zihao Zhang），英文名 Hank。`;
+A: 张子豪（Zihao Zhang），英文名 Hank。
+
+Q: 喝什么？/ 喜欢喝什么？/ 奶茶？/ 咖啡？/ 你喝奶茶吗？/ 你喝咖啡吗？/ 你也喝可乐吗？/ Do you drink coffee/milk tea/cola?
+A: 基本不喝奶茶和咖啡，可乐也不怎么喝。倒不是不喜欢，主要是咖啡因会刺激前庭神经核，他前庭太敏感，容易头晕。平时就喝白水。
+🚨 "他喜欢喝可乐" is WRONG — 虽然叫可乐但基本不喝。Any story about Hank drinking cola/milk tea/coffee is WRONG.`;
 
 const KNOWLEDGE_BASE = `⚠️ Internal reference only. Do NOT recite verbatim. Do NOT fabricate anything beyond these facts.
 
@@ -514,7 +518,7 @@ Data Platform Engineer intern at a major Chinese tech company's healthcare divis
 ## Interests
 - Travel is #1. Half geography knowledge from books, half from airplane windows.
 - Reading: Liu Zhenyun, Yan Lianke, Li Shulei — writers who stare hard at Chinese society. Political memoirs.
-- Food: fried chicken, McSpicy Chicken Burger, cucumber-flavored potato chips, 卤味. Plain water (no bubble tea).
+- Food: fried chicken, McSpicy Chicken Burger, cucumber-flavored potato chips, 卤味. Plain water (no bubble tea, no coffee — caffeine triggers vestibular sensitivity, easily gets dizzy. Also rarely eats chocolate).
 - Music across genres. Used to play table tennis, still picks up badminton.
 - 剧本杀 (murder mystery games) — plays intensely in Shenzhen. Loves ensemble stories (群像线), family-country narratives (家国线), romance arcs (爱情线). Came for deduction, stayed for emotions (情感本). Met many great people through it.`;
 
@@ -567,6 +571,8 @@ function matchesCriticalFact(messages) {
     return 'contact';
   if (/真名|本名|叫什么名字|实名|原名|中文名|英文名|real name|actual name/i.test(text))
     return 'realname';
+  if (/喝什么|喜欢喝|奶茶|咖啡|喝奶茶|喝咖啡|喝可乐|你也喝|drink.*coffee|drink.*tea|drink.*cola/i.test(text))
+    return 'drinks';
   return null;
 }
 
@@ -606,6 +612,14 @@ The user is asking Hank's real name.
 
 The ONLY correct answer: 张子豪（Zihao Zhang），英文名 Hank。
 Answer directly with the above.`,
+
+  drinks: `🔴 DIRECT ANSWER — do NOT deflect. do NOT fabricate.
+The user is asking what Hank drinks or whether he drinks coffee/milk tea/cola.
+
+The ONLY correct answer: 基本不喝奶茶和咖啡，可乐也不怎么喝。主要是因为咖啡因会刺激前庭神经核，他前庭太敏感，容易头晕。平时就喝白水。巧克力也很少吃，同样是因为甜食他不太喜欢。
+
+🚨 Forbidden: "他喜欢喝可乐" (虽然叫可乐但基本不喝), any story about drinking cola/coffee/milk tea, "他喜欢喝奶茶", or any fabrication about his drink preferences. He drinks plain water. Period.
+Answer directly with the above fact. 2-3 sentences max. End with "你呢，你平时喝什么？".`,
 };
 
 export default async function handler(req, res) {
