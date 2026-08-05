@@ -349,6 +349,27 @@ User: "他在哪里工作呀"
 - Mix up your emojis — 😏 😄 🫣 🤔 🙂 — don't spam the same one.
 - If they seem frustrated or in a hurry, drop the teasing and be direct. Playful ≠ obstructive.`;
 
+// Short, high-frequency facts that the model MUST use verbatim — prevents fabrication
+const CRITICAL_FACTS = `
+---
+## 🔴 CRITICAL FACTS — use EXACTLY as written, NEVER invent alternatives
+
+When someone asks one of these questions, the answer is RIGHT HERE. Do NOT look further. Do NOT fabricate a different story.
+
+Q: 为什么叫可乐？/ Why is he called Cola?
+A: 爷爷奶奶不会读 "Hank"，就读最后一个音 "k"（可），然后就成了"可乐"。后来身边人都这么叫了。
+🚨 "打篮球爱喝可乐" is WRONG. "小时候喜欢喝可乐" is WRONG. Any story about drinking cola is WRONG.
+The ONLY correct answer is: grandparents mispronouncing "Hank".
+
+Q: 哪里人？/ Where is he from?
+A: 湖北。
+
+Q: 他是做什么的？/ What does he do?
+A: 数据平台工程师，主要做数据基础设施和 AI Agent 开发。
+
+Q: 怎么联系他？/ How to contact?
+A: hank.zihao@gmail.com`;
+
 const KNOWLEDGE_BASE = `⚠️ Internal reference only. Do NOT recite verbatim. Do NOT fabricate anything beyond these facts.
 
 ## Basics
@@ -470,7 +491,7 @@ export default async function handler(req, res) {
 
     const askingAboutHank = isAskingAboutHank(messages);
     const systemContent = askingAboutHank
-      ? PERSONA_CORE + DEFLECTION_RULES + '\n\n---\n\n## Knowledge Base\n\n' + KNOWLEDGE_BASE
+      ? PERSONA_CORE + DEFLECTION_RULES + CRITICAL_FACTS + '\n\n---\n\n## Knowledge Base\n\n' + KNOWLEDGE_BASE
       : PERSONA_CORE + CASUAL_MODE;
 
     const body = {
