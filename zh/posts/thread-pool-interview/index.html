@@ -90,16 +90,16 @@
               </header>
               <div class="entry-content"><p>线程池是 Java 并发编程面试的高频题。</p>
 <h2>七个核心参数</h2>
-<pre class="codehilite"><code class="language-java">new ThreadPoolExecutor(
-    corePoolSize,   // 核心线程数
-    maximumPoolSize,// 最大线程数
-    keepAliveTime,  // 空闲线程存活时间
-    unit,           // 时间单位
-    workQueue,      // 阻塞队列
-    threadFactory,  // 线程工厂
-    handler         // 拒绝策略
-)
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">new</span><span class="w"> </span><span class="n">ThreadPoolExecutor</span><span class="p">(</span>
+<span class="w">    </span><span class="n">corePoolSize</span><span class="p">,</span><span class="w">   </span><span class="c1">// 核心线程数</span>
+<span class="w">    </span><span class="n">maximumPoolSize</span><span class="p">,</span><span class="c1">// 最大线程数</span>
+<span class="w">    </span><span class="n">keepAliveTime</span><span class="p">,</span><span class="w">  </span><span class="c1">// 空闲线程存活时间</span>
+<span class="w">    </span><span class="n">unit</span><span class="p">,</span><span class="w">           </span><span class="c1">// 时间单位</span>
+<span class="w">    </span><span class="n">workQueue</span><span class="p">,</span><span class="w">      </span><span class="c1">// 阻塞队列</span>
+<span class="w">    </span><span class="n">threadFactory</span><span class="p">,</span><span class="w">  </span><span class="c1">// 线程工厂</span>
+<span class="w">    </span><span class="n">handler</span><span class="w">         </span><span class="c1">// 拒绝策略</span>
+<span class="p">)</span>
+</code></pre></div>
 
 <h2>执行流程</h2>
 <ol>
@@ -755,6 +755,7 @@ window.retryLastMessage=function(){
         <option value="friend">朋友</option>
         <option value="classmate">同学</option>
         <option value="stranger">陌生人</option>
+        <option value="anonymous">匿名（未透露信息）</option>
       </select>
     </div>
     <div id="admin-body">

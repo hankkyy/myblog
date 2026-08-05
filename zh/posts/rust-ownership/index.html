@@ -90,17 +90,17 @@
               </header>
               <div class="entry-content"><p>Rust 的所有权（Ownership）是让 Java 程序员最头疼的概念。Java 里我们只管 <code>new</code>，GC 会处理一切。Rust 完全不同——<strong>没有 GC，编译器在编译时就知道每块内存何时释放</strong>。</p>
 <h2>Java 的视角</h2>
-<pre class="codehilite"><code class="language-java">String s1 = new String(&quot;hello&quot;);
-String s2 = s1;  // s1 和 s2 指向同一个对象
-// GC 会在没有任何引用时回收内存
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="n">String</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
+<span class="n">String</span><span class="w"> </span><span class="n">s2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s1</span><span class="p">;</span><span class="w">  </span><span class="c1">// s1 和 s2 指向同一个对象</span>
+<span class="c1">// GC 会在没有任何引用时回收内存</span>
+</code></pre></div>
 
 <p>Java 的做法：<strong>引用计数 + GC 追踪</strong>。程序员不用想内存，运行时帮你管。</p>
 <h2>Rust 的做法</h2>
-<pre class="codehilite"><code class="language-rust">let s1 = String::from(&quot;hello&quot;);
-let s2 = s1;       // s1 所有权转移给 s2
-// println!(&quot;{}&quot;, s1);  // 编译错误！s1 已失效
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">s2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s1</span><span class="p">;</span><span class="w">       </span><span class="c1">// s1 所有权转移给 s2</span>
+<span class="c1">// println!(&quot;{}&quot;, s1);  // 编译错误！s1 已失效</span>
+</code></pre></div>
 
 <p>Rust 的核心规则：</p>
 <ol>
@@ -116,14 +116,14 @@ let s2 = s1;       // s1 所有权转移给 s2
 - 不可预测的性能抖动</p>
 <p>Rust 的答案：<strong>编译期确定内存生命周期，运行时零开销</strong>。</p>
 <h2>借用（Borrowing）：不转移所有权的访问</h2>
-<pre class="codehilite"><code class="language-rust">fn print_len(s: &amp;String) {  // 不可变借用
-    println!(&quot;len: {}&quot;, s.len());
-}
+<div class="codehilite"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">print_len</span><span class="p">(</span><span class="n">s</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nb">String</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// 不可变借用</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;len: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">len</span><span class="p">());</span>
+<span class="p">}</span>
 
-let s = String::from(&quot;hello&quot;);
-print_len(&amp;s);    // 借出，不转移所有权
-println!(&quot;{}&quot;, s); // s 仍然可用
-</code></pre>
+<span class="kd">let</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
+<span class="n">print_len</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">);</span><span class="w">    </span><span class="c1">// 借出，不转移所有权</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">);</span><span class="w"> </span><span class="c1">// s 仍然可用</span>
+</code></pre></div>
 
 <h2>对 Java 程序员的建议</h2>
 <p>如果你从 Java 转 Rust，按这个顺序学：</p>
@@ -760,6 +760,7 @@ window.retryLastMessage=function(){
         <option value="friend">朋友</option>
         <option value="classmate">同学</option>
         <option value="stranger">陌生人</option>
+        <option value="anonymous">匿名（未透露信息）</option>
       </select>
     </div>
     <div id="admin-body">

@@ -90,37 +90,37 @@
               </header>
               <div class="entry-content"><p>RAG（Retrieval-Augmented Generation）是让 LLM 回答私有文档的核心方案。</p>
 <h2>架构概览</h2>
-<pre class="codehilite"><code>┌──────────┐    ┌──────────┐    ┌──────────┐
+<div class="codehilite"><pre><span></span><code>┌──────────┐    ┌──────────┐    ┌──────────┐
 │ 文档切分  │ → │ 向量嵌入  │ → │ 向量存储  │
 └──────────┘    └──────────┘    └──────────┘
                                       │
 ┌──────────┐    ┌──────────┐          │
 │ LLM 生成  │ ← │ 检索召回  │ ←────────┘
 └──────────┘    └──────────┘
-</code></pre>
+</code></pre></div>
 
 <h2>核心代码</h2>
-<pre class="codehilite"><code class="language-python">from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.vectorstores import Chroma
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.text_splitter</span><span class="w"> </span><span class="kn">import</span> <span class="n">RecursiveCharacterTextSplitter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.embeddings</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAIEmbeddings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.vectorstores</span><span class="w"> </span><span class="kn">import</span> <span class="n">Chroma</span>
 
-# 1. 文档切分
-splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-chunks = splitter.split_documents(documents)
+<span class="c1"># 1. 文档切分</span>
+<span class="n">splitter</span> <span class="o">=</span> <span class="n">RecursiveCharacterTextSplitter</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">chunk_overlap</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">chunks</span> <span class="o">=</span> <span class="n">splitter</span><span class="o">.</span><span class="n">split_documents</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span>
 
-# 2. 向量化 + 存储
-embeddings = OpenAIEmbeddings()
-vectorstore = Chroma.from_documents(chunks, embeddings)
+<span class="c1"># 2. 向量化 + 存储</span>
+<span class="n">embeddings</span> <span class="o">=</span> <span class="n">OpenAIEmbeddings</span><span class="p">()</span>
+<span class="n">vectorstore</span> <span class="o">=</span> <span class="n">Chroma</span><span class="o">.</span><span class="n">from_documents</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">embeddings</span><span class="p">)</span>
 
-# 3. 检索
-retriever = vectorstore.as_retriever(search_kwargs={&quot;k&quot;: 4})
-docs = retriever.get_relevant_documents(&quot;Doris 3.0 新特性&quot;)
+<span class="c1"># 3. 检索</span>
+<span class="n">retriever</span> <span class="o">=</span> <span class="n">vectorstore</span><span class="o">.</span><span class="n">as_retriever</span><span class="p">(</span><span class="n">search_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;k&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">})</span>
+<span class="n">docs</span> <span class="o">=</span> <span class="n">retriever</span><span class="o">.</span><span class="n">get_relevant_documents</span><span class="p">(</span><span class="s2">&quot;Doris 3.0 新特性&quot;</span><span class="p">)</span>
 
-# 4. 生成
-from langchain.chains import RetrievalQA
-qa = RetrievalQA.from_chain_type(llm=ChatOpenAI(), retriever=retriever)
-answer = qa.run(&quot;Doris 3.0 有哪些新特性？&quot;)
-</code></pre>
+<span class="c1"># 4. 生成</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain.chains</span><span class="w"> </span><span class="kn">import</span> <span class="n">RetrievalQA</span>
+<span class="n">qa</span> <span class="o">=</span> <span class="n">RetrievalQA</span><span class="o">.</span><span class="n">from_chain_type</span><span class="p">(</span><span class="n">llm</span><span class="o">=</span><span class="n">ChatOpenAI</span><span class="p">(),</span> <span class="n">retriever</span><span class="o">=</span><span class="n">retriever</span><span class="p">)</span>
+<span class="n">answer</span> <span class="o">=</span> <span class="n">qa</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Doris 3.0 有哪些新特性？&quot;</span><span class="p">)</span>
+</code></pre></div>
 
 <h2>关键优化</h2>
 <ul>
@@ -761,6 +761,7 @@ window.retryLastMessage=function(){
         <option value="friend">朋友</option>
         <option value="classmate">同学</option>
         <option value="stranger">陌生人</option>
+        <option value="anonymous">匿名（未透露信息）</option>
       </select>
     </div>
     <div id="admin-body">

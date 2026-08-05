@@ -90,17 +90,17 @@
               </header>
               <div class="entry-content"><p>Rust's ownership is the concept that gives Java programmers the most headaches. In Java, we just <code>new</code> things up, and the GC handles everything. Rust is completely different—<strong>there's no GC; the compiler knows exactly when each piece of memory is freed at compile time</strong>.</p>
 <h2>The Java Perspective</h2>
-<pre class="codehilite"><code class="language-java">String s1 = new String(&quot;hello&quot;);
-String s2 = s1;  // s1 and s2 point to the same object
-// The GC reclaims memory when there are no more references
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="n">String</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
+<span class="n">String</span><span class="w"> </span><span class="n">s2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s1</span><span class="p">;</span><span class="w">  </span><span class="c1">// s1 and s2 point to the same object</span>
+<span class="c1">// The GC reclaims memory when there are no more references</span>
+</code></pre></div>
 
 <p>Java's approach: <strong>reference counting + GC tracing</strong>. Programmers don't think about memory; the runtime manages it for you.</p>
 <h2>Rust's Approach</h2>
-<pre class="codehilite"><code class="language-rust">let s1 = String::from(&quot;hello&quot;);
-let s2 = s1;       // Ownership of s1 moves to s2
-// println!(&quot;{}&quot;, s1);  // Compile error! s1 is no longer valid
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
+<span class="kd">let</span><span class="w"> </span><span class="n">s2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s1</span><span class="p">;</span><span class="w">       </span><span class="c1">// Ownership of s1 moves to s2</span>
+<span class="c1">// println!(&quot;{}&quot;, s1);  // Compile error! s1 is no longer valid</span>
+</code></pre></div>
 
 <p>Rust's core rules:</p>
 <ol>
@@ -116,14 +116,14 @@ let s2 = s1;       // Ownership of s1 moves to s2
 - Unpredictable performance jitter</p>
 <p>Rust's answer: <strong>determine memory lifetimes at compile time, zero runtime overhead</strong>.</p>
 <h2>Borrowing: Access Without Transferring Ownership</h2>
-<pre class="codehilite"><code class="language-rust">fn print_len(s: &amp;String) {  // Immutable borrow
-    println!(&quot;len: {}&quot;, s.len());
-}
+<div class="codehilite"><pre><span></span><code><span class="k">fn</span><span class="w"> </span><span class="nf">print_len</span><span class="p">(</span><span class="n">s</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nb">String</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// Immutable borrow</span>
+<span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;len: {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">len</span><span class="p">());</span>
+<span class="p">}</span>
 
-let s = String::from(&quot;hello&quot;);
-print_len(&amp;s);    // Borrow, don't transfer ownership
-println!(&quot;{}&quot;, s); // s is still usable
-</code></pre>
+<span class="kd">let</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
+<span class="n">print_len</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s</span><span class="p">);</span><span class="w">    </span><span class="c1">// Borrow, don&#39;t transfer ownership</span>
+<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">);</span><span class="w"> </span><span class="c1">// s is still usable</span>
+</code></pre></div>
 
 <h2>Advice for Java Programmers</h2>
 <p>If you're coming from Java to Rust, learn in this order:</p>
@@ -760,6 +760,7 @@ window.retryLastMessage=function(){
         <option value="friend">Friend</option>
         <option value="classmate">Classmate</option>
         <option value="stranger">Stranger</option>
+        <option value="anonymous">Anonymous (no info shared)</option>
       </select>
     </div>
     <div id="admin-body">

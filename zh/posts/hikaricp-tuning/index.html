@@ -110,26 +110,26 @@
 </ul>
 <p>分析后发现，每个请求平均需要 15ms 的数据库操作时间。10 个连接理论上每秒能处理 <code>1000ms / 15ms * 10 ≈ 666</code> 个请求。但实际中还有网络延迟、事务等待等因素。</p>
 <p>调整后的配置：</p>
-<pre class="codehilite"><code class="language-yaml">spring:
-  datasource:
-    hikari:
-      maximum-pool-size: 30
-      minimum-idle: 10
-      connection-timeout: 5000
-      idle-timeout: 600000
-      max-lifetime: 1800000
-      leak-detection-threshold: 0
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="nt">spring</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">datasource</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">hikari</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">maximum-pool-size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<span class="w">      </span><span class="nt">minimum-idle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">      </span><span class="nt">connection-timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5000</span>
+<span class="w">      </span><span class="nt">idle-timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">600000</span>
+<span class="w">      </span><span class="nt">max-lifetime</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1800000</span>
+<span class="w">      </span><span class="nt">leak-detection-threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+</code></pre></div>
 
 <p>调整后 P99 延迟降到 200ms 以内，接口成功率恢复到 99.99%。</p>
 <h2>如何确定合适的连接数</h2>
 <p>一个简单的公式：</p>
-<pre class="codehilite"><code>连接数 ≈ (QPS × 平均查询时间) + 缓冲
-</code></pre>
+<div class="codehilite"><pre><span></span><code>连接数 ≈ (QPS × 平均查询时间) + 缓冲
+</code></pre></div>
 
 <p>比如 QPS 1000，平均查询 20ms：</p>
-<pre class="codehilite"><code>连接数 = (1000 × 0.02) + 缓冲 = 20 + 5~10 = 25~30
-</code></pre>
+<div class="codehilite"><pre><span></span><code>连接数 = (1000 × 0.02) + 缓冲 = 20 + 5~10 = 25~30
+</code></pre></div>
 
 <p>但这只是理论值。实际中还要考虑：</p>
 <ul>
@@ -779,6 +779,7 @@ window.retryLastMessage=function(){
         <option value="friend">朋友</option>
         <option value="classmate">同学</option>
         <option value="stranger">陌生人</option>
+        <option value="anonymous">匿名（未透露信息）</option>
       </select>
     </div>
     <div id="admin-body">

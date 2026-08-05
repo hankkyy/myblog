@@ -108,18 +108,18 @@
 </ol>
 <h2>Hands-On Skills Matter More Than Memorization</h2>
 <p>If you can write a simple AOP aspect on the spot during an interview to print method execution time, you'll score much higher:</p>
-<pre class="codehilite"><code class="language-java">@Aspect
-@Component
-public class LoggingAspect {
-    @Around(&quot;execution(* com.example.service.*.*(..))&quot;)
-    public Object logTime(ProceedingJoinPoint joinPoint) throws Throwable {
-        long start = System.currentTimeMillis();
-        Object result = joinPoint.proceed();
-        System.out.println(joinPoint.getSignature() + &quot; took &quot; + (System.currentTimeMillis() - start) + &quot;ms&quot;);
-        return result;
-    }
-}
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="nd">@Aspect</span>
+<span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">LoggingAspect</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Around</span><span class="p">(</span><span class="s">&quot;execution(* com.example.service.*.*(..))&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="nf">logTime</span><span class="p">(</span><span class="n">ProceedingJoinPoint</span><span class="w"> </span><span class="n">joinPoint</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Throwable</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">long</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">();</span>
+<span class="w">        </span><span class="n">Object</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">joinPoint</span><span class="p">.</span><span class="na">proceed</span><span class="p">();</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">joinPoint</span><span class="p">.</span><span class="na">getSignature</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; took &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;ms&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 
 <p>Don't just memorize textbook answers. Write it once, and you'll remember it.</p></div>
               <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/technology/" rel="category">Technology</a></span></footer>
@@ -746,6 +746,7 @@ window.retryLastMessage=function(){
         <option value="friend">Friend</option>
         <option value="classmate">Classmate</option>
         <option value="stranger">Stranger</option>
+        <option value="anonymous">Anonymous (no info shared)</option>
       </select>
     </div>
     <div id="admin-body">

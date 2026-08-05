@@ -93,45 +93,45 @@
 <p><code>dp[i][k][0]</code> = maximum profit on day i, with at most k transactions completed, and not holding stock.
 <code>dp[i][k][1]</code> = maximum profit on day i, with at most k transactions completed, and holding stock.</p>
 <p>State transitions:</p>
-<pre class="codehilite"><code>dp[i][k][0] = max(dp[i-1][k][0], dp[i-1][k][1] + prices[i])
-dp[i][k][1] = max(dp[i-1][k][1], dp[i-1][k-1][0] - prices[i])
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">k</span><span class="o">][</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">dp</span><span class="o">[</span><span class="n">i-1</span><span class="o">][</span><span class="n">k</span><span class="o">][</span><span class="n">0</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">dp</span><span class="o">[</span><span class="n">i-1</span><span class="o">][</span><span class="n">k</span><span class="o">][</span><span class="n">1</span><span class="o">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span>
+<span class="n">dp</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="n">k</span><span class="o">][</span><span class="n">1</span><span class="o">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">max</span><span class="p">(</span><span class="n">dp</span><span class="o">[</span><span class="n">i-1</span><span class="o">][</span><span class="n">k</span><span class="o">][</span><span class="n">1</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">dp</span><span class="o">[</span><span class="n">i-1</span><span class="o">][</span><span class="n">k-1</span><span class="o">][</span><span class="n">0</span><span class="o">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span>
+</code></pre></div>
 
 <h2>121. Buy and Sell Once (k=1)</h2>
-<pre class="codehilite"><code class="language-java">public int maxProfit(int[] prices) {
-    int minPrice = Integer.MAX_VALUE, maxProfit = 0;
-    for (int price : prices) {
-        minPrice = Math.min(minPrice, price);
-        maxProfit = Math.max(maxProfit, price - minPrice);
-    }
-    return maxProfit;
-}
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">maxProfit</span><span class="p">(</span><span class="kt">int</span><span class="o">[]</span><span class="w"> </span><span class="n">prices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">minPrice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Integer</span><span class="p">.</span><span class="na">MAX_VALUE</span><span class="p">,</span><span class="w"> </span><span class="n">maxProfit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">prices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">minPrice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">min</span><span class="p">(</span><span class="n">minPrice</span><span class="p">,</span><span class="w"> </span><span class="n">price</span><span class="p">);</span>
+<span class="w">        </span><span class="n">maxProfit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">maxProfit</span><span class="p">,</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">minPrice</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">maxProfit</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
 
 <h2>122. Buy and Sell Unlimited Times (k=∞)</h2>
 <p>Greedy: buy whenever the next day's price is higher than the previous day's.</p>
-<pre class="codehilite"><code class="language-java">public int maxProfit(int[] prices) {
-    int profit = 0;
-    for (int i = 1; i &lt; prices.length; i++) {
-        if (prices[i] &gt; prices[i-1])
-            profit += prices[i] - prices[i-1];
-    }
-    return profit;
-}
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">maxProfit</span><span class="p">(</span><span class="kt">int</span><span class="o">[]</span><span class="w"> </span><span class="n">prices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">profit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">prices</span><span class="p">.</span><span class="na">length</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">prices</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span><span class="p">)</span>
+<span class="w">            </span><span class="n">profit</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">prices</span><span class="o">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">profit</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
 
 <h2>123. At Most Two Transactions (k=2)</h2>
 <p>Expand the states into 5: no transaction, first buy, first sell, second buy, second sell.</p>
-<pre class="codehilite"><code class="language-java">int buy1 = -prices[0], sell1 = 0;
-int buy2 = -prices[0], sell2 = 0;
-for (int price : prices) {
-    buy1 = Math.max(buy1, -price);
-    sell1 = Math.max(sell1, buy1 + price);
-    buy2 = Math.max(buy2, sell1 - price);
-    sell2 = Math.max(sell2, buy2 + price);
-}
-return sell2;
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="n">buy1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">prices</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">sell1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">buy2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">prices</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">,</span><span class="w"> </span><span class="n">sell2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">price</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">prices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">buy1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">buy1</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="n">price</span><span class="p">);</span>
+<span class="w">    </span><span class="n">sell1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">sell1</span><span class="p">,</span><span class="w"> </span><span class="n">buy1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">price</span><span class="p">);</span>
+<span class="w">    </span><span class="n">buy2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">buy2</span><span class="p">,</span><span class="w"> </span><span class="n">sell1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">price</span><span class="p">);</span>
+<span class="w">    </span><span class="n">sell2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">sell2</span><span class="p">,</span><span class="w"> </span><span class="n">buy2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">price</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">return</span><span class="w"> </span><span class="n">sell2</span><span class="p">;</span>
+</code></pre></div>
 
 <h2>Series Summary</h2>
 <table>
@@ -800,6 +800,7 @@ window.retryLastMessage=function(){
         <option value="friend">Friend</option>
         <option value="classmate">Classmate</option>
         <option value="stranger">Stranger</option>
+        <option value="anonymous">Anonymous (no info shared)</option>
       </select>
     </div>
     <div id="admin-body">

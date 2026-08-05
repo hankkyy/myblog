@@ -91,40 +91,40 @@
               <div class="entry-content"><p>The role of design patterns in interviews: proving you're not just a coder who only knows CRUD.</p>
 <h2>5 Ways to Write the Singleton Pattern</h2>
 <p><strong>1. Eager Initialization (Simplest)</strong></p>
-<pre class="codehilite"><code class="language-java">public class Singleton {
-    private static final Singleton INSTANCE = new Singleton();
-    private Singleton() {}
-    public static Singleton getInstance() { return INSTANCE; }
-}
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Singleton</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Singleton</span><span class="w"> </span><span class="n">INSTANCE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Singleton</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="nf">Singleton</span><span class="p">()</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">Singleton</span><span class="w"> </span><span class="nf">getInstance</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">INSTANCE</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 
 <p>Disadvantage: It's created when the class is loaded. If it's never used, memory is wasted.</p>
 <p><strong>2. Lazy Initialization (Has Thread Safety Issues)</strong>
 If two threads check <code>instance == null</code> simultaneously, two instances will be created.</p>
 <p><strong>3. Double-Checked Locking (DCL, Most Common)</strong></p>
-<pre class="codehilite"><code class="language-java">public class Singleton {
-    private static volatile Singleton instance;  // volatile is very important!
-    public static Singleton getInstance() {
-        if (instance == null) {
-            synchronized (Singleton.class) {
-                if (instance == null) {
-                    instance = new Singleton();
-                }
-            }
-        }
-        return instance;
-    }
-}
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Singleton</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">volatile</span><span class="w"> </span><span class="n">Singleton</span><span class="w"> </span><span class="n">instance</span><span class="p">;</span><span class="w">  </span><span class="c1">// volatile is very important!</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">Singleton</span><span class="w"> </span><span class="nf">getInstance</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">instance</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kd">synchronized</span><span class="w"> </span><span class="p">(</span><span class="n">Singleton</span><span class="p">.</span><span class="na">class</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">instance</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">instance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Singleton</span><span class="p">();</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">instance</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 
 <p><code>volatile</code> prevents instruction reordering — otherwise, you might get an object that hasn't been fully initialized.</p>
 <p><strong>4. Static Inner Class (Recommended)</strong>
 Leverages the class-loading mechanism to ensure thread safety and lazy loading.</p>
 <p><strong>5. Enum (Safest)</strong></p>
-<pre class="codehilite"><code class="language-java">public enum Singleton {
-    INSTANCE;
-}
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">enum</span><span class="w"> </span><span class="n">Singleton</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">INSTANCE</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
 
 <p>Prevents reflection attacks and serialization from breaking the singleton. This is the approach recommended by Joshua Bloch (author of <em>Effective Java</em>).</p>
 <h2>Factory Pattern in Spring</h2>
@@ -759,6 +759,7 @@ window.retryLastMessage=function(){
         <option value="friend">Friend</option>
         <option value="classmate">Classmate</option>
         <option value="stranger">Stranger</option>
+        <option value="anonymous">Anonymous (no info shared)</option>
       </select>
     </div>
     <div id="admin-body">

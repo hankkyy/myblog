@@ -99,8 +99,8 @@
 <p>Previously, this logic had to be written into every service. Service Mesh extracts this part out.</p>
 <h2>The Sidecar Pattern</h2>
 <p>A Sidecar proxy (Envoy) is placed next to each service Pod. All inbound and outbound traffic passes through it:</p>
-<pre class="codehilite"><code>Service A → Envoy Proxy → Envoy Proxy → Service B
-</code></pre>
+<div class="codehilite"><pre><span></span><code>Service A → Envoy Proxy → Envoy Proxy → Service B
+</code></pre></div>
 
 <p>The application code doesn't need to know about network details — the Sidecar handles it for you.</p>
 <h2>Istio's Architecture</h2>
@@ -758,6 +758,7 @@ window.retryLastMessage=function(){
         <option value="friend">Friend</option>
         <option value="classmate">Classmate</option>
         <option value="stranger">Stranger</option>
+        <option value="anonymous">Anonymous (no info shared)</option>
       </select>
     </div>
     <div id="admin-body">

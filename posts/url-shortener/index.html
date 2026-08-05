@@ -96,32 +96,32 @@
 <li><strong>Short URL length</strong>: 7 characters (62^7 ≈ 3.5 trillion, more than enough)</li>
 </ul>
 <h2>Core Algorithm: Base62 Encoding</h2>
-<pre class="codehilite"><code class="language-python">CHARS = &quot;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;
+<div class="codehilite"><pre><span></span><code><span class="n">CHARS</span> <span class="o">=</span> <span class="s2">&quot;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;</span>
 
-def id_to_short(id: int) -&gt; str:
-    result = []
-    while id &gt; 0:
-        result.append(CHARS[id % 62])
-        id //= 62
-    return &quot;&quot;.join(reversed(result))
-</code></pre>
+<span class="k">def</span><span class="w"> </span><span class="nf">id_to_short</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">while</span> <span class="nb">id</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">CHARS</span><span class="p">[</span><span class="nb">id</span> <span class="o">%</span> <span class="mi">62</span><span class="p">])</span>
+        <span class="nb">id</span> <span class="o">//=</span> <span class="mi">62</span>
+    <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>
+</code></pre></div>
 
 <p>In distributed scenarios, use <strong>Snowflake ID</strong> to generate unique IDs, then encode them with Base62.</p>
 <h2>Database Design</h2>
-<pre class="codehilite"><code class="language-sql">CREATE TABLE urls (
-  id BIGINT PRIMARY KEY,
-  short_key VARCHAR(10) UNIQUE NOT NULL,
-  original_url TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT NOW()
-);
-CREATE INDEX idx_short_key ON urls(short_key);
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">urls</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">id</span><span class="w"> </span><span class="nb">BIGINT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">  </span><span class="n">short_key</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="k">UNIQUE</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">original_url</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">created_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span>
+<span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_short_key</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">urls</span><span class="p">(</span><span class="n">short_key</span><span class="p">);</span>
+</code></pre></div>
 
 <p><strong>Why not use MySQL auto-increment IDs</strong>: In distributed scenarios, multiple instances would cause conflicts.</p>
 <h2>Caching Strategy</h2>
 <p>Read-heavy, write-light → <strong>Use Redis to cache hot URLs</strong>:</p>
-<pre class="codehilite"><code>User accesses short URL → Redis GET → Hit? 302 redirect : Query MySQL → Write to Redis → 302
-</code></pre>
+<div class="codehilite"><pre><span></span><code>User accesses short URL → Redis GET → Hit? 302 redirect : Query MySQL → Write to Redis → 302
+</code></pre></div>
 
 <p>Caching strategy: LRU, with a 7-day expiration. It's estimated that 20% of URLs account for 80% of traffic.</p>
 <h2>Key Numbers</h2>
@@ -782,6 +782,7 @@ window.retryLastMessage=function(){
         <option value="friend">Friend</option>
         <option value="classmate">Classmate</option>
         <option value="stranger">Stranger</option>
+        <option value="anonymous">Anonymous (no info shared)</option>
       </select>
     </div>
     <div id="admin-body">

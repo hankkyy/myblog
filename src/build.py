@@ -126,6 +126,7 @@ T = {
         "profile_filter_friend": "Friend",
         "profile_filter_classmate": "Classmate",
         "profile_filter_stranger": "Stranger",
+        "profile_filter_anonymous": "Anonymous (no info shared)",
         "admin_chat_prompt": "Enter admin password (or type anything else to cancel):",
         "admin_chat_wrong": "Wrong password. Try again or type anything else to cancel.",
         "admin_chat_ok": "Access granted. Opening admin panel...",
@@ -249,6 +250,7 @@ T = {
         "profile_filter_friend": "朋友",
         "profile_filter_classmate": "同学",
         "profile_filter_stranger": "陌生人",
+        "profile_filter_anonymous": "匿名（未透露信息）",
         "admin_chat_prompt": "请输入管理密码（输入其他内容取消）：",
         "admin_chat_wrong": "密码错误。请重试，或输入其他内容取消。",
         "admin_chat_ok": "验证通过，正在打开管理面板...",
@@ -994,6 +996,7 @@ window.retryLastMessage=function(){{
         <option value="friend">{t['profile_filter_friend']}</option>
         <option value="classmate">{t['profile_filter_classmate']}</option>
         <option value="stranger">{t['profile_filter_stranger']}</option>
+        <option value="anonymous">{t['profile_filter_anonymous']}</option>
       </select>
     </div>
     <div id="admin-body">

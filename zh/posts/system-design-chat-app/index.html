@@ -98,12 +98,12 @@
 <li>支持 10 亿用户</li>
 </ul>
 <h2>架构概览</h2>
-<pre class="codehilite"><code>客户端 ←→ WebSocket 长连接 ←→ 聊天服务
+<div class="codehilite"><pre><span></span><code>客户端 ←→ WebSocket 长连接 ←→ 聊天服务
                                     ↓
                               消息队列（Kafka）
                                     ↓
                               消息存储（HBase/Cassandra）
-</code></pre>
+</code></pre></div>
 
 <h2>为什么用 WebSocket 而不是 HTTP 轮询</h2>
 <p>HTTP 轮询延迟高、浪费带宽。WebSocket 建立长连接后服务端可以主动推送消息。但 HTTP 用于发送消息是可以的（更简单）。</p>
@@ -756,6 +756,7 @@ window.retryLastMessage=function(){
         <option value="friend">朋友</option>
         <option value="classmate">同学</option>
         <option value="stranger">陌生人</option>
+        <option value="anonymous">匿名（未透露信息）</option>
       </select>
     </div>
     <div id="admin-body">

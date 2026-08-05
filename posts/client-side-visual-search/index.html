@@ -93,49 +93,49 @@
 <p>So I needed reverse image search. But here's the problem: I'm a solo developer with no GPU server; users might upload photos of antiques worth hundreds of thousands of dollars, making privacy highly sensitive; and auction browsing is fast-paced exploration that can't wait for the hundreds of milliseconds of server latency.</p>
 <p>My final solution: <strong>pack the entire visual search engine into the browser</strong>.</p>
 <h2>Overall Architecture</h2>
-<pre class="codehilite"><code>User Uploads Image
-    │
-    ▼
-┌─────────────────────────────┐
-│  Browser-Side Feature       │
-│  Extraction                 │
-│  • 48×48 pixel analysis     │
-│    canvas                   │
-│  • 8-dim color feature      │
-│    vector                   │
-│  • 14-dim extended          │
-│    signature                │
-└──────────────┬──────────────┘
-               │
-    ┌──────────┴──────────┐
-    │                      │
-    ▼                      ▼
-┌──────────────┐   ┌──────────────────┐
-│ Client-Side  │   │ Server-Side      │
-│ Matching     │   │ Matching (Optional)│
-│ • Signature  │   │ • HuggingFace API │
-│   similarity │   │ • pgvector vector │
-│ • Confidence │   │   search          │
-│   gating     │   │ • 512-dim         │
-│ • Instant    │   │   embedding       │
-│   results    │   │                   │
-└──────────────┘   └──────────────────┘
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="n">User</span><span class="w"> </span><span class="n">Uploads</span><span class="w"> </span><span class="n">Image</span>
+<span class="w">    </span><span class="err">│</span>
+<span class="w">    </span><span class="err">▼</span>
+<span class="err">┌─────────────────────────────┐</span>
+<span class="err">│</span><span class="w">  </span><span class="n">Browser</span><span class="o">-</span><span class="n">Side</span><span class="w"> </span><span class="n">Feature</span><span class="w">       </span><span class="err">│</span>
+<span class="err">│</span><span class="w">  </span><span class="n">Extraction</span><span class="w">                 </span><span class="err">│</span>
+<span class="err">│</span><span class="w">  </span><span class="err">•</span><span class="w"> </span><span class="mi">48</span><span class="err">×</span><span class="mi">48</span><span class="w"> </span><span class="n">pixel</span><span class="w"> </span><span class="n">analysis</span><span class="w">     </span><span class="err">│</span>
+<span class="err">│</span><span class="w">    </span><span class="n">canvas</span><span class="w">                   </span><span class="err">│</span>
+<span class="err">│</span><span class="w">  </span><span class="err">•</span><span class="w"> </span><span class="mi">8</span><span class="o">-</span><span class="n">dim</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="n">feature</span><span class="w">      </span><span class="err">│</span>
+<span class="err">│</span><span class="w">    </span><span class="n">vector</span><span class="w">                   </span><span class="err">│</span>
+<span class="err">│</span><span class="w">  </span><span class="err">•</span><span class="w"> </span><span class="mi">14</span><span class="o">-</span><span class="n">dim</span><span class="w"> </span><span class="n">extended</span><span class="w">          </span><span class="err">│</span>
+<span class="err">│</span><span class="w">    </span><span class="n">signature</span><span class="w">                </span><span class="err">│</span>
+<span class="err">└──────────────┬──────────────┘</span>
+<span class="w">               </span><span class="err">│</span>
+<span class="w">    </span><span class="err">┌──────────┴──────────┐</span>
+<span class="w">    </span><span class="err">│</span><span class="w">                      </span><span class="err">│</span>
+<span class="w">    </span><span class="err">▼</span><span class="w">                      </span><span class="err">▼</span>
+<span class="err">┌──────────────┐</span><span class="w">   </span><span class="err">┌──────────────────┐</span>
+<span class="err">│</span><span class="w"> </span><span class="n">Client</span><span class="o">-</span><span class="n">Side</span><span class="w">  </span><span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w"> </span><span class="n">Server</span><span class="o">-</span><span class="n">Side</span><span class="w">      </span><span class="err">│</span>
+<span class="err">│</span><span class="w"> </span><span class="n">Matching</span><span class="w">     </span><span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w"> </span><span class="n">Matching</span><span class="w"> </span><span class="p">(</span><span class="n">Optional</span><span class="p">)</span><span class="err">│</span>
+<span class="err">│</span><span class="w"> </span><span class="err">•</span><span class="w"> </span><span class="n">Signature</span><span class="w">  </span><span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w"> </span><span class="err">•</span><span class="w"> </span><span class="n">HuggingFace</span><span class="w"> </span><span class="n">API</span><span class="w"> </span><span class="err">│</span>
+<span class="err">│</span><span class="w">   </span><span class="n">similarity</span><span class="w"> </span><span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w"> </span><span class="err">•</span><span class="w"> </span><span class="n">pgvector</span><span class="w"> </span><span class="n">vector</span><span class="w"> </span><span class="err">│</span>
+<span class="err">│</span><span class="w"> </span><span class="err">•</span><span class="w"> </span><span class="n">Confidence</span><span class="w"> </span><span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="n">search</span><span class="w">          </span><span class="err">│</span>
+<span class="err">│</span><span class="w">   </span><span class="n">gating</span><span class="w">     </span><span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w"> </span><span class="err">•</span><span class="w"> </span><span class="mi">512</span><span class="o">-</span><span class="n">dim</span><span class="w">         </span><span class="err">│</span>
+<span class="err">│</span><span class="w"> </span><span class="err">•</span><span class="w"> </span><span class="n">Instant</span><span class="w">    </span><span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">   </span><span class="n">embedding</span><span class="w">       </span><span class="err">│</span>
+<span class="err">│</span><span class="w">   </span><span class="n">results</span><span class="w">    </span><span class="err">│</span><span class="w">   </span><span class="err">│</span><span class="w">                   </span><span class="err">│</span>
+<span class="err">└──────────────┘</span><span class="w">   </span><span class="err">└──────────────────┘</span>
+</code></pre></div>
 
 <p>The default path is client-side: zero server cost, zero latency, and privacy-preserving. The server-side path serves as a fallback as the knowledge base grows.</p>
 <h2>Core One: Image Signature Design</h2>
 <h3>Layer 1: 8-Dimensional Color Feature Vector</h3>
-<pre class="codehilite"><code class="language-typescript">type ArtworkFeatureVector = [
-  red: number,        // Average red channel intensity
-  green: number,      // Average green channel intensity
-  blue: number,       // Average blue channel intensity
-  brightness: number, // Overall brightness
-  saturation: number, // Color saturation
-  warmth: number,     // Warm tone tendency (red + gold)
-  coolness: number,   // Cool tone tendency (blue + green)
-  contrast: number    // Light-dark contrast
-];
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="kr">type</span><span class="w"> </span><span class="nx">ArtworkFeatureVector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nx">red</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w">        </span><span class="c1">// Average red channel intensity</span>
+<span class="w">  </span><span class="nx">green</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w">      </span><span class="c1">// Average green channel intensity</span>
+<span class="w">  </span><span class="nx">blue</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w">       </span><span class="c1">// Average blue channel intensity</span>
+<span class="w">  </span><span class="nx">brightness</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="c1">// Overall brightness</span>
+<span class="w">  </span><span class="nx">saturation</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="c1">// Color saturation</span>
+<span class="w">  </span><span class="nx">warmth</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w">     </span><span class="c1">// Warm tone tendency (red + gold)</span>
+<span class="w">  </span><span class="nx">coolness</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w">   </span><span class="c1">// Cool tone tendency (blue + green)</span>
+<span class="w">  </span><span class="nx">contrast</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="w">    </span><span class="c1">// Light-dark contrast</span>
+<span class="p">];</span>
+</code></pre></div>
 
 <p>This 8-dimensional vector serves as a "coarse filter." For instance, a piece of blue-and-white porcelain (blue-white tones) and a bronze piece (warm brown tones) can be distinguished by this vector alone. But color alone isn't enough — when two pieces are both blue-and-white porcelain, their colors are nearly identical, requiring deeper features to differentiate them.</p>
 <h3>Layer 2: 14-Dimensional Extended Signature</h3>
@@ -279,8 +279,8 @@
 <p>This is especially critical in antique trading scenarios — buyers may make purchase decisions based on match results, and a misleading match is worse than no match at all.</p>
 <h2>Core Four: Hybrid Architecture — Client + Server</h2>
 <p>The server-side path handles backend indexing and retrieval as the knowledge base scales:</p>
-<pre class="codehilite"><code>Image → HuggingFace Embedding API → 512-dim vector → L2 normalization → pgvector similarity search
-</code></pre>
+<div class="codehilite"><pre><span></span><code>Image → HuggingFace Embedding API → 512-dim vector → L2 normalization → pgvector similarity search
+</code></pre></div>
 
 <p>Implemented via Supabase's <code>match_artworks_by_image</code> RPC function, supporting both <code>index-artwork</code> and <code>match-image</code> operations.</p>
 <h2>Performance Data</h2>
@@ -960,6 +960,7 @@ window.retryLastMessage=function(){
         <option value="friend">Friend</option>
         <option value="classmate">Classmate</option>
         <option value="stranger">Stranger</option>
+        <option value="anonymous">Anonymous (no info shared)</option>
       </select>
     </div>
     <div id="admin-body">

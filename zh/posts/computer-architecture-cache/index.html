@@ -90,7 +90,7 @@
               </header>
               <div class="entry-content"><p>计算机架构的知识让你写出高性能代码。</p>
 <h2>存储层次</h2>
-<pre class="codehilite"><code>寄存器（0 延迟）
+<div class="codehilite"><pre><span></span><code>寄存器（0 延迟）
   ↓
 L1 Cache（~4 个时钟周期，32KB）
   ↓
@@ -101,35 +101,35 @@ L3 Cache（~40 个时钟周期，8MB-32MB，共享）
 主存（~200 个时钟周期）
   ↓
 SSD（~100μs）
-</code></pre>
+</code></pre></div>
 
 <p>每往下走一层，速度差一个数量级。这就是为什么局部性原理（时间局部性 + 空间局部性）如此重要。</p>
 <h2>CPU 缓存行（Cache Line）</h2>
 <p>CPU 缓存不是按字节存取的，而是按「缓存行」——固定大小的块（通常 64 字节）。即使你只读一个 int（4 字节），CPU 也会加载整个缓存行。</p>
 <h2>伪共享（False Sharing）</h2>
 <p><strong>什么是伪共享</strong>：</p>
-<pre class="codehilite"><code class="language-java">class Counter {
-    volatile long a;  // 线程 1 只写 a
-    volatile long b;  // 线程 2 只写 b
-}
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="kd">class</span> <span class="nc">Counter</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">volatile</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">a</span><span class="p">;</span><span class="w">  </span><span class="c1">// 线程 1 只写 a</span>
+<span class="w">    </span><span class="kd">volatile</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">b</span><span class="p">;</span><span class="w">  </span><span class="c1">// 线程 2 只写 b</span>
+<span class="p">}</span>
+</code></pre></div>
 
 <p>a 和 b 可能在同一个 64 字节的缓存行里。线程 1 修改 a 时，整个缓存行被标记为「脏」，线程 2 在另一个核心上的缓存行副本就失效了。即使它们操作的是不同的变量，也要反复同步缓存行。</p>
 <p><strong>解决</strong>：填充（Padding）。</p>
-<pre class="codehilite"><code class="language-java">class Counter {
-    @Contended  // JDK 8+ 的注解（需要 -XX:-RestrictContended）
-    volatile long a;
-    @Contended
-    volatile long b;
-}
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="kd">class</span> <span class="nc">Counter</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Contended</span><span class="w">  </span><span class="c1">// JDK 8+ 的注解（需要 -XX:-RestrictContended）</span>
+<span class="w">    </span><span class="kd">volatile</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
+<span class="w">    </span><span class="nd">@Contended</span>
+<span class="w">    </span><span class="kd">volatile</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
 
 <p>或者手动填充：</p>
-<pre class="codehilite"><code class="language-java">class PaddedLong {
-    volatile long value = 0;
-    long p1, p2, p3, p4, p5, p6, p7; // 填充到 64 字节
-}
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="kd">class</span> <span class="nc">PaddedLong</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">volatile</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">p1</span><span class="p">,</span><span class="w"> </span><span class="n">p2</span><span class="p">,</span><span class="w"> </span><span class="n">p3</span><span class="p">,</span><span class="w"> </span><span class="n">p4</span><span class="p">,</span><span class="w"> </span><span class="n">p5</span><span class="p">,</span><span class="w"> </span><span class="n">p6</span><span class="p">,</span><span class="w"> </span><span class="n">p7</span><span class="p">;</span><span class="w"> </span><span class="c1">// 填充到 64 字节</span>
+<span class="p">}</span>
+</code></pre></div>
 
 <h2>为什么要学这个</h2>
 <p>Disruptor（高性能队列）利用了对缓存行的深刻理解，比 ArrayBlockingQueue 快 5-10 倍。高性能编程的瓶颈往往不在算法，而在硬件。</p></div>
@@ -757,6 +757,7 @@ window.retryLastMessage=function(){
         <option value="friend">朋友</option>
         <option value="classmate">同学</option>
         <option value="stranger">陌生人</option>
+        <option value="anonymous">匿名（未透露信息）</option>
       </select>
     </div>
     <div id="admin-body">

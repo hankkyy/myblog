@@ -90,24 +90,24 @@
               </header>
               <div class="entry-content"><p>The request handling flow of Spring MVC is a classic interview question.</p>
 <h2>Complete Flow</h2>
-<pre class="codehilite"><code>HTTP Request
-    ↓
-DispatcherServlet (Front Controller)
-    ↓
-HandlerMapping (Find the handler)
-    ↓
-HandlerAdapter (Invoke the handler)
-    ↓
-Handler (Controller method)
-    ↓
-ModelAndView (Return result)
-    ↓
-ViewResolver (Resolve the view)
-    ↓
-View (Render the view)
-    ↓
-HTTP Response
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="nv">HTTP</span><span class="w"> </span><span class="nv">Request</span>
+<span class="w">    </span>↓
+<span class="nv">DispatcherServlet</span><span class="w"> </span><span class="ss">(</span><span class="nv">Front</span><span class="w"> </span><span class="nv">Controller</span><span class="ss">)</span>
+<span class="w">    </span>↓
+<span class="nv">HandlerMapping</span><span class="w"> </span><span class="ss">(</span><span class="nv">Find</span><span class="w"> </span><span class="nv">the</span><span class="w"> </span><span class="nv">handler</span><span class="ss">)</span>
+<span class="w">    </span>↓
+<span class="nv">HandlerAdapter</span><span class="w"> </span><span class="ss">(</span><span class="nv">Invoke</span><span class="w"> </span><span class="nv">the</span><span class="w"> </span><span class="nv">handler</span><span class="ss">)</span>
+<span class="w">    </span>↓
+<span class="nv">Handler</span><span class="w"> </span><span class="ss">(</span><span class="nv">Controller</span><span class="w"> </span><span class="nv">method</span><span class="ss">)</span>
+<span class="w">    </span>↓
+<span class="nv">ModelAndView</span><span class="w"> </span><span class="ss">(</span><span class="k">Return</span><span class="w"> </span><span class="nb">result</span><span class="ss">)</span>
+<span class="w">    </span>↓
+<span class="nv">ViewResolver</span><span class="w"> </span><span class="ss">(</span><span class="nv">Resolve</span><span class="w"> </span><span class="nv">the</span><span class="w"> </span><span class="nv">view</span><span class="ss">)</span>
+<span class="w">    </span>↓
+<span class="nv">View</span><span class="w"> </span><span class="ss">(</span><span class="nv">Render</span><span class="w"> </span><span class="nv">the</span><span class="w"> </span><span class="nv">view</span><span class="ss">)</span>
+<span class="w">    </span>↓
+<span class="nv">HTTP</span><span class="w"> </span><span class="nv">Response</span>
+</code></pre></div>
 
 <h2>Detailed Explanation of Each Step</h2>
 <p><strong>1. DispatcherServlet</strong>: The core of Spring MVC and the entry point for all requests. It is configured in <code>web.xml</code> or via <code>AbstractAnnotationConfigDispatcherServletInitializer</code>.</p>
@@ -748,6 +748,7 @@ window.retryLastMessage=function(){
         <option value="friend">Friend</option>
         <option value="classmate">Classmate</option>
         <option value="stranger">Stranger</option>
+        <option value="anonymous">Anonymous (no info shared)</option>
       </select>
     </div>
     <div id="admin-body">

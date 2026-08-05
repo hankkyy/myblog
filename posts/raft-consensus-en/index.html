@@ -90,12 +90,12 @@
               </header>
               <div class="entry-content"><p>The core challenge of distributed systems: how do multiple nodes agree on a single value? Raft is currently the most popular consensus algorithm.</p>
 <h2>Raft's Three Roles</h2>
-<pre class="codehilite"><code>┌──────────────────────────────────────┐
+<div class="codehilite"><pre><span></span><code>┌──────────────────────────────────────┐
 │  Leader   ← Handles all client requests│
 │  Follower ← Passively responds to Leader│
 │  Candidate ← Temporary election state  │
 └──────────────────────────────────────┘
-</code></pre>
+</code></pre></div>
 
 <h2>Leader Election</h2>
 <ol>
@@ -105,11 +105,11 @@
 <li>Split vote → re-election (randomized timeouts prevent loops)</li>
 </ol>
 <h2>Log Replication</h2>
-<pre class="codehilite"><code>Client → Leader: SET x = 1
+<div class="codehilite"><pre><span></span><code>Client → Leader: SET x = 1
 Leader → Followers: AppendEntries(x=1, term=3, prevLogIndex=4)
 Followers → Leader: ACK
 Leader → Client: OK (after majority confirmation)
-</code></pre>
+</code></pre></div>
 
 <p><strong>Key</strong>: The Leader only commits logs from its current term. This guarantees safety.</p>
 <h2>Raft vs Paxos</h2>
@@ -782,6 +782,7 @@ window.retryLastMessage=function(){
         <option value="friend">Friend</option>
         <option value="classmate">Classmate</option>
         <option value="stranger">Stranger</option>
+        <option value="anonymous">Anonymous (no info shared)</option>
       </select>
     </div>
     <div id="admin-body">

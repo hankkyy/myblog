@@ -236,11 +236,24 @@ async function analyzeAndSaveProfile(userId, sessionId, messages) {
     return;
   }
 
+  // Dedup: if user already has a rich profile and new messages are brief,
+  // skip the DeepSeek call — just bump session/message counters.
+  const existing = await getExistingProfile(userId);
+  if (existing?.profile) {
+    const p = existing.profile;
+    const hasRichProfile = p.name && p.occupation && (p.interests?.length > 0);
+    if (hasRichProfile) {
+      const newText = userMsgs.map(m => m.content).join(' ');
+      if (newText.length < 80) {
+        await saveUserProfile(userId, sessionId, p, userMsgs.length, existing);
+        return;
+      }
+    }
+  }
+
   const transcript = userMsgs.map(m => `[user]: ${m.content}`).join('\n');
 
   try {
-    // Check if this user already has a profile
-    const existing = await getExistingProfile(userId);
     const profile = await callDeepSeekForProfile(transcript, existing?.profile || null);
     if (profile) {
       await saveUserProfile(userId, sessionId, profile, userMsgs.length, existing);
@@ -461,6 +474,66 @@ function isAskingAboutHank(messages) {
   return false;
 }
 
+// Code-level critical fact matching — bypasses LLM semantic judgment.
+// When a known high-frequency factual question is detected, we route to a
+// minimal system prompt with the exact answer, low temperature, and zero
+// KNOWLEDGE_BASE — eliminates the "deflect vs answer" prompt contradiction
+// that was the root cause of AI fabrication.
+function matchesCriticalFact(messages) {
+  const userMsgs = messages.filter(m => m.role === 'user').slice(-3);
+  const text = userMsgs.map(m => m.content).join(' ');
+
+  if (/为什么叫可乐|可乐.*名|怎么.*叫可乐|为什么叫.*可乐|nickname.*cola|可乐.*由来|可乐.*来源|为什么叫这个名/i.test(text))
+    return 'nickname';
+  if (/哪里人|哪儿人|老家|家乡|哪儿|哪里.*人|from.*where/i.test(text))
+    return 'hometown';
+  if (/做什么.{0,6}的|什么工作|做什么工作|什么职业|what.*do|what.*job|工作是|职业是|他是做/i.test(text))
+    return 'job';
+  if (/怎么联系|联系方式|邮箱|email|contact|怎么.*联系/i.test(text))
+    return 'contact';
+  if (/真名|本名|叫什么名字|实名|原名|中文名|英文名|real name|actual name/i.test(text))
+    return 'realname';
+  return null;
+}
+
+// Per-fact minimal instructions — each contains ONLY the exact answer, a
+// direct-order override, and forbidden fabrications. These replace the
+// full KNOWLEDGE_BASE + DEFLECTION_RULES when a critical match fires.
+const CRITICAL_ANSWER = {
+  nickname: `🔴 DIRECT ANSWER — do NOT deflect. do NOT fabricate.
+The user is asking about Hank's nickname "可乐" (Cola).
+
+The ONLY correct answer: 年纪太大的长辈读不来"Hank"，就念最后一个音"k"（可），觉得可乐比较顺口，就都叫可乐啦。
+
+Forbidden: anything about drinking cola, playing basketball, work stress, or any other made-up story.
+Answer directly with the above fact. 2 sentences max. End with "你呢？".`,
+
+  hometown: `🔴 DIRECT ANSWER — do NOT deflect. do NOT fabricate.
+The user is asking where Hank is from.
+
+The ONLY correct answer: 湖北。
+Answer: "湖北。" Add a brief hook. Do NOT add extra details.`,
+
+  job: `🔴 DIRECT ANSWER — do NOT deflect. do NOT fabricate.
+The user is asking what Hank does.
+
+The ONLY correct answer: 数据平台工程师，主要做数据基础设施和 AI Agent 开发。
+Use EXACTLY this phrasing. Forbidden: 程序员, 码农, 后端, 后端开发, or any other term.
+Answer directly, then add "你呢？你在做什么？".`,
+
+  contact: `🔴 DIRECT ANSWER — do NOT deflect. do NOT fabricate.
+The user is asking how to contact Hank.
+
+The ONLY correct answer: hank.zihao@gmail.com
+Answer: "他的邮箱是 hank.zihao@gmail.com"`,
+
+  realname: `🔴 DIRECT ANSWER — do NOT deflect. do NOT fabricate.
+The user is asking Hank's real name.
+
+The ONLY correct answer: 张子豪（Zihao Zhang），英文名 Hank。
+Answer directly with the above.`,
+};
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -505,16 +578,29 @@ export default async function handler(req, res) {
       : `s${Date.now()}_${Math.random().toString(36).slice(2,8)}`;
 
     const askingAboutHank = isAskingAboutHank(messages);
-    // CRITICAL_FACTS are ALWAYS included — prevents fabrication of basic identity facts
-    const systemContent = askingAboutHank
-      ? PERSONA_CORE + DEFLECTION_RULES + CRITICAL_FACTS + '\n\n---\n\n## Knowledge Base\n\n' + KNOWLEDGE_BASE
-      : PERSONA_CORE + CRITICAL_FACTS + CASUAL_MODE;
+    const criticalMatch = askingAboutHank ? matchesCriticalFact(messages) : null;
+
+    // Prompt assembly: three-tier routing (code-level → general Hank → casual)
+    // Tier 1: code-matched critical fact → minimal prompt + low temp (prevents fabrication)
+    // Tier 2: general Hank question → full kb + moderate temp
+    // Tier 3: casual chat → deflecting personality + normal temp
+    let systemContent, temperature;
+    if (criticalMatch) {
+      systemContent = PERSONA_CORE + CRITICAL_ANSWER[criticalMatch];
+      temperature = 0.2;
+    } else if (askingAboutHank) {
+      systemContent = PERSONA_CORE + DEFLECTION_RULES + CRITICAL_FACTS + '\n\n---\n\n## Knowledge Base\n\n' + KNOWLEDGE_BASE;
+      temperature = 0.4;
+    } else {
+      systemContent = PERSONA_CORE + CRITICAL_FACTS + CASUAL_MODE;
+      temperature = 0.7;
+    }
 
     const body = {
       model: MODEL,
       messages: [{ role: 'system', content: systemContent }, ...recentMessages],
       stream: true,
-      temperature: 0.7,
+      temperature,
       max_tokens: 800,
     };
 

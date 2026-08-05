@@ -116,10 +116,10 @@
 <li>Access log table (optional): short_code, timestamp, ip, user_agent</li>
 </ul>
 <h2>5. Architecture Design</h2>
-<pre class="codehilite"><code>User → CDN → API Gateway → Short URL Service → Cache (Redis) → Database (MySQL)
+<div class="codehilite"><pre><span></span><code>User → CDN → API Gateway → Short URL Service → Cache (Redis) → Database (MySQL)
                                     ↓
                               302 Redirect
-</code></pre>
+</code></pre></div>
 
 <h2>6. Scaling Considerations</h2>
 <ul>
@@ -752,6 +752,7 @@ window.retryLastMessage=function(){
         <option value="friend">Friend</option>
         <option value="classmate">Classmate</option>
         <option value="stranger">Stranger</option>
+        <option value="anonymous">Anonymous (no info shared)</option>
       </select>
     </div>
     <div id="admin-body">

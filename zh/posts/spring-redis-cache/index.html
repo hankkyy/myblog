@@ -90,36 +90,36 @@
               </header>
               <div class="entry-content"><p>缓存是后端性能优化的第一道防线。</p>
 <h2>Spring Cache 注解</h2>
-<pre class="codehilite"><code class="language-java">// 最简单的方式
-@Cacheable(value = &quot;users&quot;, key = &quot;#id&quot;)
-public User getUser(Long id) {
-    return userMapper.selectById(id);
-}
+<div class="codehilite"><pre><span></span><code><span class="c1">// 最简单的方式</span>
+<span class="nd">@Cacheable</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;users&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#id&quot;</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">User</span><span class="w"> </span><span class="nf">getUser</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">userMapper</span><span class="p">.</span><span class="na">selectById</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+<span class="p">}</span>
 
-@CacheEvict(value = &quot;users&quot;, key = &quot;#user.id&quot;)
-public void updateUser(User user) {
-    userMapper.updateById(user);
-}
+<span class="nd">@CacheEvict</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;users&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#user.id&quot;</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">updateUser</span><span class="p">(</span><span class="n">User</span><span class="w"> </span><span class="n">user</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">userMapper</span><span class="p">.</span><span class="na">updateById</span><span class="p">(</span><span class="n">user</span><span class="p">);</span>
+<span class="p">}</span>
 
-@CachePut(value = &quot;users&quot;, key = &quot;#user.id&quot;)
-public User saveUser(User user) {
-    userMapper.insert(user);
-    return user;
-}
-</code></pre>
+<span class="nd">@CachePut</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;users&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;#user.id&quot;</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">User</span><span class="w"> </span><span class="nf">saveUser</span><span class="p">(</span><span class="n">User</span><span class="w"> </span><span class="n">user</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">userMapper</span><span class="p">.</span><span class="na">insert</span><span class="p">(</span><span class="n">user</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">user</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
 
 <h2>Redis 序列化配置</h2>
 <p>默认 JDK 序列化可读性差，改成 JSON：</p>
-<pre class="codehilite"><code class="language-java">@Bean
-public RedisCacheConfiguration cacheConfiguration() {
-    return RedisCacheConfiguration.defaultCacheConfig()
-        .serializeValuesWith(
-            RedisSerializationContext.SerializationPair
-                .fromSerializer(new GenericJackson2JsonRedisSerializer())
-        )
-        .entryTtl(Duration.ofMinutes(30));
-}
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="nd">@Bean</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">RedisCacheConfiguration</span><span class="w"> </span><span class="nf">cacheConfiguration</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">RedisCacheConfiguration</span><span class="p">.</span><span class="na">defaultCacheConfig</span><span class="p">()</span>
+<span class="w">        </span><span class="p">.</span><span class="na">serializeValuesWith</span><span class="p">(</span>
+<span class="w">            </span><span class="n">RedisSerializationContext</span><span class="p">.</span><span class="na">SerializationPair</span>
+<span class="w">                </span><span class="p">.</span><span class="na">fromSerializer</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">GenericJackson2JsonRedisSerializer</span><span class="p">())</span>
+<span class="w">        </span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="na">entryTtl</span><span class="p">(</span><span class="n">Duration</span><span class="p">.</span><span class="na">ofMinutes</span><span class="p">(</span><span class="mi">30</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div>
 
 <h2>缓存三大问题</h2>
 <table>
@@ -149,29 +149,29 @@ public RedisCacheConfiguration cacheConfiguration() {
 </tbody>
 </table>
 <h2>分布式锁实现</h2>
-<pre class="codehilite"><code class="language-java">public String deductStock(String productId) {
-    String lockKey = &quot;lock:stock:&quot; + productId;
-    String lockValue = UUID.randomUUID().toString();
+<div class="codehilite"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">deductStock</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">productId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">lockKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;lock:stock:&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">productId</span><span class="p">;</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">lockValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UUID</span><span class="p">.</span><span class="na">randomUUID</span><span class="p">().</span><span class="na">toString</span><span class="p">();</span>
 
-    // SET NX EX：获取锁，30秒过期
-    Boolean locked = redisTemplate.opsForValue()
-        .setIfAbsent(lockKey, lockValue, 30, TimeUnit.SECONDS);
+<span class="w">    </span><span class="c1">// SET NX EX：获取锁，30秒过期</span>
+<span class="w">    </span><span class="n">Boolean</span><span class="w"> </span><span class="n">locked</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">redisTemplate</span><span class="p">.</span><span class="na">opsForValue</span><span class="p">()</span>
+<span class="w">        </span><span class="p">.</span><span class="na">setIfAbsent</span><span class="p">(</span><span class="n">lockKey</span><span class="p">,</span><span class="w"> </span><span class="n">lockValue</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w"> </span><span class="n">TimeUnit</span><span class="p">.</span><span class="na">SECONDS</span><span class="p">);</span>
 
-    if (Boolean.FALSE.equals(locked)) {
-        throw new BusyException(&quot;系统繁忙，请稍后重试&quot;);
-    }
-    try {
-        // 扣库存逻辑
-        return &quot;success&quot;;
-    } finally {
-        // Lua 脚本保证原子性释放锁
-        String script = &quot;if redis.call('get', KEYS[1]) == ARGV[1] &quot; +
-            &quot;then return redis.call('del', KEYS[1]) else return 0 end&quot;;
-        redisTemplate.execute(new DefaultRedisScript&lt;&gt;(script, Long.class),
-            Collections.singletonList(lockKey), lockValue);
-    }
-}
-</code></pre>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Boolean</span><span class="p">.</span><span class="na">FALSE</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">locked</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BusyException</span><span class="p">(</span><span class="s">&quot;系统繁忙，请稍后重试&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 扣库存逻辑</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;success&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Lua 脚本保证原子性释放锁</span>
+<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">script</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;if redis.call(&#39;get&#39;, KEYS[1]) == ARGV[1] &quot;</span><span class="w"> </span><span class="o">+</span>
+<span class="w">            </span><span class="s">&quot;then return redis.call(&#39;del&#39;, KEYS[1]) else return 0 end&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">redisTemplate</span><span class="p">.</span><span class="na">execute</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">DefaultRedisScript</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">script</span><span class="p">,</span><span class="w"> </span><span class="n">Long</span><span class="p">.</span><span class="na">class</span><span class="p">),</span>
+<span class="w">            </span><span class="n">Collections</span><span class="p">.</span><span class="na">singletonList</span><span class="p">(</span><span class="n">lockKey</span><span class="p">),</span><span class="w"> </span><span class="n">lockValue</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 
 <blockquote>
 <p>缓存不难，难的是缓存失效那一刻。</p>
@@ -800,6 +800,7 @@ window.retryLastMessage=function(){
         <option value="friend">朋友</option>
         <option value="classmate">同学</option>
         <option value="stranger">陌生人</option>
+        <option value="anonymous">匿名（未透露信息）</option>
       </select>
     </div>
     <div id="admin-body">

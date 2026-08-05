@@ -98,8 +98,8 @@
 <p>日增数据量：500 亿条。单个表的存储量：PB 级别。</p>
 <h2>关键技术点</h2>
 <h3>1. 数据分层</h3>
-<pre class="codehilite"><code>ODS（原始数据）→ DWD（明细数据）→ DWS（汇总数据）→ ADS（应用数据）
-</code></pre>
+<div class="codehilite"><pre><span></span><code>ODS（原始数据）→ DWD（明细数据）→ DWS（汇总数据）→ ADS（应用数据）
+</code></pre></div>
 
 <p>Doris 主要承担 DWS 和 ADS 层的查询，ODS/DWD 层使用 Flink 做实时 ETL。</p>
 <h3>2. 分区和分桶策略</h3>
@@ -741,6 +741,7 @@ window.retryLastMessage=function(){
         <option value="friend">朋友</option>
         <option value="classmate">同学</option>
         <option value="stranger">陌生人</option>
+        <option value="anonymous">匿名（未透露信息）</option>
       </select>
     </div>
     <div id="admin-body">
