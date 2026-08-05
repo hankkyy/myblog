@@ -1258,6 +1258,22 @@ function stripHtml(h){{var d=document.createElement('div');d.innerHTML=h;return 
 // Shared helper: escape HTML to prevent XSS in rendered content
 function escapeHtml(s){{var d=document.createElement('div');d.appendChild(document.createTextNode(s));return d.innerHTML;}}
 
+// Known suggestion questions — skip these when picking log titles
+var __suggestions=[
+  "Where's the most interesting place you've been?",
+  "What's a data engineer's day like?",
+  "Why is your nickname 'Coke'?",
+  "What do you do?",
+  "去过最有趣的地方是哪里？",
+  "数据工程师每天都在干嘛？",
+  "为什么叫可乐？",
+  "可乐是做什么的？"
+];
+function __isSuggestion(text){{
+  for(var i=0;i<__suggestions.length;i++){{if(text===__suggestions[i])return true;}}
+  return false;
+}}
+
 // Shared helper: render a single log entry
 function renderLogEntry(log){{
   var entry=document.createElement('div');
@@ -1265,8 +1281,16 @@ function renderLogEntry(log){{
   var date=new Date(log.timestamp);
   var timeStr=date.toLocaleString();
   var preview='';
-  if(log.messages&&log.messages[0])preview=stripHtml(log.messages[0].content).slice(0,80);
-  entry.innerHTML='<div class="log-entry-header" onclick="this.parentElement.classList.toggle(&#39;open&#39;)"><div class="log-entry-summary"><span class="log-preview">'+preview.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</span></div><div class="log-entry-meta"><span class="log-sid">#'+log.sessionId.slice(-8)+'</span><span class="log-time">'+timeStr+'</span><span class="log-msgs">'+(log.messages?log.messages.length:0)+' msgs</span><span class="log-chevron">▼</span></div></div>';
+  if(log.messages){{
+    for(var i=0;i<log.messages.length;i++){{
+      var m=log.messages[i];
+      if(m.role!=='user')continue;
+      var t=stripHtml(m.content).trim();
+      if(t&&!__isSuggestion(t)){{preview=t.slice(0,80);break;}}
+    }}
+  }}
+  var title=preview||'新对话 — '+timeStr;
+  entry.innerHTML='<div class="log-entry-header" onclick="this.parentElement.classList.toggle(&#39;open&#39;)"><div class="log-entry-summary"><span class="log-preview">'+title.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</span></div><div class="log-entry-meta"><span class="log-sid">#'+log.sessionId.slice(-8)+'</span><span class="log-time">'+timeStr+'</span><span class="log-msgs">'+(log.messages?log.messages.length:0)+' msgs</span><span class="log-chevron">▼</span></div></div>';
   var body=document.createElement('div');
   body.className='log-entry-body';
   if(log.messages){{

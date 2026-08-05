@@ -701,15 +701,16 @@ export default async function handler(req, res) {
         while (true) {
           const { done, value } = await reader.read();
           if (done) {
-            // Only save if we have a meaningful response
-            if (fullResponse.trim()) {
-              const allMessages = [...messages, { role: 'assistant', content: fullResponse }];
-              await saveChatLog(sid, allMessages);
-              analyzeAndSaveProfile(userId, sid, allMessages); // fire-and-forget, merges by userId
-            }
-            // Send DONE with sessionId so frontend can continue the session
+            const allMessages = fullResponse.trim()
+              ? [...messages, { role: 'assistant', content: fullResponse }]
+              : null;
+            if (allMessages) await saveChatLog(sid, allMessages);
+            // Send DONE first, then save profile — avoids delaying user response
             res.write(`data: [DONE]\n\n`);
             res.end();
+            if (allMessages) {
+              try { await analyzeAndSaveProfile(userId, sid, allMessages); } catch(e) {}
+            }
             return;
           }
           const chunk = decoder.decode(value, { stream: true });
@@ -734,16 +735,18 @@ export default async function handler(req, res) {
         streamError = true;
         console.error('Stream error:', err.message);
         // If we got a partial response, still save it
-        if (fullResponse.trim()) {
-          const allMessages = [...messages, { role: 'assistant', content: fullResponse }];
-          await saveChatLog(sid, allMessages);
-          analyzeAndSaveProfile(userId, sid, allMessages); // fire-and-forget
-        }
+        const allMessages = fullResponse.trim()
+          ? [...messages, { role: 'assistant', content: fullResponse }]
+          : null;
+        if (allMessages) await saveChatLog(sid, allMessages);
         // Signal error to client
         try {
           res.write(`data: ${JSON.stringify({ error: 'stream_interrupted' })}\n\n`);
         } catch {}
         res.end();
+        if (allMessages) {
+          try { await analyzeAndSaveProfile(userId, sid, allMessages); } catch(e) {}
+        }
       }
     };
 
