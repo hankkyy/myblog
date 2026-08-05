@@ -104,15 +104,20 @@ function normalizeLog(doc) {
 
 async function cloudbaseRequest(path, options = {}) {
   const url = `${BASE_URL}${path}`;
+  const { notFoundFallback, ...fetchOptions } = options;
   const res = await fetch(url, {
-    ...options,
+    ...fetchOptions,
     headers: {
       'Authorization': `Bearer ${CLOUDBASE_API_KEY}`,
       'Content-Type': 'application/json',
-      ...(options.headers || {}),
+      ...(fetchOptions.headers || {}),
     },
   });
   if (!res.ok) {
+    // If collection doesn't exist yet, return empty result instead of error
+    if (notFoundFallback && res.status === 404) {
+      return { list: [], total: 0 };
+    }
     const text = await res.text();
     throw new Error(`CloudBase API error ${res.status}: ${text}`);
   }
@@ -174,7 +179,8 @@ export default async function handler(req, res) {
       }
 
       const queryResult = await cloudbaseRequest(
-        `/collections/user_profiles/documents?order=${encodeURIComponent(order)}&limit=${pageSize}&offset=${offset}${filterStr}`
+        `/collections/user_profiles/documents?order=${encodeURIComponent(order)}&limit=${pageSize}&offset=${offset}${filterStr}`,
+        { notFoundFallback: true }
       );
 
       const profiles = (queryResult.list || []).map(doc => ({
@@ -200,7 +206,8 @@ export default async function handler(req, res) {
     // --- Insights mode — aggregate stats across all profiles ---
     if (action === 'insights') {
       const queryResult = await cloudbaseRequest(
-        `/collections/user_profiles/documents?order=${encodeURIComponent(JSON.stringify([{field:'lastSeen',direction:'desc'}]))}&limit=200`
+        `/collections/user_profiles/documents?order=${encodeURIComponent(JSON.stringify([{field:'lastSeen',direction:'desc'}]))}&limit=200`,
+        { notFoundFallback: true }
       );
 
       const docs = queryResult.list || [];
