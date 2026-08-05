@@ -1891,8 +1891,14 @@ def build_site(lang, posts):
 def build():
     for item in ROOT.iterdir():
         if item.name in SAFE: continue
-        if item.is_dir(): shutil.rmtree(item)
-        else: item.unlink()
+        if item.is_dir():
+            try:
+                shutil.rmtree(item)
+            except OSError:
+                import subprocess
+                subprocess.run(['rm', '-rf', str(item)], check=False)
+        else:
+            item.unlink()
 
     CSS_DIR.mkdir(exist_ok=True)
     css_src = THEME / "static" / "css" / "style.css"
