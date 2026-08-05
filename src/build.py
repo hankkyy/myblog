@@ -464,10 +464,10 @@ document.addEventListener('DOMContentLoaded',function(){{
     <div id="chat-messages">
       <div class="chat-msg assistant chat-welcome-msg"><div class="chat-bubble">{t['chat_welcome']}</div></div>
       <div id="chat-suggestions">
-        <button class="chat-suggestion-chip" data-msg="{t['chat_suggestion_1']}">{t['chat_suggestion_1']}</button>
-        <button class="chat-suggestion-chip" data-msg="{t['chat_suggestion_2']}">{t['chat_suggestion_2']}</button>
-        <button class="chat-suggestion-chip" data-msg="{t['chat_suggestion_3']}">{t['chat_suggestion_3']}</button>
-        <button class="chat-suggestion-chip" data-msg="{t['chat_suggestion_4']}">{t['chat_suggestion_4']}</button>
+        <button class="chat-suggestion-chip" data-idx="1" data-msg="{t['chat_suggestion_1']}">{t['chat_suggestion_1']}</button>
+        <button class="chat-suggestion-chip" data-idx="2" data-msg="{t['chat_suggestion_2']}">{t['chat_suggestion_2']}</button>
+        <button class="chat-suggestion-chip" data-idx="3" data-msg="{t['chat_suggestion_3']}">{t['chat_suggestion_3']}</button>
+        <button class="chat-suggestion-chip" data-idx="4" data-msg="{t['chat_suggestion_4']}">{t['chat_suggestion_4']}</button>
       </div>
     </div>
     <button id="chat-scroll-bottom" onclick="scrollChatToBottom()" title="滚动到底部">

@@ -722,16 +722,28 @@ pre code{background:none;padding:0}
 
 /* Suggestion chips */
 #chat-suggestions {
-  display: flex; flex-wrap: wrap; gap: 8px; padding: 0 4px;
+  display: flex; flex-direction: column; gap: 6px; padding: 0 2px;
 }
 .chat-suggestion-chip {
-  display: inline-block; padding: 8px 16px; border-radius: 18px;
-  background: #fff; color: #146bb7; border: 1px solid #d0e3f7;
-  font-size: 13px; cursor: pointer; transition: all .2s;
-  font-family: inherit; white-space: nowrap;
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; padding: 10px 14px; border-radius: 10px;
+  background: #f8f9fa; color: #363b40;
+  border: 1px solid #e9ecef;
+  font-size: 13px; cursor: pointer; transition: all .15s;
+  font-family: inherit; text-align: left; white-space: normal;
+  line-height: 1.5;
 }
-.chat-suggestion-chip:hover { background: #146bb7; color: #fff; border-color: #146bb7; }
-.chat-suggestion-chip:active { transform: scale(.96); }
+.chat-suggestion-chip::before {
+  content: attr(data-idx);
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 20px; height: 20px; border-radius: 50%;
+  background: #e9ecef; color: #868e96;
+  font-size: 11px; font-weight: 600;
+  flex-shrink: 0;
+}
+.chat-suggestion-chip:hover { background: #e8f4fd; border-color: #146bb7; color: #146bb7; }
+.chat-suggestion-chip:hover::before { background: #146bb7; color: #fff; }
+.chat-suggestion-chip:active { transform: scale(.98); }
 
 /* Copy button on assistant messages */
 .chat-copy-btn {
@@ -844,8 +856,8 @@ pre code{background:none;padding:0}
   .chat-retry-btn { padding: 6px 14px; font-size: 13px; }
   .typing-dots span { width: 8px; height: 8px; }
   #chat-clear-btn { padding: 8px 10px; }
-  .chat-suggestion-chip { font-size: 14px; padding: 10px 18px; }
-  #chat-suggestions { gap: 10px; padding: 0 2px; }
+  .chat-suggestion-chip { font-size: 14px; padding: 12px 16px; }
+  #chat-suggestions { gap: 8px; padding: 0 2px; }
   .chat-copy-btn { opacity: 1; top: 8px; right: 8px; padding: 6px; }
   .chat-msg.assistant .chat-bubble { padding-right: 36px; }
   #chat-input { line-height: 1.5; }
