@@ -143,7 +143,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'Admin password not configured on server.' });
     }
 
-    const { password, page = 1, pageSize = 20 } = req.body || {};
+    const { password, page = 1, pageSize = 20, action } = req.body || {};
 
     if (!password || password !== ADMIN_PASSWORD) {
       recordFailedAttempt(clientIp);
@@ -152,7 +152,31 @@ export default async function handler(req, res) {
 
     recordSuccess(clientIp);
 
-    // Count total documents
+    // --- User Profiles mode ---
+    if (action === 'profiles') {
+      const order = JSON.stringify([{ field: 'timestamp', direction: 'desc' }]);
+      const offset = (page - 1) * pageSize;
+      const queryResult = await cloudbaseRequest(
+        `/collections/user_profiles/documents?order=${encodeURIComponent(order)}&limit=${pageSize}&offset=${offset}`
+      );
+
+      const profiles = (queryResult.list || []).map(doc => ({
+        id: doc._id?.$oid || doc._id,
+        sessionId: doc.sessionId,
+        timestamp: parseEjsonDate(doc.timestamp),
+        profile: doc.profile,
+        messageCount: doc.messageCount || 0,
+      }));
+
+      return res.json({
+        profiles,
+        page,
+        pageSize,
+        totalPages: Math.ceil((queryResult.total || 0) / pageSize),
+      });
+    }
+
+    // --- Chat Logs mode (default) ---
     const countResult = await cloudbaseRequest(
       `/collections/chat_logs/documents?count=true`
     );

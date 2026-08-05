@@ -113,6 +113,9 @@ T = {
         "admin_empty": "No conversations yet.",
         "admin_logout": "Lock",
         "admin_close": "Close",
+        "admin_tab_logs": "Chat Logs",
+        "admin_tab_profiles": "User Profiles",
+        "admin_profiles_empty": "No user profiles yet. They appear automatically after conversations.",
         "admin_chat_prompt": "Enter admin password (or type anything else to cancel):",
         "admin_chat_wrong": "Wrong password. Try again or type anything else to cancel.",
         "admin_chat_ok": "Access granted. Opening admin panel...",
@@ -223,6 +226,9 @@ T = {
         "admin_empty": "暂无对话记录。",
         "admin_logout": "锁定",
         "admin_close": "关闭",
+        "admin_tab_logs": "聊天记录",
+        "admin_tab_profiles": "用户画像",
+        "admin_profiles_empty": "暂无用户画像。对话结束后会自动生成。",
         "admin_chat_prompt": "请输入管理密码（输入其他内容取消）：",
         "admin_chat_wrong": "密码错误。请重试，或输入其他内容取消。",
         "admin_chat_ok": "验证通过，正在打开管理面板...",
@@ -887,6 +893,35 @@ window.retryLastMessage=function(){{
 .log-content strong{{font-weight:700}}
 .log-content code{{font-family:monospace;font-size:12px;background:rgba(0,0,0,.06);padding:2px 5px;border-radius:3px}}
 .log-msg.user .log-content code{{background:rgba(255,255,255,.2)}}
+/* Admin tabs */
+.admin-tab{{background:none;border:none;color:rgba(255,255,255,.5);padding:10px 20px;font-size:13px;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;font-weight:500}}
+.admin-tab:hover{{color:rgba(255,255,255,.8)}}
+.admin-tab.active{{color:#fff;border-bottom-color:#4dabf7}}
+/* Profile cards */
+.profile-card{{border:1px solid #e9ecef;border-radius:12px;margin-bottom:12px;overflow:hidden;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.04)}}
+.profile-card-header{{padding:14px 16px;cursor:pointer;user-select:none;background:#fafbfc;transition:background .15s}}
+.profile-card-header:hover{{background:#e8f4fd}}
+.profile-card-top{{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}}
+.profile-name{{font-size:15px;font-weight:700;color:#16181a}}
+.profile-time{{font-size:11px;color:#adb5bd}}
+.profile-tags{{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}}
+.profile-tag{{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:500}}
+.profile-tag-occ{{background:#e7f5ff;color:#1971c2}}
+.profile-tag-loc{{background:#fff3bf;color:#e67700}}
+.profile-tag-rel{{background:#f3f0ff;color:#7048e8}}
+.profile-tag-int{{background:#e6fcf5;color:#087f5b}}
+.profile-facts{{display:flex;flex-wrap:wrap;gap:4px}}
+.profile-fact{{font-size:11px;background:#f1f3f5;color:#495057;padding:2px 8px;border-radius:4px}}
+.profile-chevron{{transition:transform .2s;font-size:12px;color:#adb5bd;margin-left:auto;text-align:right}}
+.profile-card.open .profile-chevron{{transform:rotate(180deg)}}
+.profile-card.open .profile-card-header{{background:#e8f4fd}}
+.profile-card-body{{display:none;padding:20px 16px;background:#f8f9fa;border-top:1px solid #e9ecef}}
+.profile-card.open .profile-card-body{{display:block}}
+.profile-section{{margin-bottom:14px}}
+.profile-section:last-child{{margin-bottom:0}}
+.profile-section-label{{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#adb5bd;margin-bottom:4px;font-weight:600}}
+.profile-section-text{{font-size:13px;color:#363b40;line-height:1.6}}
+.profile-interest-tag{{display:inline-block;font-size:11px;background:#d3f9d8;color:#2b8a3e;padding:2px 8px;border-radius:10px;margin:2px 4px 2px 0}}
 </style>
 <!-- Hidden Admin Panel (type "切换到管理模式" in chat or Ctrl+Shift+A) -->
 <div id="admin-overlay">
@@ -898,6 +933,10 @@ window.retryLastMessage=function(){{
         <button onclick="closeAdmin()" style="background:none;border:none;color:#fff;cursor:pointer;font-size:18px;line-height:1">{t['admin_close']}</button>
       </div>
     </div>
+    <div id="admin-tabs" style="display:none;display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,.15)">
+      <button class="admin-tab active" data-tab="logs" onclick="switchAdminTab('logs')">{t['admin_tab_logs']}</button>
+      <button class="admin-tab" data-tab="profiles" onclick="switchAdminTab('profiles')">{t['admin_tab_profiles']}</button>
+    </div>
     <div id="admin-body">
       <div id="admin-login">
         <input type="password" id="admin-password" placeholder="{t['admin_password']}" onkeydown="if(event.key==='Enter')unlockAdmin()">
@@ -906,6 +945,10 @@ window.retryLastMessage=function(){{
       <div id="admin-logs" style="display:none">
         <div id="admin-logs-list"></div>
         <div id="admin-pagination" style="display:flex;justify-content:center;gap:8px;padding:16px"></div>
+      </div>
+      <div id="admin-profiles" style="display:none">
+        <div id="admin-profiles-list"></div>
+        <div id="admin-profiles-pagination" style="display:flex;justify-content:center;gap:8px;padding:16px"></div>
       </div>
     </div>
   </div>
@@ -921,6 +964,82 @@ var logsList=document.getElementById('admin-logs-list');
 var pagination=document.getElementById('admin-pagination');
 var adminPassword='';
 var currentPage=1;
+var profilesSection=document.getElementById('admin-profiles');
+var profilesList=document.getElementById('admin-profiles-list');
+var profilesPagination=document.getElementById('admin-profiles-pagination');
+var tabsBar=document.getElementById('admin-tabs');
+var currentTab='logs';
+var profilesCurrentPage=1;
+
+// Tab switching
+window.switchAdminTab=function(tab){{
+  currentTab=tab;
+  var tabs=tabsBar.querySelectorAll('.admin-tab');
+  for(var i=0;i<tabs.length;i++)tabs[i].classList.toggle('active',tabs[i].getAttribute('data-tab')===tab);
+  logsSection.style.display=tab==='logs'?'block':'none';
+  profilesSection.style.display=tab==='profiles'?'block':'none';
+  pagination.style.display=tab==='logs'?'flex':'none';
+  profilesPagination.style.display=tab==='profiles'?'flex':'none';
+  if(tab==='profiles'&&profilesList.children.length===0)loadProfiles(1);
+}};
+
+// Render a single profile card
+function renderProfileCard(p){{
+  var card=document.createElement('div');
+  card.className='profile-card';
+  var name=p.profile&&p.profile.name?p.profile.name:'Anonymous';
+  var occ=p.profile&&p.profile.occupation?p.profile.occupation:'';
+  var loc=p.profile&&p.profile.location?p.profile.location:'';
+  var pers=p.profile&&p.profile.personality?p.profile.personality:'';
+  var facts=p.profile&&p.profile.key_facts?p.profile.key_facts:[];
+  var interests=p.profile&&p.profile.interests?p.profile.interests:[];
+  var rel=p.profile&&p.profile.relationship_to_hank?p.profile.relationship_to_hank:'';
+  var date=new Date(p.timestamp);
+  var timeStr=date.toLocaleString();
+  var tags='';
+  if(occ)tags+='<span class="profile-tag profile-tag-occ">'+occ+'</span>';
+  if(loc)tags+='<span class="profile-tag profile-tag-loc">'+loc+'</span>';
+  if(rel)tags+='<span class="profile-tag profile-tag-rel">'+rel+'</span>';
+  if(interests.length>0)tags+='<span class="profile-tag profile-tag-int">'+interests.slice(0,2).join(', ')+(interests.length>2?' +'+(interests.length-2):'')+'</span>';
+  var factsHtml='';
+  if(facts.length>0)factsHtml='<div class="profile-facts">'+facts.map(function(f){{return '<span class="profile-fact">'+f+'</span>';}}).join('')+'</div>';
+  card.innerHTML='<div class="profile-card-header" onclick="this.parentElement.classList.toggle(&#39;open&#39;)"><div class="profile-card-top"><span class="profile-name">'+name+'</span><span class="profile-time">'+timeStr+'</span></div><div class="profile-tags">'+tags+'</div>'+factsHtml+'<div class="profile-chevron">▼</div></div><div class="profile-card-body"><div class="profile-section"><div class="profile-section-label">Personality</div><div class="profile-section-text">'+(pers||'No analysis available')+'</div></div>'+(facts.length>0?'<div class="profile-section"><div class="profile-section-label">Key Facts</div><div class="profile-section-text">'+facts.map(function(f){{return '• '+f;}}).join('<br>')+'</div></div>':'')+(interests.length>0?'<div class="profile-section"><div class="profile-section-label">Interests</div><div class="profile-section-text">'+interests.map(function(i){{return '<span class="profile-interest-tag">'+i+'</span>';}}).join(' ')+'</div></div>':'')+'<div class="profile-section"><div class="profile-section-label">Session</div><div class="profile-section-text" style="font-family:monospace;font-size:11px;color:#868e96">#'+p.sessionId.slice(-12)+' · '+p.messageCount+' messages</div></div></div>';
+  return card;
+}}
+
+// Load user profiles
+window.loadProfiles=async function(page){{
+  profilesCurrentPage=page;
+  profilesList.innerHTML='<p style="text-align:center;color:#adb5bd;padding:40px">Loading...</p>';
+  try{{
+    var resp=await fetch('/api/admin/chat-logs',{{
+      method:'POST',
+      headers:{{'Content-Type':'application/json'}},
+      body:JSON.stringify({{password:adminPassword,action:'profiles',page:page,pageSize:15}})
+    }});
+    if(!resp.ok){{profilesList.innerHTML='<p style="text-align:center;color:#dc3545;padding:40px">Failed to load profiles.</p>';return;}}
+    var data=await resp.json();
+    if(!data.profiles||data.profiles.length===0){{
+      profilesList.innerHTML='<p style="text-align:center;color:#adb5bd;padding:40px">{t['admin_profiles_empty']}</p>';
+      profilesPagination.innerHTML='';
+      return;
+    }}
+    profilesList.innerHTML='';
+    data.profiles.forEach(function(p){{profilesList.appendChild(renderProfileCard(p));}});
+    // Pagination
+    var pg='';
+    var tp=data.totalPages||1;
+    if(tp>1){{
+      var start=Math.max(1,page-2);
+      var end=Math.min(tp,page+2);
+      if(start>1)pg+='<button class="page-btn" onclick="loadProfiles(1)">1</button>';
+      if(start>2)pg+='<span style="padding:0 4px;color:#adb5bd">…</span>';
+      for(var i=start;i<=end;i++)pg+='<button class="page-btn'+(i===page?' active':'')+'" onclick="loadProfiles('+i+')">'+i+'</button>';
+      if(end<tp)pg+='<span style="padding:0 4px;color:#adb5bd">…</span><button class="page-btn" onclick="loadProfiles('+tp+')">'+tp+'</button>';
+    }}
+    profilesPagination.innerHTML=pg;
+  }}catch(e){{profilesList.innerHTML='<p style="text-align:center;color:#dc3545;padding:40px">Error loading profiles.</p>';}}
+}};
 	// Keyboard shortcut: Ctrl+Shift+A (Win/Linux) or Cmd+Shift+A (Mac)
 	document.addEventListener('keydown',function(e){{
 	  if((e.ctrlKey||e.metaKey)&&e.shiftKey&&e.code==='KeyA'&&!overlay.classList.contains('open')){{
@@ -937,8 +1056,11 @@ window.openAdmin=function(){{
   pwdInput.focus();
   loginSection.style.display='flex';
   logsSection.style.display='none';
+  profilesSection.style.display='none';
   logoutBtn.style.display='none';
+  tabsBar.style.display='none';
   logsList.innerHTML='';
+  profilesList.innerHTML='';
   pagination.innerHTML='';
 }};
 
@@ -953,6 +1075,11 @@ overlay.addEventListener('click',function(e){{
 window.unlockAdmin=function(){{
   adminPassword=pwdInput.value;
   if(!adminPassword)return;
+  loginSection.style.display='none';
+  logsSection.style.display='block';
+  logoutBtn.style.display='block';
+  tabsBar.style.display='flex';
+  switchAdminTab('logs');
   loadLogs(1);
 }};
 
@@ -963,6 +1090,8 @@ window.unlockAdminWithPassword=function(pwd){{
   loginSection.style.display='none';
   logsSection.style.display='block';
   logoutBtn.style.display='block';
+  tabsBar.style.display='flex';
+  switchAdminTab('logs');
   loadLogs(1);
 }};
 
@@ -974,6 +1103,8 @@ window.openAdminWithData=function(data,pwd){{
     loginSection.style.display='none';
     logsSection.style.display='block';
     logoutBtn.style.display='block';
+    tabsBar.style.display='flex';
+    switchAdminTab('logs');
     renderLogsFromData(data);
   }}catch(e){{
     console.error('openAdminWithData inner error:',e);
@@ -1039,8 +1170,11 @@ window.lockAdmin=function(){{
   adminPassword='';
   loginSection.style.display='flex';
   logsSection.style.display='none';
+  profilesSection.style.display='none';
   logoutBtn.style.display='none';
+  tabsBar.style.display='none';
   logsList.innerHTML='';
+  profilesList.innerHTML='';
   pwdInput.value='';
   pwdInput.focus();
 }};
