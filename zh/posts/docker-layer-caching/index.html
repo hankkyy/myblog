@@ -92,16 +92,16 @@
 <h2>层是什么</h2>
 <p>Docker 镜像由多个只读层叠加而成。Dockerfile 中的每一行指令（FROM、RUN、COPY 等）都会创建一个新的层。这些层会被缓存——如果某一层没有变化，Docker 直接复用缓存，跳过重建。</p>
 <h2>一个典型案例</h2>
-<div class="codehilite"><pre><span></span><code><span class="c"># 不好的写法</span>
-<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>/app
-<span class="k">RUN</span><span class="w"> </span>mvn<span class="w"> </span>package
+<pre class="codehilite"><code class="language-dockerfile"># 不好的写法
+COPY . /app
+RUN mvn package
 
-<span class="c"># 好的写法</span>
-<span class="k">COPY</span><span class="w"> </span>pom.xml<span class="w"> </span>/app
-<span class="k">RUN</span><span class="w"> </span>mvn<span class="w"> </span>dependency:resolve
-<span class="k">COPY</span><span class="w"> </span>src<span class="w"> </span>/app/src
-<span class="k">RUN</span><span class="w"> </span>mvn<span class="w"> </span>package
-</code></pre></div>
+# 好的写法
+COPY pom.xml /app
+RUN mvn dependency:resolve
+COPY src /app/src
+RUN mvn package
+</code></pre>
 
 <p>为什么第二种写法更快？因为 <code>pom.xml</code> 变化频率远低于源码。先把依赖下载好并缓存住，每次改代码只需要重新编译，不用重新下载依赖。</p>
 <h2>关键原则</h2>

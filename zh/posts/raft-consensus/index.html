@@ -90,12 +90,12 @@
               </header>
               <div class="entry-content"><p>分布式系统的核心难题：多个节点如何对一个值达成一致？Raft 是目前最流行的共识算法。</p>
 <h2>Raft 的三个角色</h2>
-<div class="codehilite"><pre><span></span><code>┌──────────────────────────────────────┐
+<pre class="codehilite"><code>┌──────────────────────────────────────┐
 │  Leader   ← 处理所有客户端请求       │
 │  Follower ← 被动响应 Leader          │
 │  Candidate ← 选举中的临时状态        │
 └──────────────────────────────────────┘
-</code></pre></div>
+</code></pre>
 
 <h2>Leader 选举</h2>
 <ol>
@@ -105,11 +105,11 @@
 <li>票数相同 → 重新选举（随机超时避免死循环）</li>
 </ol>
 <h2>日志复制</h2>
-<div class="codehilite"><pre><span></span><code>Client → Leader: SET x = 1
+<pre class="codehilite"><code>Client → Leader: SET x = 1
 Leader → Followers: AppendEntries(x=1, term=3, prevLogIndex=4)
 Followers → Leader: ACK
 Leader → Client: OK (多数确认后)
-</code></pre></div>
+</code></pre>
 
 <p><strong>关键</strong>：Leader 只提交当前 term 的日志。这保证了安全性。</p>
 <h2>Raft vs Paxos</h2>

@@ -92,10 +92,10 @@
 <h2>What Problem Does Saga Solve</h2>
 <p>In the monolith era, database transactions (ACID) naturally guaranteed consistency. After splitting into microservices, a single business operation may span multiple services and databases—there's no global transaction anymore.</p>
 <p>The Saga approach: break a large transaction into multiple local transactions, each with a corresponding compensating action. If something fails, execute compensations in reverse order.</p>
-<div class="codehilite"><pre><span></span><code>Order Service (Create Order) → Inventory Service (Deduct Stock) → Payment Service (Charge)
+<pre class="codehilite"><code>Order Service (Create Order) → Inventory Service (Deduct Stock) → Payment Service (Charge)
        ↓                    ↓                  ↓
    (Cancel Order) ←──────── (Rollback Stock) ←────── (Refund)
-</code></pre></div>
+</code></pre>
 
 <h2>The Problems with Saga</h2>
 <p>As you use it, you'll run into several pitfalls:</p>

@@ -90,18 +90,18 @@
               </header>
               <div class="entry-content"><p>A common interview question: "Why do OLAP databases use columnar storage instead of row-based storage?"</p>
 <p>Let's let the data speak for itself. Suppose we have a table:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="p">(</span>
-<span class="w">  </span><span class="n">id</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span><span class="w"> </span><span class="n">amount</span><span class="w"> </span><span class="nb">DECIMAL</span><span class="p">,</span>
-<span class="w">  </span><span class="n">status</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">,</span><span class="w"> </span><span class="n">created_at</span><span class="w"> </span><span class="n">DATETIME</span>
-<span class="p">);</span>
-<span class="c1">-- 100 million rows</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-sql">CREATE TABLE orders (
+  id INT, user_id INT, amount DECIMAL,
+  status VARCHAR, created_at DATETIME
+);
+-- 100 million rows
+</code></pre>
 
 <p>Query: <code>SELECT SUM(amount) FROM orders WHERE status = 'paid'</code></p>
 <h2>Row-Based Storage (MySQL/InnoDB)</h2>
 <p>Data is arranged row by row on disk:</p>
-<div class="codehilite"><pre><span></span><code>[1|101|99.9|paid|2026-01-01][2|102|50.0|pending|2026-01-02]...
-</code></pre></div>
+<pre class="codehilite"><code>[1|101|99.9|paid|2026-01-01][2|102|50.0|pending|2026-01-02]...
+</code></pre>
 
 <p>Executing <code>SUM(amount) WHERE status = 'paid'</code>:</p>
 <ol>
@@ -112,9 +112,9 @@
 <p><strong>Actual data read: 5 columns × 100 million rows ≈ 2GB+</strong></p>
 <h2>Columnar Storage (ClickHouse/Doris)</h2>
 <p>Data is arranged column by column on disk:</p>
-<div class="codehilite"><pre><span></span><code>amount:  [99.9 | 50.0 | 30.0 | ...]   ← only read this column
+<pre class="codehilite"><code>amount:  [99.9 | 50.0 | 30.0 | ...]   ← only read this column
 status:  [paid | pending | paid | ...] ← and this column
-</code></pre></div>
+</code></pre>
 
 <p>Executing the same query:</p>
 <ol>
@@ -149,17 +149,17 @@ status:  [paid | pending | paid | ...] ← and this column
 <p>Because the <code>status</code> column only contains a few distinct values (paid/pending/cancelled), dictionary encoding can compress it to nearly 1% of its original size.</p>
 <h2>Vectorized Execution</h2>
 <p>This is the biggest source of performance gains in columnar storage:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">// Traditional row-by-row processing</span>
-<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">status</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">PAID</span><span class="p">)</span>
-<span class="w">        </span><span class="n">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">amount</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-<span class="p">}</span>
+<pre class="codehilite"><code class="language-cpp">// Traditional row-by-row processing
+for (int i = 0; i &lt; n; i++) {
+    if (status[i] == PAID)
+        sum += amount[i];
+}
 
-<span class="c1">// Vectorized: processes 256 rows at once</span>
-<span class="n">__m256i</span><span class="w"> </span><span class="n">status_vec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_mm256_load_si256</span><span class="p">(</span><span class="o">&amp;</span><span class="n">status</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-<span class="n">__m256i</span><span class="w"> </span><span class="n">mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_mm256_cmpeq_epi32</span><span class="p">(</span><span class="n">status_vec</span><span class="p">,</span><span class="w"> </span><span class="n">paid_vec</span><span class="p">);</span>
-<span class="n">sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">_mm256_mask_add</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span><span class="w"> </span><span class="n">amount_vec</span><span class="p">);</span>
-</code></pre></div>
+// Vectorized: processes 256 rows at once
+__m256i status_vec = _mm256_load_si256(&amp;status[i]);
+__m256i mask = _mm256_cmpeq_epi32(status_vec, paid_vec);
+sum += _mm256_mask_add(mask, amount_vec);
+</code></pre>
 
 <p>CPU SIMD instructions process 8 32-bit integers at a time (AVX2) or 16 (AVX-512). Columnar storage keeps data contiguous in memory, making it naturally suited for vectorization.</p>
 <h2>When Should You Use Columnar Storage?</h2>

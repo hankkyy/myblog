@@ -90,32 +90,32 @@
               </header>
               <div class="entry-content"><p>The Spring Bean lifecycle is a classic interview question. Here's the complete flow:</p>
 <h2>Full Lifecycle Flow</h2>
-<div class="codehilite"><pre><span></span><code><span class="mf">1.</span><span class="w"> </span><span class="n">Instantiation</span>
-<span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="n">Constructor</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="n">called</span><span class="w"> </span><span class="kr">to</span><span class="w"> </span><span class="n">create</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">object</span>
+<pre class="codehilite"><code>1. Instantiation
+   → Constructor is called to create the object
 
-<span class="mf">2.</span><span class="w"> </span><span class="n">Populate</span><span class="w"> </span><span class="n">Properties</span>
-<span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="n">Dependency</span><span class="w"> </span><span class="n">injection</span><span class="w"> </span><span class="p">(</span><span class="n">fields</span><span class="w"> </span><span class="n">annotated</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="err">@</span><span class="n">Autowired</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">assigned</span><span class="p">)</span>
+2. Populate Properties
+   → Dependency injection (fields annotated with @Autowired are assigned)
 
-<span class="mf">3.</span><span class="w"> </span><span class="n">BeanNameAware</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">BeanFactoryAware</span>
-<span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="kr">If</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">Bean</span><span class="w"> </span><span class="n">implements</span><span class="w"> </span><span class="n">these</span><span class="w"> </span><span class="n">Aware</span><span class="w"> </span><span class="nb">int</span><span class="n">erfaces</span><span class="p">,</span><span class="w"> </span><span class="n">setBeanName</span><span class="p">()</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="n">setBeanFactory</span><span class="p">()</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">invoked</span>
+3. BeanNameAware / BeanFactoryAware
+   → If the Bean implements these Aware interfaces, setBeanName() and setBeanFactory() are invoked
 
-<span class="mf">4.</span><span class="w"> </span><span class="n">BeanPostProcessor</span><span class="mf">.</span><span class="nb">pos</span><span class="n">tProcessBeforeInitialization</span>
-<span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="nb">Int</span><span class="n">erception</span><span class="w"> </span><span class="n">point</span><span class="w"> </span><span class="n">before</span><span class="w"> </span><span class="n">initialization</span>
+4. BeanPostProcessor.postProcessBeforeInitialization
+   → Interception point before initialization
 
-<span class="mf">5.</span><span class="w"> </span><span class="n">InitializingBean</span><span class="mf">.</span><span class="n">afterPropertiesSet</span><span class="p">()</span>
-<span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="kr">If</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">InitializingBean</span><span class="w"> </span><span class="nb">int</span><span class="n">erface</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="n">implemented</span>
+5. InitializingBean.afterPropertiesSet()
+   → If the InitializingBean interface is implemented
 
-<span class="mf">6.</span><span class="w"> </span><span class="err">@</span><span class="nb">Pos</span><span class="n">tConstruct</span><span class="w"> </span><span class="n">method</span>
-<span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="n">Typically</span><span class="w"> </span><span class="n">used</span><span class="w"> </span><span class="kr">for</span><span class="w"> </span><span class="n">initialization</span><span class="w"> </span><span class="n">work</span><span class="w"> </span><span class="n">here</span><span class="w"> </span><span class="p">(</span><span class="n">recommended</span><span class="p">)</span>
+6. @PostConstruct method
+   → Typically used for initialization work here (recommended)
 
-<span class="mf">7.</span><span class="w"> </span><span class="n">BeanPostProcessor</span><span class="mf">.</span><span class="nb">pos</span><span class="n">tProcessAfterInitialization</span>
-<span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="nb">Int</span><span class="n">erception</span><span class="w"> </span><span class="n">point</span><span class="w"> </span><span class="n">after</span><span class="w"> </span><span class="n">initialization</span><span class="w"> </span><span class="p">(</span><span class="n">AOP</span><span class="w"> </span><span class="n">proxies</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">generated</span><span class="w"> </span><span class="n">here</span><span class="err">!</span><span class="p">)</span>
+7. BeanPostProcessor.postProcessAfterInitialization
+   → Interception point after initialization (AOP proxies are generated here!)
 
-<span class="mf">8.</span><span class="w"> </span><span class="kr">Read</span><span class="n">y</span><span class="w"> </span><span class="p">(</span><span class="n">Bean</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="kr">read</span><span class="n">y</span><span class="w"> </span><span class="kr">to</span><span class="w"> </span><span class="n">use</span><span class="p">)</span>
+8. Ready (Bean is ready to use)
 
-<span class="mf">9.</span><span class="w"> </span><span class="err">@</span><span class="n">PreDestroy</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">DisposableBean</span><span class="mf">.</span><span class="n">destroy</span><span class="p">()</span>
-<span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="n">Callback</span><span class="w"> </span><span class="n">during</span><span class="w"> </span><span class="n">destruction</span>
-</code></pre></div>
+9. @PreDestroy / DisposableBean.destroy()
+   → Callback during destruction
+</code></pre>
 
 <h2>How to Answer in an Interview</h2>
 <p>Don't recite all the steps at once. Start with three key phrases:</p>

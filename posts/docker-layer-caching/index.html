@@ -92,16 +92,16 @@
 <h2>What Are Layers</h2>
 <p>Docker images are composed of multiple read-only layers stacked together. Each instruction in a Dockerfile (FROM, RUN, COPY, etc.) creates a new layer. These layers are cached—if a layer hasn't changed, Docker reuses the cache directly and skips rebuilding it.</p>
 <h2>A Typical Example</h2>
-<div class="codehilite"><pre><span></span><code><span class="c"># Bad practice</span>
-<span class="k">COPY</span><span class="w"> </span>.<span class="w"> </span>/app
-<span class="k">RUN</span><span class="w"> </span>mvn<span class="w"> </span>package
+<pre class="codehilite"><code class="language-dockerfile"># Bad practice
+COPY . /app
+RUN mvn package
 
-<span class="c"># Good practice</span>
-<span class="k">COPY</span><span class="w"> </span>pom.xml<span class="w"> </span>/app
-<span class="k">RUN</span><span class="w"> </span>mvn<span class="w"> </span>dependency:resolve
-<span class="k">COPY</span><span class="w"> </span>src<span class="w"> </span>/app/src
-<span class="k">RUN</span><span class="w"> </span>mvn<span class="w"> </span>package
-</code></pre></div>
+# Good practice
+COPY pom.xml /app
+RUN mvn dependency:resolve
+COPY src /app/src
+RUN mvn package
+</code></pre>
 
 <p>Why is the second approach faster? Because <code>pom.xml</code> changes far less frequently than source code. By downloading and caching dependencies first, you only need to recompile when code changes, without re-downloading dependencies every time.</p>
 <h2>Key Principles</h2>

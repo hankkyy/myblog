@@ -116,10 +116,10 @@
 <li>访问日志表（可选）：short_code、timestamp、ip、user_agent</li>
 </ul>
 <h2>5. 架构设计</h2>
-<div class="codehilite"><pre><span></span><code>用户 → CDN → API Gateway → 短链接服务 → 缓存(Redis) → 数据库(MySQL)
+<pre class="codehilite"><code>用户 → CDN → API Gateway → 短链接服务 → 缓存(Redis) → 数据库(MySQL)
                                     ↓
                               302 Redirect
-</code></pre></div>
+</code></pre>
 
 <h2>6. 扩展考虑</h2>
 <ul>

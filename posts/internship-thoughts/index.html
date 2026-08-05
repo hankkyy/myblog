@@ -94,10 +94,10 @@
 <h3>1. Code Review Is Where the Real Learning Happens</h3>
 <p>School assignments are submitted and forgotten—nobody tells you where your code is bad.</p>
 <p>Code review at a company:</p>
-<div class="codehilite"><pre><span></span><code><span class="s2">&quot;This loop hits the database N times—change it to a batch query.&quot;</span>
-<span class="s2">&quot;The exception is swallowed; you can&#39;t debug issues when something goes wrong.&quot;</span>
-<span class="s2">&quot;What does the variable name &#39;data&#39; mean? Be specific—call it &#39;orderData&#39;.&quot;</span>
-</code></pre></div>
+<pre class="codehilite"><code>&quot;This loop hits the database N times—change it to a batch query.&quot;
+&quot;The exception is swallowed; you can't debug issues when something goes wrong.&quot;
+&quot;What does the variable name 'data' mean? Be specific—call it 'orderData'.&quot;
+</code></pre>
 
 <p>The first time I got reviewed, my PR received 47 comments. It stung, but I learned more from that than from the previous two months combined.</p>
 <h3>2. The Environment Is Harder Than the Code</h3>
@@ -112,27 +112,27 @@
 <p><strong>"Communicating clearly" is the most underrated skill in backend development.</strong></p>
 <h2>There's More to CRUD Than Meets the Eye</h2>
 <p>What you think CRUD is:</p>
-<div class="codehilite"><pre><span></span><code><span class="nd">@PostMapping</span><span class="p">(</span><span class="s">&quot;/order&quot;</span><span class="p">)</span>
-<span class="kd">public</span><span class="w"> </span><span class="n">Result</span><span class="w"> </span><span class="nf">createOrder</span><span class="p">(</span><span class="nd">@RequestBody</span><span class="w"> </span><span class="n">OrderDTO</span><span class="w"> </span><span class="n">dto</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">orderMapper</span><span class="p">.</span><span class="na">insert</span><span class="p">(</span><span class="n">dto</span><span class="p">);</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">Result</span><span class="p">.</span><span class="na">ok</span><span class="p">();</span>
-<span class="p">}</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-java">@PostMapping(&quot;/order&quot;)
+public Result createOrder(@RequestBody OrderDTO dto) {
+    orderMapper.insert(dto);
+    return Result.ok();
+}
+</code></pre>
 
 <p>What CRUD actually looks like in production:</p>
-<div class="codehilite"><pre><span></span><code><span class="nd">@PostMapping</span><span class="p">(</span><span class="s">&quot;/order&quot;</span><span class="p">)</span>
-<span class="nd">@Transactional</span><span class="p">(</span><span class="n">rollbackFor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Exception</span><span class="p">.</span><span class="na">class</span><span class="p">)</span>
-<span class="kd">public</span><span class="w"> </span><span class="n">Result</span><span class="w"> </span><span class="nf">createOrder</span><span class="p">(</span><span class="nd">@Valid</span><span class="w"> </span><span class="nd">@RequestBody</span><span class="w"> </span><span class="n">OrderDTO</span><span class="w"> </span><span class="n">dto</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="c1">// 1. Parameter validation + business validation</span>
-<span class="w">    </span><span class="c1">// 2. Idempotency check (prevent duplicate submissions)</span>
-<span class="w">    </span><span class="c1">// 3. Inventory deduction (watch for concurrency, use optimistic locking)</span>
-<span class="w">    </span><span class="c1">// 4. Create the order</span>
-<span class="w">    </span><span class="c1">// 5. Send to message queue (async notification)</span>
-<span class="w">    </span><span class="c1">// 6. Log the operation</span>
-<span class="w">    </span><span class="c1">// 7. Rollback on exception + compensation logic</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">Result</span><span class="p">.</span><span class="na">ok</span><span class="p">(</span><span class="n">orderId</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-java">@PostMapping(&quot;/order&quot;)
+@Transactional(rollbackFor = Exception.class)
+public Result createOrder(@Valid @RequestBody OrderDTO dto) {
+    // 1. Parameter validation + business validation
+    // 2. Idempotency check (prevent duplicate submissions)
+    // 3. Inventory deduction (watch for concurrency, use optimistic locking)
+    // 4. Create the order
+    // 5. Send to message queue (async notification)
+    // 6. Log the operation
+    // 7. Rollback on exception + compensation logic
+    return Result.ok(orderId);
+}
+</code></pre>
 
 <p>A "simple" create-order endpoint actually requires considering:</p>
 <ul>

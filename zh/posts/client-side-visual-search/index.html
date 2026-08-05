@@ -93,7 +93,7 @@
 <p>所以我需要以图搜图。但问题是：我一个人开发，没有 GPU 服务器；用户上传的可能是价值几十万的古董照片，隐私敏感；拍卖浏览是快速探索型的，等不起服务器返回的几百毫秒延迟。</p>
 <p>最终我的方案是：<strong>把整个视觉搜索引擎塞进浏览器里跑</strong>。</p>
 <h2>整体架构</h2>
-<div class="codehilite"><pre><span></span><code>用户上传图片
+<pre class="codehilite"><code>用户上传图片
     │
     ▼
 ┌─────────────────────────────┐
@@ -112,22 +112,22 @@
 │ • 置信度门控   │   │ • pgvector 向量搜索│
 │ • 即时返回     │   │ • 512维embedding  │
 └──────────────┘   └──────────────────┘
-</code></pre></div>
+</code></pre>
 
 <p>默认走客户端路径：零服务器成本、零延迟、保护隐私。服务端路径作为知识库规模增大后的 fallback。</p>
 <h2>核心一：图像签名设计</h2>
 <h3>第一层：8维颜色特征向量</h3>
-<div class="codehilite"><pre><span></span><code><span class="kr">type</span><span class="w"> </span><span class="nx">ArtworkFeatureVector</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
-<span class="w">  </span><span class="nx">red</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w">        </span><span class="c1">// 平均红色通道强度</span>
-<span class="w">  </span><span class="nx">green</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w">      </span><span class="c1">// 平均绿色通道强度</span>
-<span class="w">  </span><span class="nx">blue</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w">       </span><span class="c1">// 平均蓝色通道强度</span>
-<span class="w">  </span><span class="nx">brightness</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="c1">// 整体亮度</span>
-<span class="w">  </span><span class="nx">saturation</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w"> </span><span class="c1">// 色彩饱和度</span>
-<span class="w">  </span><span class="nx">warmth</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w">     </span><span class="c1">// 暖色调倾向（红+金）</span>
-<span class="w">  </span><span class="nx">coolness</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">,</span><span class="w">   </span><span class="c1">// 冷色调倾向（蓝+绿）</span>
-<span class="w">  </span><span class="nx">contrast</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="w">    </span><span class="c1">// 明暗对比度</span>
-<span class="p">];</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-typescript">type ArtworkFeatureVector = [
+  red: number,        // 平均红色通道强度
+  green: number,      // 平均绿色通道强度
+  blue: number,       // 平均蓝色通道强度
+  brightness: number, // 整体亮度
+  saturation: number, // 色彩饱和度
+  warmth: number,     // 暖色调倾向（红+金）
+  coolness: number,   // 冷色调倾向（蓝+绿）
+  contrast: number    // 明暗对比度
+];
+</code></pre>
 
 <p>这个 8 维向量是「粗筛」。比如一件青花瓷（蓝白色调）和一件铜器（暖棕色调），仅靠这个向量就能拉开距离。但光有颜色不够——两件都是青花瓷的时候，颜色几乎一样，需要更深层的特征来区分。</p>
 <h3>第二层：14维扩展签名</h3>
@@ -271,8 +271,8 @@
 <p>这在古董交易场景中尤其重要——买家可能基于匹配结果做出购买决策，误导性的匹配比没有匹配更糟糕。</p>
 <h2>核心四：混合架构——客户端 + 服务端</h2>
 <p>服务端路径用于后端索引和知识库规模增大后的检索：</p>
-<div class="codehilite"><pre><span></span><code>图片 → HuggingFace Embedding API → 512维向量 → L2归一化 → pgvector 相似度搜索
-</code></pre></div>
+<pre class="codehilite"><code>图片 → HuggingFace Embedding API → 512维向量 → L2归一化 → pgvector 相似度搜索
+</code></pre>
 
 <p>通过 Supabase 的 <code>match_artworks_by_image</code> RPC 函数实现，支持 <code>index-artwork</code> 和 <code>match-image</code> 两种操作。</p>
 <h2>性能数据</h2>

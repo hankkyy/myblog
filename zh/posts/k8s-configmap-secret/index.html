@@ -91,43 +91,43 @@
               <div class="entry-content"><p>ConfigMap 和 Secret 是 K8s 中管理配置的两大工具。</p>
 <h2>ConfigMap</h2>
 <p>存储非敏感配置——数据库地址、日志级别、环境变量等：</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
-<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConfigMap</span>
-<span class="nt">metadata</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app-config</span>
-<span class="nt">data</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">database-url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;jdbc:mysql://db:3306/mydb&quot;</span>
-<span class="w">  </span><span class="nt">log-level</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;debug&quot;</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-yaml">apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  database-url: &quot;jdbc:mysql://db:3306/mydb&quot;
+  log-level: &quot;debug&quot;
+</code></pre>
 
 <h2>Secret</h2>
 <p>存储敏感信息——密码、Token、证书等。值需要 base64 编码：</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
-<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Secret</span>
-<span class="nt">metadata</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">db-secret</span>
-<span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Opaque</span>
-<span class="nt">data</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">YWRtaW4=</span><span class="w">      </span><span class="c1"># base64(&quot;admin&quot;)</span>
-<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cGFzc3dvcmQ=</span><span class="w">  </span><span class="c1"># base64(&quot;password&quot;)</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-yaml">apiVersion: v1
+kind: Secret
+metadata:
+  name: db-secret
+type: Opaque
+data:
+  username: YWRtaW4=      # base64(&quot;admin&quot;)
+  password: cGFzc3dvcmQ=  # base64(&quot;password&quot;)
+</code></pre>
 
 <h2>注入方式</h2>
 <h3>环境变量</h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">env</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DB_URL</span>
-<span class="w">  </span><span class="nt">valueFrom</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">configMapKeyRef</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app-config</span>
-<span class="w">      </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">database-url</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-yaml">env:
+- name: DB_URL
+  valueFrom:
+    configMapKeyRef:
+      name: app-config
+      key: database-url
+</code></pre>
 
 <h3>挂载为文件</h3>
-<div class="codehilite"><pre><span></span><code><span class="nt">volumes</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">config-volume</span>
-<span class="w">  </span><span class="nt">configMap</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app-config</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-yaml">volumes:
+- name: config-volume
+  configMap:
+    name: app-config
+</code></pre>
 
 <p>文件挂载的好处：支持热更新（ConfigMap 更新后 Kubelet 会自动同步）。</p>
 <h2>Secret 的安全问题</h2>

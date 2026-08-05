@@ -99,8 +99,8 @@
 <p>以前这些逻辑要写在每个服务里。Service Mesh 把这部分剥离出来。</p>
 <h2>Sidecar 模式</h2>
 <p>每个服务 Pod 旁边放一个 Sidecar 代理（Envoy）。所有进出流量都经过它：</p>
-<div class="codehilite"><pre><span></span><code>Service A → Envoy Proxy → Envoy Proxy → Service B
-</code></pre></div>
+<pre class="codehilite"><code>Service A → Envoy Proxy → Envoy Proxy → Service B
+</code></pre>
 
 <p>应用代码不需要知道网络细节——Sidecar 帮你处理了。</p>
 <h2>Istio 的架构</h2>

@@ -90,19 +90,19 @@
               </header>
               <div class="entry-content"><p>synchronized 和 ReentrantLock 有什么区别？十个面试九个问。</p>
 <h2>用法对比</h2>
-<div class="codehilite"><pre><span></span><code><span class="c1">// synchronized</span>
-<span class="kd">synchronized</span><span class="w"> </span><span class="p">(</span><span class="n">lock</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="c1">// 临界区</span>
-<span class="p">}</span>
+<pre class="codehilite"><code class="language-java">// synchronized
+synchronized (lock) {
+    // 临界区
+}
 
-<span class="c1">// ReentrantLock</span>
-<span class="n">lock</span><span class="p">.</span><span class="na">lock</span><span class="p">();</span>
-<span class="k">try</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="c1">// 临界区</span>
-<span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">lock</span><span class="p">.</span><span class="na">unlock</span><span class="p">();</span><span class="w">  </span><span class="c1">// 必须在 finally 中释放！</span>
-<span class="p">}</span>
-</code></pre></div>
+// ReentrantLock
+lock.lock();
+try {
+    // 临界区
+} finally {
+    lock.unlock();  // 必须在 finally 中释放！
+}
+</code></pre>
 
 <h2>核心区别</h2>
 <table>

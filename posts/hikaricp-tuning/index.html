@@ -110,26 +110,26 @@
 </ul>
 <p>Analysis revealed that each request required an average of 15ms of database operation time. With 10 connections, the theoretical throughput was <code>1000ms / 15ms * 10 ≈ 666</code> requests per second. But in practice, network latency and transaction waits added to the overhead.</p>
 <p>The adjusted configuration:</p>
-<div class="codehilite"><pre><span></span><code><span class="nt">spring</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">datasource</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">hikari</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">maximum-pool-size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
-<span class="w">      </span><span class="nt">minimum-idle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
-<span class="w">      </span><span class="nt">connection-timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5000</span>
-<span class="w">      </span><span class="nt">idle-timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">600000</span>
-<span class="w">      </span><span class="nt">max-lifetime</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1800000</span>
-<span class="w">      </span><span class="nt">leak-detection-threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-yaml">spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 30
+      minimum-idle: 10
+      connection-timeout: 5000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      leak-detection-threshold: 0
+</code></pre>
 
 <p>After the adjustment, P99 latency dropped to under 200ms, and API success rates recovered to 99.99%.</p>
 <h2>How to Determine the Right Connection Count</h2>
 <p>A simple formula:</p>
-<div class="codehilite"><pre><span></span><code>Connections ≈ (QPS × Average Query Time) + Buffer
-</code></pre></div>
+<pre class="codehilite"><code>Connections ≈ (QPS × Average Query Time) + Buffer
+</code></pre>
 
 <p>For example, with QPS of 1000 and an average query time of 20ms:</p>
-<div class="codehilite"><pre><span></span><code>Connections = (1000 × 0.02) + Buffer = 20 + 5~10 = 25~30
-</code></pre></div>
+<pre class="codehilite"><code>Connections = (1000 × 0.02) + Buffer = 20 + 5~10 = 25~30
+</code></pre>
 
 <p>But this is just a theoretical value. In practice, you also need to consider:</p>
 <ul>

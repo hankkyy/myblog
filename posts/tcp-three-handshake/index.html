@@ -90,14 +90,14 @@
               </header>
               <div class="entry-content"><p>TCP connection establishment and teardown is a core topic in computer networking interviews.</p>
 <h2>Three-Way Handshake</h2>
-<div class="codehilite"><pre><span></span><code><span class="n">Client</span><span class="w">                           </span><span class="n">Server</span>
-<span class="w">  </span><span class="o">|</span><span class="w">                               </span><span class="o">|</span>
-<span class="w">  </span><span class="o">|----</span><span class="n">SYN</span><span class="p">(</span><span class="n">seq</span><span class="o">=</span><span class="n">x</span><span class="p">)</span><span class="o">----------------&gt;|</span><span class="w">  </span><span class="err">①</span><span class="w"> </span><span class="n">Client</span><span class="o">:</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="n">want</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">connect</span>
-<span class="w">  </span><span class="o">|</span><span class="w">                               </span><span class="o">|</span>
-<span class="w">  </span><span class="o">|&lt;---</span><span class="n">SYN</span><span class="o">+</span><span class="n">ACK</span><span class="p">(</span><span class="n">seq</span><span class="o">=</span><span class="n">y</span><span class="p">,</span><span class="n">ack</span><span class="o">=</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">----|</span><span class="w">  </span><span class="err">②</span><span class="w"> </span><span class="n">Server</span><span class="o">:</span><span class="w"> </span><span class="n">Got</span><span class="w"> </span><span class="n">it</span><span class="p">,</span><span class="w"> </span><span class="n">I</span><span class="s">&#39;m ready</span>
-<span class="s">  |                               |</span>
-<span class="s">  |----ACK(seq=x+1,ack=y+1)-----&gt;|  ③ Client: Received, start sending data</span>
-</code></pre></div>
+<pre class="codehilite"><code>Client                           Server
+  |                               |
+  |----SYN(seq=x)----------------&gt;|  ① Client: I want to connect
+  |                               |
+  |&lt;---SYN+ACK(seq=y,ack=x+1)----|  ② Server: Got it, I'm ready
+  |                               |
+  |----ACK(seq=x+1,ack=y+1)-----&gt;|  ③ Client: Received, start sending data
+</code></pre>
 
 <h2>Why Three Times Instead of Two?</h2>
 <p>The problem with two handshakes: if the client's first SYN is delayed in the network and then arrives again, the server would incorrectly establish a connection.</p>
@@ -105,16 +105,16 @@
 <h2>Why Not Four Times?</h2>
 <p>The server can combine SYN and ACK into a single packet (SYN+ACK) without needing to send them separately. So three times is sufficient.</p>
 <h2>Four-Way Wave</h2>
-<div class="codehilite"><pre><span></span><code><span class="n">Client</span><span class="w">                           </span><span class="n">Server</span>
-<span class="w">  </span><span class="o">|</span><span class="w">                               </span><span class="o">|</span>
-<span class="w">  </span><span class="o">|----</span><span class="n">FIN</span><span class="p">(</span><span class="n">seq</span><span class="o">=</span><span class="n">u</span><span class="p">)</span><span class="o">----------------&gt;|</span><span class="w">  </span><span class="err">①</span><span class="w"> </span><span class="n">Client</span><span class="o">:</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="n">no</span><span class="w"> </span><span class="n">more</span><span class="w"> </span><span class="kt">data</span>
-<span class="w">  </span><span class="o">|</span><span class="w">                               </span><span class="o">|</span>
-<span class="w">  </span><span class="o">|&lt;---</span><span class="n">ACK</span><span class="p">(</span><span class="n">seq</span><span class="o">=</span><span class="n">v</span><span class="p">,</span><span class="n">ack</span><span class="o">=</span><span class="n">u</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">--------|</span><span class="w">  </span><span class="err">②</span><span class="w"> </span><span class="n">Server</span><span class="o">:</span><span class="w"> </span><span class="n">Understood</span>
-<span class="w">  </span><span class="o">|</span><span class="w">                               </span><span class="o">|</span>
-<span class="w">  </span><span class="o">|&lt;---</span><span class="n">FIN</span><span class="p">(</span><span class="n">seq</span><span class="o">=</span><span class="n">w</span><span class="p">,</span><span class="n">ack</span><span class="o">=</span><span class="n">u</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">--------|</span><span class="w">  </span><span class="err">③</span><span class="w"> </span><span class="n">Server</span><span class="o">:</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="n">no</span><span class="w"> </span><span class="n">more</span><span class="w"> </span><span class="kt">data</span><span class="w"> </span><span class="n">either</span>
-<span class="w">  </span><span class="o">|</span><span class="w">                               </span><span class="o">|</span>
-<span class="w">  </span><span class="o">|----</span><span class="n">ACK</span><span class="p">(</span><span class="n">seq</span><span class="o">=</span><span class="n">u</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">ack</span><span class="o">=</span><span class="n">w</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">-----&gt;|</span><span class="w">  </span><span class="err">④</span><span class="w"> </span><span class="n">Client</span><span class="o">:</span><span class="w"> </span><span class="n">Understood</span>
-</code></pre></div>
+<pre class="codehilite"><code>Client                           Server
+  |                               |
+  |----FIN(seq=u)----------------&gt;|  ① Client: I have no more data
+  |                               |
+  |&lt;---ACK(seq=v,ack=u+1)--------|  ② Server: Understood
+  |                               |
+  |&lt;---FIN(seq=w,ack=u+1)--------|  ③ Server: I have no more data either
+  |                               |
+  |----ACK(seq=u+1,ack=w+1)-----&gt;|  ④ Client: Understood
+</code></pre>
 
 <h2>Why Does the Wave Take Four Steps?</h2>
 <p>Because TCP is full-duplex — both sides can independently send and receive data. When one side says "I have no more data" (FIN), the other side may still have data to send. So FIN and ACK cannot be combined.</p>

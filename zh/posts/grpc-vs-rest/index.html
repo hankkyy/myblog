@@ -127,20 +127,20 @@
 </tbody>
 </table>
 <h2>Protobuf：体积就是优势</h2>
-<div class="codehilite"><pre><span></span><code><span class="kd">message</span><span class="w"> </span><span class="nc">User</span><span class="w"> </span><span class="p">{</span>
-<span class="w">  </span><span class="kt">int64</span><span class="w"> </span><span class="na">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">  </span><span class="kt">string</span><span class="w"> </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
-<span class="w">  </span><span class="kt">string</span><span class="w"> </span><span class="na">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-protobuf">message User {
+  int64 id = 1;
+  string name = 2;
+  string email = 3;
+}
+</code></pre>
 
 <p>JSON 渲染：<code>{"id": 123, "name": "张三", "email": "zhang@test.com"}</code> → 58 bytes
 Protobuf 编码：→ ~30 bytes，节省 ~50%</p>
 <p>在高频调用场景，累计带宽差距显著。</p>
 <h2>HTTP/2 多路复用</h2>
-<div class="codehilite"><pre><span></span><code>HTTP/1.1:  连接1 [req1 → res1] | 连接2 [req2 → res2]  ← Head-of-line blocking
+<pre class="codehilite"><code>HTTP/1.1:  连接1 [req1 → res1] | 连接2 [req2 → res2]  ← Head-of-line blocking
 HTTP/2:    单连接 [req1,req2,req3] → [res2,res1,res3]  ← 多路复用
-</code></pre></div>
+</code></pre>
 
 <h2>什么时候用 gRPC</h2>
 <ul>

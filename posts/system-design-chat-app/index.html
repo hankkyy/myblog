@@ -98,12 +98,12 @@
 <li>Support 1 billion users</li>
 </ul>
 <h2>Architecture Overview</h2>
-<div class="codehilite"><pre><span></span><code>Clients ←→ WebSocket persistent connection ←→ Chat Service
+<pre class="codehilite"><code>Clients ←→ WebSocket persistent connection ←→ Chat Service
                                                     ↓
                                           Message Queue (Kafka)
                                                     ↓
                                           Message Storage (HBase/Cassandra)
-</code></pre></div>
+</code></pre>
 
 <h2>Why WebSocket Instead of HTTP Polling</h2>
 <p>HTTP polling has high latency and wastes bandwidth. With WebSocket, after establishing a persistent connection, the server can proactively push messages to clients. However, HTTP is acceptable for sending messages (it's simpler).</p>

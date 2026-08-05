@@ -90,17 +90,17 @@
               </header>
               <div class="entry-content"><p>The JVM memory model is the foundation for understanding how Java programs run.</p>
 <h2>JVM Runtime Data Areas</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">┌─────────────────────────────┐</span>
-<span class="err">│</span><span class="w">     </span><span class="n">Method</span><span class="w"> </span><span class="n">Area</span><span class="o">/</span><span class="n">Metaspace</span><span class="w">    </span><span class="err">│</span><span class="w">  </span><span class="err">←</span><span class="w"> </span><span class="n">Class</span><span class="w"> </span><span class="n">info</span><span class="p">,</span><span class="w"> </span><span class="n">constants</span><span class="p">,</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">variables</span>
-<span class="err">├─────────────────────────────┤</span>
-<span class="err">│</span><span class="w">            </span><span class="n">Heap</span><span class="w">              </span><span class="err">│</span><span class="w">  </span><span class="err">←</span><span class="w"> </span><span class="nb nb-Type">Object</span><span class="w"> </span><span class="n">instances</span><span class="p">,</span><span class="w"> </span><span class="n">arrays</span>
-<span class="err">├──────────┬──────────────────┤</span>
-<span class="err">│</span><span class="w">  </span><span class="n">VM</span><span class="w"> </span><span class="n">Stack</span><span class="w"> </span><span class="err">│</span><span class="w">  </span><span class="n">Native</span><span class="w"> </span><span class="n">Method</span><span class="w">   </span><span class="err">│</span><span class="w">  </span><span class="err">←</span><span class="w"> </span><span class="n">Method</span><span class="w"> </span><span class="n">calls</span><span class="p">,</span><span class="w"> </span><span class="n">local</span><span class="w"> </span><span class="n">variables</span>
-<span class="err">│</span><span class="w">           </span><span class="err">│</span><span class="w">      </span><span class="n">Stack</span><span class="w">       </span><span class="err">│</span>
-<span class="err">├──────────┴──────────────────┤</span>
-<span class="err">│</span><span class="w">        </span><span class="n">Program</span><span class="w"> </span><span class="n">Counter</span><span class="w">       </span><span class="err">│</span><span class="w">  </span><span class="err">←</span><span class="w"> </span><span class="n">Current</span><span class="w"> </span><span class="n">thread</span><span class="w"> </span><span class="n">execution</span><span class="w"> </span><span class="n">position</span>
-<span class="err">└─────────────────────────────┘</span>
-</code></pre></div>
+<pre class="codehilite"><code>┌─────────────────────────────┐
+│     Method Area/Metaspace    │  ← Class info, constants, static variables
+├─────────────────────────────┤
+│            Heap              │  ← Object instances, arrays
+├──────────┬──────────────────┤
+│  VM Stack │  Native Method   │  ← Method calls, local variables
+│           │      Stack       │
+├──────────┴──────────────────┤
+│        Program Counter       │  ← Current thread execution position
+└─────────────────────────────┘
+</code></pre>
 
 <h2>Heap</h2>
 <ul>

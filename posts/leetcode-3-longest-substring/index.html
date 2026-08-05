@@ -92,46 +92,46 @@
 <h2>Problem</h2>
 <p>Given <code>"abcabcbb"</code>, find the length of the longest substring without repeating characters. The answer is 3 (<code>"abc"</code>).</p>
 <h2>Sliding Window Template</h2>
-<div class="codehilite"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">maxLen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
-<span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">right</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">length</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="c1">// 1. Expand the window: add the character at position right</span>
-<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">right</span><span class="p">);</span>
-<span class="w">    </span><span class="n">right</span><span class="o">++</span><span class="p">;</span>
-<span class="w">    </span><span class="c1">// Update window data...</span>
+<pre class="codehilite"><code class="language-java">int left = 0, right = 0, maxLen = 0;
+while (right &lt; s.length()) {
+    // 1. Expand the window: add the character at position right
+    char c = s.charAt(right);
+    right++;
+    // Update window data...
 
-<span class="w">    </span><span class="c1">// 2. Shrink the window: when the window no longer satisfies the condition</span>
-<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">window</span><span class="w"> </span><span class="n">needs</span><span class="w"> </span><span class="n">shrinking</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">char</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">left</span><span class="p">);</span>
-<span class="w">        </span><span class="n">left</span><span class="o">++</span><span class="p">;</span>
-<span class="w">        </span><span class="c1">// Update window data...</span>
-<span class="w">    </span><span class="p">}</span>
+    // 2. Shrink the window: when the window no longer satisfies the condition
+    while (window needs shrinking) {
+        char d = s.charAt(left);
+        left++;
+        // Update window data...
+    }
 
-<span class="w">    </span><span class="c1">// 3. Update the answer</span>
-<span class="w">    </span><span class="n">maxLen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">maxLen</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">left</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div>
+    // 3. Update the answer
+    maxLen = Math.max(maxLen, right - left);
+}
+</code></pre>
 
 <h2>Solution for This Problem</h2>
-<div class="codehilite"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">lengthOfLongestSubstring</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">Character</span><span class="p">,</span><span class="w"> </span><span class="n">Integer</span><span class="o">&gt;</span><span class="w"> </span><span class="n">window</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HashMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">maxLen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<pre class="codehilite"><code class="language-java">public int lengthOfLongestSubstring(String s) {
+    Map&lt;Character, Integer&gt; window = new HashMap&lt;&gt;();
+    int left = 0, right = 0, maxLen = 0;
 
-<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">right</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">length</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">right</span><span class="p">);</span>
-<span class="w">        </span><span class="n">right</span><span class="o">++</span><span class="p">;</span>
-<span class="w">        </span><span class="n">window</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">window</span><span class="p">.</span><span class="na">getOrDefault</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+    while (right &lt; s.length()) {
+        char c = s.charAt(right);
+        right++;
+        window.put(c, window.getOrDefault(c, 0) + 1);
 
-<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">window</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="kt">char</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">charAt</span><span class="p">(</span><span class="n">left</span><span class="p">);</span>
-<span class="w">            </span><span class="n">left</span><span class="o">++</span><span class="p">;</span>
-<span class="w">            </span><span class="n">window</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">window</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span>
+        while (window.get(c) &gt; 1) {
+            char d = s.charAt(left);
+            left++;
+            window.put(d, window.get(d) - 1);
+        }
 
-<span class="w">        </span><span class="n">maxLen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">maxLen</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">left</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">maxLen</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
+        maxLen = Math.max(maxLen, right - left);
+    }
+    return maxLen;
+}
+</code></pre>
 
 <h2>Problems That Use This Template</h2>
 <ul>

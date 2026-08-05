@@ -91,18 +91,18 @@
               <div class="entry-content"><p>I recently started learning Rust, and as someone who has written Java for years, the shift in mindset is definitely necessary.</p>
 <h2>The Biggest Difference: Ownership</h2>
 <p>Java's garbage collection makes us accustomed to "creating objects freely, GC will handle it." Rust requires you to manage memory yourself, but the compiler helps you check if it's correct.</p>
-<div class="codehilite"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
-<span class="kd">let</span><span class="w"> </span><span class="n">s2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s1</span><span class="p">;</span><span class="w">  </span><span class="c1">// ownership of s1 is moved to s2</span>
-<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s1</span><span class="p">);</span><span class="w">  </span><span class="c1">// compile error! s1 is no longer valid</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-rust">let s1 = String::from(&quot;hello&quot;);
+let s2 = s1;  // ownership of s1 is moved to s2
+println!(&quot;{}&quot;, s1);  // compile error! s1 is no longer valid
+</code></pre>
 
 <p>This is completely different from Java—in Java, <code>s1</code> and <code>s2</code> can point to the same object.</p>
 <h2>Borrowing</h2>
 <p>If you don't want to transfer ownership, you can use references (borrowing):</p>
-<div class="codehilite"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">);</span>
-<span class="kd">let</span><span class="w"> </span><span class="n">s2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">s1</span><span class="p">;</span><span class="w">  </span><span class="c1">// s2 borrows s1, s1 is still valid</span>
-<span class="fm">println!</span><span class="p">(</span><span class="s">&quot;{}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">s1</span><span class="p">);</span><span class="w">  </span><span class="c1">// no problem</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-rust">let s1 = String::from(&quot;hello&quot;);
+let s2 = &amp;s1;  // s2 borrows s1, s1 is still valid
+println!(&quot;{}&quot;, s1);  // no problem
+</code></pre>
 
 <h2>What Rust Teaches Java Developers</h2>
 <p>Even if you don't write Rust, understanding the concepts of ownership and borrowing can help you write better Java code:

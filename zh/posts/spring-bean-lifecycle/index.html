@@ -90,32 +90,32 @@
               </header>
               <div class="entry-content"><p>Spring Bean 的生命周期是面试的经典题。完整流程如下：</p>
 <h2>生命周期全流程</h2>
-<div class="codehilite"><pre><span></span><code><span class="mf">1.</span><span class="w"> </span><span class="n">实例化</span><span class="err">（</span><span class="n">Instantiation</span><span class="err">）</span>
-<span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="n">调用构造方法创建对象</span>
+<pre class="codehilite"><code>1. 实例化（Instantiation）
+   → 调用构造方法创建对象
 
-<span class="mf">2.</span><span class="w"> </span><span class="n">属性赋值</span><span class="err">（</span><span class="n">Populate</span><span class="w"> </span><span class="n">Properties</span><span class="err">）</span>
-<span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="n">依赖注入</span><span class="err">（@</span><span class="n">Autowired</span><span class="w"> </span><span class="n">的字段被赋值</span><span class="err">）</span>
+2. 属性赋值（Populate Properties）
+   → 依赖注入（@Autowired 的字段被赋值）
 
-<span class="mf">3.</span><span class="w"> </span><span class="n">BeanNameAware</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">BeanFactoryAware</span>
-<span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="n">如果</span><span class="w"> </span><span class="n">Bean</span><span class="w"> </span><span class="n">实现了这些</span><span class="w"> </span><span class="n">Aware</span><span class="w"> </span><span class="n">接口</span><span class="err">，</span><span class="n">调用</span><span class="w"> </span><span class="n">setBeanName</span><span class="p">()</span><span class="err">、</span><span class="n">setBeanFactory</span><span class="p">()</span>
+3. BeanNameAware / BeanFactoryAware
+   → 如果 Bean 实现了这些 Aware 接口，调用 setBeanName()、setBeanFactory()
 
-<span class="mf">4.</span><span class="w"> </span><span class="n">BeanPostProcessor</span><span class="mf">.</span><span class="nb">pos</span><span class="n">tProcessBeforeInitialization</span>
-<span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="n">初始化前的拦截点</span>
+4. BeanPostProcessor.postProcessBeforeInitialization
+   → 初始化前的拦截点
 
-<span class="mf">5.</span><span class="w"> </span><span class="n">InitializingBean</span><span class="mf">.</span><span class="n">afterPropertiesSet</span><span class="p">()</span>
-<span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="n">如果实现了</span><span class="w"> </span><span class="n">InitializingBean</span><span class="w"> </span><span class="n">接口</span>
+5. InitializingBean.afterPropertiesSet()
+   → 如果实现了 InitializingBean 接口
 
-<span class="mf">6.</span><span class="w"> </span><span class="err">@</span><span class="nb">Pos</span><span class="n">tConstruct</span><span class="w"> </span><span class="n">方法</span>
-<span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="n">通常在这做初始化工作</span><span class="err">（</span><span class="n">推荐</span><span class="err">）</span>
+6. @PostConstruct 方法
+   → 通常在这做初始化工作（推荐）
 
-<span class="mf">7.</span><span class="w"> </span><span class="n">BeanPostProcessor</span><span class="mf">.</span><span class="nb">pos</span><span class="n">tProcessAfterInitialization</span>
-<span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="n">初始化后的拦截点</span><span class="err">（</span><span class="n">AOP</span><span class="w"> </span><span class="n">代理在这里生成</span><span class="err">！）</span>
+7. BeanPostProcessor.postProcessAfterInitialization
+   → 初始化后的拦截点（AOP 代理在这里生成！）
 
-<span class="mf">8.</span><span class="w"> </span><span class="n">就绪</span><span class="err">（</span><span class="n">Bean</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="kr">read</span><span class="n">y</span><span class="w"> </span><span class="kr">to</span><span class="w"> </span><span class="n">use</span><span class="err">）</span>
+8. 就绪（Bean is ready to use）
 
-<span class="mf">9.</span><span class="w"> </span><span class="err">@</span><span class="n">PreDestroy</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">DisposableBean</span><span class="mf">.</span><span class="n">destroy</span><span class="p">()</span>
-<span class="w">   </span><span class="err">→</span><span class="w"> </span><span class="n">销毁时的回调</span>
-</code></pre></div>
+9. @PreDestroy / DisposableBean.destroy()
+   → 销毁时的回调
+</code></pre>
 
 <h2>面试时怎么答</h2>
 <p>不要一开始就背全部步骤。先说三个关键词：</p>

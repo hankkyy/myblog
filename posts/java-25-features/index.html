@@ -91,22 +91,22 @@
               <div class="entry-content"><p>Java 25 has been officially released, and several features are worth paying attention to.</p>
 <h2>Virtual Threads Officially GA</h2>
 <p>Virtual threads were in Preview in Java 21 and are now stable.</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">// Before: one request per platform thread, blocking when the thread pool is exhausted</span>
-<span class="n">ExecutorService</span><span class="w"> </span><span class="n">exec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Executors</span><span class="p">.</span><span class="na">newFixedThreadPool</span><span class="p">(</span><span class="mi">200</span><span class="p">);</span>
+<pre class="codehilite"><code class="language-java">// Before: one request per platform thread, blocking when the thread pool is exhausted
+ExecutorService exec = Executors.newFixedThreadPool(200);
 
-<span class="c1">// Now: one request per virtual thread, with virtually no limits</span>
-<span class="n">ExecutorService</span><span class="w"> </span><span class="n">exec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Executors</span><span class="p">.</span><span class="na">newVirtualThreadPerTaskExecutor</span><span class="p">();</span>
-</code></pre></div>
+// Now: one request per virtual thread, with virtually no limits
+ExecutorService exec = Executors.newVirtualThreadPerTaskExecutor();
+</code></pre>
 
 <p>In real-world testing, with the same machine resource configuration, throughput improved by 3-5 times when using virtual threads. This is because virtual threads don't occupy OS threads—when blocked, they are automatically suspended, freeing up the underlying platform threads.</p>
 <h2>String Templates</h2>
 <p>Say goodbye to StringBuilder hell:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">// Before</span>
-<span class="n">String</span><span class="w"> </span><span class="n">sql</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;SELECT * FROM users WHERE id = &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">userId</span><span class="p">;</span>
+<pre class="codehilite"><code class="language-java">// Before
+String sql = &quot;SELECT * FROM users WHERE id = &quot; + userId;
 
-<span class="c1">// Now</span>
-<span class="n">String</span><span class="w"> </span><span class="n">sql</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">STR</span><span class="p">.</span><span class="s">&quot;SELECT * FROM users WHERE id = \{userId}&quot;</span><span class="p">;</span>
-</code></pre></div>
+// Now
+String sql = STR.&quot;SELECT * FROM users WHERE id = \{userId}&quot;;
+</code></pre>
 
 <p>Note: String templates include SQL injection protection by default, and different processors have different escaping rules.</p>
 <h2>Other Improvements</h2>

@@ -90,20 +90,20 @@
               </header>
               <div class="entry-content"><p>面试必问题：「为什么 MySQL 用 B+Tree 而不是二叉树/哈希/B-Tree？」</p>
 <h2>磁盘 IO 是根本原因</h2>
-<div class="codehilite"><pre><span></span><code>CPU L1 Cache:  ~1ns
+<pre class="codehilite"><code>CPU L1 Cache:  ~1ns
 内存访问:      ~100ns
 SSD 随机读:    ~100μs   ← 比内存慢 1000 倍
 HDD 随机读:    ~10ms    ← 比内存慢 100,000 倍
-</code></pre></div>
+</code></pre>
 
 <p>数据库的瓶颈永远是磁盘 IO。索引的目标：<strong>用最少的磁盘 IO 找到数据</strong>。</p>
 <h2>B+Tree 结构</h2>
-<div class="codehilite"><pre><span></span><code>              [30|60]          ← 非叶子节点只存 key
+<pre class="codehilite"><code>              [30|60]          ← 非叶子节点只存 key
             /    |    \
       [5|15]  [40|50]  [70|80]  ← 内部节点
        /  \    /  \    /  \
     [叶子节点 — 存全部数据 + 双向链表]
-</code></pre></div>
+</code></pre>
 
 <ul>
 <li>所有数据在叶子节点</li>
@@ -138,21 +138,21 @@ HDD 随机读:    ~10ms    ← 比内存慢 100,000 倍
 </tbody>
 </table>
 <h2>聚簇索引 vs 二级索引</h2>
-<div class="codehilite"><pre><span></span><code><span class="c1">-- InnoDB 的聚簇索引：数据存在叶子节点</span>
-<span class="c1">-- PK 就是聚簇索引</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">;</span><span class="w">  </span><span class="c1">-- 一次 B+Tree 查找</span>
+<pre class="codehilite"><code class="language-sql">-- InnoDB 的聚簇索引：数据存在叶子节点
+-- PK 就是聚簇索引
+SELECT * FROM users WHERE id = 100;  -- 一次 B+Tree 查找
 
-<span class="c1">-- 二级索引：叶子节点存主键值</span>
-<span class="c1">-- 需要「回表」</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Alice&#39;</span><span class="p">;</span>
-<span class="c1">-- 1. 在 name 索引找主键 id</span>
-<span class="c1">-- 2. 用 id 去聚簇索引找完整行</span>
-</code></pre></div>
+-- 二级索引：叶子节点存主键值
+-- 需要「回表」
+SELECT * FROM users WHERE name = 'Alice';
+-- 1. 在 name 索引找主键 id
+-- 2. 用 id 去聚簇索引找完整行
+</code></pre>
 
 <p><strong>覆盖索引</strong>：查询列全在索引里，避免回表。</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">-- 不用回表</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Alice&#39;</span><span class="p">;</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-sql">-- 不用回表
+SELECT id, name FROM users WHERE name = 'Alice';
+</code></pre>
 
 <blockquote>
 <p>B+Tree 统治数据库 40 年，靠的是对磁盘 IO 的极致优化。</p>

@@ -96,9 +96,9 @@
 <p>After learning Spring, I wanted to use dependency injection for everything. A CLI tool under 500 lines ended up with 3 interfaces and 5 implementation classes.</p>
 <p>Lesson: If a simple <code>new</code> can solve it, don't over-engineer with DI. Not all code needs to be "enterprise-grade."</p>
 <h2>3. Comments That Say Nothing</h2>
-<div class="codehilite"><pre><span></span><code><span class="c1">// Get user</span>
-<span class="kd">public</span><span class="w"> </span><span class="n">User</span><span class="w"> </span><span class="nf">getUser</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-java">// Get user
+public User getUser(Long id) { ... }
+</code></pre>
 
 <p>Comments like this are worthless.</p>
 <p>Lesson: Good code doesn't need comments to explain "what" it does. Comments should explain "why"—why this algorithm? Why not consider caching?</p>

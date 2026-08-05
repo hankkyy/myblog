@@ -90,10 +90,10 @@
               </header>
               <div class="entry-content"><p>Spring Boot's auto-configuration is a frequent interview topic. Many people can only say "convention over configuration," but freeze when asked about the underlying principles.</p>
 <h2>The Three-in-One @SpringBootApplication</h2>
-<div class="codehilite"><pre><span></span><code><span class="nd">@SpringBootConfiguration</span><span class="w">  </span><span class="c1">// Equivalent to @Configuration</span>
-<span class="nd">@EnableAutoConfiguration</span><span class="w">  </span><span class="c1">// Entry point for auto-configuration</span>
-<span class="nd">@ComponentScan</span><span class="w">            </span><span class="c1">// Scans components</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-java">@SpringBootConfiguration  // Equivalent to @Configuration
+@EnableAutoConfiguration  // Entry point for auto-configuration
+@ComponentScan            // Scans components
+</code></pre>
 
 <p>The key is <code>@EnableAutoConfiguration</code>.</p>
 <h2>The Auto-Configuration Flow</h2>

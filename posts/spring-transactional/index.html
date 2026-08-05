@@ -90,54 +90,54 @@
               </header>
               <div class="entry-content"><p>@Transactional looks great, but there are several situations where it silently fails.</p>
 <h2>1. Self-Invocation Within the Same Class</h2>
-<div class="codehilite"><pre><span></span><code><span class="nd">@Service</span>
-<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">UserService</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nd">@Transactional</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">createUser</span><span class="p">(</span><span class="n">User</span><span class="w"> </span><span class="n">user</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// The transaction here will NOT take effect!</span>
-<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">saveUser</span><span class="p">(</span><span class="n">user</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
+<pre class="codehilite"><code class="language-java">@Service
+public class UserService {
+    @Transactional
+    public void createUser(User user) {
+        // The transaction here will NOT take effect!
+        this.saveUser(user);
+    }
 
-<span class="w">    </span><span class="nd">@Transactional</span><span class="p">(</span><span class="n">propagation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Propagation</span><span class="p">.</span><span class="na">REQUIRES_NEW</span><span class="p">)</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">saveUser</span><span class="p">(</span><span class="n">User</span><span class="w"> </span><span class="n">user</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// ...</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void saveUser(User user) {
+        // ...
+    }
+}
+</code></pre>
 
 <p>Reason: Spring transactions are implemented through AOP proxies. Self-invocation within the same class bypasses the proxy.</p>
 <p>Solution: Extract the method into a different Service, or use <code>AopContext.currentProxy()</code>.</p>
 <h2>2. Non-Public Methods</h2>
-<div class="codehilite"><pre><span></span><code><span class="nd">@Transactional</span>
-<span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">saveUser</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span><span class="w">  </span><span class="c1">// Transaction does NOT take effect!</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-java">@Transactional
+private void saveUser() { }  // Transaction does NOT take effect!
+</code></pre>
 
 <p>AOP proxies can only intercept public methods.</p>
 <h2>3. Swallowed Exceptions</h2>
-<div class="codehilite"><pre><span></span><code><span class="nd">@Transactional</span>
-<span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">createUser</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// Code that throws an exception</span>
-<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">log</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&quot;Something went wrong&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">);</span><span class="w">  </span><span class="c1">// Transaction will NOT roll back!</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-java">@Transactional
+public void createUser() {
+    try {
+        // Code that throws an exception
+    } catch (Exception e) {
+        log.error(&quot;Something went wrong&quot;, e);  // Transaction will NOT roll back!
+    }
+}
+</code></pre>
 
 <p>Transactions only roll back when an uncaught RuntimeException is thrown. If you catch the exception and don't rethrow it, it's pointless. You need to manually roll back inside the catch block:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">TransactionAspectSupport</span><span class="p">.</span><span class="na">currentTransactionStatus</span><span class="p">().</span><span class="na">setRollbackOnly</span><span class="p">();</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-java">TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+</code></pre>
 
 <h2>4. Unsupported Database Engine</h2>
 <p>MyISAM does not support transactions. Adding @Transactional won't help.</p>
 <h2>5. Multithreading</h2>
-<div class="codehilite"><pre><span></span><code><span class="nd">@Transactional</span>
-<span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">batchProcess</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="n">Thread</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">userMapper</span><span class="p">.</span><span class="na">insert</span><span class="p">(</span><span class="n">user</span><span class="p">);</span><span class="w">  </span><span class="c1">// Not in the current transaction!</span>
-<span class="w">    </span><span class="p">}).</span><span class="na">start</span><span class="p">();</span>
-<span class="p">}</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-java">@Transactional
+public void batchProcess() {
+    new Thread(() -&gt; {
+        userMapper.insert(user);  // Not in the current transaction!
+    }).start();
+}
+</code></pre>
 
 <p>Transactions are bound to ThreadLocal, so a new thread cannot access the current transaction.</p>
 <h2>Summary</h2>

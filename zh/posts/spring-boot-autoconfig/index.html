@@ -90,10 +90,10 @@
               </header>
               <div class="entry-content"><p>Spring Boot 的自动配置是面试高频题。很多人只会说「约定大于配置」，但被追问原理就卡壳了。</p>
 <h2>@SpringBootApplication 的三合一</h2>
-<div class="codehilite"><pre><span></span><code><span class="nd">@SpringBootConfiguration</span><span class="w">  </span><span class="c1">// 等价于 @Configuration</span>
-<span class="nd">@EnableAutoConfiguration</span><span class="w">  </span><span class="c1">// 自动配置的入口</span>
-<span class="nd">@ComponentScan</span><span class="w">            </span><span class="c1">// 扫描组件</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-java">@SpringBootConfiguration  // 等价于 @Configuration
+@EnableAutoConfiguration  // 自动配置的入口
+@ComponentScan            // 扫描组件
+</code></pre>
 
 <p>关键是 <code>@EnableAutoConfiguration</code>。</p>
 <h2>自动配置的流程</h2>

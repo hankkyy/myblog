@@ -91,19 +91,19 @@
               <div class="entry-content"><p>If you use AI-assisted programming (Copilot, Cursor, Claude Code), there's a simple but underrated practice: <strong>put an <code>AGENTS.md</code> file in your project root</strong>.</p>
 <h2>What It Is</h2>
 <p><code>AGENTS.md</code> is a project manual written for AI. Placed in the project root, AI coding assistants will automatically read it.</p>
-<div class="codehilite"><pre><span></span><code><span class="gh"># Project Name - Development Guide</span>
+<pre class="codehilite"><code class="language-markdown"># Project Name - Development Guide
 
-<span class="gu">## Build &amp; Run</span>
+## Build &amp; Run
 npm install &amp;&amp; npm run dev
 
-<span class="gu">## Project Structure</span>
+## Project Structure
 src/ — main code
 tests/ — tests
 
-<span class="gu">## Conventions</span>
-<span class="k">-</span><span class="w"> </span>TypeScript strict mode
-<span class="k">-</span><span class="w"> </span>Components use named exports
-</code></pre></div>
+## Conventions
+- TypeScript strict mode
+- Components use named exports
+</code></pre>
 
 <h2>Why It Matters</h2>
 <p>Without AGENTS.md, AI will:</p>
@@ -115,14 +115,14 @@ tests/ — tests
 </ul>
 <p>With AGENTS.md, AI knows the project rules from the start.</p>
 <h2>Common Contents</h2>
-<div class="codehilite"><pre><span></span><code><span class="mf">1.</span><span class="w"> </span><span class="n">Project</span><span class="w"> </span><span class="n">overview</span><span class="w"> </span><span class="p">(</span><span class="kr">on</span><span class="n">e</span><span class="w"> </span><span class="n">sentence</span><span class="p">)</span>
-<span class="mf">2.</span><span class="w"> </span><span class="n">Environment</span><span class="w"> </span><span class="n">requirements</span><span class="w"> </span><span class="p">(</span><span class="n">Node</span><span class="w"> </span><span class="mf">20</span><span class="o">+</span><span class="p">,</span><span class="w"> </span><span class="n">Python</span><span class="w"> </span><span class="mf">3.11</span><span class="o">+</span><span class="p">)</span>
-<span class="mf">3.</span><span class="w"> </span><span class="n">Local</span><span class="w"> </span><span class="n">development</span><span class="w"> </span><span class="n">commands</span>
-<span class="mf">4.</span><span class="w"> </span><span class="n">Quick</span><span class="w"> </span><span class="n">project</span><span class="w"> </span><span class="n">structure</span><span class="w"> </span><span class="n">overview</span>
-<span class="mf">5.</span><span class="w"> </span><span class="n">Code</span><span class="w"> </span><span class="n">style</span><span class="w"> </span><span class="n">conventions</span>
-<span class="mf">6.</span><span class="w"> </span><span class="n">Git</span><span class="w"> </span><span class="n">branch</span><span class="w"> </span><span class="n">guidelines</span>
-<span class="mf">7.</span><span class="w"> </span><span class="kr">Go</span><span class="n">tchas</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">pitfalls</span>
-</code></pre></div>
+<pre class="codehilite"><code>1. Project overview (one sentence)
+2. Environment requirements (Node 20+, Python 3.11+)
+3. Local development commands
+4. Quick project structure overview
+5. Code style conventions
+6. Git branch guidelines
+7. Gotchas / pitfalls
+</code></pre>
 
 <h2>Best Practices</h2>
 <ul>

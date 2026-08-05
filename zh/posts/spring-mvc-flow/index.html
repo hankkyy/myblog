@@ -90,7 +90,7 @@
               </header>
               <div class="entry-content"><p>Spring MVC 的请求处理流程是经典面试题。</p>
 <h2>完整流程</h2>
-<div class="codehilite"><pre><span></span><code>HTTP 请求
+<pre class="codehilite"><code>HTTP 请求
     ↓
 DispatcherServlet（前端控制器）
     ↓
@@ -107,7 +107,7 @@ ViewResolver（解析视图）
 View（渲染视图）
     ↓
 HTTP 响应
-</code></pre></div>
+</code></pre>
 
 <h2>每一步详解</h2>
 <p><strong>1. DispatcherServlet</strong>：Spring MVC 的核心，所有请求的入口。它在 <code>web.xml</code> 或通过 <code>AbstractAnnotationConfigDispatcherServletInitializer</code> 配置。</p>

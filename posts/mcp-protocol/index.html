@@ -91,19 +91,19 @@
               <div class="entry-content"><p>MCP (Model Context Protocol) is a standard protocol open-sourced by Anthropic in late 2024. Its core goal: <strong>to establish a unified standard for interactions between LLMs and external tools/data sources</strong>.</p>
 <h2>The Problem</h2>
 <p>Here's how messy AI Agent tool calling is today:</p>
-<div class="codehilite"><pre><span></span><code><span class="n">Claude</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">its</span><span class="w"> </span><span class="n">own</span><span class="w"> </span><span class="k">tool</span><span class="w"> </span><span class="n">format</span>
-<span class="n">GPT</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">Function</span><span class="w"> </span><span class="n">Calling</span>
-<span class="n">Open</span><span class="o">-</span><span class="n">source</span><span class="w"> </span><span class="n">models</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">each</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">their</span><span class="w"> </span><span class="n">own</span><span class="w"> </span><span class="n">approach</span>
-</code></pre></div>
+<pre class="codehilite"><code>Claude → its own tool format
+GPT → Function Calling
+Open-source models → each with their own approach
+</code></pre>
 
 <p>Every tool requires separate adaptation. What MCP aims to solve: <strong>Just as USB-C unified connectors, MCP unifies AI's tool calling protocol</strong>.</p>
 <h2>Architecture</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">┌──────────┐</span><span class="w">     </span><span class="n">MCP</span><span class="w"> </span><span class="n">Protocol</span><span class="w">     </span><span class="err">┌──────────────┐</span>
-<span class="err">│</span><span class="w">  </span><span class="n">Host</span><span class="w">    </span><span class="err">│◄────────────────────►│</span><span class="w">  </span><span class="n">MCP</span><span class="w"> </span><span class="n">Server</span><span class="w">  </span><span class="err">│</span>
-<span class="err">│</span><span class="w"> </span><span class="p">(</span><span class="n">Claude</span><span class="w">  </span><span class="err">│</span><span class="w">   </span><span class="n">JSON</span><span class="o">-</span><span class="n">RPC</span><span class="w"> </span><span class="n">over</span><span class="w">      </span><span class="err">│</span><span class="w">  </span><span class="p">(</span><span class="n">tools</span><span class="p">)</span><span class="w">     </span><span class="err">│</span>
-<span class="err">│</span><span class="w">  </span><span class="n">Desktop</span><span class="p">)</span><span class="err">│</span><span class="w">   </span><span class="n">stdio</span><span class="o">/</span><span class="n">HTTP</span><span class="w">          </span><span class="err">│</span><span class="w">              </span><span class="err">│</span>
-<span class="err">└──────────┘</span><span class="w">                      </span><span class="err">└──────────────┘</span>
-</code></pre></div>
+<pre class="codehilite"><code>┌──────────┐     MCP Protocol     ┌──────────────┐
+│  Host    │◄────────────────────►│  MCP Server  │
+│ (Claude  │   JSON-RPC over      │  (tools)     │
+│  Desktop)│   stdio/HTTP          │              │
+└──────────┘                      └──────────────┘
+</code></pre>
 
 <ul>
 <li><strong>Host</strong>: AI application (Claude Desktop, VS Code, custom App)</li>
@@ -111,19 +111,19 @@
 <li><strong>Server</strong>: Service providing specific capabilities (filesystem, database, API)</li>
 </ul>
 <h2>Quick Start</h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Install MCP server</span>
-npx<span class="w"> </span>@anthropic/mcp-server-filesystem<span class="w"> </span>/path/to/allowed/dir
+<pre class="codehilite"><code class="language-bash"># Install MCP server
+npx @anthropic/mcp-server-filesystem /path/to/allowed/dir
 
-<span class="c1"># Claude Desktop configuration</span>
-<span class="o">{</span>
-<span class="w">  </span><span class="s2">&quot;mcpServers&quot;</span>:<span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="s2">&quot;filesystem&quot;</span>:<span class="w"> </span><span class="o">{</span>
-<span class="w">      </span><span class="s2">&quot;command&quot;</span>:<span class="w"> </span><span class="s2">&quot;npx&quot;</span>,
-<span class="w">      </span><span class="s2">&quot;args&quot;</span>:<span class="w"> </span><span class="o">[</span><span class="s2">&quot;@anthropic/mcp-server-filesystem&quot;</span>,<span class="w"> </span><span class="s2">&quot;/path&quot;</span><span class="o">]</span>
-<span class="w">    </span><span class="o">}</span>
-<span class="w">  </span><span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div>
+# Claude Desktop configuration
+{
+  &quot;mcpServers&quot;: {
+    &quot;filesystem&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;@anthropic/mcp-server-filesystem&quot;, &quot;/path&quot;]
+    }
+  }
+}
+</code></pre>
 
 <h2>Existing Ecosystem</h2>
 <table>

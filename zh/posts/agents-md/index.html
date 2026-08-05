@@ -91,19 +91,19 @@
               <div class="entry-content"><p>如果你用 AI 辅助编程（Copilot、Cursor、Claude Code），有个简单但被低估的做法：<strong>在项目根目录放一个 <code>AGENTS.md</code></strong>。</p>
 <h2>它是什么</h2>
 <p><code>AGENTS.md</code> 是一份写给 AI 的项目说明书。放在项目根目录，AI 编程助手会自动读取它。</p>
-<div class="codehilite"><pre><span></span><code><span class="gh"># Project Name - Development Guide</span>
+<pre class="codehilite"><code class="language-markdown"># Project Name - Development Guide
 
-<span class="gu">## Build &amp; Run</span>
+## Build &amp; Run
 npm install &amp;&amp; npm run dev
 
-<span class="gu">## Project Structure</span>
+## Project Structure
 src/ — 主代码
 tests/ — 测试
 
-<span class="gu">## Conventions</span>
-<span class="k">-</span><span class="w"> </span>TypeScript strict mode
-<span class="k">-</span><span class="w"> </span>组件用 named export
-</code></pre></div>
+## Conventions
+- TypeScript strict mode
+- 组件用 named export
+</code></pre>
 
 <h2>为什么重要</h2>
 <p>没有 AGENTS.md，AI 会：</p>
@@ -115,14 +115,14 @@ tests/ — 测试
 </ul>
 <p>有 AGENTS.md，AI 开局就知道项目规则。</p>
 <h2>常见内容</h2>
-<div class="codehilite"><pre><span></span><code><span class="mf">1.</span><span class="w"> </span><span class="n">项目简介</span><span class="err">（</span><span class="n">一句话</span><span class="err">）</span>
-<span class="mf">2.</span><span class="w"> </span><span class="n">环境要求</span><span class="err">（</span><span class="n">Node</span><span class="w"> </span><span class="mf">20</span><span class="o">+</span><span class="p">,</span><span class="w"> </span><span class="n">Python</span><span class="w"> </span><span class="mf">3.11</span><span class="o">+</span><span class="err">）</span>
-<span class="mf">3.</span><span class="w"> </span><span class="n">本地开发命令</span>
-<span class="mf">4.</span><span class="w"> </span><span class="n">项目结构速览</span>
-<span class="mf">5.</span><span class="w"> </span><span class="n">代码风格约定</span>
-<span class="mf">6.</span><span class="w"> </span><span class="n">Git</span><span class="w"> </span><span class="n">分支规范</span>
-<span class="mf">7.</span><span class="w"> </span><span class="n">注意事项</span><span class="o">/</span><span class="n">坑</span>
-</code></pre></div>
+<pre class="codehilite"><code>1. 项目简介（一句话）
+2. 环境要求（Node 20+, Python 3.11+）
+3. 本地开发命令
+4. 项目结构速览
+5. 代码风格约定
+6. Git 分支规范
+7. 注意事项/坑
+</code></pre>
 
 <h2>最佳实践</h2>
 <ul>

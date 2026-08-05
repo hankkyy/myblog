@@ -91,19 +91,19 @@
               <div class="entry-content"><p>MCP（Model Context Protocol）是 Anthropic 2024 年底开源的标准协议。它的核心目标：<strong>让 LLM 和外部工具/数据源的交互有一个统一标准</strong>。</p>
 <h2>问题</h2>
 <p>现在的 AI Agent 调用工具有多乱：</p>
-<div class="codehilite"><pre><span></span><code>Claude → 自己的工具格式
+<pre class="codehilite"><code>Claude → 自己的工具格式
 GPT → Function Calling
 开源模型 → 各家用各的
-</code></pre></div>
+</code></pre>
 
 <p>每个工具都要单独适配。MCP 要解决的问题：<strong>就像 USB-C 统一了接口，MCP 统一了 AI 的工具调用协议</strong>。</p>
 <h2>架构</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">┌──────────┐</span><span class="w">     </span><span class="n">MCP</span><span class="w"> </span><span class="n">Protocol</span><span class="w">     </span><span class="err">┌──────────────┐</span>
-<span class="err">│</span><span class="w">  </span><span class="n">Host</span><span class="w">    </span><span class="err">│◄────────────────────►│</span><span class="w">  </span><span class="n">MCP</span><span class="w"> </span><span class="n">Server</span><span class="w">  </span><span class="err">│</span>
-<span class="err">│</span><span class="w"> </span><span class="p">(</span><span class="n">Claude</span><span class="w">  </span><span class="err">│</span><span class="w">   </span><span class="n">JSON</span><span class="o">-</span><span class="n">RPC</span><span class="w"> </span><span class="n">over</span><span class="w">      </span><span class="err">│</span><span class="w">  </span><span class="p">(</span><span class="n">tools</span><span class="p">)</span><span class="w">     </span><span class="err">│</span>
-<span class="err">│</span><span class="w">  </span><span class="n">Desktop</span><span class="p">)</span><span class="err">│</span><span class="w">   </span><span class="n">stdio</span><span class="o">/</span><span class="n">HTTP</span><span class="w">          </span><span class="err">│</span><span class="w">              </span><span class="err">│</span>
-<span class="err">└──────────┘</span><span class="w">                      </span><span class="err">└──────────────┘</span>
-</code></pre></div>
+<pre class="codehilite"><code>┌──────────┐     MCP Protocol     ┌──────────────┐
+│  Host    │◄────────────────────►│  MCP Server  │
+│ (Claude  │   JSON-RPC over      │  (tools)     │
+│  Desktop)│   stdio/HTTP          │              │
+└──────────┘                      └──────────────┘
+</code></pre>
 
 <ul>
 <li><strong>Host</strong>：AI 应用（Claude Desktop、VS Code、自定义 App）</li>
@@ -111,19 +111,19 @@ GPT → Function Calling
 <li><strong>Server</strong>：提供具体能力的服务（文件系统、数据库、API）</li>
 </ul>
 <h2>快速上手</h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># 安装 MCP 服务端</span>
-npx<span class="w"> </span>@anthropic/mcp-server-filesystem<span class="w"> </span>/path/to/allowed/dir
+<pre class="codehilite"><code class="language-bash"># 安装 MCP 服务端
+npx @anthropic/mcp-server-filesystem /path/to/allowed/dir
 
-<span class="c1"># Claude Desktop 配置</span>
-<span class="o">{</span>
-<span class="w">  </span><span class="s2">&quot;mcpServers&quot;</span>:<span class="w"> </span><span class="o">{</span>
-<span class="w">    </span><span class="s2">&quot;filesystem&quot;</span>:<span class="w"> </span><span class="o">{</span>
-<span class="w">      </span><span class="s2">&quot;command&quot;</span>:<span class="w"> </span><span class="s2">&quot;npx&quot;</span>,
-<span class="w">      </span><span class="s2">&quot;args&quot;</span>:<span class="w"> </span><span class="o">[</span><span class="s2">&quot;@anthropic/mcp-server-filesystem&quot;</span>,<span class="w"> </span><span class="s2">&quot;/path&quot;</span><span class="o">]</span>
-<span class="w">    </span><span class="o">}</span>
-<span class="w">  </span><span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div>
+# Claude Desktop 配置
+{
+  &quot;mcpServers&quot;: {
+    &quot;filesystem&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;@anthropic/mcp-server-filesystem&quot;, &quot;/path&quot;]
+    }
+  }
+}
+</code></pre>
 
 <h2>已有生态</h2>
 <table>

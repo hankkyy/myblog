@@ -90,32 +90,32 @@
               </header>
               <div class="entry-content"><p>Many people think containers are "lightweight virtual machines." In reality, a container is just an ordinary process, only its view is restricted by the Linux kernel's isolation mechanisms.</p>
 <h2>The Three Pillars</h2>
-<div class="codehilite"><pre><span></span><code>┌──────────────────────────────────────┐
+<pre class="codehilite"><code>┌──────────────────────────────────────┐
 │  Namespace  → Isolate (what you see)  │
 │  Cgroups    → Limit (how much you use)│
 │  UnionFS    → Layer (how images are stored)│
 └──────────────────────────────────────┘
-</code></pre></div>
+</code></pre>
 
 <h2>Namespace: The Process's "Cage"</h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># View a process&#39;s namespaces</span>
-ls<span class="w"> </span>-la<span class="w"> </span>/proc/<span class="k">$(</span>pidof<span class="w"> </span>nginx<span class="k">)</span>/ns/
-<span class="c1"># PID  Namespace → PID 1 inside the container is just some PID on the host</span>
-<span class="c1"># NET  Namespace → The container has its own network interface, IP, and ports</span>
-<span class="c1"># MNT  Namespace → The container has its own filesystem</span>
-<span class="c1"># UTS  Namespace → The container can have its own hostname</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-bash"># View a process's namespaces
+ls -la /proc/$(pidof nginx)/ns/
+# PID  Namespace → PID 1 inside the container is just some PID on the host
+# NET  Namespace → The container has its own network interface, IP, and ports
+# MNT  Namespace → The container has its own filesystem
+# UTS  Namespace → The container can have its own hostname
+</code></pre>
 
 <h2>Cgroups: Resource Limits</h2>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Limit memory to 256MB</span>
-<span class="nb">echo</span><span class="w"> </span><span class="m">268435456</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/fs/cgroup/memory/docker/xxx/memory.limit_in_bytes
-<span class="c1"># Limit CPU to 50%</span>
-<span class="nb">echo</span><span class="w"> </span><span class="m">50000</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/fs/cgroup/cpu/docker/xxx/cpu.cfs_quota_us
-</code></pre></div>
+<pre class="codehilite"><code class="language-bash"># Limit memory to 256MB
+echo 268435456 &gt; /sys/fs/cgroup/memory/docker/xxx/memory.limit_in_bytes
+# Limit CPU to 50%
+echo 50000 &gt; /sys/fs/cgroup/cpu/docker/xxx/cpu.cfs_quota_us
+</code></pre>
 
 <p>Docker uses cgroups to ensure a container cannot consume all of the host's resources.</p>
 <h2>UnionFS: Layered Images</h2>
-<div class="codehilite"><pre><span></span><code>┌──────────┐
+<pre class="codehilite"><code>┌──────────┐
 │  Container layer (R/W) │ ← Modifications made during container runtime
 ├──────────┤
 │  Layer 3: apt install nginx │
@@ -124,15 +124,15 @@ ls<span class="w"> </span>-la<span class="w"> </span>/proc/<span class="k">$(</s
 ├──────────┤
 │  Layer 1: FROM ubuntu:22.04 │
 └──────────┘
-</code></pre></div>
+</code></pre>
 
 <p>Each layer only stores the delta (differences). Image reuse saves disk space.</p>
 <h2>What Happens When a Container Starts</h2>
-<div class="codehilite"><pre><span></span><code><span class="mf">1.</span><span class="w"> </span><span class="n">Create</span><span class="w"> </span><span class="n">Namespaces</span><span class="w"> </span><span class="p">(</span><span class="n">PID</span><span class="o">/</span><span class="n">NET</span><span class="o">/</span><span class="n">MNT</span><span class="o">/</span><span class="n">UTS</span><span class="o">/</span><span class="n">IPC</span><span class="p">)</span>
-<span class="mf">2.</span><span class="w"> </span><span class="n">Set</span><span class="w"> </span><span class="n">Cgroups</span><span class="w"> </span><span class="n">limits</span>
-<span class="mf">3.</span><span class="w"> </span><span class="n">pivot_root</span><span class="w"> </span><span class="kr">to</span><span class="w"> </span><span class="n">switch</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="n">filesystem</span>
-<span class="mf">4.</span><span class="w"> </span><span class="n">Execute</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">entrypoint</span>
-</code></pre></div>
+<pre class="codehilite"><code>1. Create Namespaces (PID/NET/MNT/UTS/IPC)
+2. Set Cgroups limits
+3. pivot_root to switch the root filesystem
+4. Execute the entrypoint
+</code></pre>
 
 <blockquote>
 <p>Understanding these three concepts is understanding the essence of containers.</p>

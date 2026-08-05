@@ -90,12 +90,12 @@
               </header>
               <div class="entry-content"><p>The core challenge of distributed systems: how can multiple nodes agree on a single value? Raft is currently the most popular consensus algorithm.</p>
 <h2>The Three Roles in Raft</h2>
-<div class="codehilite"><pre><span></span><code>┌──────────────────────────────────────┐
+<pre class="codehilite"><code>┌──────────────────────────────────────┐
 │  Leader   ← Handles all client requests │
 │  Follower ← Passively responds to Leader │
 │  Candidate ← Temporary state during election │
 └──────────────────────────────────────┘
-</code></pre></div>
+</code></pre>
 
 <h2>Leader Election</h2>
 <ol>
@@ -105,11 +105,11 @@
 <li>Tie in votes → re-election (random timeouts prevent infinite loops)</li>
 </ol>
 <h2>Log Replication</h2>
-<div class="codehilite"><pre><span></span><code>Client → Leader: SET x = 1
+<pre class="codehilite"><code>Client → Leader: SET x = 1
 Leader → Followers: AppendEntries(x=1, term=3, prevLogIndex=4)
 Followers → Leader: ACK
 Leader → Client: OK (after majority acknowledgment)
-</code></pre></div>
+</code></pre>
 
 <p><strong>Key point</strong>: The Leader only commits logs from the current term. This ensures safety.</p>
 <h2>Raft vs Paxos</h2>

@@ -116,10 +116,10 @@
 <li>Access log table (optional): short_code, timestamp, ip, user_agent</li>
 </ul>
 <h2>5. Architecture Design</h2>
-<div class="codehilite"><pre><span></span><code>User → CDN → API Gateway → Short URL Service → Cache (Redis) → Database (MySQL)
+<pre class="codehilite"><code>User → CDN → API Gateway → Short URL Service → Cache (Redis) → Database (MySQL)
                                     ↓
                               302 Redirect
-</code></pre></div>
+</code></pre>
 
 <h2>6. Scaling Considerations</h2>
 <ul>

@@ -90,20 +90,20 @@
               </header>
               <div class="entry-content"><p>A classic interview question: "Why does MySQL use B+Tree instead of binary trees/hash tables/B-Trees?"</p>
 <h2>Disk I/O Is the Root Cause</h2>
-<div class="codehilite"><pre><span></span><code><span class="nv">CPU</span><span class="w"> </span><span class="nv">L1</span><span class="w"> </span><span class="nv">Cache</span>:<span class="w">  </span><span class="o">~</span><span class="mi">1</span><span class="nv">ns</span>
-<span class="nv">Memory</span><span class="w"> </span><span class="nv">access</span>:<span class="w">      </span><span class="o">~</span><span class="mi">100</span><span class="nv">ns</span>
-<span class="nv">SSD</span><span class="w"> </span><span class="k">random</span><span class="w"> </span><span class="nv">read</span>:<span class="w">    </span><span class="o">~</span><span class="mi">100</span>μ<span class="nv">s</span><span class="w">   </span>←<span class="w"> </span><span class="mi">1000</span><span class="nv">x</span><span class="w"> </span><span class="nv">slower</span><span class="w"> </span><span class="nv">than</span><span class="w"> </span><span class="nv">memory</span>
-<span class="nv">HDD</span><span class="w"> </span><span class="k">random</span><span class="w"> </span><span class="nv">read</span>:<span class="w">    </span><span class="o">~</span><span class="mi">10</span><span class="nv">ms</span><span class="w">    </span>←<span class="w"> </span><span class="mi">100</span>,<span class="mi">000</span><span class="nv">x</span><span class="w"> </span><span class="nv">slower</span><span class="w"> </span><span class="nv">than</span><span class="w"> </span><span class="nv">memory</span>
-</code></pre></div>
+<pre class="codehilite"><code>CPU L1 Cache:  ~1ns
+Memory access:      ~100ns
+SSD random read:    ~100μs   ← 1000x slower than memory
+HDD random read:    ~10ms    ← 100,000x slower than memory
+</code></pre>
 
 <p>The bottleneck of databases is always disk I/O. The goal of indexing: <strong>find data with minimal disk I/O</strong>.</p>
 <h2>B+Tree Structure</h2>
-<div class="codehilite"><pre><span></span><code>              [30|60]          ← Non-leaf nodes store only keys
+<pre class="codehilite"><code>              [30|60]          ← Non-leaf nodes store only keys
             /    |    \
       [5|15]  [40|50]  [70|80]  ← Internal nodes
        /  \    /  \    /  \
     [Leaf nodes — store all data + doubly linked list]
-</code></pre></div>
+</code></pre>
 
 <ul>
 <li>All data is stored in leaf nodes</li>
@@ -138,21 +138,21 @@
 </tbody>
 </table>
 <h2>Clustered Index vs Secondary Index</h2>
-<div class="codehilite"><pre><span></span><code><span class="c1">-- InnoDB&#39;s clustered index: data stored in leaf nodes</span>
-<span class="c1">-- The primary key is the clustered index</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">;</span><span class="w">  </span><span class="c1">-- One B+Tree lookup</span>
+<pre class="codehilite"><code class="language-sql">-- InnoDB's clustered index: data stored in leaf nodes
+-- The primary key is the clustered index
+SELECT * FROM users WHERE id = 100;  -- One B+Tree lookup
 
-<span class="c1">-- Secondary index: leaf nodes store primary key values</span>
-<span class="c1">-- Requires &quot;table lookup&quot; (back to the clustered index)</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Alice&#39;</span><span class="p">;</span>
-<span class="c1">-- 1. Find the primary key id in the name index</span>
-<span class="c1">-- 2. Use the id to find the full row in the clustered index</span>
-</code></pre></div>
+-- Secondary index: leaf nodes store primary key values
+-- Requires &quot;table lookup&quot; (back to the clustered index)
+SELECT * FROM users WHERE name = 'Alice';
+-- 1. Find the primary key id in the name index
+-- 2. Use the id to find the full row in the clustered index
+</code></pre>
 
 <p><strong>Covering index</strong>: when all queried columns are in the index, avoiding the table lookup.</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">-- No table lookup needed</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Alice&#39;</span><span class="p">;</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-sql">-- No table lookup needed
+SELECT id, name FROM users WHERE name = 'Alice';
+</code></pre>
 
 <blockquote>
 <p>B+Tree has dominated databases for 40 years, thanks to its extreme optimization for disk I/O.</p>

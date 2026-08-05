@@ -90,16 +90,16 @@
               </header>
               <div class="entry-content"><p>Thread pools are a high-frequency topic in Java concurrency programming interviews.</p>
 <h2>Seven Core Parameters</h2>
-<div class="codehilite"><pre><span></span><code><span class="k">new</span><span class="w"> </span><span class="n">ThreadPoolExecutor</span><span class="p">(</span>
-<span class="w">    </span><span class="n">corePoolSize</span><span class="p">,</span><span class="w">   </span><span class="c1">// Core thread count</span>
-<span class="w">    </span><span class="n">maximumPoolSize</span><span class="p">,</span><span class="c1">// Maximum thread count</span>
-<span class="w">    </span><span class="n">keepAliveTime</span><span class="p">,</span><span class="w">  </span><span class="c1">// Idle thread survival time</span>
-<span class="w">    </span><span class="n">unit</span><span class="p">,</span><span class="w">           </span><span class="c1">// Time unit</span>
-<span class="w">    </span><span class="n">workQueue</span><span class="p">,</span><span class="w">      </span><span class="c1">// Blocking queue</span>
-<span class="w">    </span><span class="n">threadFactory</span><span class="p">,</span><span class="w">  </span><span class="c1">// Thread factory</span>
-<span class="w">    </span><span class="n">handler</span><span class="w">         </span><span class="c1">// Rejection policy</span>
-<span class="p">)</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-java">new ThreadPoolExecutor(
+    corePoolSize,   // Core thread count
+    maximumPoolSize,// Maximum thread count
+    keepAliveTime,  // Idle thread survival time
+    unit,           // Time unit
+    workQueue,      // Blocking queue
+    threadFactory,  // Thread factory
+    handler         // Rejection policy
+)
+</code></pre>
 
 <h2>Execution Flow</h2>
 <ol>

@@ -91,17 +91,17 @@
               <div class="entry-content"><p>Apache Doris 3.0 officially went GA in April 2026. As the fastest-growing project in the OLAP space, this major release brings several key changes.</p>
 <h2>1. Storage-Compute Separation Officially GA</h2>
 <p>Doris's traditional architecture is a shared-nothing, storage-compute integrated design:</p>
-<div class="codehilite"><pre><span></span><code>┌──────────────────────────────────────┐
+<pre class="codehilite"><code>┌──────────────────────────────────────┐
 │  FE (Frontend)  ← Metadata + Query Plan │
 │  BE (Backend)   ← Compute + Storage Together │
 └──────────────────────────────────────┘
-</code></pre></div>
+</code></pre>
 
 <p>3.0 supports <strong>decoupled storage and compute deployment</strong>:</p>
-<div class="codehilite"><pre><span></span><code>┌────────────┐    ┌──────────────────┐
+<pre class="codehilite"><code>┌────────────┐    ┌──────────────────┐
 │  BE (Compute) │───▶│ Shared Storage (S3/HDFS) │
 └────────────┘    └──────────────────┘
-</code></pre></div>
+</code></pre>
 
 <p>Benefits:
 - <strong>Elastic Scaling</strong>: Compute nodes can scale independently without affecting data
@@ -109,10 +109,10 @@
 - <strong>Multi-Cluster Sharing</strong>: Multiple compute clusters share the same data</p>
 <h2>2. Arrow Flight SQL: A Leap in Query Performance</h2>
 <p>Previously, Doris returned results via the MySQL protocol, incurring significant serialization overhead. 3.0 natively supports <strong>Arrow Flight SQL</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Connect directly using Arrow Flight SQL</span>
-mysql<span class="w"> </span>-h<span class="w"> </span>fe_host<span class="w"> </span>-P<span class="w"> </span><span class="m">9040</span><span class="w"> </span>-u<span class="w"> </span>root<span class="w">  </span><span class="c1"># MySQL protocol</span>
-<span class="c1"># Arrow Flight: port 8060, columnar transfer</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-bash"># Connect directly using Arrow Flight SQL
+mysql -h fe_host -P 9040 -u root  # MySQL protocol
+# Arrow Flight: port 8060, columnar transfer
+</code></pre>
 
 <p>Benchmark comparison (10 million row query):</p>
 <table>
@@ -139,16 +139,16 @@ mysql<span class="w"> </span>-h<span class="w"> </span>fe_host<span class="w"> <
 <p><strong>6x speedup + 60% bandwidth savings</strong>, because columnar data doesn't need to be deserialized into row format.</p>
 <h2>3. Semi-Structured Data Support</h2>
 <p>The <code>VARIANT</code> type is now GA, allowing you to store JSON in Doris and query it efficiently:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">events</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="nb">BIGINT</span><span class="p">,</span><span class="w"> </span><span class="n">payload</span><span class="w"> </span><span class="n">VARIANT</span><span class="p">);</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="n">payload</span><span class="p">:</span><span class="k">user</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">events</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">payload</span><span class="p">:</span><span class="n">event_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;click&#39;</span><span class="p">;</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-sql">CREATE TABLE events (id BIGINT, payload VARIANT);
+SELECT payload:user.name FROM events WHERE payload:event_type = 'click';
+</code></pre>
 
 <p>Under the hood, JSON is stored in a columnar format, and queries only read the required fields.</p>
 <h2>4. Inverted Index Enhancements</h2>
 <p>Full-text search capabilities have been significantly improved. You can now perform Elasticsearch-like text searches directly in Doris:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_content</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">articles</span><span class="p">(</span><span class="n">content</span><span class="p">)</span><span class="w"> </span><span class="k">USING</span><span class="w"> </span><span class="n">INVERTED</span><span class="p">;</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">articles</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">content</span><span class="w"> </span><span class="k">MATCH</span><span class="w"> </span><span class="s1">&#39;Doris|OLAP&#39;</span><span class="p">;</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-sql">CREATE INDEX idx_content ON articles(content) USING INVERTED;
+SELECT * FROM articles WHERE content MATCH 'Doris|OLAP';
+</code></pre>
 
 <h2>Summary</h2>
 <p>The biggest significance of Doris 3.0: <strong>it has evolved from an OLAP engine into a unified real-time data platform</strong>. Storage-compute separation + Arrow Flight + semi-structured data enable it to cover a wider range of scenarios.</p>

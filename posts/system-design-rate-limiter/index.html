@@ -106,15 +106,15 @@
 <h3>Token Bucket (Most Commonly Used)</h3>
 <p>Add tokens to the bucket at a fixed rate (e.g., 10 per second). When a request arrives, take a token—if one is available, it passes; if not, it's rejected. The bucket has a capacity limit, allowing for a certain amount of burst traffic.</p>
 <h2>Implementation</h2>
-<div class="codehilite"><pre><span></span><code><span class="c1">// Implement token bucket using Redis</span>
-<span class="n">String</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;rate_limit:&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">userId</span><span class="p">;</span>
-<span class="kt">long</span><span class="w"> </span><span class="n">now</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">();</span>
-<span class="kt">long</span><span class="w"> </span><span class="n">tokens</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">redis</span><span class="p">.</span><span class="na">incr</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
-<span class="n">redis</span><span class="p">.</span><span class="na">expire</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="mi">60</span><span class="p">);</span><span class="w"> </span><span class="c1">// 60-second window</span>
+<pre class="codehilite"><code class="language-java">// Implement token bucket using Redis
+String key = &quot;rate_limit:&quot; + userId;
+long now = System.currentTimeMillis();
+long tokens = redis.incr(key);
+redis.expire(key, 60); // 60-second window
 
-<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">tokens</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">429</span><span class="p">;</span>
-<span class="c1">// Process the request...</span>
-</code></pre></div>
+if (tokens &gt; 100) return 429;
+// Process the request...
+</code></pre>
 
 <h2>Distributed Rate Limiting</h2>
 <p>When deployed across multiple nodes, you need a shared counter—use Redis to solve this. However, Redis itself can become a bottleneck. Solutions:

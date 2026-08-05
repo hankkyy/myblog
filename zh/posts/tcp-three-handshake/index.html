@@ -90,14 +90,14 @@
               </header>
               <div class="entry-content"><p>TCP 的连接建立和释放是计算机网络面试的核心。</p>
 <h2>三次握手</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">客户端</span><span class="w">                          </span><span class="err">服务端</span>
-<span class="w">  </span><span class="o">|</span><span class="w">                               </span><span class="o">|</span>
-<span class="w">  </span><span class="o">|----</span><span class="n">SYN</span><span class="p">(</span><span class="n">seq</span><span class="o">=</span><span class="n">x</span><span class="p">)</span><span class="o">----------------&gt;|</span><span class="w">  </span><span class="err">①</span><span class="w"> </span><span class="err">客户端：我要连接</span>
-<span class="w">  </span><span class="o">|</span><span class="w">                               </span><span class="o">|</span>
-<span class="w">  </span><span class="o">|&lt;---</span><span class="n">SYN</span><span class="o">+</span><span class="n">ACK</span><span class="p">(</span><span class="n">seq</span><span class="o">=</span><span class="n">y</span><span class="p">,</span><span class="n">ack</span><span class="o">=</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">----|</span><span class="w">  </span><span class="err">②</span><span class="w"> </span><span class="err">服务端：收到，我准备好了</span>
-<span class="w">  </span><span class="o">|</span><span class="w">                               </span><span class="o">|</span>
-<span class="w">  </span><span class="o">|----</span><span class="n">ACK</span><span class="p">(</span><span class="n">seq</span><span class="o">=</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">ack</span><span class="o">=</span><span class="n">y</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">-----&gt;|</span><span class="w">  </span><span class="err">③</span><span class="w"> </span><span class="err">客户端：收到，开始传数据</span>
-</code></pre></div>
+<pre class="codehilite"><code>客户端                          服务端
+  |                               |
+  |----SYN(seq=x)----------------&gt;|  ① 客户端：我要连接
+  |                               |
+  |&lt;---SYN+ACK(seq=y,ack=x+1)----|  ② 服务端：收到，我准备好了
+  |                               |
+  |----ACK(seq=x+1,ack=y+1)-----&gt;|  ③ 客户端：收到，开始传数据
+</code></pre>
 
 <h2>为什么三次而不是两次？</h2>
 <p>两次握手的问题：如果客户端的第一个 SYN 在网络中滞留后重新到达，服务端会错误地建立连接。</p>
@@ -105,16 +105,16 @@
 <h2>为什么不是四次？</h2>
 <p>服务端可以把 SYN 和 ACK 合并在一个包里发送（SYN+ACK），不需要分开。所以三次就够了。</p>
 <h2>四次挥手</h2>
-<div class="codehilite"><pre><span></span><code><span class="err">客户端</span><span class="w">                          </span><span class="err">服务端</span>
-<span class="w">  </span><span class="o">|</span><span class="w">                               </span><span class="o">|</span>
-<span class="w">  </span><span class="o">|----</span><span class="n">FIN</span><span class="p">(</span><span class="n">seq</span><span class="o">=</span><span class="n">u</span><span class="p">)</span><span class="o">----------------&gt;|</span><span class="w">  </span><span class="err">①</span><span class="w"> </span><span class="err">客户端：我没数据了</span>
-<span class="w">  </span><span class="o">|</span><span class="w">                               </span><span class="o">|</span>
-<span class="w">  </span><span class="o">|&lt;---</span><span class="n">ACK</span><span class="p">(</span><span class="n">seq</span><span class="o">=</span><span class="n">v</span><span class="p">,</span><span class="n">ack</span><span class="o">=</span><span class="n">u</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">--------|</span><span class="w">  </span><span class="err">②</span><span class="w"> </span><span class="err">服务端：知道了</span>
-<span class="w">  </span><span class="o">|</span><span class="w">                               </span><span class="o">|</span>
-<span class="w">  </span><span class="o">|&lt;---</span><span class="n">FIN</span><span class="p">(</span><span class="n">seq</span><span class="o">=</span><span class="n">w</span><span class="p">,</span><span class="n">ack</span><span class="o">=</span><span class="n">u</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">--------|</span><span class="w">  </span><span class="err">③</span><span class="w"> </span><span class="err">服务端：我也没数据了</span>
-<span class="w">  </span><span class="o">|</span><span class="w">                               </span><span class="o">|</span>
-<span class="w">  </span><span class="o">|----</span><span class="n">ACK</span><span class="p">(</span><span class="n">seq</span><span class="o">=</span><span class="n">u</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">ack</span><span class="o">=</span><span class="n">w</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">-----&gt;|</span><span class="w">  </span><span class="err">④</span><span class="w"> </span><span class="err">客户端：知道了</span>
-</code></pre></div>
+<pre class="codehilite"><code>客户端                          服务端
+  |                               |
+  |----FIN(seq=u)----------------&gt;|  ① 客户端：我没数据了
+  |                               |
+  |&lt;---ACK(seq=v,ack=u+1)--------|  ② 服务端：知道了
+  |                               |
+  |&lt;---FIN(seq=w,ack=u+1)--------|  ③ 服务端：我也没数据了
+  |                               |
+  |----ACK(seq=u+1,ack=w+1)-----&gt;|  ④ 客户端：知道了
+</code></pre>
 
 <h2>为什么挥手要四次？</h2>
 <p>因为 TCP 是全双工的——双方都可以独立地发送和接收数据。一方说「我没数据了」（FIN），另一方可能还有数据要发。所以 FIN 和 ACK 不能合并。</p>

@@ -90,8 +90,8 @@
               </header>
               <div class="entry-content"><p>SQL optimization is a frequent topic in backend interviews and an essential skill for everyday development.</p>
 <h2>Core EXPLAIN Fields</h2>
-<div class="codehilite"><pre><span></span><code><span class="k">EXPLAIN</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;paid&#39;</span><span class="p">;</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-sql">EXPLAIN SELECT * FROM orders WHERE user_id = 100 AND status = 'paid';
+</code></pre>
 
 <table>
 <thead>
@@ -143,14 +143,14 @@
 <li><strong>Covering index</strong>: When all queried columns are within the index, Using index appears, avoiding table lookups</li>
 </ol>
 <h2>A Typical Case Study</h2>
-<div class="codehilite"><pre><span></span><code><span class="c1">-- Slow query: type=ALL, rows=1000000</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">123</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">create_time</span><span class="w"> </span><span class="k">DESC</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+<pre class="codehilite"><code class="language-sql">-- Slow query: type=ALL, rows=1000000
+SELECT * FROM orders WHERE user_id = 123 ORDER BY create_time DESC LIMIT 10;
 
-<span class="c1">-- Optimization: add a composite index</span>
-<span class="k">ALTER</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">orders</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_user_time</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">create_time</span><span class="p">);</span>
+-- Optimization: add a composite index
+ALTER TABLE orders ADD INDEX idx_user_time (user_id, create_time);
 
-<span class="c1">-- After optimization: type=ref, rows=100, Extra=Using index</span>
-</code></pre></div>
+-- After optimization: type=ref, rows=100, Extra=Using index
+</code></pre>
 
 <h2>Interview Talking Points</h2>
 <blockquote>

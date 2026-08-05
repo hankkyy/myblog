@@ -92,23 +92,23 @@
 <h2>1. Why Single-Threaded?</h2>
 <p>Redis chose single-threading not because it can't write multi-threaded code, but because <strong>memory operations are so fast that multi-threading's context switching and lock contention actually slow things down</strong>.</p>
 <p>The execution path of a Redis command:</p>
-<div class="codehilite"><pre><span></span><code><span class="nv">Parse</span><span class="w"> </span><span class="nv">command</span><span class="w"> </span>→<span class="w"> </span><span class="nv">Look</span><span class="w"> </span><span class="nv">up</span><span class="w"> </span><span class="nv">key</span><span class="w"> </span>→<span class="w"> </span><span class="nv">Execute</span><span class="w"> </span><span class="nv">operation</span><span class="w"> </span>→<span class="w"> </span><span class="k">Return</span><span class="w"> </span><span class="nb">result</span>
-</code></pre></div>
+<pre class="codehilite"><code>Parse command → Look up key → Execute operation → Return result
+</code></pre>
 
 <p>All are pure in-memory operations, taking microseconds. In comparison, thread switching takes 1-10 microseconds, and lock contention is even more expensive.</p>
 <p>However, Redis 6.0 introduced <strong>IO multi-threading</strong> — network reads/writes can be multi-threaded, but command execution remains single-threaded.</p>
 <h2>2. IO Multiplexing: epoll</h2>
 <p>How does a single thread handle tens of thousands of client connections? The answer is epoll.</p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Pseudocode: epoll workflow</span>
-<span class="n">epoll_fd</span> <span class="o">=</span> <span class="n">epoll_create</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">client</span> <span class="ow">in</span> <span class="n">clients</span><span class="p">:</span>
-    <span class="n">epoll_ctl</span><span class="p">(</span><span class="n">epoll_fd</span><span class="p">,</span> <span class="n">ADD</span><span class="p">,</span> <span class="n">client</span><span class="o">.</span><span class="n">fd</span><span class="p">,</span> <span class="n">EPOLLIN</span><span class="p">)</span>
+<pre class="codehilite"><code class="language-python"># Pseudocode: epoll workflow
+epoll_fd = epoll_create()
+for client in clients:
+    epoll_ctl(epoll_fd, ADD, client.fd, EPOLLIN)
 
-<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-    <span class="n">events</span> <span class="o">=</span> <span class="n">epoll_wait</span><span class="p">(</span><span class="n">epoll_fd</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>  <span class="c1"># Blocking wait</span>
-    <span class="k">for</span> <span class="n">fd</span><span class="p">,</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
-        <span class="n">handle_client</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span>  <span class="c1"># Only handle ready connections</span>
-</code></pre></div>
+while True:
+    events = epoll_wait(epoll_fd, timeout=10)  # Blocking wait
+    for fd, event in events:
+        handle_client(fd)  # Only handle ready connections
+</code></pre>
 
 <p>Comparison:
 - <code>select</code>: Iterates over all fds → O(n), max 1024
@@ -117,12 +117,12 @@
 <h2>3. Efficient Data Structures</h2>
 <p>Redis is fast not just because of memory, but also because of cleverly designed data structures.</p>
 <p><strong>SDS (Simple Dynamic String)</strong>:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">struct</span><span class="w"> </span><span class="nc">sdshdr</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">len</span><span class="p">;</span><span class="w">     </span><span class="c1">// Used length</span>
-<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">free</span><span class="p">;</span><span class="w">    </span><span class="c1">// Remaining space</span>
-<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="n">buf</span><span class="p">[];</span><span class="w">  </span><span class="c1">// Actual data</span>
-<span class="p">};</span>
-</code></pre></div>
+<pre class="codehilite"><code class="language-c">struct sdshdr {
+    int len;     // Used length
+    int free;    // Remaining space
+    char buf[];  // Actual data
+};
+</code></pre>
 
 <ul>
 <li>O(1) string length retrieval (C strings require O(n))</li>

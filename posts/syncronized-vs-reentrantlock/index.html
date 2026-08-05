@@ -90,19 +90,19 @@
               </header>
               <div class="entry-content"><p>What's the difference between synchronized and ReentrantLock? Nine out of ten interviews ask this question.</p>
 <h2>Usage Comparison</h2>
-<div class="codehilite"><pre><span></span><code><span class="c1">// synchronized</span>
-<span class="kd">synchronized</span><span class="w"> </span><span class="p">(</span><span class="n">lock</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="c1">// critical section</span>
-<span class="p">}</span>
+<pre class="codehilite"><code class="language-java">// synchronized
+synchronized (lock) {
+    // critical section
+}
 
-<span class="c1">// ReentrantLock</span>
-<span class="n">lock</span><span class="p">.</span><span class="na">lock</span><span class="p">();</span>
-<span class="k">try</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="c1">// critical section</span>
-<span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">lock</span><span class="p">.</span><span class="na">unlock</span><span class="p">();</span><span class="w">  </span><span class="c1">// Must be released in finally!</span>
-<span class="p">}</span>
-</code></pre></div>
+// ReentrantLock
+lock.lock();
+try {
+    // critical section
+} finally {
+    lock.unlock();  // Must be released in finally!
+}
+</code></pre>
 
 <h2>Core Differences</h2>
 <table>
