@@ -162,10 +162,13 @@ export default async function handler(req, res) {
 
       const profiles = (queryResult.list || []).map(doc => ({
         id: doc._id?.$oid || doc._id,
-        sessionId: doc.sessionId,
-        timestamp: parseEjsonDate(doc.timestamp),
+        userId: doc.userId,
+        sessionId: doc.lastSessionId || doc.sessionId,
+        timestamp: parseEjsonDate(doc.lastSeen || doc.timestamp),
+        firstSeen: parseEjsonDate(doc.timestamp),
         profile: doc.profile,
-        messageCount: doc.messageCount || 0,
+        sessionCount: doc.sessionCount || 1,
+        totalMessages: doc.totalMessages || doc.messageCount || 0,
       }));
 
       return res.json({

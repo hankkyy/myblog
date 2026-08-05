@@ -31,11 +31,15 @@ async function saveChatLog(sessionId, messages) {
   }
 }
 
-// Analyze user messages with DeepSeek to extract a structured profile
-async function callDeepSeekForProfile(transcript) {
+// Analyze user messages with DeepSeek to extract a structured profile.
+// If existingProfile is provided, merge new findings into it.
+async function callDeepSeekForProfile(transcript, existingProfile) {
   const apiKey = process.env.DEEPSEEK_API_KEY;
   if (!apiKey) return null;
   try {
+    const mergeInstruction = existingProfile
+      ? `\n\nHere is the existing profile for this user. Merge new findings into it — keep existing info unless contradicted, add new facts, refine personality assessment:\n${JSON.stringify(existingProfile)}`
+      : '';
     const resp = await fetch(DEEPSEEK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
@@ -57,7 +61,7 @@ Return exactly this JSON structure (use null for unknown fields):
 }`
         }, {
           role: 'user',
-          content: `Analyze this conversation and return the user profile JSON:\n\n${transcript}`
+          content: `Analyze this conversation and return the user profile JSON:\n\n${transcript}${mergeInstruction}`
         }],
         stream: false,
         temperature: 0.3,
@@ -75,43 +79,97 @@ Return exactly this JSON structure (use null for unknown fields):
   }
 }
 
-// Save user profile to CloudBase NoSQL
-async function saveUserProfile(sessionId, profile, userMsgCount) {
-  if (!CLOUDBASE_API_KEY) return;
+// Query existing profile by userId
+async function getExistingProfile(userId) {
+  if (!CLOUDBASE_API_KEY || !userId) return null;
   try {
-    await fetch(`${CB_BASE}/collections/user_profiles/documents`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${CLOUDBASE_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        data: [{
-          sessionId,
-          timestamp: new Date().toISOString(),
-          profile: profile,
-          messageCount: userMsgCount,
-        }],
-      }),
-    });
+    const filter = JSON.stringify({ userId: userId });
+    const resp = await fetch(
+      `${CB_BASE}/collections/user_profiles/documents?filter=${encodeURIComponent(filter)}&limit=1`,
+      { headers: { 'Authorization': `Bearer ${CLOUDBASE_API_KEY}`, 'Content-Type': 'application/json' } }
+    );
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    const doc = data.list?.[0];
+    if (!doc) return null;
+    return {
+      _id: doc._id?.$oid || doc._id,
+      profile: doc.profile,
+      sessionCount: (doc.sessionCount || 0),
+    };
+  } catch (err) {
+    console.error('Failed to query existing profile:', err.message);
+    return null;
+  }
+}
+
+// Save or update user profile in CloudBase NoSQL
+async function saveUserProfile(userId, sessionId, profile, userMsgCount, existingDoc) {
+  if (!CLOUDBASE_API_KEY || !userId) return;
+  try {
+    if (existingDoc?._id) {
+      // Update existing profile
+      await fetch(`${CB_BASE}/collections/user_profiles/documents/${existingDoc._id}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${CLOUDBASE_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          data: {
+            profile: profile,
+            lastSessionId: sessionId,
+            lastSeen: new Date().toISOString(),
+            sessionCount: (existingDoc.sessionCount || 0) + 1,
+            totalMessages: (existingDoc.totalMessages || 0) + userMsgCount,
+          },
+        }),
+      });
+    } else {
+      // Insert new profile
+      await fetch(`${CB_BASE}/collections/user_profiles/documents`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${CLOUDBASE_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          data: [{
+            userId,
+            sessionId,
+            timestamp: new Date().toISOString(),
+            lastSeen: new Date().toISOString(),
+            profile: profile,
+            messageCount: userMsgCount,
+            totalMessages: userMsgCount,
+            sessionCount: 1,
+            lastSessionId: sessionId,
+          }],
+        }),
+      });
+    }
   } catch (err) {
     console.error('Failed to save user profile:', err.message);
   }
 }
 
-// Fire-and-forget: analyze user messages → generate profile → save
-function analyzeAndSaveProfile(sessionId, messages) {
+// Fire-and-forget: analyze user messages → generate/merge profile → save
+async function analyzeAndSaveProfile(userId, sessionId, messages) {
   const userMsgs = messages.filter(m => m.role === 'user');
-  if (userMsgs.length < 2) return; // need at least 2 turns for meaningful analysis
+  if (userMsgs.length < 2) return;
 
   const transcript = userMsgs.map(m => `[user]: ${m.content}`).join('\n');
 
-  // Fire-and-forget — don't block the response
-  callDeepSeekForProfile(transcript).then(profile => {
+  try {
+    // Check if this user already has a profile
+    const existing = await getExistingProfile(userId);
+    const profile = await callDeepSeekForProfile(transcript, existing?.profile || null);
     if (profile) {
-      saveUserProfile(sessionId, profile, userMsgs.length);
+      await saveUserProfile(userId, sessionId, profile, userMsgs.length, existing);
     }
-  }).catch(() => {});
+  } catch (err) {
+    console.error('analyzeAndSaveProfile error:', err.message);
+  }
 }
 
 // --- Simple in-memory rate limiter ---
@@ -309,7 +367,7 @@ export default async function handler(req, res) {
   if (!apiKey) return res.status(500).json({ error: 'API key not configured' });
 
   try {
-    const { messages, sessionId } = req.body || {};
+    const { messages, sessionId, userId } = req.body || {};
 
     // --- Input validation ---
     if (!Array.isArray(messages) || messages.length === 0) {
@@ -375,7 +433,7 @@ export default async function handler(req, res) {
             if (fullResponse.trim()) {
               const allMessages = [...messages, { role: 'assistant', content: fullResponse }];
               await saveChatLog(sid, allMessages);
-              analyzeAndSaveProfile(sid, allMessages); // fire-and-forget
+              analyzeAndSaveProfile(userId, sid, allMessages); // fire-and-forget, merges by userId
             }
             // Send DONE with sessionId so frontend can continue the session
             res.write(`data: [DONE]\n\n`);
