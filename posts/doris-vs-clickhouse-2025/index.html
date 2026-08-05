@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doris vs ClickHouse: A Comparative Study of OLAP Databases – Welcome To My Blog</title>
+<meta name="description" content="A comparative study of the architectural differences, performance characteristics, and use cases of Doris and ClickHouse.">
+<meta property="og:title" content="Doris vs ClickHouse: A Comparative Study of OLAP Databases – Welcome To My Blog">
+<meta property="og:description" content="A comparative study of the architectural differences, performance characteristics, and use cases of Doris and ClickHouse.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://hankzhang.us/">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="https://hankzhang.us/">
+<link rel="alternate" hreflang="zh-Hans" href="https://hankzhang.us//zh/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Doris vs ClickHouse: A Comparative Study of OLAP Databases – Welcome To My Blog",
+  "description": "A comparative study of the architectural differences, performance characteristics, and use cases of Doris and ClickHouse.",
+  "url": "https://hankzhang.us/",
+  "datePublished": "2025-04-10",
+  "author": { "@type": "Person", "name": "Zihao Zhang" }
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Catamaran:wght@700&family=Roboto:wght@400;700&display=swap">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hank's Blog">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="mobile-web-app-capable" content="yes">
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body class="layout--right-sidebar">
+<div id="page" class="site">
+<a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+<header id="masthead" class="site-header tg-site-header tg-site-header--default">
+  <div class="tg-header-top"></div>
+  <div class="tg-header-bottom">
+    <div class="header-bottom-top">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <div class="site-branding">
+          <p class="site-title"><a href="https://hankzhang.us//" rel="home">Welcome To My Blog</a></p>
+          <p class="site-description">"Wonder more, wander further"</p>
+        </div>
+      </div>
+    </div>
+    <div class="header-bottom-bottom">
+      <div class="container" style="display:flex;justify-content:space-between;align-items:center;gap:15px">
+        <div style="flex:1"></div>
+        <nav id="site-navigation" class="main-navigation tg-site-menu--default" style="display:inline-flex;align-items:center;gap:10px">
+          <div class="menu-menu-container"><ul id="primary-menu" class="nav-menu" style="justify-content:center"><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/" class="active">Home</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/posts/">Archives</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/categories/">Categories</a></li><li class="menu-item menu-item-type-custom menu-item-object-custom"><a href="/about/">About</a></li></ul></div>
+        </nav>
+        <div style="flex:1;display:flex;justify-content:flex-end">
+          <div class="lang-switch"><a href="/zh/" class="lang-pill" aria-label="Switch to Chinese">
+      <span class="lang-opt">中</span>
+      <span class="lang-divider"></span>
+      <span class="lang-opt active">EN</span>
+    </a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<nav id="cenote-sticky-header" class="cenote-header-sticky">
+  <div class="sticky-header-slide">
+    <div class="cenote-sticky-main">
+      <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
+        <span class="sticky-title">Doris vs ClickHouse: A Comparative Study of OLAP Databases</span>
+      </div>
+    </div>
+  </div>
+</nav>
+<div id="content" class="site-content">
+  <div class="container">
+<div class="tg-flex-container tg-flex-space-between"><div id="primary" class="content-area">
+          <main id="main" class="site-main">
+            <article class="post type-post status-publish format-standard hentry">
+              <div class="entry-meta">
+                <span class="cat-links"><a href="/categories/database/" rel="category">Database</a><span class="cat-seperator">, </span><a href="/categories/technology/" rel="category">Technology</a></span><span class="posted-on"><a href="/posts/doris-vs-clickhouse-2025/" rel="bookmark"><time class="entry-date published" datetime="2025-04-10">2025-04-10</time></a></span>
+              </div>
+              <header class="entry-header">
+                <h1 class="entry-title">Doris vs ClickHouse: A Comparative Study of OLAP Databases</h1>
+              </header>
+              <div class="entry-content"><p>I've been studying OLAP databases recently and put together a comparison between Doris and ClickHouse.</p>
+<h2>Architectural Differences</h2>
+<p><strong>ClickHouse:</strong>
+- Pure columnar storage with a powerful MergeTree engine
+- Exceptional performance for single-table aggregations
+- Weaker JOIN capabilities
+- Open-sourced by Yandex (Russia)</p>
+<p><strong>Doris:</strong>
+- MPP + columnar storage architecture
+- Better standard SQL compatibility
+- Stronger JOIN capabilities
+- Open-sourced by Baidu with an active domestic community</p>
+<h2>Performance Comparison</h2>
+<ul>
+<li>Single-table aggregation: ClickHouse is slightly faster</li>
+<li>Multi-table JOIN: Doris is stronger</li>
+<li>High-concurrency queries: Doris's Unique Key model has an advantage</li>
+<li>Data updates: Doris natively supports Upsert</li>
+</ul>
+<h2>Learning Recommendations</h2>
+<p>Both are excellent OLAP engines. If you're getting started with data analysis, Doris offers better SQL compatibility and a gentler learning curve. If you're doing pure log analysis, ClickHouse delivers superior single-table performance.</p>
+<p>Choose based on your business use case, or learn both to understand their architectural design philosophies.</p>
+<hr />
+<p><strong>References:</strong></p>
+<ul>
+<li><a href="https://doris.apache.org/">Apache Doris</a></li>
+<li><a href="https://clickhouse.com/">ClickHouse</a></li>
+</ul></div>
+              <footer class="entry-footer"><span class="cat-links">Category: <a href="/categories/database/" rel="category">Database</a><a href="/categories/technology/" rel="category">Technology</a></span></footer>
+            </article>
+            <nav class="navigation post-navigation" aria-label="Posts">
+            <h2 class="screen-reader-text">Post Navigation</h2>
+            <div class="nav-links"><div class="nav-previous"><a href="/posts/terminal-tools-i-use/" rel="prev"><span class="nav-links__label">Previous</span> My Terminal Toolchain: 2025 Development Efficiency Suite</a></div><div class="nav-next"><a href="/posts/http-https-explained/" rel="next"><span class="nav-links__label">Next</span> HTTP and HTTPS Interview Guide: Status Codes, Caching, TLS Handshake</a></div></div>
+          </nav>
+            <a href="/about/" class="author-bio-link">
+            <div class="author-bio">
+              <div class="author-bio-content">
+                <h3>About Zihao Zhang</h3>
+                <p>Data Platform Engineer. Distributed systems, OLAP databases, AI Agent development.</p>
+              </div>
+            </div>
+            </a>
+            <div class="comments-area">
+              <h3>Comments</h3>
+              <p class="no-comments">Comments are closed.</p>
+            </div>
+          </main>
+        </div><aside id="secondary" class="widget-area">
+          <section class="widget widget_recent_entries">
+            <h2 class="widget-title">Recent Posts</h2>
+            <ul><li><a href="/posts/client-side-visual-search/">How I Built a Browser-Based Reverse Image Search Engine for an Antique Auction Platform</a></li><li><a href="/posts/ai-coding-agents-2026/">AI Coding Agents Are Reshaping Software Development: It's Not Just 'Writing Faster'</a></li><li><a href="/posts/saga-pattern-decline/">The Twilight of the Saga Pattern? New Approaches to Distributed Transactions in 2026</a></li><li><a href="/posts/wasm-backend-2026/">WebAssembly on the Backend: Year Three, the Turning Point Approaches</a></li><li><a href="/posts/ai-supply-limits-era/">Two Big Events in One Week: AI Is Entering the Era of Limited Supply</a></li></ul>
+          </section>
+          <section class="widget widget_tag_cloud">
+            <h2 class="widget-title">Categories</h2>
+            <div class="tagcloud"><a href="/categories/ai/">AI</a><a href="/categories/cloud-native/">Cloud Native</a><a href="/categories/database/">Database</a><a href="/categories/distributed-systems/">Distributed Systems</a><a href="/categories/leetcode/">LeetCode</a><a href="/categories/misc/">Misc</a><a href="/categories/musings/">Musings</a><a href="/categories/news/">News</a><a href="/categories/opinion/">Opinion</a><a href="/categories/random-thoughts/">Random Thoughts</a><a href="/categories/reflections/">Reflections</a><a href="/categories/system-design/">System Design</a><a href="/categories/tech/">Tech</a><a href="/categories/technology/">Technology</a></div>
+          </section>
+        </aside></div>
+  </div>
+</div>
+<footer id="colophon" class="site-footer tg-site-footer tg-site-footer--default">
+  <div class="tg-footer-bottom">
+    <div class="container">
+      <div class="site-info" style="display:flex;justify-content:space-between;align-items:center">
+        <span id="footer-copyright">Copyright © 2026 <a href="https://hankzhang.us/" title="Welcome To My Blog"><span>Welcome To My Blog</span></a>. All rights reserved.</span>
+        <nav style="display:flex;gap:15px">
+          <a href="/">Home</a><a href="/posts/">Archives</a><a href="/categories/">Categories</a><a href="/about/">About</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</footer>
+<button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:30px;right:30px;width:44px;height:44px;border-radius:50%;background:#16181a;color:#fff;border:none;cursor:pointer;font-size:20px;display:none;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,.2)">↑</button>
+<script>
+// Fix 100vh on mobile (keyboard-aware, works on ALL browsers incl. QQ/UC/Baidu)
+(function(){
+  function setVH(){document.documentElement.style.setProperty('--vh',window.innerHeight*0.01+'px');}
+  setVH();
+  window.addEventListener('resize',setVH);
+  window.addEventListener('orientationchange',setVH);
+})();
+window.addEventListener('scroll',function(){document.getElementById('back-to-top').style.display=window.scrollY>300?'block':'none';var s=document.getElementById('cenote-sticky-header');if(s)s.classList.toggle('visible',window.scrollY>200);});
+// Mobile menu toggle
+document.addEventListener('DOMContentLoaded',function(){
+  var toggle=document.querySelector('.tg-mobile-menu-toggle');
+  var nav=document.querySelector('.tg-site-menu--default');
+  if(toggle&&nav){
+    toggle.addEventListener('click',function(e){
+      e.stopPropagation();
+      toggle.classList.toggle('open');
+      nav.classList.toggle('mobile-open');
+    });
+    // Close when clicking outside
+    document.addEventListener('click',function(e){
+      if(!toggle.contains(e.target)&&!nav.contains(e.target)){
+        toggle.classList.remove('open');
+        nav.classList.remove('mobile-open');
+      }
+    });
+  }
+});
+</script>
+<!-- AI Chat Widget -->
+<div id="chat-widget">
+  <button id="chat-toggle" onclick="toggleChat()" title="Ask Me Anything">
+    <span id="chat-toggle-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></span>
+    <span id="chat-toggle-close" style="display:none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
+  </button>
+  <div id="chat-panel">
+    <div id="chat-header">
+      <span>Ask Me Anything</span>
+      <div id="chat-header-actions">
+        <button id="chat-clear-btn" onclick="clearConversation()" title="Clear conversation">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+        </button>
+        <button onclick="toggleChat(true)" style="background:none;border:none;color:#fff;cursor:pointer;font-size:18px;line-height:1;padding:4px 8px">&times;</button>
+      </div>
+    </div>
+    <div id="chat-messages">
+      <div class="chat-msg assistant chat-welcome-msg"><div class="chat-bubble">Hey! I'm Hank's digital avatar. How'd you find your way here?</div></div>
+      <div id="chat-suggestions">
+        <button class="chat-suggestion-chip" data-msg="Where's the most interesting place you've been?">Where's the most interesting place you've been?</button>
+        <button class="chat-suggestion-chip" data-msg="What's a data engineer's day like?">What's a data engineer's day like?</button>
+        <button class="chat-suggestion-chip" data-msg="Why is your nickname 'Coke'?">Why is your nickname 'Coke'?</button>
+        <button class="chat-suggestion-chip" data-msg="What do you do?">What do you do?</button>
+      </div>
+    </div>
+    <button id="chat-scroll-bottom" onclick="scrollChatToBottom()" title="滚动到底部">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div id="chat-disclaimer">⚠️ AI-powered · May be inaccurate · Powered by DeepSeek</div>
+    <div id="chat-refresh-hint" style="display:none">
+      <span class="chat-refresh-hint-text">That was a long chat — my context is getting full and quality might dip. Want to start fresh?</span>
+      <button class="chat-refresh-btn" onclick="clearConversation();hideRefreshHint();">Start fresh</button>
+      <button class="chat-continue-btn" onclick="hideRefreshHint();">Keep chatting</button>
+    </div>
+    <div id="chat-input-area">
+      <textarea id="chat-input" placeholder="Say something..." autocomplete="off" spellcheck="false" rows="1"></textarea>
+      <button id="chat-send-btn" onclick="sendMessage()">Send</button>
+      <button id="chat-stop-btn" onclick="stopGeneration()" style="display:none" title="停止生成">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+var panel=document.getElementById('chat-panel');
+var input=document.getElementById('chat-input');
+var messages=document.getElementById('chat-messages');
+var sendBtn=document.getElementById('chat-send-btn');
+var stopBtn=document.getElementById('chat-stop-btn');
+var scrollBtn=document.getElementById('chat-scroll-bottom');
+var chatIcon=document.getElementById('chat-toggle-icon');
+var closeIcon=document.getElementById('chat-toggle-close');
+var isOpen=false;
+var isStreaming=false;
+var isComposing=false;
+var adminMode=false;
+var streamAbort=null;
+var lastUserMsg=null;
+var sessionId='s'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
+// Persistent user ID (survives clear/reload — stored in localStorage)
+var userId=(function(){
+  try{
+    var stored=localStorage.getItem('myblog_uid');
+    if(stored)return stored;
+  }catch(e){}
+  var uid='u'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,6);
+  try{localStorage.setItem('myblog_uid',uid);}catch(e){}
+  return uid;
+})();
+var msgCount=0;
+var AUTO_REFRESH_LIMIT=30;
+var dragOffsetX=0,dragOffsetY=0;
+var isDragging=false,dragStartX=0,dragStartY=0;
+var chatToggle=document.getElementById('chat-toggle');
+
+// Init marked.js
+if(typeof marked!=='undefined'){marked.setOptions({breaks:true,gfm:true});}
+
+// IME composition tracking (fixes Safari Chinese input)
+input.addEventListener('compositionstart',function(){isComposing=true;});
+input.addEventListener('compositionend',function(){isComposing=false;});
+
+// Enter to send, Shift+Enter for newline — respects IME composition
+input.addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&!isComposing&&!e.shiftKey){
+    e.preventDefault();
+    sendMessage();
+  }
+});
+// Auto-grow textarea
+input.addEventListener('input',function(){
+  input.style.height='auto';
+  input.style.height=(input.scrollHeight)+'px';
+});
+
+// Make panel draggable by header
+var chatHeader=document.getElementById('chat-header');
+chatHeader.style.cursor='move';
+chatHeader.addEventListener('mousedown',function(e){
+  if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
+  isDragging=true;
+  dragStartX=e.clientX-dragOffsetX;
+  dragStartY=e.clientY-dragOffsetY;
+  panel.style.transition='none';
+});
+chatHeader.addEventListener('touchstart',function(e){
+  if(e.target.tagName==='BUTTON')return;
+  e.preventDefault();
+  isDragging=true;
+  dragStartX=e.touches[0].clientX-dragOffsetX;
+  dragStartY=e.touches[0].clientY-dragOffsetY;
+  panel.style.transition='none';
+},{passive:false});
+document.addEventListener('mousemove',function(e){
+  if(!isDragging)return;
+  e.preventDefault();
+  dragOffsetX=e.clientX-dragStartX;
+  dragOffsetY=e.clientY-dragStartY;
+  panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
+});
+document.addEventListener('touchmove',function(e){
+  if(!isDragging)return;
+  e.preventDefault();
+  dragOffsetX=e.touches[0].clientX-dragStartX;
+  dragOffsetY=e.touches[0].clientY-dragStartY;
+  panel.style.transform='translate('+dragOffsetX+'px,'+dragOffsetY+'px)';
+},{passive:false});
+document.addEventListener('mouseup',function(){isDragging=false;panel.style.transition='';});
+document.addEventListener('touchend',function(){isDragging=false;panel.style.transition='';});
+
+window.toggleChat=function(manualClose){
+  isOpen=!isOpen;
+  panel.classList.toggle('open',isOpen);
+  chatIcon.style.display=isOpen?'none':'block';
+  closeIcon.style.display=isOpen?'block':'none';
+  if(isOpen){
+    input.focus();
+    messages.scrollTop=messages.scrollHeight;
+    dragOffsetX=0;dragOffsetY=0;panel.style.transform='';
+    adminMode=false;
+    if(window.innerWidth<=768)document.body.style.overflow='hidden';
+    // Push history state for back-gesture support
+    try{history.pushState({chatOpen:true},'');}catch(e){}
+  }else{
+    document.body.style.overflow='';
+    panel.style.height='';panel.style.top='';
+    if(!manualClose){try{history.back();}catch(e){}}
+  }
+};
+
+// Back button/gesture closes chat
+window.addEventListener('popstate',function(e){
+  if(isOpen&&e.state&&e.state.chatOpen){
+    // This is our own state being popped — just close chat, don't navigate
+  }
+  if(isOpen){
+    isOpen=false;
+    panel.classList.remove('open');
+    chatIcon.style.display='block';
+    closeIcon.style.display='none';
+    document.body.style.overflow='';
+    panel.style.height='';panel.style.top='';
+    if(isStreaming&&streamAbort){streamAbort.abort();streamAbort=null;}
+    finishStream();
+  }
+});
+
+// Suggestion chip clicks
+document.getElementById('chat-suggestions').addEventListener('click',function(e){
+  var chip=e.target.closest('.chat-suggestion-chip');
+  if(!chip||isStreaming)return;
+  var msg=chip.getAttribute('data-msg');
+  if(msg){input.value=msg;sendMessage();}
+});
+
+// Clear conversation
+window.clearConversation=function(){
+  if(isStreaming)return;
+  // Remove all messages except welcome
+  var all=messages.querySelectorAll('.chat-msg:not(.chat-welcome-msg)');
+  for(var i=0;i<all.length;i++)all[i].remove();
+  // Reset session
+  sessionId='s'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
+  lastUserMsg=null;
+  msgCount=0;
+  hideRefreshHint();
+  // Show suggestions again
+  var sug=document.getElementById('chat-suggestions');
+  if(sug)sug.style.display='';
+  input.focus();
+};
+
+function showRefreshHint(){
+  var hint=document.getElementById('chat-refresh-hint');
+  if(hint)hint.style.display='';
+}
+
+function hideRefreshHint(){
+  var hint=document.getElementById('chat-refresh-hint');
+  if(hint)hint.style.display='none';
+  // Extend the threshold so it won't pop up again immediately
+  AUTO_REFRESH_LIMIT=msgCount+15;
+}
+
+// Click outside chat panel to close
+document.addEventListener('click',function(e){
+  if(isOpen&&!panel.contains(e.target)&&e.target!==chatToggle&&!chatToggle.contains(e.target)){
+    toggleChat(true);
+  }
+});
+
+// Esc key: close chat, or cancel admin password mode
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){
+    if(adminMode){
+      adminMode=false;
+      addMessage('assistant','Admin mode cancelled.');
+      return;
+    }
+    if(isOpen){toggleChat(true);}
+  }
+});
+
+// Scroll-to-bottom button
+messages.addEventListener('scroll',function(){
+  var atBottom=messages.scrollHeight-messages.scrollTop-messages.clientHeight<80;
+  scrollBtn.classList.toggle('visible',!atBottom&&messages.scrollHeight>messages.clientHeight+100);
+});
+window.scrollChatToBottom=function(){
+  messages.scrollTo({top:messages.scrollHeight,behavior:'smooth'});
+};
+
+// Stop AI generation
+window.stopGeneration=function(){
+  if(streamAbort){streamAbort.abort();streamAbort=null;}
+};
+
+
+// Render markdown to HTML with fallback for plain text
+function renderMarkdown(text){
+  if(typeof marked!=='undefined')return marked.parse(text);
+  return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').split('\n').join('<br>');
+}
+
+function addMessage(role,text,isHtml){
+  var div=document.createElement('div');
+  div.className='chat-msg '+role;
+  if(isHtml){div.innerHTML='<div class="chat-bubble">'+text+'</div>';}
+  else{var s=text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');div.innerHTML='<div class="chat-bubble">'+s+'</div>';}
+  // Add copy button to assistant messages (not welcome/typing)
+  if(role==='assistant'&&!div.classList.contains('chat-welcome-msg')&&!div.classList.contains('typing')){
+    var copyBtn=document.createElement('button');
+    copyBtn.className='chat-copy-btn';
+    copyBtn.title='Copied!';
+    copyBtn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+    copyBtn.addEventListener('click',function(){
+      var bubble=div.querySelector('.chat-bubble');
+      var txt=bubble.textContent.trim();
+      try{
+        navigator.clipboard.writeText(txt).then(function(){
+          copyBtn.classList.add('copied');
+          setTimeout(function(){copyBtn.classList.remove('copied');},1500);
+        });
+      }catch(e){}
+    });
+    div.querySelector('.chat-bubble').classList.add('has-copy-btn');
+    div.querySelector('.chat-bubble').appendChild(copyBtn);
+  }
+  messages.appendChild(div);
+  // Hide suggestions after first real message
+  var sug=document.getElementById('chat-suggestions');
+  if(sug&&role==='user')sug.style.display='none';
+  requestAnimationFrame(function(){messages.scrollTop=messages.scrollHeight;});
+  return div;
+}
+
+function addTyping(){var div=document.createElement('div');div.className='chat-msg assistant typing';div.innerHTML='<div class="chat-bubble"><span class="typing-dots"><span></span><span></span><span></span></span></div>';messages.appendChild(div);requestAnimationFrame(function(){messages.scrollTop=messages.scrollHeight;});return div;}
+
+window.sendMessage=async function(){
+  if(isStreaming)return;
+  var text=input.value.trim();
+  if(!text)return;
+  input.value='';
+  input.style.height='auto';
+
+  // Haptic feedback on mobile
+  try{if(window.navigator&&navigator.vibrate)navigator.vibrate(10);}catch(e){}
+
+  lastUserMsg=text;
+  addMessage('user',text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'));
+  var typing=addTyping();
+  isStreaming=true;
+  sendBtn.style.display='none';
+  stopBtn.style.display='';
+
+  // ---- Admin mode: chat-triggered access ----
+  if(adminMode){
+    typing.remove();
+    finishStream();
+    adminMode=false;
+    try{
+      var adminResp=await fetch('/api/admin/chat-logs',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({password:text,page:1,pageSize:20})
+      });
+      if(adminResp.ok){
+        var adminData=await adminResp.json();
+        addMessage('assistant','Access granted. Opening admin panel...');
+        try{
+          if(window.openAdminWithData)window.openAdminWithData(adminData,text);
+        }catch(e){
+          console.error('openAdminWithData error:',e);
+          try{window.unlockAdminWithPassword&&window.unlockAdminWithPassword(text);}catch(e2){}
+        }
+      }else if(adminResp.status===401){
+        addMessage('assistant','Wrong password. Try again or type anything else to cancel.');
+      }else{
+        addErrorMessage();
+      }
+    }catch(e){
+      addErrorMessage();
+    }
+    return;
+  }
+  if(/切换到管理模式|admin mode|\/admin|管理模式|管理面板/i.test(text)){
+    typing.remove();
+    finishStream();
+    adminMode=true;
+    addMessage('assistant','Enter admin password (or type anything else to cancel):');
+    return;
+  }
+  // ---- End admin mode ----
+
+  // Build conversation history from visible messages
+  var history=[];
+  var msgs=messages.querySelectorAll('.chat-msg:not(.typing):not(.chat-welcome-msg)');
+  msgs.forEach(function(m){
+    var role=m.classList.contains('user')?'user':'assistant';
+    var content=m.querySelector('.chat-bubble').innerHTML;
+    history.push({role:role,content:content});
+  });
+
+  try{
+    streamAbort=new AbortController();
+    var timeoutId=setTimeout(function(){if(streamAbort)streamAbort.abort();},25000);
+    var resp=await fetch('/api/chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:history,sessionId:sessionId,userId:userId}),
+      signal:streamAbort.signal
+    });
+    clearTimeout(timeoutId);
+    if(!resp.ok)throw new Error('API error');
+    typing.remove();
+
+    var assistantDiv=addMessage('assistant','',true);
+    var bubble=assistantDiv.querySelector('.chat-bubble');
+    bubble.classList.add('streaming');
+    var fullText='';
+    var reader=resp.body.getReader();
+    var decoder=new TextDecoder();
+    var buffer='';
+    var renderPending=false;
+
+    while(true){
+      var r=await reader.read();
+      if(r.done)break;
+      buffer+=decoder.decode(r.value,{stream:true});
+      var lines=buffer.split('\n');
+      buffer=lines.pop()||'';
+      for(var i=0;i<lines.length;i++){
+        var line=lines[i].trim();
+        if(!line.startsWith('data: '))continue;
+        var data=line.slice(6);
+        if(data==='[DONE]')break;
+        try{
+          var json=JSON.parse(data);
+          if(json.error==='stream_interrupted'){
+            if(!fullText){fullText=' ';}
+            break;
+          }
+          var delta=json.choices&&json.choices[0]&&json.choices[0].delta;
+          if(delta&&delta.content){
+            fullText+=delta.content;
+            if(!renderPending){
+              renderPending=true;
+              requestAnimationFrame(function(){
+                bubble.innerHTML=renderMarkdown(fullText)+'<span class="streaming-cursor"></span>';
+                messages.scrollTop=messages.scrollHeight;
+                renderPending=false;
+              });
+            }
+          }
+        }catch(e){}
+      }
+    }
+    bubble.classList.remove('streaming');
+    if(fullText){bubble.innerHTML=renderMarkdown(fullText);}
+    else{bubble.innerHTML='<em>Response interrupted. Please try again.</em>';}
+    // Show refresh hint after N rounds — quality may degrade with long context
+    msgCount++;
+    if(msgCount>=AUTO_REFRESH_LIMIT){
+      showRefreshHint();
+    }
+  }catch(e){
+    typing.remove();
+    if(e.name==='AbortError'){
+      // User stopped generation — add partial text if any, or a subtle indicator
+      var lastBubble=messages.querySelector('.chat-msg.assistant:not(.typing):not(.chat-welcome-msg):last-of-type .chat-bubble');
+      if(lastBubble&&lastBubble.classList.contains('streaming')){
+        lastBubble.classList.remove('streaming');
+        if(!lastBubble.textContent.trim())lastBubble.innerHTML='<em>Generation stopped</em>';
+      }else{
+        addMessage('assistant','Generation stopped');
+      }
+    }else{
+      addErrorMessage();
+    }
+  }
+  finishStream();
+};
+
+function finishStream(){
+  isStreaming=false;
+  streamAbort=null;
+  sendBtn.style.display='';
+  stopBtn.style.display='none';
+  input.focus();
+}
+
+function addErrorMessage(){
+  var div=document.createElement('div');
+  div.className='chat-msg assistant';
+  div.innerHTML='<div class="chat-bubble chat-error-bubble"><span>Sorry, the service is temporarily unavailable. Please try again later.</span> <button class="chat-retry-btn" onclick="retryLastMessage()">Retry</button></div>';
+  messages.appendChild(div);
+  requestAnimationFrame(function(){messages.scrollTop=messages.scrollHeight;});
+}
+
+window.retryLastMessage=function(){
+  if(isStreaming||!lastUserMsg)return;
+  // Remove the error message bubble
+  var errBubble=messages.querySelector('.chat-error-bubble');
+  if(errBubble){var errMsg=errBubble.closest('.chat-msg');if(errMsg)errMsg.remove();}
+  input.value=lastUserMsg;
+  sendMessage();
+};
+})();
+</script>
+<style>
+.log-entry{border:1px solid #e9ecef;border-radius:12px;margin-bottom:16px;overflow:hidden;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.log-entry-header{padding:14px 16px;cursor:pointer;user-select:none;background:#fafbfc;transition:background .15s}
+.log-entry-header:hover{background:#e8f4fd}
+.log-entry-summary{margin-bottom:6px}
+.log-preview{font-size:13px;color:#16181a;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.log-entry-meta{display:flex;align-items:center;gap:12px;font-size:11px}
+.log-sid{font-family:monospace;color:#868e96;background:#f1f3f5;padding:2px 6px;border-radius:4px}
+.log-time{color:#adb5bd}
+.log-msgs{color:#868e96;font-weight:500}
+.log-chevron{transition:transform .2s;font-size:12px;color:#adb5bd;margin-left:auto}
+.log-entry.open .log-chevron{transform:rotate(180deg)}
+.log-entry.open .log-entry-header{background:#e8f4fd}
+.log-entry-body{display:none;padding:20px 16px;background:#f8f9fa;border-top:1px solid #e9ecef}
+.log-entry.open .log-entry-body{display:block}
+.log-msg{display:flex;margin-bottom:16px}
+.log-msg:last-child{margin-bottom:0}
+.log-msg.user{justify-content:flex-end}
+.log-msg.assistant{justify-content:flex-start}
+.log-bubble{max-width:85%;padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.55}
+.log-msg.user .log-bubble{background:#146bb7;color:#fff;border-bottom-right-radius:4px}
+.log-msg.assistant .log-bubble{background:#fff;color:#363b40;border:1px solid #e9ecef;border-bottom-left-radius:4px}
+.log-content{word-break:break-word}
+.log-content p{margin:0 0 6px 0}
+.log-content p:last-child{margin-bottom:0}
+.log-content a{color:inherit;text-decoration:underline}
+.log-content strong{font-weight:700}
+.log-content code{font-family:monospace;font-size:12px;background:rgba(0,0,0,.06);padding:2px 5px;border-radius:3px}
+.log-msg.user .log-content code{background:rgba(255,255,255,.2)}
+/* Admin tabs */
+.admin-tab{background:none;border:none;color:rgba(255,255,255,.5);padding:10px 20px;font-size:13px;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;font-weight:500}
+.admin-tab:hover{color:rgba(255,255,255,.8)}
+.admin-tab.active{color:#fff;border-bottom-color:#4dabf7}
+/* Profile cards */
+.profile-card{border:1px solid #e9ecef;border-radius:12px;margin-bottom:12px;overflow:hidden;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.profile-card-header{padding:14px 16px;cursor:pointer;user-select:none;background:#fafbfc;transition:background .15s}
+.profile-card-header:hover{background:#e8f4fd}
+.profile-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.profile-name{font-size:15px;font-weight:700;color:#16181a}
+.profile-returning-badge{font-size:10px;font-weight:500;color:#7048e8;background:#f3f0ff;padding:1px 6px;border-radius:8px;margin-left:6px;vertical-align:middle}
+.profile-time{font-size:11px;color:#adb5bd}
+.profile-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.profile-tag{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:500}
+.profile-tag-occ{background:#e7f5ff;color:#1971c2}
+.profile-tag-loc{background:#fff3bf;color:#e67700}
+.profile-tag-rel{background:#f3f0ff;color:#7048e8}
+.profile-tag-int{background:#e6fcf5;color:#087f5b}
+.profile-facts{display:flex;flex-wrap:wrap;gap:4px}
+.profile-fact{font-size:11px;background:#f1f3f5;color:#495057;padding:2px 8px;border-radius:4px}
+.profile-chevron{transition:transform .2s;font-size:12px;color:#adb5bd;margin-left:auto;text-align:right}
+.profile-card.open .profile-chevron{transform:rotate(180deg)}
+.profile-card.open .profile-card-header{background:#e8f4fd}
+.profile-card-body{display:none;padding:20px 16px;background:#f8f9fa;border-top:1px solid #e9ecef}
+.profile-card.open .profile-card-body{display:block}
+.profile-section{margin-bottom:14px}
+.profile-section:last-child{margin-bottom:0}
+.profile-section-label{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#adb5bd;margin-bottom:4px;font-weight:600}
+.profile-section-text{font-size:13px;color:#363b40;line-height:1.6}
+.profile-interest-tag{display:inline-block;font-size:11px;background:#d3f9d8;color:#2b8a3e;padding:2px 8px;border-radius:10px;margin:2px 4px 2px 0}
+.profile-view-chat-btn{background:#e7f5ff;color:#1971c2;border:none;padding:6px 14px;border-radius:6px;font-size:12px;cursor:pointer;margin-top:8px;font-weight:500}
+.profile-view-chat-btn:hover{background:#d0ebff}
+.profile-history-item{padding:8px 0;border-bottom:1px solid #e9ecef;font-size:12px}
+.profile-history-item:last-child{border-bottom:none}
+.profile-history-time{color:#adb5bd;font-size:11px;margin-bottom:4px}
+.profile-change-tag{display:inline-block;background:#fff9db;color:#e67700;padding:2px 6px;border-radius:4px;font-size:11px;margin:2px 4px 2px 0}
+#admin-profiles-toolbar{display:none;padding:12px 0;gap:8px;flex-wrap:wrap}
+#admin-profiles-toolbar select{padding:6px 10px;border-radius:6px;border:1px solid #dee2e6;font-size:12px;background:#fff}
+#admin-insights{display:none;padding:12px 16px;background:linear-gradient(135deg,#f8f9fa,#e9ecef);border-radius:12px;margin-bottom:16px}
+.insight-stat{background:#fff;border-radius:8px;padding:10px 16px;min-width:100px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.insight-stat-value{font-size:24px;font-weight:700;color:#16181a}
+.insight-stat-label{font-size:11px;color:#adb5bd;margin-top:2px}
+</style>
+<!-- Hidden Admin Panel (type "切换到管理模式" in chat or Ctrl+Shift+A) -->
+<div id="admin-overlay">
+  <div id="admin-panel">
+    <div id="admin-header">
+      <span>Chat Logs</span>
+      <div style="display:flex;gap:8px">
+        <button id="admin-logout-btn" onclick="lockAdmin()" style="display:none;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer">Lock</button>
+        <button onclick="closeAdmin()" style="background:none;border:none;color:#fff;cursor:pointer;font-size:18px;line-height:1">Close</button>
+      </div>
+    </div>
+    <div id="admin-tabs" style="display:none;display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,.15)">
+      <button class="admin-tab active" data-tab="logs" onclick="switchAdminTab('logs')">Chat Logs</button>
+      <button class="admin-tab" data-tab="profiles" onclick="switchAdminTab('profiles')">User Profiles</button>
+    </div>
+    <div id="admin-profiles-toolbar">
+      <select id="profile-sort" onchange="loadProfiles(1)">
+        <option value="recent">Recent</option>
+        <option value="sessions">Most Visits</option>
+        <option value="messages">Most Messages</option>
+        <option value="first">First Seen</option>
+      </select>
+      <select id="profile-filter-rel" onchange="loadProfiles(1)">
+        <option value="all">All Types</option>
+        <option value="reader">Reader</option>
+        <option value="colleague">Colleague</option>
+        <option value="friend">Friend</option>
+        <option value="classmate">Classmate</option>
+        <option value="stranger">Stranger</option>
+      </select>
+    </div>
+    <div id="admin-body">
+      <div id="admin-login">
+        <input type="password" id="admin-password" placeholder="Enter password" onkeydown="if(event.key==='Enter')unlockAdmin()">
+        <button onclick="unlockAdmin()">Unlock</button>
+      </div>
+      <div id="admin-logs" style="display:none">
+        <div id="admin-logs-list"></div>
+        <div id="admin-pagination" style="display:flex;justify-content:center;gap:8px;padding:16px"></div>
+      </div>
+      <div id="admin-profiles" style="display:none">
+        <div id="admin-insights">
+          <div style="display:flex;gap:16px;flex-wrap:wrap">
+            <div class="insight-stat"><div class="insight-stat-value" id="insight-total">-</div><div class="insight-stat-label">Profiles</div></div>
+            <div class="insight-stat"><div class="insight-stat-value" id="insight-sessions">-</div><div class="insight-stat-label">Total Sessions</div></div>
+            <div class="insight-stat"><div class="insight-stat-value" id="insight-avg">-</div><div class="insight-stat-label">Avg Visits</div></div>
+          </div>
+          <div id="insight-interests" style="margin-top:12px;font-size:12px;color:#495057"></div>
+        </div>
+        <div id="admin-profiles-list"></div>
+        <div id="admin-profiles-pagination" style="display:flex;justify-content:center;gap:8px;padding:16px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+var overlay=document.getElementById('admin-overlay');
+var pwdInput=document.getElementById('admin-password');
+var loginSection=document.getElementById('admin-login');
+var logsSection=document.getElementById('admin-logs');
+var logoutBtn=document.getElementById('admin-logout-btn');
+var logsList=document.getElementById('admin-logs-list');
+var pagination=document.getElementById('admin-pagination');
+var adminPassword='';
+var currentPage=1;
+var profilesSection=document.getElementById('admin-profiles');
+var profilesList=document.getElementById('admin-profiles-list');
+var profilesPagination=document.getElementById('admin-profiles-pagination');
+var tabsBar=document.getElementById('admin-tabs');
+var currentTab='logs';
+var profilesCurrentPage=1;
+
+// Tab switching
+window.switchAdminTab=function(tab){
+  currentTab=tab;
+  var tabs=tabsBar.querySelectorAll('.admin-tab');
+  for(var i=0;i<tabs.length;i++)tabs[i].classList.toggle('active',tabs[i].getAttribute('data-tab')===tab);
+  logsSection.style.display=tab==='logs'?'block':'none';
+  profilesSection.style.display=tab==='profiles'?'block':'none';
+  pagination.style.display=tab==='logs'?'flex':'none';
+  profilesPagination.style.display=tab==='profiles'?'flex':'none';
+  var toolbar=document.getElementById('admin-profiles-toolbar');
+  if(toolbar)toolbar.style.display=tab==='profiles'?'flex':'none';
+  if(tab==='profiles'&&profilesList.children.length===0){loadProfiles(1);loadInsights();}
+};
+
+// Load insights dashboard (aggregate stats across all profiles)
+window.loadInsights=async function(){
+  try{
+    var resp=await fetch('/api/admin/chat-logs',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({password:adminPassword,action:'insights'})
+    });
+    if(!resp.ok)return;
+    var data=await resp.json();
+    var ins=data.insights;
+    document.getElementById('insight-total').textContent=ins.totalProfiles;
+    document.getElementById('insight-sessions').textContent=ins.totalSessions;
+    document.getElementById('insight-avg').textContent=ins.avgSessions;
+    var interestsHtml='<strong>热门话题: </strong>';
+    ins.topInterests.forEach(function(item){
+      interestsHtml+='<span class="profile-interest-tag">'+item.name+' ('+item.count+')</span>';
+    });
+    document.getElementById('insight-interests').innerHTML=interestsHtml;
+    document.getElementById('admin-insights').style.display='block';
+  }catch(e){}
+};
+
+// Render a single profile card
+function renderProfileCard(p){
+  var card=document.createElement('div');
+  card.className='profile-card';
+  var isAnon=p.profile&&p.profile.relationship_to_hank==='anonymous';
+  var name=isAnon?'匿名访客':(p.profile&&p.profile.name?p.profile.name:'Anonymous');
+  var occ=p.profile&&p.profile.occupation?p.profile.occupation:'';
+  var loc=p.profile&&p.profile.location?p.profile.location:'';
+  var pers=isAnon?'未透露个人信息':(p.profile&&p.profile.personality?p.profile.personality:'');
+  var facts=p.profile&&p.profile.key_facts?p.profile.key_facts:[];
+  var interests=p.profile&&p.profile.interests?p.profile.interests:[];
+  var rel=p.profile&&p.profile.relationship_to_hank?p.profile.relationship_to_hank:'';
+  var date=new Date(p.timestamp);
+  var timeStr=date.toLocaleString();
+  var returningBadge=(p.sessionCount||0)>1?' <span class="profile-returning-badge">↻'+p.sessionCount+'</span>':'';
+  var totalMsgs=p.totalMessages||p.messageCount||0;
+  var sessionInfo='<div class="profile-section"><div class="profile-section-label">Activity</div><div class="profile-section-text" style="font-family:monospace;font-size:11px;color:#868e96">'+p.sessionCount+' session'+(p.sessionCount>1?'s':'')+' · '+totalMsgs+' messages</div></div>';
+  var historyHtml='';
+  if(p.history&&p.history.length>1){
+    historyHtml='<div class="profile-section"><div class="profile-section-label">Evolution ('+p.history.length+' snapshots)</div>';
+    p.history.forEach(function(h){
+      var hDate=new Date(h.timestamp).toLocaleString();
+      historyHtml+='<div class="profile-history-item"><div class="profile-history-time">'+hDate+'</div><div class="profile-history-changes">'+h.changes.map(function(c){return '<span class="profile-change-tag">'+c+'</span>';}).join(' ')+'</div></div>';
+    });
+    historyHtml+='</div>';
+  }
+  var tags='';
+  if(!isAnon&&occ)tags+='<span class="profile-tag profile-tag-occ">'+occ+'</span>';
+  if(!isAnon&&loc)tags+='<span class="profile-tag profile-tag-loc">'+loc+'</span>';
+  if(rel)tags+='<span class="profile-tag profile-tag-rel">'+rel+'</span>';
+  if(!isAnon&&interests.length>0)tags+='<span class="profile-tag profile-tag-int">'+interests.slice(0,2).join(', ')+(interests.length>2?' +'+(interests.length-2):'')+'</span>';
+  var factsHtml='';
+  if(facts.length>0)factsHtml='<div class="profile-facts">'+facts.map(function(f){return '<span class="profile-fact">'+f+'</span>';}).join('')+'</div>';
+  card.innerHTML='<div class="profile-card-header" onclick="this.parentElement.classList.toggle(&#39;open&#39;)"><div class="profile-card-top"><span class="profile-name">'+name+returningBadge+'</span><span class="profile-time">'+timeStr+'</span></div><div class="profile-tags">'+tags+'</div>'+factsHtml+'<div class="profile-chevron">▼</div></div><div class="profile-card-body"><div class="profile-section"><div class="profile-section-label">Personality</div><div class="profile-section-text">'+(pers||'No analysis available')+'</div></div>'+(facts.length>0?'<div class="profile-section"><div class="profile-section-label">Key Facts</div><div class="profile-section-text">'+facts.map(function(f){return '• '+f;}).join('<br>')+'</div></div>':'')+(interests.length>0?'<div class="profile-section"><div class="profile-section-label">Interests</div><div class="profile-section-text">'+interests.map(function(i){return '<span class="profile-interest-tag">'+i+'</span>';}).join(' ')+'</div></div>':'')+sessionInfo+historyHtml+'<div class="profile-section"><button class="profile-view-chat-btn" onclick="viewProfileChats(&#39;'+p.sessionId+'&#39;)">查看对话记录 →</button></div></div>';
+  return card;
+}
+
+// Navigate from profile card to the corresponding chat log
+window.viewProfileChats=function(sessionId){
+  switchAdminTab('logs');
+  loadLogsBySession(sessionId);
+};
+
+// Load chat logs filtered by a specific sessionId (for profile → chat navigation)
+window.loadLogsBySession=async function(sessionId){
+  logsList.innerHTML='<p style="text-align:center;color:#adb5bd;padding:40px">Loading...</p>';
+  try{
+    var resp=await fetch('/api/admin/chat-logs',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({password:adminPassword,sessionId:sessionId,page:1,pageSize:1})
+    });
+    if(!resp.ok){logsList.innerHTML='<p style="text-align:center;color:#adb5bd;padding:40px">Not found.</p>';return;}
+    var data=await resp.json();
+    if(data.logs&&data.logs.length>0){
+      logsList.innerHTML='';
+      data.logs.forEach(function(log){logsList.appendChild(renderLogEntry(log));});
+      // Auto-expand the first entry
+      var first=logsList.querySelector('.log-entry');
+      if(first)first.classList.add('open');
+    }else{
+      logsList.innerHTML='<p style="text-align:center;color:#adb5bd;padding:40px">Conversation not found.</p>';
+    }
+  }catch(e){logsList.innerHTML='<p style="color:#dc3545;padding:40px">Error loading conversation.</p>';}
+};
+
+// Load user profiles
+window.loadProfiles=async function(page){
+  profilesCurrentPage=page;
+  profilesList.innerHTML='<p style="text-align:center;color:#adb5bd;padding:40px">Loading...</p>';
+  try{
+    var sort=document.getElementById('profile-sort')?.value||'recent';
+    var filterRel=document.getElementById('profile-filter-rel')?.value||'all';
+    var resp=await fetch('/api/admin/chat-logs',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({password:adminPassword,action:'profiles',page:page,pageSize:15,sort:sort,filterRel:filterRel!=='all'?filterRel:undefined})
+    });
+    if(!resp.ok){profilesList.innerHTML='<p style="text-align:center;color:#dc3545;padding:40px">Failed to load profiles.</p>';return;}
+    var data=await resp.json();
+    if(!data.profiles||data.profiles.length===0){
+      profilesList.innerHTML='<p style="text-align:center;color:#adb5bd;padding:40px">No user profiles yet. They appear automatically after conversations.</p>';
+      profilesPagination.innerHTML='';
+      return;
+    }
+    profilesList.innerHTML='';
+    data.profiles.forEach(function(p){profilesList.appendChild(renderProfileCard(p));});
+    // Pagination
+    var pg='';
+    var tp=data.totalPages||1;
+    if(tp>1){
+      var start=Math.max(1,page-2);
+      var end=Math.min(tp,page+2);
+      if(start>1)pg+='<button class="page-btn" onclick="loadProfiles(1)">1</button>';
+      if(start>2)pg+='<span style="padding:0 4px;color:#adb5bd">…</span>';
+      for(var i=start;i<=end;i++)pg+='<button class="page-btn'+(i===page?' active':'')+'" onclick="loadProfiles('+i+')">'+i+'</button>';
+      if(end<tp)pg+='<span style="padding:0 4px;color:#adb5bd">…</span><button class="page-btn" onclick="loadProfiles('+tp+')">'+tp+'</button>';
+    }
+    profilesPagination.innerHTML=pg;
+  }catch(e){profilesList.innerHTML='<p style="text-align:center;color:#dc3545;padding:40px">Error loading profiles.</p>';}
+};
+	// Keyboard shortcut: Ctrl+Shift+A (Win/Linux) or Cmd+Shift+A (Mac)
+	document.addEventListener('keydown',function(e){
+	  if((e.ctrlKey||e.metaKey)&&e.shiftKey&&e.code==='KeyA'&&!overlay.classList.contains('open')){
+	    e.preventDefault();
+	    openAdmin();
+	  }
+	});
+
+	console.info('Admin: type "切换到管理模式" in chat or press Ctrl+Shift+A');
+
+window.openAdmin=function(){
+  overlay.classList.add('open');
+  pwdInput.value='';
+  pwdInput.focus();
+  loginSection.style.display='flex';
+  logsSection.style.display='none';
+  profilesSection.style.display='none';
+  logoutBtn.style.display='none';
+  tabsBar.style.display='none';
+  logsList.innerHTML='';
+  profilesList.innerHTML='';
+  pagination.innerHTML='';
+};
+
+window.closeAdmin=function(){
+  overlay.classList.remove('open');
+};
+
+overlay.addEventListener('click',function(e){
+  if(e.target===overlay)closeAdmin();
+});
+
+window.unlockAdmin=function(){
+  adminPassword=pwdInput.value;
+  if(!adminPassword)return;
+  loginSection.style.display='none';
+  logsSection.style.display='block';
+  logoutBtn.style.display='block';
+  tabsBar.style.display='flex';
+  switchAdminTab('logs');
+  loadLogs(1);
+};
+
+// Called from chat-based admin auth — bypasses the login form
+window.unlockAdminWithPassword=function(pwd){
+  overlay.classList.add('open');
+  adminPassword=pwd;
+  loginSection.style.display='none';
+  logsSection.style.display='block';
+  logoutBtn.style.display='block';
+  tabsBar.style.display='flex';
+  switchAdminTab('logs');
+  loadLogs(1);
+};
+
+// Called from chat-based admin auth with pre-fetched data — no extra API call
+window.openAdminWithData=function(data,pwd){
+  try{
+    overlay.classList.add('open');
+    adminPassword=pwd;
+    loginSection.style.display='none';
+    logsSection.style.display='block';
+    logoutBtn.style.display='block';
+    tabsBar.style.display='flex';
+    switchAdminTab('logs');
+    renderLogsFromData(data);
+  }catch(e){
+    console.error('openAdminWithData inner error:',e);
+    overlay.classList.add('open');
+    logsSection.style.display='block';
+    logsList.innerHTML='<p style="color:#dc3545;padding:40px">Error loading logs.</p>';
+  }
+};
+
+// Shared helper: strip HTML tags for preview text
+function stripHtml(h){var d=document.createElement('div');d.innerHTML=h;return d.textContent||d.innerText||'';}
+// Shared helper: escape HTML to prevent XSS in rendered content
+function escapeHtml(s){var d=document.createElement('div');d.appendChild(document.createTextNode(s));return d.innerHTML;}
+
+// Shared helper: render a single log entry
+function renderLogEntry(log){
+  var entry=document.createElement('div');
+  entry.className='log-entry';
+  var date=new Date(log.timestamp);
+  var timeStr=date.toLocaleString();
+  var preview='';
+  if(log.messages&&log.messages[0])preview=stripHtml(log.messages[0].content).slice(0,80);
+  entry.innerHTML='<div class="log-entry-header" onclick="this.parentElement.classList.toggle(&#39;open&#39;)"><div class="log-entry-summary"><span class="log-preview">'+preview.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</span></div><div class="log-entry-meta"><span class="log-sid">#'+log.sessionId.slice(-8)+'</span><span class="log-time">'+timeStr+'</span><span class="log-msgs">'+(log.messages?log.messages.length:0)+' msgs</span><span class="log-chevron">▼</span></div></div>';
+  var body=document.createElement('div');
+  body.className='log-entry-body';
+  if(log.messages){
+    log.messages.forEach(function(m){
+      var msgDiv=document.createElement('div');
+      msgDiv.className='log-msg '+m.role;
+      msgDiv.innerHTML='<div class="log-bubble"><div class="log-content">'+escapeHtml(m.content)+'</div></div>';
+      body.appendChild(msgDiv);
+    });
+  }
+  entry.appendChild(body);
+  return entry;
+}
+
+function renderLogsFromData(data){
+  if(!data.logs||data.logs.length===0){
+    logsList.innerHTML='<p style="text-align:center;color:#adb5bd;padding:40px">No conversations yet.</p>';
+    pagination.innerHTML='';
+    return;
+  }
+  logsList.innerHTML='';
+  data.logs.forEach(function(log){logsList.appendChild(renderLogEntry(log));});
+  renderPagination(data);
+}
+
+function renderPagination(data){
+  var pg='';
+  var tp=data.totalPages;
+  if(tp>1){
+    var pages=[];
+    for(var i=Math.max(1,currentPage-2);i<=Math.min(tp,currentPage+2);i++)pages.push(i);
+    if(pages[0]>1){pg+='<button class="page-btn" onclick="loadLogs(1)">1</button>';if(pages[0]>2)pg+='<span style="padding:0 4px;color:#adb5bd">…</span>';}
+    pages.forEach(function(p){pg+='<button class="page-btn'+(p===currentPage?' active':'')+'" onclick="loadLogs('+p+')">'+p+'</button>';});
+    if(pages[pages.length-1]<tp){if(pages[pages.length-1]<tp-1)pg+='<span style="padding:0 4px;color:#adb5bd">…</span>';pg+='<button class="page-btn" onclick="loadLogs('+tp+')">'+tp+'</button>';}
+  }
+  pagination.innerHTML=pg;
+}
+
+window.lockAdmin=function(){
+  adminPassword='';
+  loginSection.style.display='flex';
+  logsSection.style.display='none';
+  profilesSection.style.display='none';
+  logoutBtn.style.display='none';
+  tabsBar.style.display='none';
+  logsList.innerHTML='';
+  profilesList.innerHTML='';
+  pwdInput.value='';
+  pwdInput.focus();
+};
+
+window.loadLogs=async function(page){
+  currentPage=page;
+  logsList.innerHTML='<p style="text-align:center;color:#adb5bd;padding:40px">Loading...</p>';
+  pagination.innerHTML='';
+
+  try{
+    var resp=await fetch('/api/admin/chat-logs',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({password:adminPassword,page:page})
+    });
+    if(resp.status===401){
+      logsList.innerHTML='<p style="text-align:center;color:#dc3545;padding:40px">Wrong password</p>';
+      return;
+    }
+    if(!resp.ok)throw new Error('Failed');
+    var data=await resp.json();
+
+    if(data.logs.length===0){
+      logsList.innerHTML='<p style="text-align:center;color:#adb5bd;padding:40px">No conversations yet.</p>';
+    }else{
+      loginSection.style.display='none';
+      logsSection.style.display='block';
+      logoutBtn.style.display='block';
+      logsList.innerHTML='';
+      data.logs.forEach(function(log){logsList.appendChild(renderLogEntry(log));});
+      renderPagination(data);
+    }
+  }catch(e){
+    logsList.innerHTML='<p style="text-align:center;color:#dc3545;padding:40px">Failed to load. Please try again.</p>';
+  }
+};
+
+// Keyboard shortcut: Escape to close
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'&&overlay.classList.contains('open'))closeAdmin();
+});
+
+})();
+</script>
+</div>
+<script>
+// Register Service Worker for PWA (offline support + Add to Home Screen)
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js');
+}
+</script>
+</body>
+</html>
