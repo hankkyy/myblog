@@ -96,6 +96,8 @@ async function getExistingProfile(userId) {
       _id: doc._id?.$oid || doc._id,
       profile: doc.profile,
       sessionCount: (doc.sessionCount || 0),
+      totalMessages: (doc.totalMessages || 0),
+      history: doc.history || [],
     };
   } catch (err) {
     console.error('Failed to query existing profile:', err.message);
@@ -103,10 +105,38 @@ async function getExistingProfile(userId) {
   }
 }
 
-// Save or update user profile in CloudBase NoSQL
+// Save or update user profile in CloudBase NoSQL, with change history tracking
 async function saveUserProfile(userId, sessionId, profile, userMsgCount, existingDoc) {
   if (!CLOUDBASE_API_KEY || !userId) return;
   try {
+    // Compute changes compared to previous profile
+    const changes = [];
+    if (existingDoc?.profile) {
+      const old = existingDoc.profile;
+      for (const key of ['name', 'occupation', 'location', 'personality', 'relationship_to_hank']) {
+        if (profile[key] && profile[key] !== old[key]) {
+          changes.push(`Update: ${key}=${old[key] || '(empty)'}→${profile[key]}`);
+        } else if (profile[key] && !old[key]) {
+          changes.push(`New: ${key}=${profile[key]}`);
+        }
+      }
+      // Compare interests
+      const oldInterests = new Set(old.interests || []);
+      const newInterests = profile.interests || [];
+      const addedInterests = newInterests.filter(i => !oldInterests.has(i));
+      if (addedInterests.length > 0) changes.push(`New interests: ${addedInterests.join(', ')}`);
+    }
+
+    const historyEntry = {
+      timestamp: new Date().toISOString(),
+      sessionId,
+      profile,
+      changes: changes.length > 0 ? changes : ['No significant changes'],
+    };
+
+    // Build updated history array (read-modify-write fallback instead of $push)
+    const allHistory = [...(existingDoc?.history || []), historyEntry];
+
     if (existingDoc?._id) {
       // Update existing profile
       await fetch(`${CB_BASE}/collections/user_profiles/documents/${existingDoc._id}`, {
@@ -122,6 +152,7 @@ async function saveUserProfile(userId, sessionId, profile, userMsgCount, existin
             lastSeen: new Date().toISOString(),
             sessionCount: (existingDoc.sessionCount || 0) + 1,
             totalMessages: (existingDoc.totalMessages || 0) + userMsgCount,
+            history: allHistory,
           },
         }),
       });
@@ -144,6 +175,7 @@ async function saveUserProfile(userId, sessionId, profile, userMsgCount, existin
             totalMessages: userMsgCount,
             sessionCount: 1,
             lastSessionId: sessionId,
+            history: [historyEntry],
           }],
         }),
       });
@@ -153,10 +185,59 @@ async function saveUserProfile(userId, sessionId, profile, userMsgCount, existin
   }
 }
 
+// Quality gate: skip profile analysis for meaningless conversations
+// Requires at least 3 user messages, 30 total chars, and 2 substantial (>10 char) messages
+function hasMeaningfulContent(userMsgs) {
+  if (userMsgs.length < 3) return false;
+
+  const totalChars = userMsgs.reduce((sum, m) => {
+    const text = (m.content || '').trim();
+    return sum + text.length;
+  }, 0);
+  if (totalChars < 30) return false;
+
+  const substantial = userMsgs.filter(m => (m.content || '').trim().length > 10);
+  if (substantial.length < 2) return false;
+
+  return true;
+}
+
+// Detect users who haven't shared any personal info — skip DeepSeek, save as anonymous
+function isAnonymousUser(userMsgs) {
+  const text = userMsgs.map(m => m.content).join(' ');
+
+  const patterns = [
+    /我叫|我是|我在|我.*做|我.*工作|我.*学生|我.*工程师|我.*程序员|我.*公司|我.*大学|我.*学校/,
+    /my name|I am|I work|I study|I live in|I'm a/,
+    /北京|上海|深圳|杭州|成都|广州|武汉/,
+  ];
+
+  const hasPersonalInfo = patterns.some(p => p.test(text));
+  return !hasPersonalInfo;
+}
+
 // Fire-and-forget: analyze user messages → generate/merge profile → save
 async function analyzeAndSaveProfile(userId, sessionId, messages) {
   const userMsgs = messages.filter(m => m.role === 'user');
-  if (userMsgs.length < 2) return;
+
+  // Quality gate: skip meaningless conversations (hi/ok/emoji-only)
+  if (!hasMeaningfulContent(userMsgs)) return;
+
+  // Anonymous user detection: save lightweight marker, skip DeepSeek API call
+  if (isAnonymousUser(userMsgs)) {
+    const anonProfile = {
+      name: null,
+      occupation: null,
+      location: null,
+      interests: [],
+      personality: null,
+      key_facts: [],
+      relationship_to_hank: 'anonymous',
+    };
+    const existing = await getExistingProfile(userId);
+    await saveUserProfile(userId, sessionId, anonProfile, userMsgs.length, existing);
+    return;
+  }
 
   const transcript = userMsgs.map(m => `[user]: ${m.content}`).join('\n');
 
@@ -465,7 +546,7 @@ export default async function handler(req, res) {
         if (fullResponse.trim()) {
           const allMessages = [...messages, { role: 'assistant', content: fullResponse }];
           await saveChatLog(sid, allMessages);
-          analyzeAndSaveProfile(sid, allMessages); // fire-and-forget
+          analyzeAndSaveProfile(userId, sid, allMessages); // fire-and-forget
         }
         // Signal error to client
         try {

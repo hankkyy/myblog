@@ -143,7 +143,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'Admin password not configured on server.' });
     }
 
-    const { password, page = 1, pageSize = 20, action } = req.body || {};
+    const { password, page = 1, pageSize = 20, action, sessionId, sort = 'recent', filterRel } = req.body || {};
 
     if (!password || password !== ADMIN_PASSWORD) {
       recordFailedAttempt(clientIp);
@@ -154,10 +154,27 @@ export default async function handler(req, res) {
 
     // --- User Profiles mode ---
     if (action === 'profiles') {
-      const order = JSON.stringify([{ field: 'timestamp', direction: 'desc' }]);
+      // Build order based on sort parameter
+      let orderField;
+      switch (sort) {
+        case 'recent':    orderField = 'lastSeen'; break;
+        case 'first':     orderField = 'timestamp'; break;
+        case 'sessions':  orderField = 'sessionCount'; break;
+        case 'messages':  orderField = 'totalMessages'; break;
+        default:          orderField = 'lastSeen';
+      }
+      const order = JSON.stringify([{ field: orderField, direction: 'desc' }]);
       const offset = (page - 1) * pageSize;
+
+      // Build filter for relationship type
+      let filterStr = '';
+      if (filterRel && filterRel !== 'all') {
+        const filter = JSON.stringify({ 'profile.relationship_to_hank': filterRel });
+        filterStr = `&filter=${encodeURIComponent(filter)}`;
+      }
+
       const queryResult = await cloudbaseRequest(
-        `/collections/user_profiles/documents?order=${encodeURIComponent(order)}&limit=${pageSize}&offset=${offset}`
+        `/collections/user_profiles/documents?order=${encodeURIComponent(order)}&limit=${pageSize}&offset=${offset}${filterStr}`
       );
 
       const profiles = (queryResult.list || []).map(doc => ({
@@ -169,6 +186,7 @@ export default async function handler(req, res) {
         profile: doc.profile,
         sessionCount: doc.sessionCount || 1,
         totalMessages: doc.totalMessages || doc.messageCount || 0,
+        history: doc.history || [],
       }));
 
       return res.json({
@@ -179,7 +197,66 @@ export default async function handler(req, res) {
       });
     }
 
+    // --- Insights mode — aggregate stats across all profiles ---
+    if (action === 'insights') {
+      const queryResult = await cloudbaseRequest(
+        `/collections/user_profiles/documents?order=${encodeURIComponent(JSON.stringify([{field:'lastSeen',direction:'desc'}]))}&limit=200`
+      );
+
+      const docs = queryResult.list || [];
+      const profiles = docs.map(doc => doc.profile).filter(Boolean);
+
+      // Relationship type distribution
+      const relCounts = {};
+      profiles.forEach(p => {
+        const rel = (p && p.relationship_to_hank) || 'unknown';
+        relCounts[rel] = (relCounts[rel] || 0) + 1;
+      });
+
+      // Top interests across all users
+      const interestCounts = {};
+      profiles.forEach(p => {
+        (p && p.interests || []).forEach(i => {
+          interestCounts[i] = (interestCounts[i] || 0) + 1;
+        });
+      });
+      const topInterests = Object.entries(interestCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 20)
+        .map(([name, count]) => ({ name, count }));
+
+      // Session statistics
+      const totalSessions = docs.reduce((sum, doc) => sum + (doc.sessionCount || 0), 0);
+      const avgSessions = docs.length > 0 ? (totalSessions / docs.length).toFixed(1) : 0;
+
+      return res.json({
+        insights: {
+          totalProfiles: queryResult.total || docs.length,
+          totalSessions,
+          avgSessions,
+          relationshipDistribution: relCounts,
+          topInterests,
+        },
+      });
+    }
+
     // --- Chat Logs mode (default) ---
+    // If sessionId is provided, return matching log (for profile → chat navigation)
+    if (sessionId) {
+      const filter = JSON.stringify({ sessionId });
+      const queryResult = await cloudbaseRequest(
+        `/collections/chat_logs/documents?filter=${encodeURIComponent(filter)}&limit=1`
+      );
+      const logs = (queryResult.list || []).map(normalizeLog);
+      return res.json({
+        logs,
+        total: logs.length,
+        page: 1,
+        pageSize: 1,
+        totalPages: logs.length > 0 ? 1 : 0,
+      });
+    }
+
     const countResult = await cloudbaseRequest(
       `/collections/chat_logs/documents?count=true`
     );

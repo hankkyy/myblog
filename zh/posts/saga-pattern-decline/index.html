@@ -739,6 +739,18 @@ window.retryLastMessage=function(){
 .profile-section-label{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#adb5bd;margin-bottom:4px;font-weight:600}
 .profile-section-text{font-size:13px;color:#363b40;line-height:1.6}
 .profile-interest-tag{display:inline-block;font-size:11px;background:#d3f9d8;color:#2b8a3e;padding:2px 8px;border-radius:10px;margin:2px 4px 2px 0}
+.profile-view-chat-btn{background:#e7f5ff;color:#1971c2;border:none;padding:6px 14px;border-radius:6px;font-size:12px;cursor:pointer;margin-top:8px;font-weight:500}
+.profile-view-chat-btn:hover{background:#d0ebff}
+.profile-history-item{padding:8px 0;border-bottom:1px solid #e9ecef;font-size:12px}
+.profile-history-item:last-child{border-bottom:none}
+.profile-history-time{color:#adb5bd;font-size:11px;margin-bottom:4px}
+.profile-change-tag{display:inline-block;background:#fff9db;color:#e67700;padding:2px 6px;border-radius:4px;font-size:11px;margin:2px 4px 2px 0}
+#admin-profiles-toolbar{display:none;padding:12px 0;gap:8px;flex-wrap:wrap}
+#admin-profiles-toolbar select{padding:6px 10px;border-radius:6px;border:1px solid #dee2e6;font-size:12px;background:#fff}
+#admin-insights{display:none;padding:12px 16px;background:linear-gradient(135deg,#f8f9fa,#e9ecef);border-radius:12px;margin-bottom:16px}
+.insight-stat{background:#fff;border-radius:8px;padding:10px 16px;min-width:100px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.insight-stat-value{font-size:24px;font-weight:700;color:#16181a}
+.insight-stat-label{font-size:11px;color:#adb5bd;margin-top:2px}
 </style>
 <!-- Hidden Admin Panel (type "切换到管理模式" in chat or Ctrl+Shift+A) -->
 <div id="admin-overlay">
@@ -754,6 +766,22 @@ window.retryLastMessage=function(){
       <button class="admin-tab active" data-tab="logs" onclick="switchAdminTab('logs')">聊天记录</button>
       <button class="admin-tab" data-tab="profiles" onclick="switchAdminTab('profiles')">用户画像</button>
     </div>
+    <div id="admin-profiles-toolbar">
+      <select id="profile-sort" onchange="loadProfiles(1)">
+        <option value="recent">最近来访</option>
+        <option value="sessions">回访次数</option>
+        <option value="messages">消息总数</option>
+        <option value="first">最早发现</option>
+      </select>
+      <select id="profile-filter-rel" onchange="loadProfiles(1)">
+        <option value="all">全部类型</option>
+        <option value="reader">读者</option>
+        <option value="colleague">同行</option>
+        <option value="friend">朋友</option>
+        <option value="classmate">同学</option>
+        <option value="stranger">陌生人</option>
+      </select>
+    </div>
     <div id="admin-body">
       <div id="admin-login">
         <input type="password" id="admin-password" placeholder="输入密码" onkeydown="if(event.key==='Enter')unlockAdmin()">
@@ -764,6 +792,14 @@ window.retryLastMessage=function(){
         <div id="admin-pagination" style="display:flex;justify-content:center;gap:8px;padding:16px"></div>
       </div>
       <div id="admin-profiles" style="display:none">
+        <div id="admin-insights">
+          <div style="display:flex;gap:16px;flex-wrap:wrap">
+            <div class="insight-stat"><div class="insight-stat-value" id="insight-total">-</div><div class="insight-stat-label">Profiles</div></div>
+            <div class="insight-stat"><div class="insight-stat-value" id="insight-sessions">-</div><div class="insight-stat-label">Total Sessions</div></div>
+            <div class="insight-stat"><div class="insight-stat-value" id="insight-avg">-</div><div class="insight-stat-label">Avg Visits</div></div>
+          </div>
+          <div id="insight-interests" style="margin-top:12px;font-size:12px;color:#495057"></div>
+        </div>
         <div id="admin-profiles-list"></div>
         <div id="admin-profiles-pagination" style="display:flex;justify-content:center;gap:8px;padding:16px"></div>
       </div>
@@ -797,17 +833,43 @@ window.switchAdminTab=function(tab){
   profilesSection.style.display=tab==='profiles'?'block':'none';
   pagination.style.display=tab==='logs'?'flex':'none';
   profilesPagination.style.display=tab==='profiles'?'flex':'none';
-  if(tab==='profiles'&&profilesList.children.length===0)loadProfiles(1);
+  var toolbar=document.getElementById('admin-profiles-toolbar');
+  if(toolbar)toolbar.style.display=tab==='profiles'?'flex':'none';
+  if(tab==='profiles'&&profilesList.children.length===0){loadProfiles(1);loadInsights();}
+};
+
+// Load insights dashboard (aggregate stats across all profiles)
+window.loadInsights=async function(){
+  try{
+    var resp=await fetch('/api/admin/chat-logs',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({password:adminPassword,action:'insights'})
+    });
+    if(!resp.ok)return;
+    var data=await resp.json();
+    var ins=data.insights;
+    document.getElementById('insight-total').textContent=ins.totalProfiles;
+    document.getElementById('insight-sessions').textContent=ins.totalSessions;
+    document.getElementById('insight-avg').textContent=ins.avgSessions;
+    var interestsHtml='<strong>热门话题: </strong>';
+    ins.topInterests.forEach(function(item){
+      interestsHtml+='<span class="profile-interest-tag">'+item.name+' ('+item.count+')</span>';
+    });
+    document.getElementById('insight-interests').innerHTML=interestsHtml;
+    document.getElementById('admin-insights').style.display='block';
+  }catch(e){}
 };
 
 // Render a single profile card
 function renderProfileCard(p){
   var card=document.createElement('div');
   card.className='profile-card';
-  var name=p.profile&&p.profile.name?p.profile.name:'Anonymous';
+  var isAnon=p.profile&&p.profile.relationship_to_hank==='anonymous';
+  var name=isAnon?'匿名访客':(p.profile&&p.profile.name?p.profile.name:'Anonymous');
   var occ=p.profile&&p.profile.occupation?p.profile.occupation:'';
   var loc=p.profile&&p.profile.location?p.profile.location:'';
-  var pers=p.profile&&p.profile.personality?p.profile.personality:'';
+  var pers=isAnon?'未透露个人信息':(p.profile&&p.profile.personality?p.profile.personality:'');
   var facts=p.profile&&p.profile.key_facts?p.profile.key_facts:[];
   var interests=p.profile&&p.profile.interests?p.profile.interests:[];
   var rel=p.profile&&p.profile.relationship_to_hank?p.profile.relationship_to_hank:'';
@@ -816,26 +878,66 @@ function renderProfileCard(p){
   var returningBadge=(p.sessionCount||0)>1?' <span class="profile-returning-badge">↻'+p.sessionCount+'</span>':'';
   var totalMsgs=p.totalMessages||p.messageCount||0;
   var sessionInfo='<div class="profile-section"><div class="profile-section-label">Activity</div><div class="profile-section-text" style="font-family:monospace;font-size:11px;color:#868e96">'+p.sessionCount+' session'+(p.sessionCount>1?'s':'')+' · '+totalMsgs+' messages</div></div>';
+  var historyHtml='';
+  if(p.history&&p.history.length>1){
+    historyHtml='<div class="profile-section"><div class="profile-section-label">Evolution ('+p.history.length+' snapshots)</div>';
+    p.history.forEach(function(h){
+      var hDate=new Date(h.timestamp).toLocaleString();
+      historyHtml+='<div class="profile-history-item"><div class="profile-history-time">'+hDate+'</div><div class="profile-history-changes">'+h.changes.map(function(c){return '<span class="profile-change-tag">'+c+'</span>';}).join(' ')+'</div></div>';
+    });
+    historyHtml+='</div>';
+  }
   var tags='';
-  if(occ)tags+='<span class="profile-tag profile-tag-occ">'+occ+'</span>';
-  if(loc)tags+='<span class="profile-tag profile-tag-loc">'+loc+'</span>';
+  if(!isAnon&&occ)tags+='<span class="profile-tag profile-tag-occ">'+occ+'</span>';
+  if(!isAnon&&loc)tags+='<span class="profile-tag profile-tag-loc">'+loc+'</span>';
   if(rel)tags+='<span class="profile-tag profile-tag-rel">'+rel+'</span>';
-  if(interests.length>0)tags+='<span class="profile-tag profile-tag-int">'+interests.slice(0,2).join(', ')+(interests.length>2?' +'+(interests.length-2):'')+'</span>';
+  if(!isAnon&&interests.length>0)tags+='<span class="profile-tag profile-tag-int">'+interests.slice(0,2).join(', ')+(interests.length>2?' +'+(interests.length-2):'')+'</span>';
   var factsHtml='';
   if(facts.length>0)factsHtml='<div class="profile-facts">'+facts.map(function(f){return '<span class="profile-fact">'+f+'</span>';}).join('')+'</div>';
-  card.innerHTML='<div class="profile-card-header" onclick="this.parentElement.classList.toggle(&#39;open&#39;)"><div class="profile-card-top"><span class="profile-name">'+name+returningBadge+'</span><span class="profile-time">'+timeStr+'</span></div><div class="profile-tags">'+tags+'</div>'+factsHtml+'<div class="profile-chevron">▼</div></div><div class="profile-card-body"><div class="profile-section"><div class="profile-section-label">Personality</div><div class="profile-section-text">'+(pers||'No analysis available')+'</div></div>'+(facts.length>0?'<div class="profile-section"><div class="profile-section-label">Key Facts</div><div class="profile-section-text">'+facts.map(function(f){return '• '+f;}).join('<br>')+'</div></div>':'')+(interests.length>0?'<div class="profile-section"><div class="profile-section-label">Interests</div><div class="profile-section-text">'+interests.map(function(i){return '<span class="profile-interest-tag">'+i+'</span>';}).join(' ')+'</div></div>':'')+sessionInfo+'</div>';
+  card.innerHTML='<div class="profile-card-header" onclick="this.parentElement.classList.toggle(&#39;open&#39;)"><div class="profile-card-top"><span class="profile-name">'+name+returningBadge+'</span><span class="profile-time">'+timeStr+'</span></div><div class="profile-tags">'+tags+'</div>'+factsHtml+'<div class="profile-chevron">▼</div></div><div class="profile-card-body"><div class="profile-section"><div class="profile-section-label">Personality</div><div class="profile-section-text">'+(pers||'No analysis available')+'</div></div>'+(facts.length>0?'<div class="profile-section"><div class="profile-section-label">Key Facts</div><div class="profile-section-text">'+facts.map(function(f){return '• '+f;}).join('<br>')+'</div></div>':'')+(interests.length>0?'<div class="profile-section"><div class="profile-section-label">Interests</div><div class="profile-section-text">'+interests.map(function(i){return '<span class="profile-interest-tag">'+i+'</span>';}).join(' ')+'</div></div>':'')+sessionInfo+historyHtml+'<div class="profile-section"><button class="profile-view-chat-btn" onclick="viewProfileChats(&#39;'+p.sessionId+'&#39;)">查看对话记录 →</button></div></div>';
   return card;
 }
+
+// Navigate from profile card to the corresponding chat log
+window.viewProfileChats=function(sessionId){
+  switchAdminTab('logs');
+  loadLogsBySession(sessionId);
+};
+
+// Load chat logs filtered by a specific sessionId (for profile → chat navigation)
+window.loadLogsBySession=async function(sessionId){
+  logsList.innerHTML='<p style="text-align:center;color:#adb5bd;padding:40px">Loading...</p>';
+  try{
+    var resp=await fetch('/api/admin/chat-logs',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({password:adminPassword,sessionId:sessionId,page:1,pageSize:1})
+    });
+    if(!resp.ok){logsList.innerHTML='<p style="text-align:center;color:#adb5bd;padding:40px">Not found.</p>';return;}
+    var data=await resp.json();
+    if(data.logs&&data.logs.length>0){
+      logsList.innerHTML='';
+      data.logs.forEach(function(log){logsList.appendChild(renderLogEntry(log));});
+      // Auto-expand the first entry
+      var first=logsList.querySelector('.log-entry');
+      if(first)first.classList.add('open');
+    }else{
+      logsList.innerHTML='<p style="text-align:center;color:#adb5bd;padding:40px">Conversation not found.</p>';
+    }
+  }catch(e){logsList.innerHTML='<p style="color:#dc3545;padding:40px">Error loading conversation.</p>';}
+};
 
 // Load user profiles
 window.loadProfiles=async function(page){
   profilesCurrentPage=page;
   profilesList.innerHTML='<p style="text-align:center;color:#adb5bd;padding:40px">Loading...</p>';
   try{
+    var sort=document.getElementById('profile-sort')?.value||'recent';
+    var filterRel=document.getElementById('profile-filter-rel')?.value||'all';
     var resp=await fetch('/api/admin/chat-logs',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({password:adminPassword,action:'profiles',page:page,pageSize:15})
+      body:JSON.stringify({password:adminPassword,action:'profiles',page:page,pageSize:15,sort:sort,filterRel:filterRel!=='all'?filterRel:undefined})
     });
     if(!resp.ok){profilesList.innerHTML='<p style="text-align:center;color:#dc3545;padding:40px">Failed to load profiles.</p>';return;}
     var data=await resp.json();
