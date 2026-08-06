@@ -669,7 +669,7 @@ window.retryLastMessage=function(){
 /* Profile cards */
 .profile-card{border:none;border-radius:16px;margin-bottom:14px;overflow:hidden;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.04),0 0 0 1px rgba(0,0,0,.02);transition:box-shadow .15s}
 .profile-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.06),0 0 0 1px rgba(0,0,0,.04)}
-.profile-card-header{padding:18px 20px;cursor:pointer;user-select:none;background:#fff;transition:background .15s;display:flex;flex-direction:column}
+.profile-card-header{padding:18px 44px 18px 20px;cursor:pointer;user-select:none;background:#fff;transition:background .15s;position:relative}
 .profile-card-header:hover{background:#f8f9fb}
 .profile-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .profile-name{font-size:16px;font-weight:700;color:#1a1a2e;display:flex;align-items:center}
@@ -683,7 +683,7 @@ window.retryLastMessage=function(){
 .profile-tag-int{background:#d1fae5;color:#059669}
 .profile-facts{display:flex;flex-wrap:wrap;gap:6px}
 .profile-fact{font-size:12px;background:#f3f4f6;color:#6b7280;padding:3px 10px;border-radius:6px}
-.profile-chevron{transition:transform .2s;font-size:12px;color:#9ca3af;align-self:flex-end;margin-top:-20px}
+.profile-chevron{transition:transform .2s;font-size:12px;color:#9ca3af;position:absolute;top:22px;right:20px}
 .profile-card.open .profile-chevron{transform:rotate(180deg)}
 .profile-card.open .profile-card-header{background:#f8f9fb}
 .profile-card-body{display:none;padding:24px 20px;background:#fbfbfb;border-top:1px solid #f0f0f3}
@@ -699,7 +699,7 @@ window.retryLastMessage=function(){
 .profile-history-item:last-child{border-bottom:none}
 .profile-history-time{color:#9ca3af;font-size:11px;margin-bottom:6px}
 .profile-change-tag{display:inline-block;background:#fef3c7;color:#d97706;padding:3px 8px;border-radius:6px;font-size:11px;margin:2px 5px 2px 0}
-#admin-profiles-toolbar{display:none;padding:0 0 16px 0;gap:10px;flex-wrap:wrap}
+#admin-profiles-toolbar{display:none;padding:0 28px 16px 28px;gap:10px;flex-wrap:wrap}
 #admin-profiles-toolbar select{padding:8px 32px 8px 12px;border-radius:10px;border:1.5px solid #e5e7eb;font-size:13px;background:#fff;color:#6b7280;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'%3E%3C/path%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;transition:border-color .15s,box-shadow .15s}
 #admin-profiles-toolbar select:hover{border-color:#6366f1}
 #admin-profiles-toolbar select:focus{outline:none;border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,.1)}
@@ -715,11 +715,11 @@ window.retryLastMessage=function(){
     <div id="admin-header">
       <span>Chat Logs</span>
       <div style="display:flex;gap:8px">
-        <button id="admin-logout-btn" onclick="lockAdmin()" style="display:none;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer">Lock</button>
-        <button onclick="closeAdmin()" style="background:none;border:none;color:#fff;cursor:pointer;font-size:18px;line-height:1">Close</button>
+        <button id="admin-logout-btn" onclick="lockAdmin()" style="display:none;background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:5px 14px;font-size:12px;cursor:pointer;font-weight:500;transition:all .15s">Lock</button>
+        <button onclick="closeAdmin()" style="background:none;border:none;color:rgba(255,255,255,.7);cursor:pointer;font-size:20px;line-height:1;padding:4px;transition:color .15s" title="Close">✕</button>
       </div>
     </div>
-    <div id="admin-tabs" style="display:none;display:flex;gap:0;border-bottom:1px solid #dee2e6">
+    <div id="admin-tabs" style="display:none;display:flex;gap:4px;border-bottom:1px solid #e5e7eb;padding:8px 28px">
       <button class="admin-tab" data-tab="logs" onclick="switchAdminTab('logs')">Chat Logs</button>
       <button class="admin-tab active" data-tab="profiles" onclick="switchAdminTab('profiles')">User Profiles</button>
     </div>
