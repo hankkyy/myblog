@@ -410,6 +410,7 @@ function showRefreshHint(){
   var hint=document.getElementById('chat-refresh-hint');
   if(hint)hint.style.display='';
 }
+window.showRefreshHint=showRefreshHint;
 
 function hideRefreshHint(){
   var hint=document.getElementById('chat-refresh-hint');
@@ -417,6 +418,7 @@ function hideRefreshHint(){
   // Extend the threshold so it won't pop up again immediately
   AUTO_REFRESH_LIMIT=msgCount+15;
 }
+window.hideRefreshHint=hideRefreshHint;
 
 // Click outside chat panel to close
 document.addEventListener('click',function(e){
