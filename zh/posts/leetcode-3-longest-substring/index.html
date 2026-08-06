@@ -751,8 +751,8 @@ window.retryLastMessage=function(){
 .profile-history-item:last-child{border-bottom:none}
 .profile-history-time{color:#9ca3af;font-size:11px;margin-bottom:6px}
 .profile-change-tag{display:inline-block;background:#fef3c7;color:#d97706;padding:3px 8px;border-radius:6px;font-size:11px;margin:2px 5px 2px 0}
-#admin-profiles-toolbar{display:none;padding:0 28px 16px 28px;gap:10px;flex-wrap:wrap}
-#admin-profiles-toolbar select{padding:8px 32px 8px 12px;border-radius:10px;border:1.5px solid #e5e7eb;font-size:13px;background:#fff;color:#6b7280;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'%3E%3C/path%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;transition:border-color .15s,box-shadow .15s}
+#admin-profiles-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+#admin-profiles-toolbar select{padding:8px 12px;border-radius:10px;border:1.5px solid #e5e7eb;font-size:13px;background:#fff;color:#6b7280;cursor:pointer;transition:border-color .15s,box-shadow .15s}
 #admin-profiles-toolbar select:hover{border-color:#6366f1}
 #admin-profiles-toolbar select:focus{outline:none;border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,.1)}
 #admin-insights{display:none;padding:20px;background:#fff;border-radius:16px;margin-bottom:20px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 0 0 1px rgba(0,0,0,.02)}
@@ -775,23 +775,6 @@ window.retryLastMessage=function(){
       <button class="admin-tab" data-tab="logs" onclick="switchAdminTab('logs')">聊天记录</button>
       <button class="admin-tab active" data-tab="profiles" onclick="switchAdminTab('profiles')">用户画像</button>
     </div>
-    <div id="admin-profiles-toolbar">
-      <select id="profile-sort" onchange="loadProfiles(1)">
-        <option value="recent">最近来访</option>
-        <option value="sessions">回访次数</option>
-        <option value="messages">消息总数</option>
-        <option value="first">最早发现</option>
-      </select>
-      <select id="profile-filter-rel" onchange="loadProfiles(1)">
-        <option value="all">全部类型</option>
-        <option value="reader">读者</option>
-        <option value="colleague">同行</option>
-        <option value="friend">朋友</option>
-        <option value="classmate">同学</option>
-        <option value="stranger">陌生人</option>
-        <option value="anonymous">匿名（未透露信息）</option>
-      </select>
-    </div>
     <div id="admin-body">
       <div id="admin-login">
         <input type="password" id="admin-password" placeholder="输入密码" onkeydown="if(event.key==='Enter')unlockAdmin()">
@@ -802,6 +785,23 @@ window.retryLastMessage=function(){
         <div id="admin-pagination" style="display:flex;justify-content:center;gap:8px;padding:16px"></div>
       </div>
       <div id="admin-profiles" style="display:none">
+        <div id="admin-profiles-toolbar">
+          <select id="profile-sort" onchange="loadProfiles(1)">
+            <option value="recent">最近来访</option>
+            <option value="sessions">回访次数</option>
+            <option value="messages">消息总数</option>
+            <option value="first">最早发现</option>
+          </select>
+          <select id="profile-filter-rel" onchange="loadProfiles(1)">
+            <option value="all">全部类型</option>
+            <option value="reader">读者</option>
+            <option value="colleague">同行</option>
+            <option value="friend">朋友</option>
+            <option value="classmate">同学</option>
+            <option value="stranger">陌生人</option>
+            <option value="anonymous">匿名（未透露信息）</option>
+          </select>
+        </div>
         <div id="admin-insights">
           <div style="display:flex;gap:16px;flex-wrap:wrap">
             <div class="insight-stat"><div class="insight-stat-value" id="insight-total">-</div><div class="insight-stat-label">👤 画像总数</div></div>
