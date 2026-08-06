@@ -101,8 +101,17 @@ function parseEjsonNumber(val) {
   if (val && typeof val === 'object') {
     if (val.$numberInt) return Number(val.$numberInt);
     if (val.$numberLong) return Number(val.$numberLong);
+    if (val.$numberDouble) return Number(val.$numberDouble);
   }
-  return val;
+  // Salvage corrupted string values (e.g., "[object Object]111" from old bug)
+  if (typeof val === 'string') {
+    var n = Number(val);
+    if (!isNaN(n)) return n;
+    var match = val.match(/(\d+)$/);
+    if (match) return Number(match[1]);
+    return 0;
+  }
+  return Number(val) || 0;
 }
 
 function normalizeLog(doc) {

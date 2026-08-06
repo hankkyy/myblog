@@ -141,6 +141,12 @@ T = {
         "chat_suggestion_2": "What's a data engineer's day like?",
         "chat_suggestion_3": "Why is your nickname 'Coke'?",
         "chat_suggestion_4": "What do you do?",
+        "chat_suggestion_5": "What's your favorite programming language?",
+        "chat_suggestion_6": "How did you start this blog?",
+        "chat_suggestion_7": "What's the best way to learn to code?",
+        "chat_suggestion_8": "What do you do for fun?",
+        "chat_suggestion_9": "Why did you choose data engineering?",
+        "chat_suggestion_10": "Any book recommendations?",
         "chat_refresh_hint": "That was a long chat — my context is getting full and quality might dip. Want to start fresh?",
         "chat_refresh_btn": "Start fresh",
         "chat_continue_btn": "Keep chatting",
@@ -266,6 +272,12 @@ T = {
         "chat_suggestion_2": "数据工程师每天都在干嘛？",
         "chat_suggestion_3": "为什么叫可乐？",
         "chat_suggestion_4": "可乐是做什么的？",
+        "chat_suggestion_5": "你最喜欢的编程语言是什么？",
+        "chat_suggestion_6": "你是怎么开始写博客的？",
+        "chat_suggestion_7": "学编程最好的方法是什么？",
+        "chat_suggestion_8": "业余时间喜欢做什么？",
+        "chat_suggestion_9": "为什么选择做数据工程？",
+        "chat_suggestion_10": "有什么推荐的书吗？",
         "chat_refresh_hint": "已经聊了30轮，对话质量可能会下降。要不要刷新重新开始？",
         "chat_refresh_btn": "刷新对话",
         "chat_continue_btn": "继续聊",
@@ -473,12 +485,7 @@ document.addEventListener('DOMContentLoaded',function(){{
     </div>
     <div id="chat-messages">
       <div class="chat-msg assistant chat-welcome-msg"><div class="chat-bubble">{t['chat_welcome']}</div></div>
-      <div id="chat-suggestions">
-        <button class="chat-suggestion-chip" data-idx="1" data-msg="{t['chat_suggestion_1']}">{t['chat_suggestion_1']}</button>
-        <button class="chat-suggestion-chip" data-idx="2" data-msg="{t['chat_suggestion_2']}">{t['chat_suggestion_2']}</button>
-        <button class="chat-suggestion-chip" data-idx="3" data-msg="{t['chat_suggestion_3']}">{t['chat_suggestion_3']}</button>
-        <button class="chat-suggestion-chip" data-idx="4" data-msg="{t['chat_suggestion_4']}">{t['chat_suggestion_4']}</button>
-      </div>
+      <div id="chat-suggestions"></div>
     </div>
     <button id="chat-scroll-bottom" onclick="scrollChatToBottom()" title="滚动到底部">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
@@ -508,6 +515,8 @@ var stopBtn=document.getElementById('chat-stop-btn');
 var scrollBtn=document.getElementById('chat-scroll-bottom');
 var chatIcon=document.getElementById('chat-toggle-icon');
 var closeIcon=document.getElementById('chat-toggle-close');
+// Local dev: route API calls to prod since python3 -m http.server has no /api/*
+var API_BASE=window.location.hostname==='localhost'?'https://hankzhang.us':'';
 var isOpen=false;
 var isStreaming=false;
 var isComposing=false;
@@ -632,6 +641,30 @@ document.getElementById('chat-suggestions').addEventListener('click',function(e)
   if(msg){{input.value=msg;sendMessage();}}
 }});
 
+// Render 2 random chat suggestions
+function renderSuggestions(){{
+  var sug=document.getElementById('chat-suggestions');
+  if(!sug)return;
+  // Use the pre-built __suggestions array (defined in admin script)
+  var pool=(typeof __suggestions!=='undefined'?__suggestions:[]).slice();
+  if(!pool.length)return;
+  // Shuffle
+  for(var i=pool.length-1;i>0;i--){{
+    var j=Math.floor(Math.random()*(i+1));
+    var tmp=pool[i];pool[i]=pool[j];pool[j]=tmp;
+  }}
+  // Pick 2
+  sug.innerHTML='';
+  for(var i=0;i<2;i++){{
+    var btn=document.createElement('button');
+    btn.className='chat-suggestion-chip';
+    btn.setAttribute('data-msg',pool[i]);
+    btn.textContent=pool[i];
+    sug.appendChild(btn);
+  }}
+  sug.style.display='';
+}}
+
 // Clear conversation
 window.clearConversation=function(){{
   if(isStreaming)return;
@@ -643,9 +676,8 @@ window.clearConversation=function(){{
   lastUserMsg=null;
   msgCount=0;
   hideRefreshHint();
-  // Show suggestions again
-  var sug=document.getElementById('chat-suggestions');
-  if(sug)sug.style.display='';
+  // Show new random suggestions
+  renderSuggestions();
   input.focus();
 }};
 
@@ -699,7 +731,15 @@ window.stopGeneration=function(){{
 
 // Render markdown to HTML with fallback for plain text
 function renderMarkdown(text){{
-  if(typeof marked!=='undefined')return marked.parse(text);
+  if(typeof marked!=='undefined'){{
+    var html=marked.parse(text);
+    // Basic XSS sanitization: strip script tags and inline event handlers
+    html=html.replace(/<script[\\s\\S]*?<\\/script>/gi,'');
+    html=html.replace(/\\s+on\\w+\\s*=\\s*"[^"]*"/gi,'');
+    html=html.replace(/\\s+on\\w+\\s*=\\s*'[^']*'/gi,'');
+    html=html.replace(/\\s+on\\w+\\s*=\\s*[^\\s>]+/gi,'');
+    return html;
+  }}
   return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').split('\\n').join('<br>');
 }}
 
@@ -760,7 +800,7 @@ window.sendMessage=async function(){{
     finishStream();
     adminMode=false;
     try{{
-      var adminResp=await fetch('/api/admin/chat-logs',{{
+      var adminResp=await fetch(API_BASE+'/api/admin/chat-logs',{{
         method:'POST',
         headers:{{'Content-Type':'application/json'}},
         body:JSON.stringify({{password:text,page:1,pageSize:20}})
@@ -810,7 +850,7 @@ window.sendMessage=async function(){{
         var content=m.querySelector('.chat-bubble').innerHTML;
         cacheHistory.push({{role:role,content:content}});
       }});
-      fetch('/api/chat',{{
+      fetch(API_BASE+'/api/chat',{{
         method:'POST',
         headers:{{'Content-Type':'application/json'}},
         body:JSON.stringify({{messages:cacheHistory,sessionId:sessionId,userId:userId}})
@@ -832,7 +872,7 @@ window.sendMessage=async function(){{
   try{{
     streamAbort=new AbortController();
     var timeoutId=setTimeout(function(){{if(streamAbort)streamAbort.abort();}},25000);
-    var resp=await fetch('/api/chat',{{
+    var resp=await fetch(API_BASE+'/api/chat',{{
       method:'POST',
       headers:{{'Content-Type':'application/json'}},
       body:JSON.stringify({{messages:history,sessionId:sessionId,userId:userId}}),
@@ -943,7 +983,7 @@ window.checkLocalCriticalFact=function(text){{
   if(/为什么叫可乐|可乐.*名|怎么.*叫可乐|为什么叫.*可乐|nickname.*cola|可乐.*由来|可乐.*来源|为什么叫这个名/i.test(text))
     return '年纪太大的长辈读不来"Hank"，就念最后一个音"k"（可），觉得可乐比较顺口，就都叫可乐啦 😄 你呢？';
   // Hometown
-  if(/哪里人|哪儿人|老家|家乡|哪儿|哪里.*人|from.*where/i.test(text))
+  if(/哪里人|哪儿人|老家|家乡|你是哪的|哪里.*人|from.*where|where.*from|hometown/i.test(text))
     return '湖北。你呢，你是哪里的？';
   // Job
   if(/做什么.{{0,6}}的|什么工作|做什么工作|什么职业|what.*do|what.*job|工作是|职业是/i.test(text))
@@ -959,6 +999,9 @@ window.checkLocalCriticalFact=function(text){{
     return '基本不喝奶茶和咖啡，可乐也不怎么喝。主要是因为咖啡因会刺激前庭神经核，他前庭太敏感，容易头晕。平时就喝白水。你呢，你平时喝什么？';
   return null;
 }};
+
+// Initialize suggestions on page load
+renderSuggestions();
 </script>
 <style>
 .log-entry{{border:1px solid #e9ecef;border-radius:12px;margin-bottom:16px;overflow:hidden;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.04)}}
@@ -1122,7 +1165,7 @@ window.switchAdminTab=function(tab){{
 // Load insights dashboard (aggregate stats across all profiles)
 window.loadInsights=async function(){{
   try{{
-    var resp=await fetch('/api/admin/chat-logs',{{
+    var resp=await fetch(API_BASE+'/api/admin/chat-logs',{{
       method:'POST',
       headers:{{'Content-Type':'application/json'}},
       body:JSON.stringify({{password:adminPassword,action:'insights'}})
@@ -1164,7 +1207,7 @@ function renderProfileCard(p){{
     historyHtml='<div class="profile-section"><div class="profile-section-label">Evolution ('+p.history.length+' snapshots)</div>';
     p.history.forEach(function(h){{
       var hDate=new Date(h.timestamp).toLocaleString();
-      historyHtml+='<div class="profile-history-item"><div class="profile-history-time">'+hDate+'</div><div class="profile-history-changes">'+h.changes.map(function(c){{return '<span class="profile-change-tag">'+c+'</span>';}}).join(' ')+'</div></div>';
+      historyHtml+='<div class="profile-history-item"><div class="profile-history-time">'+hDate+'</div><div class="profile-history-changes">'+(h.changes||[]).map(function(c){{return '<span class="profile-change-tag">'+c+'</span>';}}).join(' ')+'</div></div>';
     }});
     historyHtml+='</div>';
   }}
@@ -1189,7 +1232,7 @@ window.viewProfileChats=function(sessionId){{
 window.loadLogsBySession=async function(sessionId){{
   logsList.innerHTML='<p style="text-align:center;color:#adb5bd;padding:40px">Loading...</p>';
   try{{
-    var resp=await fetch('/api/admin/chat-logs',{{
+    var resp=await fetch(API_BASE+'/api/admin/chat-logs',{{
       method:'POST',
       headers:{{'Content-Type':'application/json'}},
       body:JSON.stringify({{password:adminPassword,sessionId:sessionId,page:1,pageSize:1}})
@@ -1215,7 +1258,7 @@ window.loadProfiles=async function(page){{
   try{{
     var sort=document.getElementById('profile-sort')?.value||'recent';
     var filterRel=document.getElementById('profile-filter-rel')?.value||'all';
-    var resp=await fetch('/api/admin/chat-logs',{{
+    var resp=await fetch(API_BASE+'/api/admin/chat-logs',{{
       method:'POST',
       headers:{{'Content-Type':'application/json'}},
       body:JSON.stringify({{password:adminPassword,action:'profiles',page:page,pageSize:15,sort:sort,filterRel:filterRel!=='all'?filterRel:undefined}})
@@ -1397,7 +1440,7 @@ window.loadLogs=async function(page){{
   pagination.innerHTML='';
 
   try{{
-    var resp=await fetch('/api/admin/chat-logs',{{
+    var resp=await fetch(API_BASE+'/api/admin/chat-logs',{{
       method:'POST',
       headers:{{'Content-Type':'application/json'}},
       body:JSON.stringify({{password:adminPassword,page:page}})

@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>后端实习两个月，我学到的东西比大学两年都多 – Welcome To My Blog</title>
+<title>为什么实习学到的东西比大学两年都多 – Welcome To My Blog</title>
 <meta name="description" content="从学校到企业的落差、代码 Review 的残酷、以及为什么 CRUD 没那么简单">
-<meta property="og:title" content="后端实习两个月，我学到的东西比大学两年都多 – Welcome To My Blog">
+<meta property="og:title" content="为什么实习学到的东西比大学两年都多 – Welcome To My Blog">
 <meta property="og:description" content="从学校到企业的落差、代码 Review 的残酷、以及为什么 CRUD 没那么简单">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://hankzhang.us/">
@@ -16,7 +16,7 @@
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "后端实习两个月，我学到的东西比大学两年都多 – Welcome To My Blog",
+  "headline": "为什么实习学到的东西比大学两年都多 – Welcome To My Blog",
   "description": "从学校到企业的落差、代码 Review 的残酷、以及为什么 CRUD 没那么简单",
   "url": "https://hankzhang.us/",
   "datePublished": "2026-06-08",
@@ -72,7 +72,7 @@
   <div class="sticky-header-slide">
     <div class="cenote-sticky-main">
       <div class="container tg-flex-container tg-flex-space-between tg-flex-item-centered">
-        <span class="sticky-title">后端实习两个月，我学到的东西比大学两年都多</span>
+        <span class="sticky-title">为什么实习学到的东西比大学两年都多</span>
       </div>
     </div>
   </div>
@@ -86,7 +86,7 @@
                 <span class="cat-links"><a href="/zh/categories/杂谈/" rel="category">杂谈</a></span><span class="posted-on"><a href="/zh/posts/internship-thoughts/" rel="bookmark"><time class="entry-date published" datetime="2026-06-08">2026年6月8日</time></a></span>
               </div>
               <header class="entry-header">
-                <h1 class="entry-title">后端实习两个月，我学到的东西比大学两年都多</h1>
+                <h1 class="entry-title">为什么实习学到的东西比大学两年都多</h1>
               </header>
               <div class="entry-content"><p>在学校的时候，我以为后端开发就是 Spring Boot 连 MySQL，写几个 CRUD 接口。</p>
 <p>实习两个月后，我发现 <strong>CRUD 是工作中最简单的部分</strong>。</p>
@@ -242,12 +242,7 @@ document.addEventListener('DOMContentLoaded',function(){
     </div>
     <div id="chat-messages">
       <div class="chat-msg assistant chat-welcome-msg"><div class="chat-bubble">你好！我是 Hank 的数字分身，你怎么找到这里的！</div></div>
-      <div id="chat-suggestions">
-        <button class="chat-suggestion-chip" data-idx="1" data-msg="去过最有趣的地方是哪里？">去过最有趣的地方是哪里？</button>
-        <button class="chat-suggestion-chip" data-idx="2" data-msg="数据工程师每天都在干嘛？">数据工程师每天都在干嘛？</button>
-        <button class="chat-suggestion-chip" data-idx="3" data-msg="为什么叫可乐？">为什么叫可乐？</button>
-        <button class="chat-suggestion-chip" data-idx="4" data-msg="可乐是做什么的？">可乐是做什么的？</button>
-      </div>
+      <div id="chat-suggestions"></div>
     </div>
     <button id="chat-scroll-bottom" onclick="scrollChatToBottom()" title="滚动到底部">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
@@ -277,6 +272,8 @@ var stopBtn=document.getElementById('chat-stop-btn');
 var scrollBtn=document.getElementById('chat-scroll-bottom');
 var chatIcon=document.getElementById('chat-toggle-icon');
 var closeIcon=document.getElementById('chat-toggle-close');
+// Local dev: route API calls to prod since python3 -m http.server has no /api/*
+var API_BASE=window.location.hostname==='localhost'?'https://hankzhang.us':'';
 var isOpen=false;
 var isStreaming=false;
 var isComposing=false;
@@ -401,6 +398,30 @@ document.getElementById('chat-suggestions').addEventListener('click',function(e)
   if(msg){input.value=msg;sendMessage();}
 });
 
+// Render 2 random chat suggestions
+function renderSuggestions(){
+  var sug=document.getElementById('chat-suggestions');
+  if(!sug)return;
+  // Use the pre-built __suggestions array (defined in admin script)
+  var pool=(typeof __suggestions!=='undefined'?__suggestions:[]).slice();
+  if(!pool.length)return;
+  // Shuffle
+  for(var i=pool.length-1;i>0;i--){
+    var j=Math.floor(Math.random()*(i+1));
+    var tmp=pool[i];pool[i]=pool[j];pool[j]=tmp;
+  }
+  // Pick 2
+  sug.innerHTML='';
+  for(var i=0;i<2;i++){
+    var btn=document.createElement('button');
+    btn.className='chat-suggestion-chip';
+    btn.setAttribute('data-msg',pool[i]);
+    btn.textContent=pool[i];
+    sug.appendChild(btn);
+  }
+  sug.style.display='';
+}
+
 // Clear conversation
 window.clearConversation=function(){
   if(isStreaming)return;
@@ -412,9 +433,8 @@ window.clearConversation=function(){
   lastUserMsg=null;
   msgCount=0;
   hideRefreshHint();
-  // Show suggestions again
-  var sug=document.getElementById('chat-suggestions');
-  if(sug)sug.style.display='';
+  // Show new random suggestions
+  renderSuggestions();
   input.focus();
 };
 
@@ -468,7 +488,15 @@ window.stopGeneration=function(){
 
 // Render markdown to HTML with fallback for plain text
 function renderMarkdown(text){
-  if(typeof marked!=='undefined')return marked.parse(text);
+  if(typeof marked!=='undefined'){
+    var html=marked.parse(text);
+    // Basic XSS sanitization: strip script tags and inline event handlers
+    html=html.replace(/<script[\s\S]*?<\/script>/gi,'');
+    html=html.replace(/\s+on\w+\s*=\s*"[^"]*"/gi,'');
+    html=html.replace(/\s+on\w+\s*=\s*'[^']*'/gi,'');
+    html=html.replace(/\s+on\w+\s*=\s*[^\s>]+/gi,'');
+    return html;
+  }
   return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').split('\n').join('<br>');
 }
 
@@ -529,7 +557,7 @@ window.sendMessage=async function(){
     finishStream();
     adminMode=false;
     try{
-      var adminResp=await fetch('/api/admin/chat-logs',{
+      var adminResp=await fetch(API_BASE+'/api/admin/chat-logs',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({password:text,page:1,pageSize:20})
@@ -579,7 +607,7 @@ window.sendMessage=async function(){
         var content=m.querySelector('.chat-bubble').innerHTML;
         cacheHistory.push({role:role,content:content});
       });
-      fetch('/api/chat',{
+      fetch(API_BASE+'/api/chat',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({messages:cacheHistory,sessionId:sessionId,userId:userId})
@@ -601,7 +629,7 @@ window.sendMessage=async function(){
   try{
     streamAbort=new AbortController();
     var timeoutId=setTimeout(function(){if(streamAbort)streamAbort.abort();},25000);
-    var resp=await fetch('/api/chat',{
+    var resp=await fetch(API_BASE+'/api/chat',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({messages:history,sessionId:sessionId,userId:userId}),
@@ -712,7 +740,7 @@ window.checkLocalCriticalFact=function(text){
   if(/为什么叫可乐|可乐.*名|怎么.*叫可乐|为什么叫.*可乐|nickname.*cola|可乐.*由来|可乐.*来源|为什么叫这个名/i.test(text))
     return '年纪太大的长辈读不来"Hank"，就念最后一个音"k"（可），觉得可乐比较顺口，就都叫可乐啦 😄 你呢？';
   // Hometown
-  if(/哪里人|哪儿人|老家|家乡|哪儿|哪里.*人|from.*where/i.test(text))
+  if(/哪里人|哪儿人|老家|家乡|你是哪的|哪里.*人|from.*where|where.*from|hometown/i.test(text))
     return '湖北。你呢，你是哪里的？';
   // Job
   if(/做什么.{0,6}的|什么工作|做什么工作|什么职业|what.*do|what.*job|工作是|职业是/i.test(text))
@@ -728,6 +756,9 @@ window.checkLocalCriticalFact=function(text){
     return '基本不喝奶茶和咖啡，可乐也不怎么喝。主要是因为咖啡因会刺激前庭神经核，他前庭太敏感，容易头晕。平时就喝白水。你呢，你平时喝什么？';
   return null;
 };
+
+// Initialize suggestions on page load
+renderSuggestions();
 </script>
 <style>
 .log-entry{border:1px solid #e9ecef;border-radius:12px;margin-bottom:16px;overflow:hidden;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.04)}
@@ -891,7 +922,7 @@ window.switchAdminTab=function(tab){
 // Load insights dashboard (aggregate stats across all profiles)
 window.loadInsights=async function(){
   try{
-    var resp=await fetch('/api/admin/chat-logs',{
+    var resp=await fetch(API_BASE+'/api/admin/chat-logs',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({password:adminPassword,action:'insights'})
@@ -933,7 +964,7 @@ function renderProfileCard(p){
     historyHtml='<div class="profile-section"><div class="profile-section-label">Evolution ('+p.history.length+' snapshots)</div>';
     p.history.forEach(function(h){
       var hDate=new Date(h.timestamp).toLocaleString();
-      historyHtml+='<div class="profile-history-item"><div class="profile-history-time">'+hDate+'</div><div class="profile-history-changes">'+h.changes.map(function(c){return '<span class="profile-change-tag">'+c+'</span>';}).join(' ')+'</div></div>';
+      historyHtml+='<div class="profile-history-item"><div class="profile-history-time">'+hDate+'</div><div class="profile-history-changes">'+(h.changes||[]).map(function(c){return '<span class="profile-change-tag">'+c+'</span>';}).join(' ')+'</div></div>';
     });
     historyHtml+='</div>';
   }
@@ -958,7 +989,7 @@ window.viewProfileChats=function(sessionId){
 window.loadLogsBySession=async function(sessionId){
   logsList.innerHTML='<p style="text-align:center;color:#adb5bd;padding:40px">Loading...</p>';
   try{
-    var resp=await fetch('/api/admin/chat-logs',{
+    var resp=await fetch(API_BASE+'/api/admin/chat-logs',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({password:adminPassword,sessionId:sessionId,page:1,pageSize:1})
@@ -984,7 +1015,7 @@ window.loadProfiles=async function(page){
   try{
     var sort=document.getElementById('profile-sort')?.value||'recent';
     var filterRel=document.getElementById('profile-filter-rel')?.value||'all';
-    var resp=await fetch('/api/admin/chat-logs',{
+    var resp=await fetch(API_BASE+'/api/admin/chat-logs',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({password:adminPassword,action:'profiles',page:page,pageSize:15,sort:sort,filterRel:filterRel!=='all'?filterRel:undefined})
@@ -1094,14 +1125,26 @@ function escapeHtml(s){var d=document.createElement('div');d.appendChild(documen
 
 // Known suggestion questions — auto-generated from i18n T dict, skip when picking log titles
 var __suggestions=[
-"What do you do?",
+"Any book recommendations?",
+  "How did you start this blog?",
+  "What do you do for fun?",
+  "What do you do?",
   "What's a data engineer's day like?",
+  "What's the best way to learn to code?",
+  "What's your favorite programming language?",
   "Where's the most interesting place you've been?",
+  "Why did you choose data engineering?",
   "Why is your nickname 'Coke'?",
+  "业余时间喜欢做什么？",
   "为什么叫可乐？",
+  "为什么选择做数据工程？",
+  "你是怎么开始写博客的？",
+  "你最喜欢的编程语言是什么？",
   "去过最有趣的地方是哪里？",
   "可乐是做什么的？",
-  "数据工程师每天都在干嘛？"
+  "学编程最好的方法是什么？",
+  "数据工程师每天都在干嘛？",
+  "有什么推荐的书吗？"
 ];
 function __isSuggestion(text){
   for(var i=0;i<__suggestions.length;i++){if(text===__suggestions[i])return true;}
@@ -1173,7 +1216,7 @@ window.loadLogs=async function(page){
   pagination.innerHTML='';
 
   try{
-    var resp=await fetch('/api/admin/chat-logs',{
+    var resp=await fetch(API_BASE+'/api/admin/chat-logs',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({password:adminPassword,page:page})

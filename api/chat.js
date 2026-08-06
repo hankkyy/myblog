@@ -46,6 +46,25 @@ async function saveChatLog(sessionId, messages, userId) {
   }
 }
 
+// Parse CloudBase EJSON number format: {"$numberInt": "5"} → 5
+function parseEjsonNumber(val) {
+  if (val && typeof val === 'object') {
+    if (val.$numberInt !== undefined) return Number(val.$numberInt);
+    if (val.$numberLong !== undefined) return Number(val.$numberLong);
+    if (val.$numberDouble !== undefined) return Number(val.$numberDouble);
+  }
+  // Guard against corrupted string values (e.g., "[object Object]111")
+  if (typeof val === 'string') {
+    const n = Number(val);
+    if (!isNaN(n)) return n;
+    // Try to salvage: extract trailing digits from corrupted strings
+    const match = val.match(/(\d+)$/);
+    if (match) return Number(match[1]);
+    return 0;
+  }
+  return Number(val) || 0;
+}
+
 // Query existing profile by userId
 async function getExistingProfile(userId) {
   if (!CLOUDBASE_API_KEY || !userId) return null;
@@ -62,8 +81,8 @@ async function getExistingProfile(userId) {
     return {
       _id: doc._id?.$oid || doc._id,
       profile: doc.profile,
-      sessionCount: (doc.sessionCount || 0),
-      totalMessages: (doc.totalMessages || 0),
+      sessionCount: parseEjsonNumber(doc.sessionCount),
+      totalMessages: parseEjsonNumber(doc.totalMessages || doc.messageCount),
       history: doc.history || [],
     };
   } catch (err) {
@@ -777,17 +796,14 @@ export default async function handler(req, res) {
             const allMessages = fullResponse.trim()
               ? [...messages, { role: 'assistant', content: fullResponse }]
               : null;
-            // Save chat log AND profile in parallel BEFORE res.end().
-            // OPTIMIZATION: profile analysis has a 3s timeout — if DeepSeek is slow,
-            // we still finish the response. Chat log always saves.
+            // Save chat log synchronously — must complete before res.end().
+            // Profile analysis is fire-and-forget with a 3s timeout.
             if (allMessages) {
-              await Promise.race([
-                Promise.all([
-                  saveChatLog(sid, allMessages, userId),
-                  analyzeAndSaveProfile(userId, sid, allMessages).catch(() => {}),
-                ]),
-                new Promise(r => setTimeout(r, PROFILE_TIMEOUT_MS)),
-              ]);
+              await saveChatLog(sid, allMessages, userId);
+              // Fire profile analysis in background — race against timeout so
+              // a slow DeepSeek call doesn't block the SSE [DONE] event.
+              analyzeAndSaveProfile(userId, sid, allMessages).catch(() => {});
+              await new Promise(r => setTimeout(r, PROFILE_TIMEOUT_MS));
             }
             res.write(`data: [DONE]\n\n`);
             res.end();
@@ -817,14 +833,9 @@ export default async function handler(req, res) {
           ? [...messages, { role: 'assistant', content: fullResponse }]
           : null;
         if (allMessages) {
-          // Same timeout protection on error path
-          await Promise.race([
-            Promise.all([
-              saveChatLog(sid, allMessages, userId),
-              analyzeAndSaveProfile(userId, sid, allMessages).catch(() => {}),
-            ]),
-            new Promise(r => setTimeout(r, PROFILE_TIMEOUT_MS)),
-          ]);
+          await saveChatLog(sid, allMessages, userId);
+          analyzeAndSaveProfile(userId, sid, allMessages).catch(() => {});
+          await new Promise(r => setTimeout(r, PROFILE_TIMEOUT_MS));
         }
         try {
           res.write(`data: ${JSON.stringify({ error: 'stream_interrupted' })}\n\n`);

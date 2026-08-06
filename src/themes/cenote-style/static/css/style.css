@@ -204,13 +204,14 @@ blockquote p{margin-bottom:0;font-style:italic}
 .hobby-card{background:linear-gradient(135deg,#fff9f5,#fff5f0);border:1px solid #ffe0cc;border-radius:14px;padding:28px 32px;position:relative}
 .hobby-card::before{content:'"';position:absolute;top:8px;left:20px;font-family:Georgia,serif;font-size:72px;color:#de7b85;opacity:.25;line-height:1;pointer-events:none}
 .hobby-card .about-text{position:relative;z-index:1;padding-top:12px}
-.travel-stats{display:flex;gap:16px;margin-top:20px;position:relative;z-index:1}
-.travel-stat{display:flex;flex-direction:column;align-items:center;background:#fff;border-radius:10px;padding:14px 22px;border:1px solid #ffe0cc;transition:all .3s;min-width:90px}
-.travel-stat:hover{border-color:#de7b85;transform:translateY(-2px);box-shadow:0 4px 12px rgba(222,123,133,.1)}
-.travel-stat strong{font-size:1.6rem;color:#de7b85;font-weight:800;line-height:1.2}
-.travel-stat .stat-unit{font-size:.8rem;font-weight:500;color:#c9878e;margin-left:3px}
-.travel-stat span{font-size:.72rem;color:#adb5bd;font-weight:500;margin-top:2px}
-.travel-data-source{width:100%;font-size:.7rem;color:#adb5bd;text-align:center;margin-top:8px;font-style:italic}
+.travel-stats{display:flex;gap:12px;margin-top:20px;position:relative;z-index:1}
+.travel-stat{display:flex;flex-direction:column;align-items:center;background:#fff;border-radius:12px;padding:20px 28px;border:1px solid #ffe0cc;transition:all .3s;min-width:110px;gap:6px;white-space:nowrap}
+.travel-stat:hover{border-color:#de7b85;transform:translateY(-2px);box-shadow:0 4px 12px rgba(222,123,133,.12)}
+.travel-stat .stat-icon{font-size:1.25rem;line-height:1;margin-bottom:2px}
+.travel-stat strong{font-size:1.5rem;color:#de7b85;font-weight:800;line-height:1.2;letter-spacing:-.02em}
+.travel-stat .stat-unit{font-size:.75rem;font-weight:500;color:#c9878e;margin-left:1px}
+.travel-stat > span:last-child{font-size:.68rem;color:#adb5bd;font-weight:500;margin-top:0}
+.travel-data-source{width:100%;font-size:.7rem;color:#adb5bd;text-align:center;margin-top:6px;font-style:normal;letter-spacing:.02em}
 /* Blog about card */
 .blog-about-card{background:#f8f9fa;border-radius:14px;padding:28px 32px;border:1px solid #e9ecef;position:relative}
 .blog-about-card::before{content:'📝';position:absolute;top:-16px;right:24px;font-size:1.5rem;background:#fff;padding:0 8px;border-radius:8px}
@@ -342,9 +343,10 @@ blockquote p{margin-bottom:0;font-style:italic}
   /* Hobby card */
   .hobby-card{padding:20px 16px}
   .hobby-card::before{font-size:48px;top:4px;left:12px}
-  .travel-stats{flex-wrap:wrap;gap:10px}
-  .travel-stat{min-width:70px;padding:10px 14px}
-  .travel-stat strong{font-size:1.3rem}
+  .travel-stats{flex-wrap:wrap;gap:8px}
+  .travel-stat{min-width:70px;padding:16px 18px;gap:4px}
+  .travel-stat strong{font-size:1.25rem}
+  .travel-stat .stat-icon{font-size:1.1rem}
   .travel-regions{grid-template-columns:1fr;gap:16px}
 
   /* Blog about card */
