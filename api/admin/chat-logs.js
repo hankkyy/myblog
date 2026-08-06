@@ -243,8 +243,8 @@ export default async function handler(req, res) {
         .slice(0, 20)
         .map(([name, count]) => ({ name, count }));
 
-      // Session statistics
-      const totalSessions = docs.reduce((sum, doc) => sum + (doc.sessionCount || 0), 0);
+      // Session statistics (parse EJSON numbers from CloudBase NoSQL)
+      const totalSessions = docs.reduce((sum, doc) => sum + (parseEjsonNumber(doc.sessionCount) || 0), 0);
       const avgSessions = docs.length > 0 ? (totalSessions / docs.length).toFixed(1) : 0;
 
       return res.json({
