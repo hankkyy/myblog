@@ -91,11 +91,11 @@ T = {
         "project_skytakeout_desc": "Food delivery backend — practicing high-concurrency architecture patterns with Redis and Redisson.",
         "project_ectf_desc": "Embedded security competition — attack phase. Hardware-software boundary vulnerability exploitation.",
         "hobby_text": 'Passionate about travel and aviation. Half of my geography knowledge comes from books, the other half from airplane windows at 30,000 feet.<br>Seeing the world shapes your vision — visit more places, meet more people, understand more.',
-        "blog_about_text": 'A custom static site engine built from scratch in Python — Markdown + YAML frontmatter pipeline, bilingual i18n with clean URL routing, WordPress Cenote–inspired theme.<br><br>The AI digital avatar enables asynchronous connection — even when I\'m offline, visitors can learn about my experience, projects, and technical perspectives. An exploration of personality-driven AI agents: one that knows when to joke and when to be serious.<br><br>Powered by the DeepSeek V4-pro large language model with SSE streaming and a three-tier gated prompt architecture, backed by CloudBase Tencent Cloud in Asia and deployed globally on Vercel. Over 140 technical articles.<br>Technical notes, project retrospectives, industry observations.',
+        "blog_about_text": 'A custom static site engine built from scratch in Python — Markdown + YAML frontmatter pipeline, bilingual i18n with clean URL routing, WordPress Cenote–inspired theme.<br><br>The AI digital avatar enables asynchronous connection — even when I\'m offline, visitors can learn about my experience, projects, and technical perspectives. An exploration of personality-driven AI agents: one that knows when to joke and when to be serious.<br><br>Powered by the DeepSeek V4-pro large language model with SSE streaming and a three-tier gated prompt architecture, backed by CloudBase Tencent Cloud in Asia and deployed globally on Vercel. Over 140 technical articles.<br><br>Technical notes, project retrospectives, industry observations.',
         "flight_hours": "Total Flight Hours",
         "flight_km": "Total Flight Distance",
         "cities_count_label": "Cities Visited",
-        "flight_data_source": "Based on Umetrip (航旅纵横) statistics",
+        "flight_data_source": "Flight data automatically tracked by Umetrip (航旅纵横)",
         "mainland_china": "🇨🇳 Mainland China",
         "international": "🌍 International",
         "lang_switch_en": "EN",
@@ -216,11 +216,11 @@ T = {
         "project_skytakeout_desc": "外卖后端系统，基于 Redis 和 Redisson 实践高并发架构模式。",
         "project_ectf_desc": "嵌入式安全竞赛——攻击阶段，硬件与软件边界的安全漏洞利用。",
         "hobby_text": "热爱旅行和航空。地理知识，一半来自书本，另一半来自三万英尺高空的舷窗。<br>相信眼界决定世界——去更多地方，见更多人，理解更多事。",
-        "blog_about_text": "从零构建的静态博客引擎：Python 驱动的 Markdown + YAML frontmatter 构建管线，中英双语 i18n 与干净 URL 路由，WordPress Cenote 风格主题。<br><br>通过 AI 数字分身实现异步社交——不在线的时候，访客也能了解我的经历、项目和技术观点。用 AI Agent 探索人格化对话的边界——一个懂分寸、有性格的数字分身，知道什么时候开玩笑、什么时候认真。<br><br>基于 DeepSeek V4-pro 大模型，SSE 流式输出、三层门控 Prompt 架构，亚洲节点使用 CloudBase 腾讯云持久化，全球节点通过 Vercel 部署。140+ 篇技术文章。<br>写技术笔记、项目复盘、行业观察。",
+        "blog_about_text": "从零构建的静态博客引擎：Python 驱动的 Markdown + YAML frontmatter 构建管线，中英双语 i18n 与干净 URL 路由，WordPress Cenote 风格主题。<br><br>通过 AI 数字分身实现异步社交——不在线的时候，访客也能了解我的经历、项目和技术观点。用 AI Agent 探索人格化对话的边界——一个懂分寸、有性格的数字分身，知道什么时候开玩笑、什么时候认真。<br><br>基于 DeepSeek V4-pro 大模型，SSE 流式输出、三层门控 Prompt 架构，亚洲节点使用 CloudBase 腾讯云持久化，全球节点通过 Vercel 部署。140+ 篇技术文章。<br><br>写技术笔记、项目复盘、行业观察。",
         "flight_hours": "累计飞行时长",
         "flight_km": "累计飞行里程",
         "cities_count_label": "个城市",
-        "flight_data_source": "基于航旅纵横统计",
+        "flight_data_source": "飞行数据基于航旅纵横自动统计",
         "mainland_china": "🇨🇳 中国大陆",
         "international": "🌍 国际 · 港澳台",
         "lang_switch_en": "EN",
@@ -1929,8 +1929,8 @@ def build_site(lang, posts):
             <div class="travel-stat"><strong>319<span class="stat-unit">h</span>&thinsp;40<span class="stat-unit">min</span></strong><span>{t['flight_hours']}</span></div>
             <div class="travel-stat"><strong>238,719<span class="stat-unit">km</span></strong><span>{t['flight_km']}</span></div>
             <div class="travel-stat"><strong>{total_cities}</strong><span>{t['cities_count_label']}</span></div>
+            <div class="travel-data-source">{t['flight_data_source']}</div>
           </div>
-          <p class="travel-data-source">{t['flight_data_source']}</p>
         </div>
       </section>
 

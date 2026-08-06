@@ -632,27 +632,34 @@ Answer directly with the above fact. 2-3 sentences max. End with "你呢，你�
 // Retry helper — one retry on transient network errors for initial fetch
 // ---------------------------------------------------------------------------
 
-async function fetchWithRetry(url, options, maxRetries = 1) {
+async function fetchWithRetry(url, options, maxRetries = 2) {
   let lastError;
   for (let i = 0; i <= maxRetries; i++) {
     try {
       const response = await fetch(url, options);
-      if (response.ok || i === maxRetries) return response;
-      // If response is not ok but not a 4xx client error, retry
-      if (response.status < 400 || response.status >= 500) {
-        lastError = new Error(`DeepSeek returned ${response.status}`);
-        if (i < maxRetries) {
-          console.warn(`DeepSeek fetch attempt ${i + 1} failed (${response.status}), retrying...`);
-          await new Promise(r => setTimeout(r, 300 * (i + 1)));
-          continue;
-        }
+      if (response.ok) return response;
+
+      // Retry on 429 (rate limit) and 5xx (server errors)
+      const shouldRetry = response.status === 429 || response.status >= 500;
+      if (shouldRetry && i < maxRetries) {
+        // Exponential backoff: 500ms, 1500ms, 4000ms
+        const delay = 500 * Math.pow(3, i);
+        console.warn(`DeepSeek fetch attempt ${i + 1} failed (${response.status}), retrying in ${delay}ms...`);
+        await new Promise(r => setTimeout(r, delay));
+        continue;
+      }
+
+      // For 4xx (except 429) or exhausted retries, return as-is
+      if (i === maxRetries) {
+        lastError = new Error(`DeepSeek returned ${response.status} after ${maxRetries + 1} attempts`);
       }
       return response;
     } catch (err) {
       lastError = err;
       if (i < maxRetries) {
-        console.warn(`DeepSeek fetch attempt ${i + 1} failed: ${err.message}, retrying...`);
-        await new Promise(r => setTimeout(r, 300 * (i + 1)));
+        const delay = 500 * Math.pow(2, i);
+        console.warn(`DeepSeek fetch attempt ${i + 1} network error: ${err.message}, retrying in ${delay}ms...`);
+        await new Promise(r => setTimeout(r, delay));
       }
     }
   }
