@@ -19,7 +19,7 @@
   "headline": "Database – Welcome To My Blog",
   "description": ""Wonder more, wander further"",
   "url": "https://hankzhang.us/categories/database/",
-  "datePublished": "2026-08-05",
+  "datePublished": "2026-08-06",
   "author": { "@type": "Person", "name": "Zihao Zhang" }
 }
 </script>
@@ -788,8 +788,8 @@ window.retryLastMessage=function(){
       </div>
     </div>
     <div id="admin-tabs" style="display:none;display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,.15)">
-      <button class="admin-tab active" data-tab="logs" onclick="switchAdminTab('logs')">Chat Logs</button>
-      <button class="admin-tab" data-tab="profiles" onclick="switchAdminTab('profiles')">User Profiles</button>
+      <button class="admin-tab" data-tab="logs" onclick="switchAdminTab('logs')">Chat Logs</button>
+      <button class="admin-tab active" data-tab="profiles" onclick="switchAdminTab('profiles')">User Profiles</button>
     </div>
     <div id="admin-profiles-toolbar">
       <select id="profile-sort" onchange="loadProfiles(1)">
@@ -1027,8 +1027,8 @@ window.unlockAdmin=function(){
   logsSection.style.display='block';
   logoutBtn.style.display='block';
   tabsBar.style.display='flex';
-  switchAdminTab('logs');
-  loadLogs(1);
+  switchAdminTab('profiles');
+  loadProfiles(1);loadInsights();
 };
 
 // Called from chat-based admin auth — bypasses the login form
@@ -1039,8 +1039,8 @@ window.unlockAdminWithPassword=function(pwd){
   logsSection.style.display='block';
   logoutBtn.style.display='block';
   tabsBar.style.display='flex';
-  switchAdminTab('logs');
-  loadLogs(1);
+  switchAdminTab('profiles');
+  loadProfiles(1);loadInsights();
 };
 
 // Called from chat-based admin auth with pre-fetched data — no extra API call
@@ -1052,7 +1052,8 @@ window.openAdminWithData=function(data,pwd){
     logsSection.style.display='block';
     logoutBtn.style.display='block';
     tabsBar.style.display='flex';
-    switchAdminTab('logs');
+    switchAdminTab('profiles');
+    loadProfiles(1);loadInsights();
     renderLogsFromData(data);
   }catch(e){
     console.error('openAdminWithData inner error:',e);
@@ -1089,26 +1090,8 @@ function renderLogEntry(log){
   entry.className='log-entry';
   var date=new Date(log.timestamp);
   var timeStr=date.toLocaleString();
-  var preview='';
-  if(log.messages){
-    for(var i=0;i<log.messages.length;i++){
-      var m=log.messages[i];
-      if(m.role!=='user')continue;
-      var t=stripHtml(m.content).trim();
-      if(t&&!__isSuggestion(t)){preview=t.slice(0,80);break;}
-    }
-    // Fallback: no meaningful user message → use AI's first response as title
-    if(!preview){
-      for(var i=0;i<log.messages.length;i++){
-        var m=log.messages[i];
-        if(m.role!=='assistant')continue;
-        var t=stripHtml(m.content).trim();
-        if(t){preview=t.slice(0,80);break;}
-      }
-    }
-  }
-  var title=preview||'新对话 — '+timeStr;
-  entry.innerHTML='<div class="log-entry-header" onclick="this.parentElement.classList.toggle(&#39;open&#39;)"><div class="log-entry-summary"><span class="log-preview">'+title.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</span></div><div class="log-entry-meta"><span class="log-sid">#'+log.sessionId.slice(-8)+'</span><span class="log-time">'+timeStr+'</span><span class="log-msgs">'+(log.messages?log.messages.length:0)+' msgs</span><span class="log-chevron">▼</span></div></div>';
+  var title='访客 — '+timeStr;
+  entry.innerHTML='<div class="log-entry-header" onclick="this.parentElement.classList.toggle(&#39;open&#39;)"><div class="log-entry-summary"><span class="log-preview">'+title+'</span></div><div class="log-entry-meta"><span class="log-sid">#'+log.sessionId.slice(-8)+'</span><span class="log-time">'+timeStr+'</span><span class="log-msgs">'+(log.messages?log.messages.length:0)+' msgs</span><span class="log-chevron">▼</span></div></div>';
   var body=document.createElement('div');
   body.className='log-entry-body';
   if(log.messages){

@@ -93,10 +93,21 @@ function parseEjsonDate(val) {
   return val;
 }
 
+// CloudBase NoSQL returns numbers as {$numberInt: "1"} or {$numberLong: "123"}.
+// Without parsing, these become "[object Object]" when coerced to string.
+function parseEjsonNumber(val) {
+  if (val && typeof val === 'object') {
+    if (val.$numberInt) return Number(val.$numberInt);
+    if (val.$numberLong) return Number(val.$numberLong);
+  }
+  return val;
+}
+
 function normalizeLog(doc) {
   return {
     id: doc._id?.$oid || doc._id,
     sessionId: doc.sessionId,
+    userId: doc.userId || null,
     timestamp: parseEjsonDate(doc.timestamp),
     messages: normalizeMessages(doc.messages),
   };
@@ -190,8 +201,8 @@ export default async function handler(req, res) {
         timestamp: parseEjsonDate(doc.lastSeen || doc.timestamp),
         firstSeen: parseEjsonDate(doc.timestamp),
         profile: doc.profile,
-        sessionCount: doc.sessionCount || 1,
-        totalMessages: doc.totalMessages || doc.messageCount || 0,
+        sessionCount: parseEjsonNumber(doc.sessionCount) || 1,
+        totalMessages: parseEjsonNumber(doc.totalMessages || doc.messageCount) || 0,
         history: doc.history || [],
       }));
 

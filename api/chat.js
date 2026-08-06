@@ -13,7 +13,7 @@ const CB_BASE = `https://${CLOUDBASE_ENV}.api.tcloudbasegateway.com/v1/database/
 const STREAM_CHUNK_DELAY_MS = 5;
 
 // Save chat log via CloudBase NoSQL HTTP API
-async function saveChatLog(sessionId, messages) {
+async function saveChatLog(sessionId, messages, userId) {
   if (!CLOUDBASE_API_KEY) return;
   try {
     await fetch(`${CB_BASE}/collections/chat_logs/documents`, {
@@ -23,7 +23,7 @@ async function saveChatLog(sessionId, messages) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        data: [{ sessionId, timestamp: new Date().toISOString(), messages }],
+        data: [{ sessionId, userId: userId || null, timestamp: new Date().toISOString(), messages }],
       }),
     });
   } catch (err) {
@@ -724,13 +724,17 @@ export default async function handler(req, res) {
             const allMessages = fullResponse.trim()
               ? [...messages, { role: 'assistant', content: fullResponse }]
               : null;
-            if (allMessages) await saveChatLog(sid, allMessages);
-            // Send DONE first, then save profile — avoids delaying user response
+            // Save chat log AND profile in parallel BEFORE res.end().
+            // Previously profile was saved after res.end() — Vercel killed the function
+            // before the DeepSeek API call completed, so profiles were silently lost.
+            if (allMessages) {
+              await Promise.all([
+                saveChatLog(sid, allMessages, userId),
+                analyzeAndSaveProfile(userId, sid, allMessages).catch(() => {}),
+              ]);
+            }
             res.write(`data: [DONE]\n\n`);
             res.end();
-            if (allMessages) {
-              try { await analyzeAndSaveProfile(userId, sid, allMessages); } catch(e) {}
-            }
             return;
           }
           const chunk = decoder.decode(value, { stream: true });
@@ -758,15 +762,17 @@ export default async function handler(req, res) {
         const allMessages = fullResponse.trim()
           ? [...messages, { role: 'assistant', content: fullResponse }]
           : null;
-        if (allMessages) await saveChatLog(sid, allMessages);
+        if (allMessages) {
+          await Promise.all([
+            saveChatLog(sid, allMessages, userId),
+            analyzeAndSaveProfile(userId, sid, allMessages).catch(() => {}),
+          ]);
+        }
         // Signal error to client
         try {
           res.write(`data: ${JSON.stringify({ error: 'stream_interrupted' })}\n\n`);
         } catch {}
         res.end();
-        if (allMessages) {
-          try { await analyzeAndSaveProfile(userId, sid, allMessages); } catch(e) {}
-        }
       }
     };
 
