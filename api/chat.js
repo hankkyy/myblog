@@ -786,7 +786,6 @@ export default async function handler(req, res) {
     const decoder = new TextDecoder();
     let fullResponse = '';
     let sseBuffer = '';
-    let streamError = false;
 
     const pump = async () => {
       try {
@@ -827,7 +826,6 @@ export default async function handler(req, res) {
           }
         }
       } catch (err) {
-        streamError = true;
         console.error('Stream error:', err.message);
         const allMessages = fullResponse.trim()
           ? [...messages, { role: 'assistant', content: fullResponse }]
