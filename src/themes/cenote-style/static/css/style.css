@@ -210,6 +210,7 @@ blockquote p{margin-bottom:0;font-style:italic}
 .travel-stat strong{font-size:1.6rem;color:#de7b85;font-weight:800;line-height:1.2}
 .travel-stat .stat-unit{font-size:.8rem;font-weight:500;color:#c9878e;margin-left:3px}
 .travel-stat span{font-size:.72rem;color:#adb5bd;font-weight:500;margin-top:2px}
+.travel-data-source{font-size:.7rem;color:#adb5bd;text-align:center;margin-top:10px;font-style:italic}
 /* Blog about card */
 .blog-about-card{background:#f8f9fa;border-radius:14px;padding:28px 32px;border:1px solid #e9ecef;position:relative}
 .blog-about-card::before{content:'📝';position:absolute;top:-16px;right:24px;font-size:1.5rem;background:#fff;padding:0 8px;border-radius:8px}

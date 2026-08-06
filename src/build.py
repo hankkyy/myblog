@@ -95,6 +95,7 @@ T = {
         "flight_hours": "Total Flight Hours",
         "flight_km": "Total Flight Distance",
         "cities_count_label": "Cities Visited",
+        "flight_data_source": "Based on Umetrip (航旅纵横) statistics",
         "mainland_china": "🇨🇳 Mainland China",
         "international": "🌍 International",
         "lang_switch_en": "EN",
@@ -219,6 +220,7 @@ T = {
         "flight_hours": "累计飞行时长",
         "flight_km": "累计飞行里程",
         "cities_count_label": "个城市",
+        "flight_data_source": "基于航旅纵横统计",
         "mainland_china": "🇨🇳 中国大陆",
         "international": "🌍 国际 · 港澳台",
         "lang_switch_en": "EN",
@@ -1928,6 +1930,7 @@ def build_site(lang, posts):
             <div class="travel-stat"><strong>238,719<span class="stat-unit">km</span></strong><span>{t['flight_km']}</span></div>
             <div class="travel-stat"><strong>{total_cities}</strong><span>{t['cities_count_label']}</span></div>
           </div>
+          <p class="travel-data-source">{t['flight_data_source']}</p>
         </div>
       </section>
 
