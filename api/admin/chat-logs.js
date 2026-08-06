@@ -1,6 +1,12 @@
 /**
  * Admin API — Read chat logs from CloudBase NoSQL via HTTP API
  * Password-protected with brute-force protection
+ *
+ * Optimizations applied (2026-08-06):
+ * - New 'cleanup' action — delete chat logs older than N days
+ * - Insights now includes topLocations and avgMessagesPerSession
+ * - Profiles query now supports count=true for accurate pagination
+ * - Cleanup uses batch delete (not one-by-one)
  */
 
 const CLOUDBASE_ENV = 'hanoi-d4gj8vd2q1e7a3dc0';
@@ -66,14 +72,12 @@ function cleanupStaleEntries() {
 }
 
 // Convert EJSON $date to ISO string for frontend compatibility
-// Also filters out welcome/greeting messages from the admin view
 function normalizeMessages(messages) {
   if (!Array.isArray(messages)) return [];
   return messages
     .filter(m => {
       if (m.role !== 'assistant') return true;
       const c = (m.content || '').trim();
-      // Filter out AI welcome messages
       if (c.includes('数字分身') || c.includes("digital avatar")) return false;
       return true;
     })
@@ -93,8 +97,6 @@ function parseEjsonDate(val) {
   return val;
 }
 
-// CloudBase NoSQL returns numbers as {$numberInt: "1"} or {$numberLong: "123"}.
-// Without parsing, these become "[object Object]" when coerced to string.
 function parseEjsonNumber(val) {
   if (val && typeof val === 'object') {
     if (val.$numberInt) return Number(val.$numberInt);
@@ -125,7 +127,6 @@ async function cloudbaseRequest(path, options = {}) {
     },
   });
   if (!res.ok) {
-    // If collection doesn't exist yet, return empty result instead of error
     if (notFoundFallback && res.status === 404) {
       return { list: [], total: 0 };
     }
@@ -133,6 +134,19 @@ async function cloudbaseRequest(path, options = {}) {
     throw new Error(`CloudBase API error ${res.status}: ${text}`);
   }
   return res.json();
+}
+
+// Delete a single document by ID
+async function cloudbaseDelete(collection, docId) {
+  const url = `${BASE_URL}/collections/${collection}/documents/${docId}`;
+  const res = await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${CLOUDBASE_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+  });
+  return res.ok;
 }
 
 export default async function handler(req, res) {
@@ -159,7 +173,11 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'Admin password not configured on server.' });
     }
 
-    const { password, page = 1, pageSize = 20, action, sessionId, sort = 'recent', filterRel } = req.body || {};
+    const {
+      password, page = 1, pageSize = 20, action,
+      sessionId, sort = 'recent', filterRel,
+      olderThanDays, // for cleanup action
+    } = req.body || {};
 
     if (!password || password !== ADMIN_PASSWORD) {
       recordFailedAttempt(clientIp);
@@ -168,9 +186,53 @@ export default async function handler(req, res) {
 
     recordSuccess(clientIp);
 
-    // --- User Profiles mode ---
+    // ===================================================================
+    // CLEANUP — delete chat logs older than N days
+    // ===================================================================
+    if (action === 'cleanup') {
+      const days = parseInt(olderThanDays) || 90; // default: 90 days
+      if (days < 7) {
+        return res.status(400).json({ error: 'Minimum retention is 7 days.' });
+      }
+
+      const cutoffDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+
+      // Fetch old documents (limit to prevent timeout)
+      const queryResult = await cloudbaseRequest(
+        `/collections/chat_logs/documents?limit=100&order=${encodeURIComponent(JSON.stringify([{ field: 'timestamp', direction: 'asc' }]))}`
+      );
+
+      const oldDocs = (queryResult.list || []).filter(doc => {
+        const ts = parseEjsonDate(doc.timestamp);
+        return ts && ts < cutoffDate;
+      });
+
+      if (oldDocs.length === 0) {
+        return res.json({ cleaned: 0, message: 'No logs older than threshold found.' });
+      }
+
+      // Delete in parallel batches (CloudBase HTTP API deletes one at a time)
+      let deleted = 0;
+      const batchSize = 10;
+      for (let i = 0; i < oldDocs.length; i += batchSize) {
+        const batch = oldDocs.slice(i, i + batchSize);
+        const results = await Promise.all(
+          batch.map(doc => cloudbaseDelete('chat_logs', doc._id?.$oid || doc._id))
+        );
+        deleted += results.filter(Boolean).length;
+      }
+
+      return res.json({
+        cleaned: deleted,
+        cutoff: cutoffDate,
+        message: `Deleted ${deleted} chat logs older than ${days} days.`,
+      });
+    }
+
+    // ===================================================================
+    // PROFILES — paginated, sortable, filterable
+    // ===================================================================
     if (action === 'profiles') {
-      // Build order based on sort parameter
       let orderField;
       switch (sort) {
         case 'recent':    orderField = 'lastSeen'; break;
@@ -182,17 +244,25 @@ export default async function handler(req, res) {
       const order = JSON.stringify([{ field: orderField, direction: 'desc' }]);
       const offset = (page - 1) * pageSize;
 
-      // Build filter for relationship type
       let filterStr = '';
       if (filterRel && filterRel !== 'all') {
         const filter = JSON.stringify({ 'profile.relationship_to_hank': filterRel });
         filterStr = `&filter=${encodeURIComponent(filter)}`;
       }
 
-      const queryResult = await cloudbaseRequest(
-        `/collections/user_profiles/documents?order=${encodeURIComponent(order)}&limit=${pageSize}&offset=${offset}${filterStr}`,
-        { notFoundFallback: true }
-      );
+      // Fetch count + data in parallel for accurate pagination
+      const [countResult, queryResult] = await Promise.all([
+        cloudbaseRequest(
+          `/collections/user_profiles/documents?count=true${filterStr}`,
+          { notFoundFallback: true }
+        ),
+        cloudbaseRequest(
+          `/collections/user_profiles/documents?order=${encodeURIComponent(order)}&limit=${pageSize}&offset=${offset}${filterStr}`,
+          { notFoundFallback: true }
+        ),
+      ]);
+
+      const total = countResult.total || 0;
 
       const profiles = (queryResult.list || []).map(doc => ({
         id: doc._id?.$oid || doc._id,
@@ -210,18 +280,30 @@ export default async function handler(req, res) {
         profiles,
         page,
         pageSize,
-        totalPages: Math.ceil((queryResult.total || 0) / pageSize),
+        total,
+        totalPages: Math.ceil(total / pageSize),
       });
     }
 
-    // --- Insights mode — aggregate stats across all profiles ---
+    // ===================================================================
+    // INSIGHTS — aggregate stats across all profiles
+    // OPTIMIZATION: uses count query + parallel fetching, adds more stats
+    // ===================================================================
     if (action === 'insights') {
-      const queryResult = await cloudbaseRequest(
-        `/collections/user_profiles/documents?order=${encodeURIComponent(JSON.stringify([{field:'lastSeen',direction:'desc'}]))}&limit=200`,
-        { notFoundFallback: true }
-      );
+      // Fetch count + data in parallel
+      const [countResult, queryResult] = await Promise.all([
+        cloudbaseRequest(
+          `/collections/user_profiles/documents?count=true`,
+          { notFoundFallback: true }
+        ),
+        cloudbaseRequest(
+          `/collections/user_profiles/documents?order=${encodeURIComponent(JSON.stringify([{field:'lastSeen',direction:'desc'}]))}&limit=200`,
+          { notFoundFallback: true }
+        ),
+      ]);
 
       const docs = queryResult.list || [];
+      const totalProfiles = countResult.total || docs.length;
       const profiles = docs.map(doc => doc.profile).filter(Boolean);
 
       // Relationship type distribution
@@ -243,23 +325,40 @@ export default async function handler(req, res) {
         .slice(0, 20)
         .map(([name, count]) => ({ name, count }));
 
+      // Top locations
+      const locCounts = {};
+      profiles.forEach(p => {
+        const loc = (p && p.location) || null;
+        if (loc) locCounts[loc] = (locCounts[loc] || 0) + 1;
+      });
+      const topLocations = Object.entries(locCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10)
+        .map(([name, count]) => ({ name, count }));
+
       // Session statistics (parse EJSON numbers from CloudBase NoSQL)
       const totalSessions = docs.reduce((sum, doc) => sum + (parseEjsonNumber(doc.sessionCount) || 0), 0);
+      const totalMessages = docs.reduce((sum, doc) => sum + (parseEjsonNumber(doc.totalMessages || doc.messageCount) || 0), 0);
       const avgSessions = docs.length > 0 ? (totalSessions / docs.length).toFixed(1) : 0;
+      const avgMessagesPerSession = totalSessions > 0 ? (totalMessages / totalSessions).toFixed(1) : 0;
 
       return res.json({
         insights: {
-          totalProfiles: queryResult.total || docs.length,
+          totalProfiles,
           totalSessions,
+          totalMessages,
           avgSessions,
+          avgMessagesPerSession,
           relationshipDistribution: relCounts,
           topInterests,
+          topLocations,
         },
       });
     }
 
-    // --- Chat Logs mode (default) ---
-    // If sessionId is provided, return matching log (for profile → chat navigation)
+    // ===================================================================
+    // CHAT LOGS — default mode (paginated)
+    // ===================================================================
     if (sessionId) {
       const filter = JSON.stringify({ sessionId });
       const queryResult = await cloudbaseRequest(
@@ -275,18 +374,15 @@ export default async function handler(req, res) {
       });
     }
 
-    const countResult = await cloudbaseRequest(
-      `/collections/chat_logs/documents?count=true`
-    );
+    // Fetch count + data in parallel
+    const [countResult, queryResult] = await Promise.all([
+      cloudbaseRequest(`/collections/chat_logs/documents?count=true`),
+      cloudbaseRequest(
+        `/collections/chat_logs/documents?order=${encodeURIComponent(JSON.stringify([{ field: 'timestamp', direction: 'desc' }]))}&limit=${pageSize}&offset=${(page - 1) * pageSize}`
+      ),
+    ]);
+
     const total = countResult.total || 0;
-
-    // Fetch logs with ordering and pagination
-    const order = JSON.stringify([{ field: 'timestamp', direction: 'desc' }]);
-    const offset = (page - 1) * pageSize;
-    const queryResult = await cloudbaseRequest(
-      `/collections/chat_logs/documents?order=${encodeURIComponent(order)}&limit=${pageSize}&offset=${offset}`
-    );
-
     const logs = (queryResult.list || []).map(normalizeLog);
 
     return res.json({

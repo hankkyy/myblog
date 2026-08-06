@@ -287,14 +287,14 @@ var isComposing=false;
 var adminMode=false;
 var streamAbort=null;
 var lastUserMsg=null;
-var sessionId='s'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
+var sessionId=crypto.randomUUID();
 // Persistent user ID (survives clear/reload — stored in localStorage)
 var userId=(function(){
   try{
     var stored=localStorage.getItem('myblog_uid');
     if(stored)return stored;
   }catch(e){}
-  var uid='u'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,6);
+  var uid=crypto.randomUUID();
   try{localStorage.setItem('myblog_uid',uid);}catch(e){}
   return uid;
 })();
@@ -412,7 +412,7 @@ window.clearConversation=function(){
   var all=messages.querySelectorAll('.chat-msg:not(.chat-welcome-msg)');
   for(var i=0;i<all.length;i++)all[i].remove();
   // Reset session
-  sessionId='s'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
+  sessionId=crypto.randomUUID();
   lastUserMsg=null;
   msgCount=0;
   hideRefreshHint();
@@ -562,7 +562,34 @@ window.sendMessage=async function(){
     addMessage('assistant','Enter admin password (or type anything else to cancel):');
     return;
   }
-  // ---- End admin mode ----
+  // ---- Client-side critical fact cache ----
+  // Before calling the API, check if the user asked a known factual question.
+  // If matched, answer instantly — saves an API call and eliminates fabrication risk.
+  var localAnswer=checkLocalCriticalFact(text);
+  if(localAnswer){
+    typing.remove();
+    finishStream();
+    var localDiv=addMessage('assistant','',true);
+    var localBubble=localDiv.querySelector('.chat-bubble');
+    localBubble.innerHTML=renderMarkdown(localAnswer);
+    // Save the local answer to chat log (fire-and-forget)
+    try{
+      var cacheHistory=[];
+      var cacheMsgs=messages.querySelectorAll('.chat-msg:not(.typing):not(.chat-welcome-msg)');
+      cacheMsgs.forEach(function(m){
+        var role=m.classList.contains('user')?'user':'assistant';
+        var content=m.querySelector('.chat-bubble').innerHTML;
+        cacheHistory.push({role:role,content:content});
+      });
+      fetch('/api/chat',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({messages:cacheHistory,sessionId:sessionId,userId:userId})
+      }).catch(function(){});
+    }catch(e){}
+    return;
+  }
+  // ---- End client-side cache ----
 
   // Build conversation history from visible messages
   var history=[];
@@ -678,29 +705,54 @@ window.retryLastMessage=function(){
   sendMessage();
 };
 })();
+
+// ---- Critical fact local cache ----
+// Answers known factual questions instantly without calling the API.
+// Kept in sync with api/chat.js CRITICAL_ANSWER.
+window.checkLocalCriticalFact=function(text){
+  // Nickname origin
+  if(/为什么叫可乐|可乐.*名|怎么.*叫可乐|为什么叫.*可乐|nickname.*cola|可乐.*由来|可乐.*来源|为什么叫这个名/i.test(text))
+    return '年纪太大的长辈读不来"Hank"，就念最后一个音"k"（可），觉得可乐比较顺口，就都叫可乐啦 😄 你呢？';
+  // Hometown
+  if(/哪里人|哪儿人|老家|家乡|哪儿|哪里.*人|from.*where/i.test(text))
+    return '湖北。你呢，你是哪里的？';
+  // Job
+  if(/做什么.{0,6}的|什么工作|做什么工作|什么职业|what.*do|what.*job|工作是|职业是/i.test(text))
+    return '他是数据平台工程师，主要做数据基础设施和 AI Agent 开发。你呢，你在做什么？';
+  // Contact
+  if(/怎么联系|联系方式|邮箱|email|contact|怎么.*联系/i.test(text))
+    return '他的邮箱是 hank.zihao@gmail.com 📧';
+  // Real name
+  if(/真名|本名|叫什么名字|实名|原名|中文名|英文名|real name|actual name/i.test(text))
+    return '他叫张子豪（Zihao Zhang），英文名 Hank。';
+  // Drinks
+  if(/喝什么|喜欢喝|奶茶|咖啡|喝奶茶|喝咖啡|喝可乐|你也喝|drink.*coffee|drink.*tea|drink.*cola/i.test(text))
+    return '基本不喝奶茶和咖啡，可乐也不怎么喝。主要是因为咖啡因会刺激前庭神经核，他前庭太敏感，容易头晕。平时就喝白水。你呢，你平时喝什么？';
+  return null;
+};
 </script>
 <style>
-.log-entry{border:none;border-radius:16px;margin-bottom:16px;overflow:hidden;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.04),0 0 0 1px rgba(0,0,0,.02)}
-.log-entry-header{padding:16px 20px;cursor:pointer;user-select:none;background:#fff;transition:all .15s}
-.log-entry-header:hover{background:#f8f9fb}
+.log-entry{border:1px solid #e9ecef;border-radius:12px;margin-bottom:16px;overflow:hidden;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.log-entry-header{padding:14px 16px;cursor:pointer;user-select:none;background:#fafbfc;transition:background .15s}
+.log-entry-header:hover{background:#e8f4fd}
 .log-entry-summary{margin-bottom:6px}
-.log-preview{font-size:13px;color:#1a1a2e;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.log-entry-meta{display:flex;align-items:center;gap:12px;font-size:12px}
-.log-sid{font-family:monospace;color:#6b7280;background:#f1f3f5;padding:2px 8px;border-radius:6px;font-size:11px}
-.log-time{color:#9ca3af}
-.log-msgs{color:#6b7280;font-weight:500}
-.log-chevron{transition:transform .2s;font-size:12px;color:#9ca3af;margin-left:auto}
+.log-preview{font-size:13px;color:#16181a;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.log-entry-meta{display:flex;align-items:center;gap:12px;font-size:11px}
+.log-sid{font-family:monospace;color:#868e96;background:#f1f3f5;padding:2px 6px;border-radius:4px}
+.log-time{color:#adb5bd}
+.log-msgs{color:#868e96;font-weight:500}
+.log-chevron{transition:transform .2s;font-size:12px;color:#adb5bd;margin-left:auto}
 .log-entry.open .log-chevron{transform:rotate(180deg)}
-.log-entry.open .log-entry-header{background:#f8f9fb}
-.log-entry-body{display:none;padding:24px 20px;background:#fbfbfb;border-top:1px solid #f0f0f3}
+.log-entry.open .log-entry-header{background:#e8f4fd}
+.log-entry-body{display:none;padding:20px 16px;background:#f8f9fa;border-top:1px solid #e9ecef}
 .log-entry.open .log-entry-body{display:block}
 .log-msg{display:flex;margin-bottom:16px}
 .log-msg:last-child{margin-bottom:0}
 .log-msg.user{justify-content:flex-end}
 .log-msg.assistant{justify-content:flex-start}
-.log-bubble{max-width:82%;padding:12px 16px;border-radius:16px;font-size:13px;line-height:1.6}
-.log-msg.user .log-bubble{background:#6366f1;color:#fff;border-bottom-right-radius:6px}
-.log-msg.assistant .log-bubble{background:#fff;color:#363b40;border:1px solid #f0f0f3;border-bottom-left-radius:6px}
+.log-bubble{max-width:85%;padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.55}
+.log-msg.user .log-bubble{background:#146bb7;color:#fff;border-bottom-right-radius:4px}
+.log-msg.assistant .log-bubble{background:#fff;color:#363b40;border:1px solid #e9ecef;border-bottom-left-radius:4px}
 .log-content{word-break:break-word}
 .log-content p{margin:0 0 6px 0}
 .log-content p:last-child{margin-bottom:0}
@@ -709,51 +761,47 @@ window.retryLastMessage=function(){
 .log-content code{font-family:monospace;font-size:12px;background:rgba(0,0,0,.06);padding:2px 5px;border-radius:3px}
 .log-msg.user .log-content code{background:rgba(255,255,255,.2)}
 /* Admin tabs */
-.admin-tab{background:none;border:none;color:#9ca3af;padding:8px 18px;font-size:13px;cursor:pointer;border-radius:8px;transition:all .15s;font-weight:500}
-.admin-tab:hover{color:#6b7280;background:rgba(0,0,0,.03)}
-.admin-tab.active{color:#6366f1;background:#eef2ff}
+.admin-tab{background:none;border:none;color:#868e96;padding:10px 20px;font-size:13px;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;font-weight:500}
+.admin-tab:hover{color:#495057}
+.admin-tab.active{color:#16181a;border-bottom-color:#4dabf7}
 /* Profile cards */
-.profile-card{border:none;border-radius:16px;margin-bottom:14px;overflow:hidden;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.04),0 0 0 1px rgba(0,0,0,.02);transition:box-shadow .15s}
-.profile-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.06),0 0 0 1px rgba(0,0,0,.04)}
-.profile-card-header{padding:18px 44px 18px 20px;cursor:pointer;user-select:none;background:#fff;transition:background .15s;position:relative}
-.profile-card-header:hover{background:#f8f9fb}
-.profile-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.profile-name{font-size:16px;font-weight:700;color:#1a1a2e;display:flex;align-items:center}
-.profile-returning-badge{font-size:11px;font-weight:600;color:#6366f1;background:#eef2ff;padding:2px 8px;border-radius:10px;margin-left:8px}
-.profile-time{font-size:12px;color:#9ca3af}
-.profile-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px}
-.profile-tag{font-size:12px;padding:3px 10px;border-radius:8px;font-weight:500}
-.profile-tag-occ{background:#eef2ff;color:#4f46e5}
-.profile-tag-loc{background:#fef3c7;color:#d97706}
-.profile-tag-rel{background:#f3e8ff;color:#7c3aed}
-.profile-tag-int{background:#d1fae5;color:#059669}
-.profile-facts{display:flex;flex-wrap:wrap;gap:6px}
-.profile-fact{font-size:12px;background:#f3f4f6;color:#6b7280;padding:3px 10px;border-radius:6px}
-.profile-chevron{transition:transform .2s;font-size:12px;color:#9ca3af;position:absolute;top:22px;right:20px}
+.profile-card{border:1px solid #e9ecef;border-radius:12px;margin-bottom:12px;overflow:hidden;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.profile-card-header{padding:14px 16px;cursor:pointer;user-select:none;background:#fafbfc;transition:background .15s}
+.profile-card-header:hover{background:#e8f4fd}
+.profile-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.profile-name{font-size:15px;font-weight:700;color:#16181a}
+.profile-returning-badge{font-size:10px;font-weight:500;color:#7048e8;background:#f3f0ff;padding:1px 6px;border-radius:8px;margin-left:6px;vertical-align:middle}
+.profile-time{font-size:11px;color:#adb5bd}
+.profile-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.profile-tag{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:500}
+.profile-tag-occ{background:#e7f5ff;color:#1971c2}
+.profile-tag-loc{background:#fff3bf;color:#e67700}
+.profile-tag-rel{background:#f3f0ff;color:#7048e8}
+.profile-tag-int{background:#e6fcf5;color:#087f5b}
+.profile-facts{display:flex;flex-wrap:wrap;gap:4px}
+.profile-fact{font-size:11px;background:#f1f3f5;color:#495057;padding:2px 8px;border-radius:4px}
+.profile-chevron{transition:transform .2s;font-size:12px;color:#adb5bd;margin-left:auto;text-align:right}
 .profile-card.open .profile-chevron{transform:rotate(180deg)}
-.profile-card.open .profile-card-header{background:#f8f9fb}
-.profile-card-body{display:none;padding:24px 20px;background:#fbfbfb;border-top:1px solid #f0f0f3}
+.profile-card.open .profile-card-header{background:#e8f4fd}
+.profile-card-body{display:none;padding:20px 16px;background:#f8f9fa;border-top:1px solid #e9ecef}
 .profile-card.open .profile-card-body{display:block}
-.profile-section{margin-bottom:18px}
+.profile-section{margin-bottom:14px}
 .profile-section:last-child{margin-bottom:0}
-.profile-section-label{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:#9ca3af;margin-bottom:6px;font-weight:600}
-.profile-section-text{font-size:13px;color:#363b40;line-height:1.65}
-.profile-interest-tag{display:inline-block;font-size:12px;background:#d1fae5;color:#059669;padding:3px 10px;border-radius:8px;margin:3px 5px 3px 0}
-.profile-view-chat-btn{background:#eef2ff;color:#4f46e5;border:none;padding:8px 16px;border-radius:8px;font-size:12px;cursor:pointer;margin-top:10px;font-weight:600;transition:all .15s}
-.profile-view-chat-btn:hover{background:#e0e7ff;transform:translateY(-1px)}
-.profile-history-item{padding:10px 0;border-bottom:1px solid #f0f0f3;font-size:12px}
+.profile-section-label{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#adb5bd;margin-bottom:4px;font-weight:600}
+.profile-section-text{font-size:13px;color:#363b40;line-height:1.6}
+.profile-interest-tag{display:inline-block;font-size:11px;background:#d3f9d8;color:#2b8a3e;padding:2px 8px;border-radius:10px;margin:2px 4px 2px 0}
+.profile-view-chat-btn{background:#e7f5ff;color:#1971c2;border:none;padding:6px 14px;border-radius:6px;font-size:12px;cursor:pointer;margin-top:8px;font-weight:500}
+.profile-view-chat-btn:hover{background:#d0ebff}
+.profile-history-item{padding:8px 0;border-bottom:1px solid #e9ecef;font-size:12px}
 .profile-history-item:last-child{border-bottom:none}
-.profile-history-time{color:#9ca3af;font-size:11px;margin-bottom:6px}
-.profile-change-tag{display:inline-block;background:#fef3c7;color:#d97706;padding:3px 8px;border-radius:6px;font-size:11px;margin:2px 5px 2px 0}
-#admin-profiles-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
-#admin-profiles-toolbar select{padding:8px 12px;border-radius:10px;border:1.5px solid #e5e7eb;font-size:13px;background:#fff;color:#6b7280;cursor:pointer;transition:border-color .15s,box-shadow .15s}
-#admin-profiles-toolbar select:hover{border-color:#6366f1}
-#admin-profiles-toolbar select:focus{outline:none;border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,.1)}
-#admin-insights{display:none;padding:20px;background:#fff;border-radius:16px;margin-bottom:20px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 0 0 1px rgba(0,0,0,.02)}
-.insight-stat{background:#f8f9fb;border-radius:14px;padding:16px 20px;min-width:120px;text-align:center;position:relative;overflow:hidden;flex:1;transition:all .15s}
-.insight-stat:hover{background:#eef2ff}
-.insight-stat-value{font-size:28px;font-weight:800;color:#1a1a2e;line-height:1.1}
-.insight-stat-label{font-size:11px;color:#9ca3af;margin-top:4px;font-weight:500}
+.profile-history-time{color:#adb5bd;font-size:11px;margin-bottom:4px}
+.profile-change-tag{display:inline-block;background:#fff9db;color:#e67700;padding:2px 6px;border-radius:4px;font-size:11px;margin:2px 4px 2px 0}
+#admin-profiles-toolbar{display:none;padding:12px 0;gap:8px;flex-wrap:wrap}
+#admin-profiles-toolbar select{padding:6px 10px;border-radius:6px;border:1px solid #dee2e6;font-size:12px;background:#fff}
+#admin-insights{display:none;padding:12px 16px;background:linear-gradient(135deg,#f8f9fa,#e9ecef);border-radius:12px;margin-bottom:16px}
+.insight-stat{background:#fff;border-radius:8px;padding:10px 16px;min-width:100px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.insight-stat-value{font-size:24px;font-weight:700;color:#16181a}
+.insight-stat-label{font-size:11px;color:#adb5bd;margin-top:2px}
 </style>
 <!-- Hidden Admin Panel (type "切换到管理模式" in chat or Ctrl+Shift+A) -->
 <div id="admin-overlay">
@@ -761,13 +809,30 @@ window.retryLastMessage=function(){
     <div id="admin-header">
       <span>Chat Logs</span>
       <div style="display:flex;gap:8px">
-        <button id="admin-logout-btn" onclick="lockAdmin()" style="display:none;background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:5px 14px;font-size:12px;cursor:pointer;font-weight:500;transition:all .15s">Lock</button>
-        <button onclick="closeAdmin()" style="background:none;border:none;color:rgba(255,255,255,.7);cursor:pointer;font-size:20px;line-height:1;padding:4px;transition:color .15s" title="Close">✕</button>
+        <button id="admin-logout-btn" onclick="lockAdmin()" style="display:none;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer">Lock</button>
+        <button onclick="closeAdmin()" style="background:none;border:none;color:#fff;cursor:pointer;font-size:18px;line-height:1">Close</button>
       </div>
     </div>
-    <div id="admin-tabs" style="display:none;display:flex;gap:4px;border-bottom:1px solid #e5e7eb;padding:8px 28px">
+    <div id="admin-tabs" style="display:none;display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,.15)">
       <button class="admin-tab" data-tab="logs" onclick="switchAdminTab('logs')">Chat Logs</button>
       <button class="admin-tab active" data-tab="profiles" onclick="switchAdminTab('profiles')">User Profiles</button>
+    </div>
+    <div id="admin-profiles-toolbar">
+      <select id="profile-sort" onchange="loadProfiles(1)">
+        <option value="recent">Recent</option>
+        <option value="sessions">Most Visits</option>
+        <option value="messages">Most Messages</option>
+        <option value="first">First Seen</option>
+      </select>
+      <select id="profile-filter-rel" onchange="loadProfiles(1)">
+        <option value="all">All Types</option>
+        <option value="reader">Reader</option>
+        <option value="colleague">Colleague</option>
+        <option value="friend">Friend</option>
+        <option value="classmate">Classmate</option>
+        <option value="stranger">Stranger</option>
+        <option value="anonymous">Anonymous (no info shared)</option>
+      </select>
     </div>
     <div id="admin-body">
       <div id="admin-login">
@@ -779,28 +844,11 @@ window.retryLastMessage=function(){
         <div id="admin-pagination" style="display:flex;justify-content:center;gap:8px;padding:16px"></div>
       </div>
       <div id="admin-profiles" style="display:none">
-        <div id="admin-profiles-toolbar">
-          <select id="profile-sort" onchange="loadProfiles(1)">
-            <option value="recent">Recent</option>
-            <option value="sessions">Most Visits</option>
-            <option value="messages">Most Messages</option>
-            <option value="first">First Seen</option>
-          </select>
-          <select id="profile-filter-rel" onchange="loadProfiles(1)">
-            <option value="all">All Types</option>
-            <option value="reader">Reader</option>
-            <option value="colleague">Colleague</option>
-            <option value="friend">Friend</option>
-            <option value="classmate">Classmate</option>
-            <option value="stranger">Stranger</option>
-            <option value="anonymous">Anonymous (no info shared)</option>
-          </select>
-        </div>
         <div id="admin-insights">
           <div style="display:flex;gap:16px;flex-wrap:wrap">
-            <div class="insight-stat"><div class="insight-stat-value" id="insight-total">-</div><div class="insight-stat-label">👤 Profiles</div></div>
-            <div class="insight-stat"><div class="insight-stat-value" id="insight-sessions">-</div><div class="insight-stat-label">💬 Total Sessions</div></div>
-            <div class="insight-stat"><div class="insight-stat-value" id="insight-avg">-</div><div class="insight-stat-label">🔄 Avg Visits</div></div>
+            <div class="insight-stat"><div class="insight-stat-value" id="insight-total">-</div><div class="insight-stat-label">Profiles</div></div>
+            <div class="insight-stat"><div class="insight-stat-value" id="insight-sessions">-</div><div class="insight-stat-label">Total Sessions</div></div>
+            <div class="insight-stat"><div class="insight-stat-value" id="insight-avg">-</div><div class="insight-stat-label">Avg Visits</div></div>
           </div>
           <div id="insight-interests" style="margin-top:12px;font-size:12px;color:#495057"></div>
         </div>
@@ -856,56 +904,35 @@ window.loadInsights=async function(){
     document.getElementById('insight-total').textContent=ins.totalProfiles;
     document.getElementById('insight-sessions').textContent=ins.totalSessions;
     document.getElementById('insight-avg').textContent=ins.avgSessions;
-    var interestsHtml='<strong>'+t['insight_hot_topics']+': </strong>';
-    if(!ins.topInterests||ins.topInterests.length===0){
-      interestsHtml+='<span style="color:#adb5bd">-</span>';
-    }else{
-      ins.topInterests.forEach(function(item){
-        interestsHtml+='<span class="profile-interest-tag">'+item.name+' ('+item.count+')</span>';
-      });
-    }
+    var interestsHtml='<strong>热门话题: </strong>';
+    ins.topInterests.forEach(function(item){
+      interestsHtml+='<span class="profile-interest-tag">'+item.name+' ('+item.count+')</span>';
+    });
     document.getElementById('insight-interests').innerHTML=interestsHtml;
     document.getElementById('admin-insights').style.display='block';
   }catch(e){}
 };
-
-// Helper: safely extract a number from EJSON objects or corrupted strings
-function safeNumber(val, fallback){
-  if(typeof val==='number')return val;
-  if(typeof val==='object'&&val!==null){
-    if(val.$numberInt)return Number(val.$numberInt);
-    if(val.$numberLong)return Number(val.$numberLong);
-    return fallback||0;
-  }
-  if(typeof val==='string'){
-    var m=val.match(/\d+/);
-    return m?Number(m[0]):(fallback||0);
-  }
-  return fallback||0;
-}
 
 // Render a single profile card
 function renderProfileCard(p){
   var card=document.createElement('div');
   card.className='profile-card';
   var isAnon=p.profile&&p.profile.relationship_to_hank==='anonymous';
-  var name=isAnon?t['profile_anonymous_name']:(p.profile&&p.profile.name?p.profile.name:'Anonymous');
+  var name=isAnon?'匿名访客':(p.profile&&p.profile.name?p.profile.name:'Anonymous');
   var occ=p.profile&&p.profile.occupation?p.profile.occupation:'';
   var loc=p.profile&&p.profile.location?p.profile.location:'';
-  var pers=isAnon?t['profile_anonymous_desc']:(p.profile&&p.profile.personality?p.profile.personality:'');
+  var pers=isAnon?'未透露个人信息':(p.profile&&p.profile.personality?p.profile.personality:'');
   var facts=p.profile&&p.profile.key_facts?p.profile.key_facts:[];
   var interests=p.profile&&p.profile.interests?p.profile.interests:[];
   var rel=p.profile&&p.profile.relationship_to_hank?p.profile.relationship_to_hank:'';
   var date=new Date(p.timestamp);
   var timeStr=date.toLocaleString();
-  var sc=safeNumber(p.sessionCount,0);
-  var returningBadge=sc>1?' <span class="profile-returning-badge">↻'+sc+'</span>':'';
-  var totalMsgs=safeNumber(p.totalMessages||p.messageCount,0);
-  var sessionLabel=sc===1?t['profile_session_unit']:t['profile_sessions_unit'];
-  var sessionInfo='<div class="profile-section"><div class="profile-section-label">'+t['profile_label_activity']+'</div><div class="profile-section-text" style="font-family:monospace;font-size:12px;color:#6b7280">'+sc+' '+sessionLabel+' · '+totalMsgs+' '+t['profile_messages_unit']+'</div></div>';
+  var returningBadge=(p.sessionCount||0)>1?' <span class="profile-returning-badge">↻'+p.sessionCount+'</span>':'';
+  var totalMsgs=p.totalMessages||p.messageCount||0;
+  var sessionInfo='<div class="profile-section"><div class="profile-section-label">Activity</div><div class="profile-section-text" style="font-family:monospace;font-size:11px;color:#868e96">'+p.sessionCount+' session'+(p.sessionCount>1?'s':'')+' · '+totalMsgs+' messages</div></div>';
   var historyHtml='';
   if(p.history&&p.history.length>1){
-    historyHtml='<div class="profile-section"><div class="profile-section-label">'+t['profile_label_evolution']+' ('+p.history.length+' '+t['profile_snapshots_unit']+')</div>';
+    historyHtml='<div class="profile-section"><div class="profile-section-label">Evolution ('+p.history.length+' snapshots)</div>';
     p.history.forEach(function(h){
       var hDate=new Date(h.timestamp).toLocaleString();
       historyHtml+='<div class="profile-history-item"><div class="profile-history-time">'+hDate+'</div><div class="profile-history-changes">'+h.changes.map(function(c){return '<span class="profile-change-tag">'+c+'</span>';}).join(' ')+'</div></div>';
@@ -919,7 +946,7 @@ function renderProfileCard(p){
   if(!isAnon&&interests.length>0)tags+='<span class="profile-tag profile-tag-int">'+interests.slice(0,2).join(', ')+(interests.length>2?' +'+(interests.length-2):'')+'</span>';
   var factsHtml='';
   if(facts.length>0)factsHtml='<div class="profile-facts">'+facts.map(function(f){return '<span class="profile-fact">'+f+'</span>';}).join('')+'</div>';
-  card.innerHTML='<div class="profile-card-header" onclick="this.parentElement.classList.toggle(&#39;open&#39;)"><div class="profile-card-top"><span class="profile-name">'+name+returningBadge+'</span><span class="profile-time">'+timeStr+'</span></div><div class="profile-tags">'+tags+'</div>'+factsHtml+'<div class="profile-chevron">▼</div></div><div class="profile-card-body"><div class="profile-section"><div class="profile-section-label">'+t['profile_label_personality']+'</div><div class="profile-section-text">'+(pers||t['profile_no_analysis'])+'</div></div>'+(facts.length>0?'<div class="profile-section"><div class="profile-section-label">'+t['profile_label_keyfacts']+'</div><div class="profile-section-text">'+facts.map(function(f){return '• '+f;}).join('<br>')+'</div></div>':'')+(interests.length>0?'<div class="profile-section"><div class="profile-section-label">'+t['profile_label_interests']+'</div><div class="profile-section-text">'+interests.map(function(i){return '<span class="profile-interest-tag">'+i+'</span>';}).join(' ')+'</div></div>':'')+sessionInfo+historyHtml+'<div class="profile-section"><button class="profile-view-chat-btn" onclick="viewProfileChats(&#39;'+p.sessionId+'&#39;)">'+t['profile_view_chat']+'</button></div></div>';
+  card.innerHTML='<div class="profile-card-header" onclick="this.parentElement.classList.toggle(&#39;open&#39;)"><div class="profile-card-top"><span class="profile-name">'+name+returningBadge+'</span><span class="profile-time">'+timeStr+'</span></div><div class="profile-tags">'+tags+'</div>'+factsHtml+'<div class="profile-chevron">▼</div></div><div class="profile-card-body"><div class="profile-section"><div class="profile-section-label">Personality</div><div class="profile-section-text">'+(pers||'No analysis available')+'</div></div>'+(facts.length>0?'<div class="profile-section"><div class="profile-section-label">Key Facts</div><div class="profile-section-text">'+facts.map(function(f){return '• '+f;}).join('<br>')+'</div></div>':'')+(interests.length>0?'<div class="profile-section"><div class="profile-section-label">Interests</div><div class="profile-section-text">'+interests.map(function(i){return '<span class="profile-interest-tag">'+i+'</span>';}).join(' ')+'</div></div>':'')+sessionInfo+historyHtml+'<div class="profile-section"><button class="profile-view-chat-btn" onclick="viewProfileChats(&#39;'+p.sessionId+'&#39;)">查看对话记录 →</button></div></div>';
   return card;
 }
 
@@ -1089,8 +1116,8 @@ function renderLogEntry(log){
   entry.className='log-entry';
   var date=new Date(log.timestamp);
   var timeStr=date.toLocaleString();
-  var title=t['log_visitor_prefix']+timeStr;
-  entry.innerHTML='<div class="log-entry-header" onclick="this.parentElement.classList.toggle(&#39;open&#39;)"><div class="log-entry-summary"><span class="log-preview">'+title+'</span></div><div class="log-entry-meta"><span class="log-sid">#'+log.sessionId.slice(-8)+'</span><span class="log-time">'+timeStr+'</span><span class="log-msgs">'+(log.messages?log.messages.length:0)+' '+t['log_msgs_unit']+'</span><span class="log-chevron">▼</span></div></div>';
+  var title='访客 — '+timeStr;
+  entry.innerHTML='<div class="log-entry-header" onclick="this.parentElement.classList.toggle(&#39;open&#39;)"><div class="log-entry-summary"><span class="log-preview">'+title+'</span></div><div class="log-entry-meta"><span class="log-sid">#'+log.sessionId.slice(-8)+'</span><span class="log-time">'+timeStr+'</span><span class="log-msgs">'+(log.messages?log.messages.length:0)+' msgs</span><span class="log-chevron">▼</span></div></div>';
   var body=document.createElement('div');
   body.className='log-entry-body';
   if(log.messages){

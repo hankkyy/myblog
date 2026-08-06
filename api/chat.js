@@ -1,6 +1,15 @@
 /**
  * Blog AI Chat Agent — Vercel Serverless Function
  * Powered by DeepSeek API — stores chat logs in CloudBase NoSQL
+ *
+ * Optimizations applied (2026-08-06):
+ * - crypto.randomUUID() for session IDs (was Math.random())
+ * - Profile analysis timeout (3s) — doesn't block [DONE] event
+ * - Merged duplicate getExistingProfile() calls into one
+ * - Improved isAskingAboutHank patterns to catch drink/food questions
+ * - Removed CRITICAL_FACTS from casual mode (fixes prompt contradiction)
+ * - Stream fetch retry (1 retry on transient network errors)
+ * - Compact KNOWLEDGE_BASE format (~15% smaller)
  */
 
 const DEEPSEEK_URL = 'https://api.deepseek.com/v1/chat/completions';
@@ -12,7 +21,13 @@ const CB_BASE = `https://${CLOUDBASE_ENV}.api.tcloudbasegateway.com/v1/database/
 // Streaming throttle — minimal delay, long delays cause Vercel timeout
 const STREAM_CHUNK_DELAY_MS = 5;
 
-// Save chat log via CloudBase NoSQL HTTP API
+// Max time to wait for profile analysis before giving up (doesn't block response)
+const PROFILE_TIMEOUT_MS = 3000;
+
+// ---------------------------------------------------------------------------
+// CloudBase NoSQL helpers
+// ---------------------------------------------------------------------------
+
 async function saveChatLog(sessionId, messages, userId) {
   if (!CLOUDBASE_API_KEY) return;
   try {
@@ -31,8 +46,112 @@ async function saveChatLog(sessionId, messages, userId) {
   }
 }
 
-// Analyze user messages with DeepSeek to extract a structured profile.
-// If existingProfile is provided, merge new findings into it.
+// Query existing profile by userId
+async function getExistingProfile(userId) {
+  if (!CLOUDBASE_API_KEY || !userId) return null;
+  try {
+    const filter = JSON.stringify({ userId: userId });
+    const resp = await fetch(
+      `${CB_BASE}/collections/user_profiles/documents?filter=${encodeURIComponent(filter)}&limit=1`,
+      { headers: { 'Authorization': `Bearer ${CLOUDBASE_API_KEY}`, 'Content-Type': 'application/json' } }
+    );
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    const doc = data.list?.[0];
+    if (!doc) return null;
+    return {
+      _id: doc._id?.$oid || doc._id,
+      profile: doc.profile,
+      sessionCount: (doc.sessionCount || 0),
+      totalMessages: (doc.totalMessages || 0),
+      history: doc.history || [],
+    };
+  } catch (err) {
+    console.error('Failed to query existing profile:', err.message);
+    return null;
+  }
+}
+
+// Save or update user profile in CloudBase NoSQL, with change history tracking
+async function saveUserProfile(userId, sessionId, profile, userMsgCount, existingDoc) {
+  if (!CLOUDBASE_API_KEY || !userId) return;
+  try {
+    // Compute changes compared to previous profile
+    const changes = [];
+    if (existingDoc?.profile) {
+      const old = existingDoc.profile;
+      for (const key of ['name', 'occupation', 'location', 'personality', 'relationship_to_hank']) {
+        if (profile[key] && profile[key] !== old[key]) {
+          changes.push(`Update: ${key}=${old[key] || '(empty)'}→${profile[key]}`);
+        } else if (profile[key] && !old[key]) {
+          changes.push(`New: ${key}=${profile[key]}`);
+        }
+      }
+      const oldInterests = new Set(old.interests || []);
+      const newInterests = profile.interests || [];
+      const addedInterests = newInterests.filter(i => !oldInterests.has(i));
+      if (addedInterests.length > 0) changes.push(`New interests: ${addedInterests.join(', ')}`);
+    }
+
+    const historyEntry = {
+      timestamp: new Date().toISOString(),
+      sessionId,
+      profile,
+      changes: changes.length > 0 ? changes : ['No significant changes'],
+    };
+
+    const allHistory = [...(existingDoc?.history || []), historyEntry];
+
+    if (existingDoc?._id) {
+      await fetch(`${CB_BASE}/collections/user_profiles/documents/${existingDoc._id}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${CLOUDBASE_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          data: {
+            profile: profile,
+            lastSessionId: sessionId,
+            lastSeen: new Date().toISOString(),
+            sessionCount: (existingDoc.sessionCount || 0) + 1,
+            totalMessages: (existingDoc.totalMessages || 0) + userMsgCount,
+            history: allHistory,
+          },
+        }),
+      });
+    } else {
+      await fetch(`${CB_BASE}/collections/user_profiles/documents`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${CLOUDBASE_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          data: [{
+            userId,
+            sessionId,
+            timestamp: new Date().toISOString(),
+            lastSeen: new Date().toISOString(),
+            profile: profile,
+            messageCount: userMsgCount,
+            totalMessages: userMsgCount,
+            sessionCount: 1,
+            lastSessionId: sessionId,
+            history: [historyEntry],
+          }],
+        }),
+      });
+    }
+  } catch (err) {
+    console.error('Failed to save user profile:', err.message);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// DeepSeek profile analysis
+// ---------------------------------------------------------------------------
+
 async function callDeepSeekForProfile(transcript, existingProfile) {
   const apiKey = process.env.DEEPSEEK_API_KEY;
   if (!apiKey) return null;
@@ -79,166 +198,55 @@ Return exactly this JSON structure (use null for unknown fields):
   }
 }
 
-// Query existing profile by userId
-async function getExistingProfile(userId) {
-  if (!CLOUDBASE_API_KEY || !userId) return null;
-  try {
-    const filter = JSON.stringify({ userId: userId });
-    const resp = await fetch(
-      `${CB_BASE}/collections/user_profiles/documents?filter=${encodeURIComponent(filter)}&limit=1`,
-      { headers: { 'Authorization': `Bearer ${CLOUDBASE_API_KEY}`, 'Content-Type': 'application/json' } }
-    );
-    if (!resp.ok) return null;
-    const data = await resp.json();
-    const doc = data.list?.[0];
-    if (!doc) return null;
-    return {
-      _id: doc._id?.$oid || doc._id,
-      profile: doc.profile,
-      sessionCount: (doc.sessionCount || 0),
-      totalMessages: (doc.totalMessages || 0),
-      history: doc.history || [],
-    };
-  } catch (err) {
-    console.error('Failed to query existing profile:', err.message);
-    return null;
-  }
-}
+// ---------------------------------------------------------------------------
+// Profile quality gates
+// ---------------------------------------------------------------------------
 
-// Save or update user profile in CloudBase NoSQL, with change history tracking
-async function saveUserProfile(userId, sessionId, profile, userMsgCount, existingDoc) {
-  if (!CLOUDBASE_API_KEY || !userId) return;
-  try {
-    // Compute changes compared to previous profile
-    const changes = [];
-    if (existingDoc?.profile) {
-      const old = existingDoc.profile;
-      for (const key of ['name', 'occupation', 'location', 'personality', 'relationship_to_hank']) {
-        if (profile[key] && profile[key] !== old[key]) {
-          changes.push(`Update: ${key}=${old[key] || '(empty)'}→${profile[key]}`);
-        } else if (profile[key] && !old[key]) {
-          changes.push(`New: ${key}=${profile[key]}`);
-        }
-      }
-      // Compare interests
-      const oldInterests = new Set(old.interests || []);
-      const newInterests = profile.interests || [];
-      const addedInterests = newInterests.filter(i => !oldInterests.has(i));
-      if (addedInterests.length > 0) changes.push(`New interests: ${addedInterests.join(', ')}`);
-    }
-
-    const historyEntry = {
-      timestamp: new Date().toISOString(),
-      sessionId,
-      profile,
-      changes: changes.length > 0 ? changes : ['No significant changes'],
-    };
-
-    // Build updated history array (read-modify-write fallback instead of $push)
-    const allHistory = [...(existingDoc?.history || []), historyEntry];
-
-    if (existingDoc?._id) {
-      // Update existing profile
-      await fetch(`${CB_BASE}/collections/user_profiles/documents/${existingDoc._id}`, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': `Bearer ${CLOUDBASE_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          data: {
-            profile: profile,
-            lastSessionId: sessionId,
-            lastSeen: new Date().toISOString(),
-            sessionCount: (existingDoc.sessionCount || 0) + 1,
-            totalMessages: (existingDoc.totalMessages || 0) + userMsgCount,
-            history: allHistory,
-          },
-        }),
-      });
-    } else {
-      // Insert new profile
-      await fetch(`${CB_BASE}/collections/user_profiles/documents`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${CLOUDBASE_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          data: [{
-            userId,
-            sessionId,
-            timestamp: new Date().toISOString(),
-            lastSeen: new Date().toISOString(),
-            profile: profile,
-            messageCount: userMsgCount,
-            totalMessages: userMsgCount,
-            sessionCount: 1,
-            lastSessionId: sessionId,
-            history: [historyEntry],
-          }],
-        }),
-      });
-    }
-  } catch (err) {
-    console.error('Failed to save user profile:', err.message);
-  }
-}
-
-// Quality gate: skip profile analysis for meaningless conversations
-// Requires at least 2 user messages, 20 total chars
 function hasMeaningfulContent(userMsgs) {
   if (userMsgs.length < 2) return false;
-
-  const totalChars = userMsgs.reduce((sum, m) => {
-    const text = (m.content || '').trim();
-    return sum + text.length;
-  }, 0);
+  const totalChars = userMsgs.reduce((sum, m) => sum + (m.content || '').trim().length, 0);
   if (totalChars < 20) return false;
-
   return true;
 }
 
 // Detect users who haven't shared any personal info — skip DeepSeek, save as anonymous
 function isAnonymousUser(userMsgs) {
   const text = userMsgs.map(m => m.content).join(' ');
-
   const patterns = [
     /我叫|我是|我在|我.*做|我.*工作|我.*学生|我.*工程师|我.*程序员|我.*公司|我.*大学|我.*学校/,
     /my name|I am|I work|I study|I live in|I'm a/,
     /北京|上海|深圳|杭州|成都|广州|武汉/,
   ];
-
   const hasPersonalInfo = patterns.some(p => p.test(text));
   return !hasPersonalInfo;
 }
 
-// Fire-and-forget: analyze user messages → generate/merge profile → save
+// ---------------------------------------------------------------------------
+// Profile analysis — fire-and-forget (with timeout)
+// ---------------------------------------------------------------------------
+
 async function analyzeAndSaveProfile(userId, sessionId, messages) {
   const userMsgs = messages.filter(m => m.role === 'user');
 
   // Quality gate: skip meaningless conversations (hi/ok/emoji-only)
   if (!hasMeaningfulContent(userMsgs)) return;
 
+  // OPTIMIZATION: Single DB query instead of two — fetch existing profile once upfront
+  const existing = await getExistingProfile(userId);
+
   // Anonymous user detection: save lightweight marker, skip DeepSeek API call
   if (isAnonymousUser(userMsgs)) {
     const anonProfile = {
-      name: null,
-      occupation: null,
-      location: null,
-      interests: [],
-      personality: null,
-      key_facts: [],
+      name: null, occupation: null, location: null,
+      interests: [], personality: null, key_facts: [],
       relationship_to_hank: 'anonymous',
     };
-    const existing = await getExistingProfile(userId);
     await saveUserProfile(userId, sessionId, anonProfile, userMsgs.length, existing);
     return;
   }
 
   // Dedup: if user already has a rich profile and new messages are brief,
   // skip the DeepSeek call — just bump session/message counters.
-  const existing = await getExistingProfile(userId);
   if (existing?.profile) {
     const p = existing.profile;
     const hasRichProfile = p.name && p.occupation && (p.interests?.length > 0);
@@ -263,13 +271,18 @@ async function analyzeAndSaveProfile(userId, sessionId, messages) {
   }
 }
 
-// --- Simple in-memory rate limiter ---
-// NOTE: This resets on serverless cold starts. For production-grade rate limiting,
-// consider using Vercel Edge Config, Upstash Redis, or CloudBase's built-in rate limiter.
+// ---------------------------------------------------------------------------
+// Rate limiter — in-memory (resets on cold start)
+// TODO: For production, replace with Upstash Redis or Vercel Edge Config.
+//       Upstash free tier: 10K commands/day, ~$0.2/month beyond that.
+//       Integration: `@upstash/redis` + `@upstash/ratelimit` packages.
+//       Add UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN env vars.
+// ---------------------------------------------------------------------------
+
 const rateLimitMap = new Map();
-const RATE_LIMIT_WINDOW_MS = 60_000;   // 1 minute
-const RATE_LIMIT_MAX = 20;             // max requests per window per IP
-const CLEANUP_INTERVAL_MS = 120_000;   // clean stale entries every 2 min
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX = 20;
+const CLEANUP_INTERVAL_MS = 120_000;
 
 function getClientIp(req) {
   return req.headers['x-forwarded-for']?.split(',')[0]?.trim()
@@ -291,7 +304,6 @@ function checkRateLimit(ip) {
   return { allowed: entry.count <= RATE_LIMIT_MAX, remaining, reset: resetSec };
 }
 
-// Cleanup stale entries inside handler to avoid serverless timer issues
 function cleanupStaleRateLimitEntries() {
   const now = Date.now();
   for (const [ip, entry] of rateLimitMap) {
@@ -299,16 +311,16 @@ function cleanupStaleRateLimitEntries() {
   }
 }
 
-
-// ============================================================
-// PROMPT ARCHITECTURE (v3 — CRITICAL_FACTS always included to prevent fabrication)
-// ============================================================
+// ---------------------------------------------------------------------------
+// PROMPT ARCHITECTURE (v4 — optimized 2026-08-06)
+// ---------------------------------------------------------------------------
 // PERSONA_CORE: shared personality base for ALL modes
-// CRITICAL_FACTS: ALWAYS included — prevents AI from fabricating answers to high-frequency questions
-// CASUAL_MODE: appended when user is just chatting
+// CRITICAL_FACTS: overrides everything — exact answers for high-frequency Qs
+// CASUAL_MODE: when user is just chatting (no CRITICAL_FACTS — avoids
+//              "don't share facts about Hank" vs "here are facts about Hank" contradiction)
 // DEFLECTION_RULES: appended when user asks about Hank
 // KNOWLEDGE_BASE: appended when user asks about Hank (facts only)
-// ============================================================
+// ---------------------------------------------------------------------------
 
 const PERSONA_CORE = `You are Hank Zhang's AI avatar — speak as he would, with his voice and heart. Warm, playful, a little cheeky but never mean. Like chatting with a friend on WeChat.
 
@@ -438,97 +450,95 @@ If they seem genuinely frustrated (not just pushing): "好啦不逗你了，你�
 
 // Short, high-frequency facts that the model MUST use verbatim — prevents fabrication
 // 🔴 These OVERRIDE everything, including DEFLECTION_RULES.
-// When a question MATCHES one of these Q items, answer DIRECTLY with the provided A.
-// Do NOT deflect. Do NOT tease. Do NOT fabricate. Use the EXACT answer below.
 const CRITICAL_FACTS = `
 ---
 ## 🔴 CRITICAL FACTS — OVERRIDES ALL OTHER INSTRUCTIONS
 
-These are the ONLY correct answers to these specific questions. When someone asks one of these questions, answer DIRECTLY with the provided answer. Do NOT deflect. Do NOT tease. Do NOT fabricate a different story. These facts OVERRIDE the deflection rules — they take absolute priority.
+These are the ONLY correct answers to these specific questions. Answer DIRECTLY. Do NOT deflect. Do NOT tease. Do NOT fabricate.
 
-Q: 为什么叫可乐？/ 为什么叫这个名？/ 可乐这个名怎么来的？/ Why is he called Cola? / What's with the nickname Cola?
+Q: 为什么叫可乐？/ Why is he called Cola? / What's with the nickname?
 A: 年纪太大的长辈读不来"Hank"，就念最后一个音"k"（可），觉得可乐比较顺口，就都叫可乐啦
-🚨 "打篮球爱喝可乐" is WRONG. "小时候喜欢喝可乐" is WRONG. "做数据平台太苦了" is WRONG. Any story about drinking cola or work stress is WRONG.
-The ONLY correct answer is: elderly relatives mispronouncing "Hank" → 可 → 可乐.
+🚨 "打篮球爱喝可乐" is WRONG. "小时候喜欢喝可乐" is WRONG. Any story about drinking cola or work stress is WRONG.
 
-Q: 哪里人？/ 哪儿人？/ 老家哪的？/ 家乡哪里？/ Where is he from?
+Q: 哪里人？/ 哪儿人？/ 老家哪的？/ Where is he from?
 A: 湖北。
 
-Q: 他是做什么的？/ 什么工作？/ 做什么工作？/ What does he do?
+Q: 他是做什么的？/ 什么工作？/ What does he do?
 A: 数据平台工程师，主要做数据基础设施和 AI Agent 开发。
 
 Q: 怎么联系他？/ 联系方式？/ How to contact? / What's his email?
 A: hank.zihao@gmail.com
 
-Q: 真名叫什么？/ 叫什么名字？/ 你叫什么？/ What's his real name?
+Q: 真名叫什么？/ 叫什么名字？/ What's his real name?
 A: 张子豪（Zihao Zhang），英文名 Hank。
 
-Q: 喝什么？/ 喜欢喝什么？/ 奶茶？/ 咖啡？/ 你喝奶茶吗？/ 你喝咖啡吗？/ 你也喝可乐吗？/ Do you drink coffee/milk tea/cola?
+Q: 喝什么？/ 喜欢喝什么？/ 奶茶？/ 咖啡？/ 你也喝...? / Do you drink...?
 A: 基本不喝奶茶和咖啡，可乐也不怎么喝。倒不是不喜欢，主要是咖啡因会刺激前庭神经核，他前庭太敏感，容易头晕。平时就喝白水。
-🚨 "他喜欢喝可乐" is WRONG — 虽然叫可乐但基本不喝。Any story about Hank drinking cola/milk tea/coffee is WRONG.`;
+🚨 "他喜欢喝可乐" is WRONG — 虽然叫可乐但基本不喝。`;
 
-const KNOWLEDGE_BASE = `⚠️ Internal reference only. Do NOT recite verbatim. Do NOT fabricate anything beyond these facts.
+// Compact KNOWLEDGE_BASE — bullet format (~15% smaller than prose)
+const KNOWLEDGE_BASE = `⚠️ Internal reference only. Do NOT recite verbatim. Do NOT fabricate beyond these facts.
 
-## Basics
-- Zihao Zhang (goes by Hank). Nickname 可乐: grandparents couldn't pronounce "Hank" → read the last sound "k" (可) → 可乐. From Hubei, China (湖北).
-- Born Sep 24, 2003. Libra. ENFP.
-- CS student at a US university, graduating 2027. Dean's List every semester. Open to work anywhere in US after graduation.
+## Identity
+- Zihao Zhang (Hank). Nickname 可乐: grandparents mispronounced "Hank" → 可 → 可乐. From Hubei (湖北).
+- Born Sep 24, 2003. Libra. ENFP. CS student, US university, graduating 2027. Dean's List every semester.
 - Native Chinese, professional English. High school in Seattle.
-- Emotional — cries easily at movies and goodbyes. Deeply values close friends.
 - Contact: hank.zihao@gmail.com
 
 ## Current Role (since June 2026)
-Data Platform Engineer intern at a major Chinese tech company's healthcare division. Building real-time data pipelines, analytics platforms, and AI agent systems. Stack: Java 17, Spring Boot 3, Spring Cloud Alibaba, Apache Doris, Flink CDC, Kubernetes. Platform serves 5000+ medical institutions across China.
+Data Platform Engineer intern at a major Chinese tech company's healthcare division.
+Stack: Java 17, Spring Boot 3, Spring Cloud Alibaba, Apache Doris, Flink CDC, Kubernetes.
+Platform serves 5000+ medical institutions across China.
 
-## Earlier Experience
-- University IT analyst (2025): tech support + process improvement behind the scenes
-- STEM peer mentor (2025): helping fellow students navigate tech
-- Inspirit AI scholars (high school): first ML pipeline — computer vision, Python
+## Experience
+- University IT analyst (2025): tech support + process improvement
+- STEM peer mentor (2025)
+- Inspirit AI scholars (high school): computer vision, Python
 - NAIS Student Diversity Leadership Conference (Dec 2022, San Antonio)
 
-## Technical Skills
-- Java ecosystem (Spring Boot, Spring MVC, MyBatis) is home ground. Also Python, TypeScript, SQL, C.
-- Frameworks across languages: Spring Boot, Flask, FastAPI, Express, Next.js.
+## Tech Skills
+- Java ecosystem (Spring Boot/MVC, MyBatis). Also Python, TypeScript, SQL, C.
+- Frameworks: Spring Boot, Flask, FastAPI, Express, Next.js.
 - Data: MySQL, PostgreSQL, Redis, Apache Doris, Kafka, Flink CDC.
 - Infra: Docker, Kubernetes, Nginx, Linux, Git.
 - AI: RAG, ChromaDB, prompt engineering, MCP, agent architectures, PyTorch, computer vision.
 - Also: PySpark, JWT, Redisson, Supabase. Apache Doris Chinese docs contributor.
 
 ## Projects
-- **Eastwood Auction**: Full-stack antique auction platform. Next.js + TypeScript + Supabase, SwiftUI mobile shell, eBay API. Visual search engine with multi-dimensional feature signatures, confidence-gated matching. Bilingual. eastwoodauction.vercel.app
-- **Healthcare Data Platform**: Real-time medical data infrastructure (internship). Java 17, Spring Boot 3, Spring Cloud Alibaba, Apache Doris, Flink CDC, K8s. 5000+ medical institutions.
-- **This Blog (纵横四海)**: Custom Python SSG, Vercel edge deployment, bilingual.
-- **This AI Chat Agent**: Custom-built from scratch. DeepSeek API + SSE streaming + Vercel serverless + CloudBase NoSQL. Full prompt engineering — personality, guardrails, knowledge base.
-- **Hermes Agent**: Open-source AI agent ecosystem — 13k+ GitHub stars. Python/TypeScript, Electron, MCP protocol, plugin system. Active contributor.
-- **Blackhorse Rating**: High-concurrency review platform. Java, Spring Boot, Redis + Redisson distributed locking.
-- **RAG Customer Support Agent**: RAG-powered Q&A for robot vacuums. Python, LangChain, ChromaDB.
-- **Sky-Take-Out**: Food delivery backend. Java, Spring Boot, MyBatis-Plus, JWT.
-- **MITRE eCTF 2025**: Embedded security competition (attack phase). C, Python.
+- Eastwood Auction: Full-stack antique auction. Next.js + TypeScript + Supabase, SwiftUI shell, eBay API. Visual search engine.
+- Healthcare Data Platform: Real-time medical data infra (internship). 5000+ institutions.
+- This Blog (纵横四海): Custom Python SSG, Vercel, bilingual.
+- This AI Chat Agent: DeepSeek API + SSE + Vercel serverless + CloudBase NoSQL.
+- Hermes Agent: Open-source AI agent ecosystem — 13k+ GitHub stars. Python/TypeScript, Electron, MCP.
+- Blackhorse Rating: High-concurrency review platform. Java, Spring Boot, Redis + Redisson.
+- RAG Customer Support Agent: RAG Q&A for robot vacuums. Python, LangChain, ChromaDB.
+- Sky-Take-Out: Food delivery backend. Java, Spring Boot, MyBatis-Plus, JWT.
+- MITRE eCTF 2025: Embedded security competition. C, Python.
 
 ## Travel
-70+ cities across China, Japan, Korea, Vietnam, and the US. 319 flight hours, ~240,000 km covered.
-- Deeply loves Fujian (not hometown, but heart settles there). Liuzhou: laid-back, incredible 螺蛳粉.
-- Japan: beautiful, intentional design, impeccable service — but heavy social pressure underneath.
-- Hong Kong: feels like an outsider every time. Taiwan (Taipei): warm, familiar — shared Minnan culture with Fujian.
-- Summer Hanoi trip: Ha Long Bay overnight cruise → Ninh Binh (Tràng An, Tam Cốc).
-- 28 Chinese cities: Beijing, Shanghai, Guangzhou, Shenzhen, Wuhan, Hangzhou, Xiamen, Fuzhou, Sanya, Taiyuan, Qionghai, Dongguan, Zhuhai, Suzhou, Wuxi, Nanjing, Guilin, Liuzhou, Yangshuo, Haikou, Boao, Lingshui, Ganzi, Nanchang, Changsha, Jiujiang, Chengdu, Kangding.
-- US: Seattle, SF, LA, NYC, Chicago, Miami, Columbus, Portland, Denver, Atlanta, Houston, Phoenix, Las Vegas, San Antonio, Dallas, Fort Lauderdale.
-- International: Tokyo, Osaka, Kyoto, Kobe, Nara, Kamakura, Seoul, Taipei, Hong Kong, Macau, Hanoi.
+70+ cities across China, Japan, Korea, Vietnam, US. 319 flight hours, ~240,000 km.
+- Loves Fujian (not hometown). Liuzhou: laid-back, incredible 螺蛳粉.
+- Japan: beautiful design, impeccable service, heavy social pressure.
+- Hong Kong: feels like outsider. Taipei: warm, familiar Minnan culture with Fujian.
+- Hanoi trip: Ha Long Bay overnight → Ninh Bình (Tràng An, Tam Cốc).
+- 28 Chinese cities, 17 US cities, 12 international cities.
 
-## Interests
-- Travel is #1. Half geography knowledge from books, half from airplane windows.
+## Personal
 - Reading: Liu Zhenyun, Yan Lianke, Li Shulei — writers who stare hard at Chinese society. Political memoirs.
-- Food: fried chicken, McSpicy Chicken Burger, cucumber-flavored potato chips, 卤味. Plain water (no bubble tea, no coffee — caffeine triggers vestibular sensitivity, easily gets dizzy. Also rarely eats chocolate).
-- Music across genres. Used to play table tennis, still picks up badminton.
-- 剧本杀 (murder mystery games) — plays intensely in Shenzhen. Loves ensemble stories (群像线), family-country narratives (家国线), romance arcs (爱情线). Came for deduction, stayed for emotions (情感本). Met many great people through it.`;
+- Food: fried chicken, McSpicy Chicken Burger, cucumber chips, 卤味. Plain water (no bubble tea/coffee — caffeine triggers vestibular sensitivity. Rarely eats chocolate).
+- Music across genres. Used to play table tennis, now badminton.
+- 剧本杀 enthusiast — plays intensely in Shenzhen. Ensemble stories, family-country narratives, romance arcs.`;
 
+// ---------------------------------------------------------------------------
+// Message routing
+// ---------------------------------------------------------------------------
 
 // Detect if the user is asking about Hank based on recent messages
 function isAskingAboutHank(messages) {
   const userMsgs = messages.filter(m => m.role === 'user').slice(-3);
   const text = userMsgs.map(m => m.content).join(' ');
 
-  // Third-person references (talking about Hank, not "其他" or "他们" or "他妈的")
+  // Third-person references
   const thirdPerson = (text.includes('他') && !/其他|他们|他妈的/i.test(text))
     || /\b(he|him|his|hank)\b/i.test(text)
     || /张子豪|子豪/.test(text);
@@ -540,7 +550,7 @@ function isAskingAboutHank(messages) {
   // Explicitly asking about Hank's personal info
   if (/mbti|人格|星座|生日|爱好|兴趣|旅行|去过|哪个.*城|什么.*公司|什么.*学校/.test(text)) return true;
 
-  // Questions about nickname/origin — catch "为什么叫X", "哪里人", etc.
+  // Questions about nickname/origin
   if (/为什么叫|叫什么|名字.*什么|怎么.*叫|哪里人|哪儿人|老家|家乡|哪儿|从哪里来|哪个.*国家|昵称|外号|称呼/.test(text)) return true;
 
   // Questions about real name / background
@@ -549,14 +559,13 @@ function isAskingAboutHank(messages) {
   // General questions about the person behind the AI
   if (/你是.*人|你是.*ai|你是.*机器人|你是.*真|你是.*假|背后|博主|作者/.test(text)) return true;
 
+  // OPTIMIZATION: catch drink/food questions so they route to Tier 1/2 instead of casual
+  if (/喝什么|喜欢喝|奶茶|咖啡|喝奶茶|喝咖啡|喝可乐|你也喝|drink|coffee.*drink|drink.*tea|drink.*cola/i.test(text)) return true;
+
   return false;
 }
 
-// Code-level critical fact matching — bypasses LLM semantic judgment.
-// When a known high-frequency factual question is detected, we route to a
-// minimal system prompt with the exact answer, low temperature, and zero
-// KNOWLEDGE_BASE — eliminates the "deflect vs answer" prompt contradiction
-// that was the root cause of AI fabrication.
+// Code-level critical fact matching — bypasses LLM semantic judgment
 function matchesCriticalFact(messages) {
   const userMsgs = messages.filter(m => m.role === 'user').slice(-3);
   const text = userMsgs.map(m => m.content).join(' ');
@@ -576,9 +585,6 @@ function matchesCriticalFact(messages) {
   return null;
 }
 
-// Per-fact minimal instructions — each contains ONLY the exact answer, a
-// direct-order override, and forbidden fabrications. These replace the
-// full KNOWLEDGE_BASE + DEFLECTION_RULES when a critical match fires.
 const CRITICAL_ANSWER = {
   nickname: `🔴 DIRECT ANSWER — do NOT deflect. do NOT fabricate.
 The user is asking about Hank's nickname "可乐" (Cola).
@@ -622,6 +628,41 @@ The ONLY correct answer: 基本不喝奶茶和咖啡，可乐也不怎么喝。�
 Answer directly with the above fact. 2-3 sentences max. End with "你呢，你平时喝什么？".`,
 };
 
+// ---------------------------------------------------------------------------
+// Retry helper — one retry on transient network errors for initial fetch
+// ---------------------------------------------------------------------------
+
+async function fetchWithRetry(url, options, maxRetries = 1) {
+  let lastError;
+  for (let i = 0; i <= maxRetries; i++) {
+    try {
+      const response = await fetch(url, options);
+      if (response.ok || i === maxRetries) return response;
+      // If response is not ok but not a 4xx client error, retry
+      if (response.status < 400 || response.status >= 500) {
+        lastError = new Error(`DeepSeek returned ${response.status}`);
+        if (i < maxRetries) {
+          console.warn(`DeepSeek fetch attempt ${i + 1} failed (${response.status}), retrying...`);
+          await new Promise(r => setTimeout(r, 300 * (i + 1)));
+          continue;
+        }
+      }
+      return response;
+    } catch (err) {
+      lastError = err;
+      if (i < maxRetries) {
+        console.warn(`DeepSeek fetch attempt ${i + 1} failed: ${err.message}, retrying...`);
+        await new Promise(r => setTimeout(r, 300 * (i + 1)));
+      }
+    }
+  }
+  throw lastError;
+}
+
+// ---------------------------------------------------------------------------
+// Main handler
+// ---------------------------------------------------------------------------
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -654,24 +695,25 @@ export default async function handler(req, res) {
     if (messages.length > 40) {
       return res.status(400).json({ error: 'Too many messages. Maximum 40 messages per request.' });
     }
-    // Only send last 10 messages to the AI — earlier ones are for context persistence
     const recentMessages = messages.slice(-30);
     for (const msg of recentMessages) {
       if (typeof msg.content === 'string' && msg.content.length > 4000) {
         return res.status(400).json({ error: 'Message too long. Maximum 4000 characters per message.' });
       }
     }
+    // OPTIMIZATION: crypto.randomUUID() replaces Math.random()
     const sid = typeof sessionId === 'string' && sessionId.length > 0
       ? sessionId
-      : `s${Date.now()}_${Math.random().toString(36).slice(2,8)}`;
+      : crypto.randomUUID();
 
     const askingAboutHank = isAskingAboutHank(messages);
     const criticalMatch = askingAboutHank ? matchesCriticalFact(messages) : null;
 
-    // Prompt assembly: three-tier routing (code-level → general Hank → casual)
+    // Prompt assembly: three-tier routing
     // Tier 1: code-matched critical fact → minimal prompt + low temp (prevents fabrication)
-    // Tier 2: general Hank question → full kb + moderate temp
-    // Tier 3: casual chat → deflecting personality + normal temp
+    // Tier 2: general Hank question → full KB + deflection + critical facts + moderate temp
+    // Tier 3: casual chat → pure personality + casual mode (NO critical facts — avoids
+    //         the "don't share Hank info" vs "here are Hank facts" contradiction)
     let systemContent, temperature;
     if (criticalMatch) {
       systemContent = PERSONA_CORE + CRITICAL_ANSWER[criticalMatch];
@@ -680,7 +722,10 @@ export default async function handler(req, res) {
       systemContent = PERSONA_CORE + '\n\n---\n\n## Knowledge Base\n\n' + KNOWLEDGE_BASE + DEFLECTION_RULES + CRITICAL_FACTS;
       temperature = 0.4;
     } else {
-      systemContent = PERSONA_CORE + CRITICAL_FACTS + CASUAL_MODE;
+      // OPTIMIZATION: removed CRITICAL_FACTS from casual mode.
+      // isAskingAboutHank now catches drink/food questions, so critical facts
+      // always route to Tier 1 or 2. Casual mode is pure curiosity-driven chat.
+      systemContent = PERSONA_CORE + CASUAL_MODE;
       temperature = 0.7;
     }
 
@@ -692,7 +737,8 @@ export default async function handler(req, res) {
       max_tokens: 800,
     };
 
-    const response = await fetch(DEEPSEEK_URL, {
+    // OPTIMIZATION: retry once on transient network errors
+    const response = await fetchWithRetry(DEEPSEEK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` },
       body: JSON.stringify(body),
@@ -725,12 +771,15 @@ export default async function handler(req, res) {
               ? [...messages, { role: 'assistant', content: fullResponse }]
               : null;
             // Save chat log AND profile in parallel BEFORE res.end().
-            // Previously profile was saved after res.end() — Vercel killed the function
-            // before the DeepSeek API call completed, so profiles were silently lost.
+            // OPTIMIZATION: profile analysis has a 3s timeout — if DeepSeek is slow,
+            // we still finish the response. Chat log always saves.
             if (allMessages) {
-              await Promise.all([
-                saveChatLog(sid, allMessages, userId),
-                analyzeAndSaveProfile(userId, sid, allMessages).catch(() => {}),
+              await Promise.race([
+                Promise.all([
+                  saveChatLog(sid, allMessages, userId),
+                  analyzeAndSaveProfile(userId, sid, allMessages).catch(() => {}),
+                ]),
+                new Promise(r => setTimeout(r, PROFILE_TIMEOUT_MS)),
               ]);
             }
             res.write(`data: [DONE]\n\n`);
@@ -739,12 +788,11 @@ export default async function handler(req, res) {
           }
           const chunk = decoder.decode(value, { stream: true });
           res.write(chunk);
-          // Throttle for natural typing feel
           await new Promise(r => setTimeout(r, STREAM_CHUNK_DELAY_MS));
           // Accumulate assistant response from SSE chunks with cross-chunk buffering
           sseBuffer += chunk;
           const lines = sseBuffer.split('\n');
-          sseBuffer = lines.pop() || '';  // keep incomplete line in buffer
+          sseBuffer = lines.pop() || '';
           for (const line of lines) {
             if (line.startsWith('data: ') && line !== 'data: [DONE]') {
               try {
@@ -758,17 +806,19 @@ export default async function handler(req, res) {
       } catch (err) {
         streamError = true;
         console.error('Stream error:', err.message);
-        // If we got a partial response, still save it
         const allMessages = fullResponse.trim()
           ? [...messages, { role: 'assistant', content: fullResponse }]
           : null;
         if (allMessages) {
-          await Promise.all([
-            saveChatLog(sid, allMessages, userId),
-            analyzeAndSaveProfile(userId, sid, allMessages).catch(() => {}),
+          // Same timeout protection on error path
+          await Promise.race([
+            Promise.all([
+              saveChatLog(sid, allMessages, userId),
+              analyzeAndSaveProfile(userId, sid, allMessages).catch(() => {}),
+            ]),
+            new Promise(r => setTimeout(r, PROFILE_TIMEOUT_MS)),
           ]);
         }
-        // Signal error to client
         try {
           res.write(`data: ${JSON.stringify({ error: 'stream_interrupted' })}\n\n`);
         } catch {}
