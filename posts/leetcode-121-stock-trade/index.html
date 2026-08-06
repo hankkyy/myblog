@@ -890,26 +890,43 @@ window.loadInsights=async function(){
   }catch(e){}
 };
 
+// Helper: safely extract a number from EJSON objects or corrupted strings
+function safeNumber(val, fallback){
+  if(typeof val==='number')return val;
+  if(typeof val==='object'&&val!==null){
+    if(val.$numberInt)return Number(val.$numberInt);
+    if(val.$numberLong)return Number(val.$numberLong);
+    return fallback||0;
+  }
+  if(typeof val==='string'){
+    var m=val.match(/\d+/);
+    return m?Number(m[0]):(fallback||0);
+  }
+  return fallback||0;
+}
+
 // Render a single profile card
 function renderProfileCard(p){
   var card=document.createElement('div');
   card.className='profile-card';
   var isAnon=p.profile&&p.profile.relationship_to_hank==='anonymous';
-  var name=isAnon?'匿名访客':(p.profile&&p.profile.name?p.profile.name:'Anonymous');
+  var name=isAnon?t['profile_anonymous_name']:(p.profile&&p.profile.name?p.profile.name:'Anonymous');
   var occ=p.profile&&p.profile.occupation?p.profile.occupation:'';
   var loc=p.profile&&p.profile.location?p.profile.location:'';
-  var pers=isAnon?'未透露个人信息':(p.profile&&p.profile.personality?p.profile.personality:'');
+  var pers=isAnon?t['profile_anonymous_desc']:(p.profile&&p.profile.personality?p.profile.personality:'');
   var facts=p.profile&&p.profile.key_facts?p.profile.key_facts:[];
   var interests=p.profile&&p.profile.interests?p.profile.interests:[];
   var rel=p.profile&&p.profile.relationship_to_hank?p.profile.relationship_to_hank:'';
   var date=new Date(p.timestamp);
   var timeStr=date.toLocaleString();
-  var returningBadge=(p.sessionCount||0)>1?' <span class="profile-returning-badge">↻'+p.sessionCount+'</span>':'';
-  var totalMsgs=p.totalMessages||p.messageCount||0;
-  var sessionInfo='<div class="profile-section"><div class="profile-section-label">Activity</div><div class="profile-section-text" style="font-family:monospace;font-size:11px;color:#868e96">'+p.sessionCount+' session'+(p.sessionCount>1?'s':'')+' · '+totalMsgs+' messages</div></div>';
+  var sc=safeNumber(p.sessionCount,0);
+  var returningBadge=sc>1?' <span class="profile-returning-badge">↻'+sc+'</span>':'';
+  var totalMsgs=safeNumber(p.totalMessages||p.messageCount,0);
+  var sessionLabel=sc===1?t['profile_session_unit']:t['profile_sessions_unit'];
+  var sessionInfo='<div class="profile-section"><div class="profile-section-label">'+t['profile_label_activity']+'</div><div class="profile-section-text" style="font-family:monospace;font-size:12px;color:#6b7280">'+sc+' '+sessionLabel+' · '+totalMsgs+' '+t['profile_messages_unit']+'</div></div>';
   var historyHtml='';
   if(p.history&&p.history.length>1){
-    historyHtml='<div class="profile-section"><div class="profile-section-label">Evolution ('+p.history.length+' snapshots)</div>';
+    historyHtml='<div class="profile-section"><div class="profile-section-label">'+t['profile_label_evolution']+' ('+p.history.length+' '+t['profile_snapshots_unit']+')</div>';
     p.history.forEach(function(h){
       var hDate=new Date(h.timestamp).toLocaleString();
       historyHtml+='<div class="profile-history-item"><div class="profile-history-time">'+hDate+'</div><div class="profile-history-changes">'+h.changes.map(function(c){return '<span class="profile-change-tag">'+c+'</span>';}).join(' ')+'</div></div>';
@@ -923,7 +940,7 @@ function renderProfileCard(p){
   if(!isAnon&&interests.length>0)tags+='<span class="profile-tag profile-tag-int">'+interests.slice(0,2).join(', ')+(interests.length>2?' +'+(interests.length-2):'')+'</span>';
   var factsHtml='';
   if(facts.length>0)factsHtml='<div class="profile-facts">'+facts.map(function(f){return '<span class="profile-fact">'+f+'</span>';}).join('')+'</div>';
-  card.innerHTML='<div class="profile-card-header" onclick="this.parentElement.classList.toggle(&#39;open&#39;)"><div class="profile-card-top"><span class="profile-name">'+name+returningBadge+'</span><span class="profile-time">'+timeStr+'</span></div><div class="profile-tags">'+tags+'</div>'+factsHtml+'<div class="profile-chevron">▼</div></div><div class="profile-card-body"><div class="profile-section"><div class="profile-section-label">Personality</div><div class="profile-section-text">'+(pers||'No analysis available')+'</div></div>'+(facts.length>0?'<div class="profile-section"><div class="profile-section-label">Key Facts</div><div class="profile-section-text">'+facts.map(function(f){return '• '+f;}).join('<br>')+'</div></div>':'')+(interests.length>0?'<div class="profile-section"><div class="profile-section-label">Interests</div><div class="profile-section-text">'+interests.map(function(i){return '<span class="profile-interest-tag">'+i+'</span>';}).join(' ')+'</div></div>':'')+sessionInfo+historyHtml+'<div class="profile-section"><button class="profile-view-chat-btn" onclick="viewProfileChats(&#39;'+p.sessionId+'&#39;)">查看对话记录 →</button></div></div>';
+  card.innerHTML='<div class="profile-card-header" onclick="this.parentElement.classList.toggle(&#39;open&#39;)"><div class="profile-card-top"><span class="profile-name">'+name+returningBadge+'</span><span class="profile-time">'+timeStr+'</span></div><div class="profile-tags">'+tags+'</div>'+factsHtml+'<div class="profile-chevron">▼</div></div><div class="profile-card-body"><div class="profile-section"><div class="profile-section-label">'+t['profile_label_personality']+'</div><div class="profile-section-text">'+(pers||t['profile_no_analysis'])+'</div></div>'+(facts.length>0?'<div class="profile-section"><div class="profile-section-label">'+t['profile_label_keyfacts']+'</div><div class="profile-section-text">'+facts.map(function(f){return '• '+f;}).join('<br>')+'</div></div>':'')+(interests.length>0?'<div class="profile-section"><div class="profile-section-label">'+t['profile_label_interests']+'</div><div class="profile-section-text">'+interests.map(function(i){return '<span class="profile-interest-tag">'+i+'</span>';}).join(' ')+'</div></div>':'')+sessionInfo+historyHtml+'<div class="profile-section"><button class="profile-view-chat-btn" onclick="viewProfileChats(&#39;'+p.sessionId+'&#39;)">'+t['profile_view_chat']+'</button></div></div>';
   return card;
 }
 
@@ -1093,8 +1110,8 @@ function renderLogEntry(log){
   entry.className='log-entry';
   var date=new Date(log.timestamp);
   var timeStr=date.toLocaleString();
-  var title='访客 — '+timeStr;
-  entry.innerHTML='<div class="log-entry-header" onclick="this.parentElement.classList.toggle(&#39;open&#39;)"><div class="log-entry-summary"><span class="log-preview">'+title+'</span></div><div class="log-entry-meta"><span class="log-sid">#'+log.sessionId.slice(-8)+'</span><span class="log-time">'+timeStr+'</span><span class="log-msgs">'+(log.messages?log.messages.length:0)+' msgs</span><span class="log-chevron">▼</span></div></div>';
+  var title=t['log_visitor_prefix']+timeStr;
+  entry.innerHTML='<div class="log-entry-header" onclick="this.parentElement.classList.toggle(&#39;open&#39;)"><div class="log-entry-summary"><span class="log-preview">'+title+'</span></div><div class="log-entry-meta"><span class="log-sid">#'+log.sessionId.slice(-8)+'</span><span class="log-time">'+timeStr+'</span><span class="log-msgs">'+(log.messages?log.messages.length:0)+' '+t['log_msgs_unit']+'</span><span class="log-chevron">▼</span></div></div>';
   var body=document.createElement('div');
   body.className='log-entry-body';
   if(log.messages){
