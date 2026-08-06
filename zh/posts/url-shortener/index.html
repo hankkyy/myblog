@@ -712,9 +712,9 @@ window.retryLastMessage=function(){
 .log-content code{font-family:monospace;font-size:12px;background:rgba(0,0,0,.06);padding:2px 5px;border-radius:3px}
 .log-msg.user .log-content code{background:rgba(255,255,255,.2)}
 /* Admin tabs */
-.admin-tab{background:none;border:none;color:rgba(255,255,255,.5);padding:10px 20px;font-size:13px;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;font-weight:500}
-.admin-tab:hover{color:rgba(255,255,255,.8)}
-.admin-tab.active{color:#fff;border-bottom-color:#4dabf7}
+.admin-tab{background:none;border:none;color:#868e96;padding:10px 20px;font-size:13px;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;font-weight:500}
+.admin-tab:hover{color:#495057}
+.admin-tab.active{color:#16181a;border-bottom-color:#4dabf7}
 /* Profile cards */
 .profile-card{border:1px solid #e9ecef;border-radius:12px;margin-bottom:12px;overflow:hidden;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .profile-card-header{padding:14px 16px;cursor:pointer;user-select:none;background:#fafbfc;transition:background .15s}
@@ -764,7 +764,7 @@ window.retryLastMessage=function(){
         <button onclick="closeAdmin()" style="background:none;border:none;color:#fff;cursor:pointer;font-size:18px;line-height:1">关闭</button>
       </div>
     </div>
-    <div id="admin-tabs" style="display:none;display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,.15)">
+    <div id="admin-tabs" style="display:none;display:flex;gap:0;border-bottom:1px solid #dee2e6">
       <button class="admin-tab" data-tab="logs" onclick="switchAdminTab('logs')">聊天记录</button>
       <button class="admin-tab active" data-tab="profiles" onclick="switchAdminTab('profiles')">用户画像</button>
     </div>
@@ -797,9 +797,9 @@ window.retryLastMessage=function(){
       <div id="admin-profiles" style="display:none">
         <div id="admin-insights">
           <div style="display:flex;gap:16px;flex-wrap:wrap">
-            <div class="insight-stat"><div class="insight-stat-value" id="insight-total">-</div><div class="insight-stat-label">Profiles</div></div>
-            <div class="insight-stat"><div class="insight-stat-value" id="insight-sessions">-</div><div class="insight-stat-label">Total Sessions</div></div>
-            <div class="insight-stat"><div class="insight-stat-value" id="insight-avg">-</div><div class="insight-stat-label">Avg Visits</div></div>
+            <div class="insight-stat"><div class="insight-stat-value" id="insight-total">-</div><div class="insight-stat-label">画像总数</div></div>
+            <div class="insight-stat"><div class="insight-stat-value" id="insight-sessions">-</div><div class="insight-stat-label">总会话数</div></div>
+            <div class="insight-stat"><div class="insight-stat-value" id="insight-avg">-</div><div class="insight-stat-label">平均回访</div></div>
           </div>
           <div id="insight-interests" style="margin-top:12px;font-size:12px;color:#495057"></div>
         </div>
@@ -855,10 +855,14 @@ window.loadInsights=async function(){
     document.getElementById('insight-total').textContent=ins.totalProfiles;
     document.getElementById('insight-sessions').textContent=ins.totalSessions;
     document.getElementById('insight-avg').textContent=ins.avgSessions;
-    var interestsHtml='<strong>热门话题: </strong>';
-    ins.topInterests.forEach(function(item){
-      interestsHtml+='<span class="profile-interest-tag">'+item.name+' ('+item.count+')</span>';
-    });
+    var interestsHtml='<strong>'+t['insight_hot_topics']+': </strong>';
+    if(!ins.topInterests||ins.topInterests.length===0){
+      interestsHtml+='<span style="color:#adb5bd">-</span>';
+    }else{
+      ins.topInterests.forEach(function(item){
+        interestsHtml+='<span class="profile-interest-tag">'+item.name+' ('+item.count+')</span>';
+      });
+    }
     document.getElementById('insight-interests').innerHTML=interestsHtml;
     document.getElementById('admin-insights').style.display='block';
   }catch(e){}
